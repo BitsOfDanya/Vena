@@ -27,11 +27,6 @@ dist/
 .env.*
 !.env.example
 
-.claude/
-.claude.json
-.claude.local.*
-CLAUDE.local.*
-
 dataset/
 datasets/
 dataset*.zip
