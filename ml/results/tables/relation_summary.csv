@@ -1,0 +1,9 @@
+metric,value
+channels_dict_total_rows,11485
+channels_dict_distinct_id,11485
+orphan_channels_in_dict_not_in_events,0
+orphan_channels_total_in_dict,11485
+event_channels_missing_from_dict,1142
+event_channels_total_distinct,12627
+example_journal_total_rows,169993
+example_journal_matched_to_dict,169993

@@ -1,0 +1,11 @@
+file,column,null_count,null_pct,note
+ext-journal-2019..2026.csv,ид_события,0,0.0,structurally complete in all 8 years
+ext-journal-2019..2026.csv,ид_канала_данных,0,0.0,structurally complete in all 8 years
+ext-journal-2019..2026.csv,дата,0,0.0,structurally complete; one row per year-2025 is a corrupted embedded header, not a true null
+ext-journal-2019..2026.csv,время,0,0.0,structurally complete in all 8 years
+ext-journal-2019..2026.csv,тревожное,0,0.0,structurally complete in all 8 years
+ext-journal-2019..2026.csv,значение_датчика,0,0.0,"structurally non-empty, but semantically 'null-like' via sentinel values: 41534+41520=83054 rows with literal '01.01.1970 03:00:0x' (epoch reset), 7503339 rows with literal 'Неопределен' (=undefined) across all years - see sensor_value_non_numeric_top_literals.csv"
+справочник_каналов_датчиков.csv,all columns,0,0.0,no missing values in the channel dictionary
+справочник_объектов_диспетчер.csv,all columns,0,0.0,no missing values in the tiny object dictionary
+журнал_событий_пример.csv,all columns,0,0.0,no missing values in the sample file
+ALL FILES,репрезентативность полей ТЗ,n/a,n/a,"поля, заявленные в ТЗ и полностью ОТСУТСТВУЮЩИЕ во всём датасете: результат_проверки, причина_неисправности (отдельным полем), дата_ввода_в_эксплуатацию, дата_последнего_ремонта, статус_заявки, ФИО, организация, тип_допуска, координаты/geojson/wkt - see 15 compliance table in 00_executive_summary.md"

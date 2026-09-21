@@ -1,0 +1,23 @@
+file,ext,size_bytes,size_human,rows,note
+8. ДЖКХ.pdf,.pdf,2819931,2.7MB,,technical specification (TOR)
+dataset.zip,.zip,1749499745,1.6GB,,original packed dataset archive (dataset/ already unpacked from it)
+dataset/ext-journal-2019.7z,.7z,141465610,134.9MB,,"compressed duplicate of corresponding .csv (not decompressed, raw csv already present)"
+dataset/ext-journal-2019.csv,.csv,1185619451,1.1GB,20993328,
+dataset/ext-journal-2020.7z,.7z,176467481,168.3MB,,"compressed duplicate of corresponding .csv (not decompressed, raw csv already present)"
+dataset/ext-journal-2020.csv,.csv,1576579151,1.5GB,28172398,
+dataset/ext-journal-2021.7z,.7z,284299144,271.1MB,,"compressed duplicate of corresponding .csv (not decompressed, raw csv already present)"
+dataset/ext-journal-2021.csv,.csv,2735726977,2.5GB,53698948,
+dataset/ext-journal-2022.7z,.7z,238723816,227.7MB,,"compressed duplicate of corresponding .csv (not decompressed, raw csv already present)"
+dataset/ext-journal-2022.csv,.csv,2161818822,2.0GB,43483149,
+dataset/ext-journal-2023.7z,.7z,185893242,177.3MB,,"compressed duplicate of corresponding .csv (not decompressed, raw csv already present)"
+dataset/ext-journal-2023.csv,.csv,1630553963,1.5GB,31937125,
+dataset/ext-journal-2024.7z,.7z,264372460,252.1MB,,"compressed duplicate of corresponding .csv (not decompressed, raw csv already present)"
+dataset/ext-journal-2024.csv,.csv,2419404373,2.3GB,49023883,
+dataset/ext-journal-2025.7z,.7z,290680118,277.2MB,,"compressed duplicate of corresponding .csv (not decompressed, raw csv already present)"
+dataset/ext-journal-2025.csv,.csv,2710263516,2.5GB,55541797,
+dataset/ext-journal-2026.7z,.7z,165304211,157.6MB,,"compressed duplicate of corresponding .csv (not decompressed, raw csv already present)"
+dataset/ext-journal-2026.csv,.csv,1497523553,1.4GB,30695389,
+dataset/журнал_событий_пример.csv,.csv,9707502,9.3MB,169993,
+dataset/справочник_каналов_датчиков.csv,.csv,1260877,1.2MB,11494,
+dataset/справочник_объектов_диспетчер.csv,.csv,5266,5.1KB,95,
+ЛЦТ2026 Шаблон презентации.pptx,.pptx,33766436,32.2MB,,presentation template

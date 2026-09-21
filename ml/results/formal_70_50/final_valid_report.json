@@ -1,0 +1,32 @@
+{
+ "config": "pump72 LogReg + hard negatives x4 (oof+near), train<=2024, threshold min-gap on VALID 2025",
+ "valid_frontier": {
+  "pr_auc": 0.4739953927513527,
+  "roc_auc": 0.7225990451178912,
+  "precision_at_recall_0.1": 0.9334535617673579,
+  "precision_at_recall_0.2": 0.7185552181556657,
+  "precision_at_recall_0.3": 0.5344322054045487,
+  "precision_at_recall_0.4": 0.45987827954789545,
+  "precision_at_recall_0.5": 0.3968926553672316,
+  "precision_at_recall_0.6": 0.3353510745404149,
+  "recall_at_precision_0.5": 0.33894572953736657,
+  "recall_at_precision_0.6": 0.2605427046263345,
+  "recall_at_precision_0.7": 0.21272241992882562,
+  "recall_at_precision_0.8": 0.1755338078291815,
+  "best_f1": 0.44355998249598866,
+  "best_f2": 0.5646475419154707,
+  "formal_gap_oracle": 0.28699443295380417,
+  "oracle_precision": 0.6999050332383666,
+  "oracle_recall": 0.21310053380782917,
+  "formal_reached_oracle": false
+ },
+ "frozen_threshold": 0.5168044849633222,
+ "valid_at_threshold": {
+  "threshold": 0.5168044849633222,
+  "precision": 0.6999050332383666,
+  "recall": 0.21310053380782917,
+  "formal_gap": 0.28699443295380417,
+  "alert_fraction": 0.05753203579098669,
+  "formal_reached": false
+ }
+}

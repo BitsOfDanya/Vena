@@ -1,0 +1,18 @@
+metric,value,note
+total events all years,313546219,sum of ext-journal-2019..2026 row counts
+total distinct channels ever seen in events,12627,includes 1142 not present in channel dictionary
+total distinct channels in channel dictionary,11485,справочник_каналов_датчиков.csv
+raw 'Неисправен' (faulty) readings all years,1500298,literal categorical value inside значение_датчика - NOT a separate incident/repair log
+distinct channels that ever emit 'Неисправен',4821,38.2% of all channels seen in events
+'Неисправен' events on Датчик дыма (smoke),1169182,dominant sensor type for this literal - 2844 distinct smoke-detector channels affected
+'Неисправен' events on Состояние насоса (pump),108872,180 distinct pump-status channels affected - bridges to 'infrastructure/equipment' framing
+'Неисправен' events on Состояние вентилятора (fan),78692,235 distinct fan-status channels affected
+raw transitions into 'Неисправен' (prev reading != Неисправен),1427554,counts every flap as a new transition - inflated by 2021 storm
+failure EPISODES after 6h-gap collapsing (recommended definition),89905,much more realistic positive-event count for supervised target; ~4600-15800 per year, fairly stable except a mid-2021 anomaly (see 06_sensor_failure_target.md)
+2021 flapping storm: distinct channels involved,~80-130 per day (peak),April-June 2021 concentrated event; treat as separate regime / exclude or downweight in training
+channels silent since before 2025-01-01 (candidate decommission/hard-failure proxy),1134 of 12627 (9.0%),alternative/complementary target definition to literal 'Неисправен' state
+'Обесточен' (de-energized) events all years,1288383,1541 distinct channels; declining trend 2019->2026 (321582 -> 69201) - could reflect infra improvement or monitoring/labeling change, needs field validation
+'Батарея неисправна' / 'Батарея разряжена' events all years,3454 / 309,35 / 30 distinct channels - small but clean weak-battery signal typical of wireless fire/security sensors
+alarm ('тревожное'=t) events all years,2467812,0.79% of all events; NOT the same concept as 'failure' - alarm=motion/smoke/contact trip, failure='Неисправен' state literal
+class balance for a 24h 'Неисправен' target (episode-level, naive global estimate),positive rate roughly 90000 episodes / (12627 channels * ~2900 days) implies well under 1% of channel-days are positive,severe imbalance typical of predictive maintenance; requires class weighting / resampling / probability calibration, not naive accuracy
+infrastructure degradation ground truth (repairs, install dates, ТО/ППР, inspections),NOT FOUND in dataset,no repair journal, no equipment registry with dates, no АРМ-Контроль, no СКУД - see 07_infrastructure_degradation.md

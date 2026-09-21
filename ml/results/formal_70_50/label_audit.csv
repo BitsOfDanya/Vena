@@ -1,0 +1,4 @@
+device,episodes,single_tick,dur_lt_5min,dur_5_60min,dur_ge_60min,repeat_within_24h,persistent_ge_10ticks_and_10min,median_ticks,median_dur_min
+pump,26017,0.56,0.689,0.151,0.161,0.122,0.091,1.0,0.0
+fan,27084,0.52,0.748,0.115,0.137,0.104,0.028,1.0,0.0
+smoke,18238,0.557,0.628,0.173,0.199,0.133,0.076,1.0,0.0

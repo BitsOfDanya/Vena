@@ -1,0 +1,27 @@
+check,year,count,pct_of_year_rows,note
+duplicate ид_события (exact id repeated within same file),2019,1491,0.007,minor
+duplicate ид_события (exact id repeated within same file),2020,0,0.0,none found
+duplicate ид_события (exact id repeated within same file),2021,775099,1.44,significant - overlaps with 2021 Неисправен flapping storm period
+duplicate ид_события (exact id repeated within same file),2022,667317,1.54,significant
+duplicate ид_события (exact id repeated within same file),2023,785998 groups / 789301 excess rows,2.46,significant
+duplicate ид_события (exact id repeated within same file),2024,0,0.0,none found
+duplicate ид_события (exact id repeated within same file),2025,0,0.0,none found
+duplicate ид_события (exact id repeated within same file),2026,0,0.0,none found
+duplicate ид_события across years (same id reused in 2 different year files),ALL,at least 20 confirmed in sample scan (see duplicate_event_id_across_years_sample.csv),n/a,ид_события counter is NOT a globally unique primary key across files - must namespace by (source_year, ид_события) or better use (ид_канала_данных, дата, время) as effective key
+full row duplicates (channel+date+time+value+flag identical),2019,34749 groups / 77469 excess rows,0.37,
+full row duplicates (channel+date+time+value+flag identical),2020,41600 groups / 73468 excess rows,0.26,
+full row duplicates (channel+date+time+value+flag identical),2021,37502 groups / 71318 excess rows,0.13,
+full row duplicates (channel+date+time+value+flag identical),2022,37318 groups / 59700 excess rows,0.14,
+full row duplicates (channel+date+time+value+flag identical),2023,595920 groups / 614251 excess rows,1.92,anomalously high vs other years - needs dedup before modeling
+full row duplicates (channel+date+time+value+flag identical),2024,20196 groups / 30548 excess rows,0.06,
+full row duplicates (channel+date+time+value+flag identical),2025,19077 groups / 20486 excess rows,0.04,
+full row duplicates (channel+date+time+value+flag identical),2026,7910 groups / 8351 excess rows,0.03,
+conflicting readings (same channel+timestamp, different значение_датчика - sensor race/duplicate transmission),2019,70254,0.33,two different readings reported for the identical second - implies sub-second events collapse to 1s resolution
+conflicting readings (same channel+timestamp, different значение_датчика),2020,275660,0.98,
+conflicting readings (same channel+timestamp, different значение_датчика),2021,447995,0.83,
+conflicting readings (same channel+timestamp, different значение_датчика),2022,477059,1.10,
+conflicting readings (same channel+timestamp, different значение_датчика),2023,773876,2.42,
+conflicting readings (same channel+timestamp, different значение_датчика),2024,553642,1.13,
+conflicting readings (same channel+timestamp, different значение_датчика),2025,631257,1.14,
+conflicting readings (same channel+timestamp, different значение_датчика),2026,584855,1.91,
+embedded header row mid-file (schema/concatenation artifact),2025,1,n/a,"file is literally two half-year exports concatenated at 2025-06-30/2025-07-01 boundary with header repeated - see 03_data_quality.md"

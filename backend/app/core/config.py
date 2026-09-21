@@ -1,4 +1,5 @@
 from functools import lru_cache
+from pathlib import Path
 from typing import Literal
 
 from pydantic import AnyHttpUrl
@@ -19,6 +20,7 @@ class Settings(BaseSettings):
     environment: Literal["local", "test", "staging", "production"] = "local"
     debug: bool = False
     cors_origins: list[AnyHttpUrl] = [AnyHttpUrl("http://localhost:3000")]
+    ml_dir: Path = Path(__file__).resolve().parents[3] / "ml"
 
 
 @lru_cache
