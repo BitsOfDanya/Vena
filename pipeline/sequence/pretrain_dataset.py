@@ -34,10 +34,6 @@ class PretrainSequenceDataset(Dataset):
         return len(self.ts_sec)
 
     def __getitem__(self, i):
-        # Right-padded (real content first, PAD at the end): required for the causal
-        # next-event branch, where left-padding would leave leading PAD positions with
-        # zero valid attention keys under causal + key-padding masking (all -inf row -> NaN).
-        # Bidirectional masked-LM is padding-side agnostic, so the same layout is reused.
         cid = self.channel_ids[i]
         t = self.ts_sec[i]
         window_ts, window_state, window_alarm, prev_ts = self.index.window(cid, t, self.max_len)

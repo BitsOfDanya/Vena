@@ -42,7 +42,6 @@ def test_normalization_uses_only_train_rows():
     mean = x[train_mask].mean(axis=0)
     std = x[train_mask].std(axis=0)
     assert mean[0] == 2.0
-    # the outlier (row 3, held out of train) must not influence the fitted mean/std
     assert mean[0] != x.mean(axis=0)[0]
 
 

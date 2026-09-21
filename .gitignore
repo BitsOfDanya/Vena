@@ -1,12 +1,3 @@
-.DS_Store
-Thumbs.db
-
-.idea/
-.vscode/
-*.swp
-*.swo
-*~
-
 __pycache__/
 *.py[cod]
 .pytest_cache/
@@ -23,38 +14,57 @@ build/
 dist/
 *.egg-info/
 
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
 .env
 .env.*
 !.env.example
+*.pem
+*.key
 
+data/
 dataset/
 datasets/
 dataset*.zip
 external_datasets/
 external_datasets.zip
-*.7z
 raw/
-cache/
-tmp/
+downloads/
+ext-journal-*.csv
+*.7z
+*.zip
+*.tar
+*.tar.gz
+
 *.parquet
+*.feather
 *.arrow
 
 analysis/
 research/
-catboost_info/
+results/
 
 artifacts/experimental/
+predictions/
+runs/
+checkpoints/
+logs/
+*.pt
+*.pth
+*.ckpt
 
-ЛЦТ2026 Шаблон презентации.pptx
-8. ДЖКХ.pdf
+tmp/
+temp/
+cache/
+.cache/
+catboost_info/
 
-node_modules/
-.next/
-out/
-coverage/
-.turbo/
-.vercel/
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
-pnpm-debug.log*
+*.pdf
+*.pptx
+*.docx

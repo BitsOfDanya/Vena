@@ -51,7 +51,6 @@ def test_pretrain_dataset_uses_right_padding():
     real = (~item["pad_mask"].numpy()).astype(int)
     n_real = real.sum()
     assert n_real > 0
-    # real content is a contiguous prefix starting at index 0
     np.testing.assert_array_equal(real, np.array([1] * n_real + [0] * (16 - n_real)))
 
 

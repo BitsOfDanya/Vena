@@ -130,7 +130,6 @@ def test_epoch_lr_warmup_then_cosine_decay():
 def test_epoch_lr_use_schedule_false_is_truly_constant():
     lrs = [train_mod.epoch_lr(e, 10, 1e-3, warmup_frac=0.0, use_schedule=False) for e in range(1, 11)]
     assert all(v == 1e-3 for v in lrs)
-    # sanity: with the schedule ON, warmup_frac=0.0 still decays (this is the bug this test guards against)
     decaying = [train_mod.epoch_lr(e, 10, 1e-3, warmup_frac=0.0, use_schedule=True) for e in range(1, 11)]
     assert decaying[0] < 1e-3
     assert decaying[-1] == pytest.approx(0.0, abs=1e-9)
@@ -215,8 +214,6 @@ def test_checkpoint_selection_prefers_primary_metric_with_ap_tiebreak():
         lr=1e-4, log_fn=lambda msg: None,
     )
     assert len(history) == 3
-    # epoch2 has equal primary_metric to epoch1 but higher avg_precision -> wins the tiebreak;
-    # epoch3 has a lower primary_metric than the running best, so it is never checkpointed.
     assert set(snapshots.keys()) == {1, 2}
     final_state = model.state_dict()
     for k, v in final_state.items():

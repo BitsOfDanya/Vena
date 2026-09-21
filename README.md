@@ -1,214 +1,132 @@
-# VENA — ЛЦТ 2026, кейс №8 (АО «Москоллектор»)
+# VENA
 
-Risk-скоринг отказа канала (насос / вентилятор / дым) по журналу событий. Baseline: CatBoost / LogisticRegression.
+ML-компонент предиктивного обслуживания инженерных систем (кейс №8, АО «Москоллектор», ЛЦТ 2026): по журналу событий датчиков оценивает риск наступления состояния оборудования в заданном горизонте и ранжирует каналы для осмотра.
 
-## Данные
+## Problem
 
-| | |
-|---|---|
-| Период | 2019-01-01 … 2026-06-30 |
-| Событий | 313 546 219 |
-| Каналов с «Неисправен» | 4821 |
-| Срабатываний литерала | 1 500 298 |
-| Эпизодов отказа (после group 6ч) | 89 905 |
-| Направления в модели | pump, fan, smoke |
-| Газ | проверен, ROC AUC ≈ 0.51 — исключён |
-| Температура | 83 эпизода за 8 лет — исключён |
-| Реестр оборудования / история ремонтов / АРМ-Контроль / СКУД / визуальные осмотры | отсутствуют в данных |
+Журнал событий содержит состояния каналов (насосы, вентиляторы, датчики дыма/газа/температуры, фазы питания, ИБП, охрана и др.). Задача — по истории канала до момента `t` оценить вероятность того, что в интервале `(t, t+h]` начнётся целевой эпизод (например, «Неисправен» или «Обесточен»), и выдать ранжированный список кандидатов.
 
-## Анализ данных
+## Supported directions
 
-Проверил рекурсивно всю директорию датасета (`find . -maxdepth 4`) — заявленных в ТЗ таблиц (реестр оборудования, журнал неисправностей, АРМ-Контроль, СКУД) физически нет, кроме уже перечисленных выше файлов.
-
-**Схема.** Собрал каталог колонок по всем 8 годовым файлам (`analysis/02_schema_catalog.md`). Набор колонок одинаковый во всех годах (`ид_события`, `ид_канала_данных`, `дата`, `время`, `тревожное`, `значение_датчика`). `значение_датчика` — смешанный тип: число или один из ~34 повторяющихся текстовых литералов состояния (`Неисправен`, `Обесточен`, `Батарея разряжена` и т.д.). Демо-файл `журнал_событий_пример.csv` кодирует `тревожное` как `true`/`false` вместо `f`/`t` — привёл к единому виду перед объединением.
-
-**Качество.** Нашёл и учёл:
-
-| Проблема | Масштаб |
-|---|---|
-| Скрытые null (`"Неопределен"`, epoch-заглушка `01.01.1970`) | ~7.59 млн строк (2.4%) |
-| Дубликаты `ид_события` внутри года | до 2.46% строк (2023) |
-| Полные дубликаты строк | до 1.92% строк (2023) |
-| Конфликтующие показания в одну секунду | до 2.42% строк (2023) |
-| `ид_события` не уникален глобально | подтверждено ≥20 межгодовых коллизий |
-| Каналы в событиях без записи в справочнике | 1142 из 12 627 (9.0%) |
-| Склейка двух полугодий в `ext-journal-2025.csv` | дублирующийся заголовок на строке 26 140 585, вырезал |
-
-Перед обучением делаю дедупликацию по `(ид_канала_данных, дата, время, значение_датчика, тревожное)`.
-
-**Связи между таблицами.** Проверил гипотезу «код в `тег_инженерной_системы` = id из справочника объектов» — совпадения слабые и несистемные (максимум 16 из 570 уникальных значений на одной позиции токена), отклонил как случайную коллизию. Реальная связь в данных только одна: `EVENT → CHANNEL` (по `ид_канала_данных`), покрытие растёт с 88% событий в 2019 до 100% в 2025-2026. Цепочки `CHANNEL → SYSTEM → OBJECT → EQUIPMENT → INCIDENT → REPAIR` из ТЗ в данных нет — `справочник_объектов_диспетчер.csv` физически изолирован от событий.
-
-**Аномалия 2021.** Апрель–июнь 2021: до 819 021 событий `"Неисправен"` за май на ~80–130 каналах — локализованный сбой мониторинга/связи, не волна физических поломок. После группировки в эпизоды окном 6ч аномалия сглаживается, распределение по годам становится ровным (4602 эпизода в 2019 → 15777 в 2025). Поэтому считаю target на уровне эпизода, а не тика.
-
-**Разметка риска утечки.** Составил таблицу полей по риску (`analysis/08_leakage_and_validation.md`): скользящие статистики и `time_since_last_*` безопасны при строгом окне `(., t]`; сам литерал `"Неисправен"` в момент ≥t — утечка, если использовать как признак; склеенная строка-заголовок в 2025 — утечка/порча, вырезается до сплита.
-
-**Почему не random split.** Данные — временной ряд по каналу, а не независимые наблюдения; справочник каналов дрейфует во времени (82%→100% покрытия); в данных есть локализованная аномалия (2021). Random split завысил бы метрики. Использую только temporal split по годам (см. Validation ниже).
-
-**Feature engineering.** Из ТЗ-списка признаков вычислимо напрямую: частотные (`alarms_Nh`, `time_since_last_event/failure`, `event_rate_delta`, `burst_count`, interarrival stats), календарные (season/weekday/hour), метаданные канала (`тип_датчика`, `тип_инж_системы`). Не вычислимо и не использую: `sensor_age` (нет дат установки), `district`/геопривязка (нет координат), настоящий `false_alarm_ratio` (нет поля верификации), `time_since_last_repair` (нет журнала ремонтов). Погоду добавил как внешний признак (единая точка «Москва», без district-уровня) — не дала прироста, исключил (см. таблицу «Исключено»).
-
-## Target
-
-Новый эпизод `"Неисправен"` на канале в `(t, t+24h]` или `(t, t+72h]`. Признаки только `<= t`. Equipment Failure Risk — прокси по состоянию датчика, не физический износ и не RUL.
-
-## Pipeline
-
-```
-events → candidates (alarm/fault_adjacent/recovery/burst/transition/silence)
-       → episodes → causal features (10м…30д, EWMA, приоры, интервалы, календарь)
-       → model → ranking (daily top-K) → alerts (cooldown dedup)
-```
-
-## Baseline
-
-| Устройство | Горизонт | Модель |
+| Направление | Target | Статус |
 |---|---|---|
-| Насос | 24ч | CatBoost |
-| Насос | 72ч | LogisticRegression |
-| Вентилятор | 24ч | CatBoost |
-| Вентилятор | 72ч | CatBoost |
-| Дым | 24ч | CatBoost |
+| Sensor Health | эпизод «Неисправен» датчика (дым 24ч) | замороженная модель в `artifacts/models` |
+| Equipment Health | эпизод «Неисправен» насоса и вентилятора (24ч, 72ч) | замороженные модели в `artifacts/models` |
+| Power Health | onset «Обесточен» у «Состояние фазы» (24ч; любой и устойчивый ≥30 мин) | модуль `pipeline.targets`, кандидат в production |
+| Alarm Intelligence | подтверждение detection-alarm (дым, газ, температура) поведением системы за 15/30/60 мин | модуль `pipeline.targets`, shadow-режим |
+| Incident Risk Proxies | Fire/Smoke Risk Index, Hydraulic Load Anomaly | только proxy-индексы (`pipeline.targets.proxies`), не вероятности инцидентов |
+| Maintenance Priority | взвешенная композиция сигналов | решающее правило (`pipeline.targets.priority`), не обучаемый target |
 
-Конфиги: `configs/models/*.json`. Артефакты: `artifacts/models/*/{model.joblib,meta.json}`.
+Alarm Intelligence предсказывает подтверждение тревоги системным поведением, а не «ложную тревогу»: операторской метки истинной/ложной тревоги в данных нет. Реальных меток пожара и подтопления в данных нет, поэтому supervised-модели для них не обучаются.
 
-## Результаты (test = 2025–2026H1, out-of-time)
+## Data
 
-| Устройство | Горизонт | ROC AUC | avg_precision | daily top-1% | alert precision | episode recall | median lead time |
-|---|---|---|---|---|---|---|---|
-| Насос | 24ч | 0.623 | 0.273 | 44.3% | 23.6% | 4.9% | 14.0ч |
-| Насос | 72ч | 0.666 | 0.448 | 70.8% | 50.6% | 8.2% | 52.8ч |
-| Вентилятор | 24ч | 0.817 | 0.183 | 18.3% | 16.0% | 4.4% | 13.4ч |
-| Вентилятор | 72ч | 0.858 | 0.411 | 38.2% | 35.0% | 7.7% | 46.8ч |
-| Дым | 24ч | 0.917 | 0.225 | 13.2% | 13.2% | 24.8% | ≈5 мин |
+Данные не входят в репозиторий (проприетарные). Ожидаемая структура:
 
-Дым: recall выше всех, lead time ≈5 мин.
+```
+dataset/
+  ext-journal-2019.csv ... ext-journal-2026.csv
+  справочник_каналов_датчиков.csv
+```
 
-## Metrics glossary
+Журнал: период 2019-01-01 … 2026-06-30, ≈313.5 млн событий, 19 типов датчиков. Единственная связь между таблицами — `EVENT → CHANNEL` по `ид_канала_данных`. Корень проекта переопределяется переменной окружения `LCT_PROJECT_ROOT`. Кэш извлечённых событий пишется в `analysis/ml_ready/cache` (в git не попадает).
 
-| Метрика | Что это |
-|---|---|
-| daily top-1% | precision/recall на верхнем 1% risk_score по каждому дню отдельно |
-| alert precision | daily top-K после cooldown-дедупликации по каналу (24/48/72ч) |
+## Targets
 
-alert precision ≤ daily top-K precision всегда.
+- Эпизод состояния — события одного канала с одним значением, сгруппированные окном 6 часов; начало эпизода — первое событие группы.
+- Метка кандидата в момент `t`: начало целевого эпизода в `(t, t+h]`. Горизонты: 24ч и 72ч для отказов, 24ч для питания, 15/30/60 мин для подтверждения тревог.
+- Устойчивое отключение: onset «Обесточен», после которого канал остаётся в этом состоянии ≥30 минут.
+- Подтверждение тревоги: повтор alarm на том же канале, alarm другого канала той же tag-группы или detection-состояние длительностью ≥W минут.
+- Признаки используются только по событиям `≤ t`; периоды, попадающие в закрытый период 2026H1, исключены из загрузчиков исследовательских данных.
+
+## Architecture
+
+```
+events → candidate generation → causal features → model → risk score → ranking / alerts (cooldown) → API / product
+```
+
+- `pipeline/extract.py`, `episodes.py`, `candidates.py`, `features.py` — извлечение, эпизоды, кандидаты, causal-признаки.
+- `pipeline/models.py`, `training.py`, `backtest.py`, `evaluate.py`, `alerts.py`, `decision.py`, `calibration.py` — модели, rolling backtest, метрики, алерты, пороги.
+- `pipeline/artifacts.py`, `inference.py` — сохранение и инференс замороженных моделей.
+- `pipeline/targets/` — новые направления: target discovery, generic state-target, Power Health, Alarm Corroboration, proxy-индексы, приоритет.
+- `pipeline/formal/` — инструменты для формальной цели Precision ≥ 0.70 и Recall ≥ 0.50 (PR-frontier, перенос порога, hard-negative веса, lockbox-guard).
+- `pipeline/sequence/` — экспериментальные последовательные модели (transformer, hybrid); research-only, production baseline не заменяют.
+
+## Models
+
+| Направление | Модель | Где |
+|---|---|---|
+| Pump 24ч | CatBoost | `artifacts/models/pump_24h` |
+| Pump 72ч | LogisticRegression | `artifacts/models/pump_72h` |
+| Fan 24ч, 72ч | CatBoost | `artifacts/models/fan_24h`, `fan_72h` |
+| Smoke 24ч | CatBoost | `artifacts/models/smoke_24h` |
+| Power Health | LightGBM | `python -m pipeline.targets.run phase` |
+| Alarm Corroboration | LightGBM | `python -m pipeline.targets.run alarm` |
+
+Конфиги инференса замороженных моделей — `configs/models/*.json`. Артефакты компактные (до ≈350 КБ каждый) и нужны для запуска инференса.
 
 ## Validation
 
-| Fold | Train | Valid |
-|---|---|---|
-| 1 | ≤ 2021 | 2022 |
-| 2 | ≤ 2022 | 2023 |
-| 3 | ≤ 2023 | 2024 |
-| 4 | ≤ 2024 | 2025 |
+Только строгая временная валидация, без random split: rolling backtest из 4 фолдов (train до года N, valid — год N+1: 2022, 2023, 2024, 2025). Пороги выбираются на предыдущем периоде и применяются без пересчёта. Период 2026H1 зарезервирован как закрытый (lockbox) и не участвует в выборе моделей и признаков.
 
-Model selection: rolling через 2025. Невиданный период: 2026H1.
+## Metrics
 
-## Formal 70/50 (Precision≥0.7 и Recall≥0.5 одновременно)
+Метрики считаются на уровне кандидатов (precision, recall, PR-AUC, ROC AUC, recall при precision 0.70, precision при recall 0.50) и операционные: daily top-1%, alert precision (дедупликация cooldown), episode recall, lead time, candidate coverage.
 
-Не достигнуто ни для одной модели. Порог подбирается только на VALID.
-
-| Устройство/горизонт | При precision≥0.7 | При recall≥0.5 |
-|---|---|---|
-| Насос 72ч | precision 0.747, recall 0.132 | recall 0.512, precision 0.369 |
-| Вентилятор 72ч | — | recall 0.601, precision 0.348 |
-| Дым 24ч | precision 0.809, recall 0.007 | recall 0.682, precision 0.124 |
-
-## Исключено
-
-| Что | Причина |
+| Направление | Результат (rolling folds 2022–2025) |
 |---|---|
-| Погода | не даёт устойчивого прироста ни на одном устройстве |
-| Duty-cycle | ухудшает насос (0.215→0.202), нейтрально для вентилятора |
-| XGBoost | стабильно хуже CatBoost/LogReg |
-| Газ | ROC AUC ≈ 0.51 |
-| Температура | 83 эпизода за 8 лет |
+| Pump 72ч (LogReg) | AP 0.405; вариант с hard-negative весами (исследовательский) — AP 0.425; formal 70/50 **не достигнут** (на валидации 2025 P=0.70 достигается только при R=0.21) |
+| Fan 72ч (CatBoost) | AP 0.338; formal 70/50 **не достигнут**; blend CatBoost+hybrid улучшает только operational ranking |
+| Power Health, onset за 24ч (LightGBM) | AP 0.87, ROC AUC 0.92; на всех фолдах существует порог с P ≥ 0.70 и R ≥ 0.50; при пороге предыдущего фолда: alert precision 0.66, episode recall 0.75 |
+| Power Health, устойчивое отключение за 24ч (LightGBM) | AP 0.93, ROC AUC 0.96 |
+| Alarm Corroboration, 30 мин (LightGBM / CatBoost) | ROC AUC 0.89, PR-AUC 0.96 |
 
-## Deep Temporal Models (`pipeline/sequence/`) — экспериментально, не production
+Формальная цель Precision ≥ 0.70 и Recall ≥ 0.50 для отказов Pump72/Fan72 **не достигнута**; для Pump72 на закрытом периоде 2026H1 при замороженном пороге: P=0.51, R=0.25.
 
-Custom Event Transformer: d_model=128, 3 encoder layers, 4 heads, 614k параметров.
-
-| Stage | Статус |
-|---|---|
-| A/B1 (scratch, Pump72, 4-fold) | хуже LogReg: daily_top1 0.463 vs 0.548 |
-| B2 | max_len=128 зафиксирован |
-| C-A (self-supervised pretrain) | не помогает |
-| E (hybrid seq+tabular) | fold3 — победа над обоими baseline на 4/6 метрик; fold2/fold4 на момент снимка (2026-09-17) ещё считались |
-
-Production-артефакты этот трек не использует и не меняет.
-
-## Run
+## Reproduction
 
 ```bash
-python3 -m venv .venv && source .venv/bin/activate
+python -m pipeline.run --sensor-type "Состояние насоса" --horizon 72 --models logistic_regression,catboost --out results/pump_72h.csv
+python run_final_freeze.py pump 72 logistic_regression
+python run_baseline_suite.py
+python -m pipeline.targets.run discovery
+python -m pipeline.targets.run phase --target any --horizon 24 --train-end 2024 --valid-year 2025
+python -m pipeline.targets.run alarm --window 30 --train-end 2024 --valid-year 2025
+```
+
+Команды `phase` и `alarm` пишут модель и отчёт в `artifacts/experimental` (в git не попадает).
+
+## Project structure
+
+```
+pipeline/            основной код (данные, признаки, модели, метрики)
+  targets/           направления: discovery, Power Health, Alarm Corroboration, proxy, приоритет
+  formal/            формальная цель Precision/Recall, lockbox-guard
+  sequence/          research-only последовательные модели
+  tests/             тесты
+configs/models/      конфиги инференса замороженных моделей
+artifacts/models/    замороженные модели
+run_final_freeze.py, run_baseline_suite.py   воспроизведение замороженных моделей и baseline
+```
+
+## Tests
+
+```bash
+python -m pytest
+```
+
+100 тестов, все проходят (≈75 с).
+
+## Installation
+
+Python 3.12, зависимости в `requirements.txt`:
+
+```bash
+python3 -m venv .venv
+source .venv/bin/activate
 pip install -r requirements.txt
 ```
 
-Python 3.12. `dataset/` (~15ГБ) и `external_datasets/` (~1ГБ) — локально, не в git.
+## Limitations
 
-Один прогон:
-
-```bash
-python3 -m pipeline.run --sensor-type pump --horizon 24 --models catboost,logistic_regression
-```
-
-Все 5 конфигов → `results/baseline_metrics.csv`:
-
-```bash
-python3 run_baseline_suite.py
-```
-
-Оценка своих predictions:
-
-```python
-from pipeline import evaluate
-metrics = evaluate.evaluate_predictions(
-    channel_id, prediction_time, y_true, risk_score,
-    episodes=episodes_df, horizon_hours=72, cooldown_hours=24,
-)
-```
-
-Тесты:
-
-```bash
-python3 -m pytest -m "not slow"
-```
-
-## Структура
-
-| Путь | Назначение |
-|---|---|
-| `pipeline/extract.py` | чтение и кэш сырых данных |
-| `pipeline/episodes.py` | группировка эпизодов, target |
-| `pipeline/candidates.py` | причинные кандидаты |
-| `pipeline/features.py` | причинные признаки |
-| `pipeline/tags.py` | разбор/группировка тегов каналов |
-| `pipeline/weather.py` | погодные признаки (исключены) |
-| `pipeline/splits.py` | temporal split |
-| `pipeline/backtest.py` | rolling folds |
-| `pipeline/models.py` | CatBoost/LogReg обёртки |
-| `pipeline/training.py` | feature columns, прогон моделей |
-| `pipeline/ranking.py` | ranker-модель (эксперимент) |
-| `pipeline/calibration.py` | Platt/isotonic |
-| `pipeline/decision.py` | подбор порога |
-| `pipeline/evaluate.py` | метрики, `evaluate_predictions` |
-| `pipeline/alerts.py` | cooldown, coverage |
-| `pipeline/error_analysis.py` | разбор FN/near-miss |
-| `pipeline/artifacts.py` | сохранение/загрузка моделей |
-| `pipeline/inference.py` | сборка фич + скоринг в проде |
-| `pipeline/experiments.py` | оркестрация серии экспериментов |
-| `pipeline/config.py` | константы |
-| `pipeline/run.py` | CLI entrypoint |
-| `pipeline/sequence/` | transformer, эксперимент, не production |
-| `pipeline/tests/` | тесты |
-| `configs/models/` | frozen конфиги (5 combo) |
-| `artifacts/models/` | frozen модели |
-| `run_baseline_suite.py` | все 5 baseline конфигов → CSV |
-| `run_final_freeze.py`, `run_final_sprint.py`, `run_experiment_battery.py`, `build_final_matrix.py` | эксперименты, пишут в `analysis/` |
-
-`analysis/`, `dataset/`, `external_datasets/` — локально, в `.gitignore`.
-
-## Дальше
-
-- Прогоняю `run_baseline_suite.py` на полном датасете, фиксирую `results/baseline_metrics.csv`.
-- Довожу isotonic-калибровку в `pipeline/inference.py`.
-- Смотрю Stage E (fold2/fold4) по transformer, обновляю таблицу выше по завершении.
-- Chronic-channel routing для pump/smoke — в работе.
+В данных отсутствуют: подтверждение оператором истинности тревог, возраст оборудования, история ремонтов, геопривязка, данные АРМ-Контроль и СКУД. Поэтому «вероятность отказа» — оценка риска состояния датчика по журналу, а не физический износ и не остаточный ресурс; proxy-индексы не являются вероятностями пожара или подтопления. Более половины эпизодов отказа — одиночные события нулевой длительности, что ограничивает достижимое качество.
