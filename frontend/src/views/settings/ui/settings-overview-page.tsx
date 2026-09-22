@@ -1,0 +1,69 @@
+"use client"
+
+import Link from "next/link"
+
+import { useNotificationSettings } from "@/entities/notification"
+
+import { SettingsSection, SettingsShell, StateTag } from "./settings-shell"
+
+export function SettingsOverviewPage() {
+  const settings = useNotificationSettings()
+  const channels = settings.data?.channels ?? []
+  const digest = settings.data?.digests[0]
+
+  return (
+    <SettingsShell title="Settings" descriptor="workspace">
+      <SettingsSection title="Account">
+        <dl className="grid grid-cols-2 gap-x-6 gap-y-3 border border-border bg-elevated px-5 py-4 text-[14px]">
+          <div>
+            <dt className="text-[12px] text-faint uppercase">User</dt>
+            <dd className="mt-0.5">Duty engineer</dd>
+          </div>
+          <div>
+            <dt className="text-[12px] text-faint uppercase">Team</dt>
+            <dd className="mt-0.5">Dispatcher team</dd>
+          </div>
+          <div>
+            <dt className="text-[12px] text-faint uppercase">Time zone</dt>
+            <dd className="mt-0.5 font-mono text-[13px]">Europe/Moscow</dd>
+          </div>
+          <div>
+            <dt className="text-[12px] text-faint uppercase">Interface language</dt>
+            <dd className="mt-0.5">English</dd>
+          </div>
+        </dl>
+      </SettingsSection>
+
+      <SettingsSection title="Notification channels" description="Каналы доставки настраиваются на странице Notifications.">
+        <ul className="border border-border bg-elevated">
+          {channels.map((channel) => (
+            <li key={channel.id} className="flex items-center gap-4 border-b border-border-soft px-5 py-3 last:border-b-0">
+              <span className="text-[14px]">{channel.name}</span>
+              <span className="text-[13px] text-muted-foreground">{channel.detail}</span>
+              <span className="ml-auto">
+                <StateTag state={channel.state} />
+              </span>
+            </li>
+          ))}
+        </ul>
+        <Link
+          href="/settings/notifications"
+          className="inline-block text-[13px] text-vena underline-offset-4 hover:underline focus-visible:ring-2 focus-visible:ring-ring/60 focus-visible:outline-none"
+        >
+          Open notification settings
+        </Link>
+      </SettingsSection>
+
+      {digest ? (
+        <SettingsSection title="Scheduled digest">
+          <div className="border border-border bg-elevated px-5 py-4">
+            <p className="text-[14px] font-medium">{digest.name}</p>
+            <p className="mt-1 font-mono text-[13px] text-muted-foreground tabular-nums">
+              every day · {String(digest.hour).padStart(2, "0")}:{String(digest.minute).padStart(2, "0")} МСК
+            </p>
+          </div>
+        </SettingsSection>
+      ) : null}
+    </SettingsShell>
+  )
+}

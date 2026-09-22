@@ -2,7 +2,7 @@ from functools import lru_cache
 from pathlib import Path
 from typing import Literal
 
-from pydantic import AnyHttpUrl
+from pydantic import AliasChoices, AnyHttpUrl, Field
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
@@ -21,6 +21,27 @@ class Settings(BaseSettings):
     debug: bool = False
     cors_origins: list[AnyHttpUrl] = [AnyHttpUrl("http://localhost:3000")]
     ml_dir: Path = Path(__file__).resolve().parents[3] / "ml"
+    database_url: str = "sqlite:///./data/vena.db"
+    timezone: str = "Europe/Moscow"
+    public_url: str = "http://localhost:3100"
+    seed_demo: bool = True
+    digest_enabled: bool = True
+    smtp_host: str = Field(default="", validation_alias=AliasChoices("SMTP_HOST", "VENA_SMTP_HOST"))
+    smtp_port: int = Field(
+        default=587, validation_alias=AliasChoices("SMTP_PORT", "VENA_SMTP_PORT")
+    )
+    smtp_username: str = Field(
+        default="", validation_alias=AliasChoices("SMTP_USERNAME", "VENA_SMTP_USERNAME")
+    )
+    smtp_password: str = Field(
+        default="", validation_alias=AliasChoices("SMTP_PASSWORD", "VENA_SMTP_PASSWORD")
+    )
+    smtp_from: str = Field(default="", validation_alias=AliasChoices("SMTP_FROM", "VENA_SMTP_FROM"))
+    smtp_tls: bool = Field(default=True, validation_alias=AliasChoices("SMTP_TLS", "VENA_SMTP_TLS"))
+
+    @property
+    def smtp_configured(self) -> bool:
+        return bool(self.smtp_host and self.smtp_from)
 
 
 @lru_cache

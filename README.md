@@ -24,6 +24,35 @@ ml/         ML-компонент: pipeline, модели, конфиги, те�
 
 Формальная цель Precision ≥ 0.70 и Recall ≥ 0.50 для отказов насосов и вентиляторов **не достигнута**; для Power Health на rolling-валидации достигается. Подробности — в [ml/README.md](ml/README.md), сводная таблица направлений — `ml/results/directions.json`.
 
+## Run with Docker
+
+```bash
+docker compose up -d --build
+```
+
+| Сервис | Порт | Данные |
+|---|---|---|
+| frontend (Next.js) | `http://localhost:3100` | — |
+| backend (FastAPI) | `http://localhost:8100/docs` | том `vena-data` (SQLite) |
+
+Каталоги `ml/results`, `ml/configs` и `ml/artifacts` монтируются в контейнер API только на чтение (`VENA_ML_DIR=/srv/ml`); датасет событий (15 ГБ) в образ не попадает и не монтируется.
+
+### Environment
+
+Бэкенд читает переменные с префиксом `VENA_` (см. `backend/.env.example`): `VENA_DATABASE_URL`, `VENA_PUBLIC_URL`, `VENA_TIMEZONE`, `VENA_SEED_DEMO`, `VENA_DIGEST_ENABLED`. Почта настраивается только через окружение: `SMTP_HOST`, `SMTP_PORT`, `SMTP_USERNAME`, `SMTP_PASSWORD`, `SMTP_FROM`, `SMTP_TLS` — значения не хранятся ни в базе, ни во фронтенде, ни в репозитории. Пока `SMTP_HOST`/`SMTP_FROM` пусты, канал Email отображается как `Not configured`, а `POST /api/v1/notifications/test` возвращает `409`.
+
+Фронтенд собирается с `NEXT_PUBLIC_API_URL`, `NEXT_PUBLIC_VENA_DATA_MODE` (источник телеметрии: `demo` — детерминированный снимок) и `NEXT_PUBLIC_VENA_WORKFLOW_MODE` (`api` — уведомления, работы и настройки идут в бэкенд; `demo` — локальное хранилище браузера).
+
+### What is real and what is demo
+
+| Блок | Состояние |
+|---|---|
+| Уведомления, подтверждения, работы, история, результаты, настройки уведомлений | хранятся в БД бэкенда |
+| System notices | вычисляются бэкендом по доступности ML-каталогов |
+| Телеметрия, риск-скоры, паттерны, Pulse/Network/Timeline | детерминированный демо-снимок во фронтенде |
+| Email, Morning brief | код и планировщик есть, отправка включается только настроенным SMTP |
+| Карта, аналитический Dashboard | не реализованы намеренно |
+
 ## Local development
 
 Backend (порт 8000; если занят — укажите другой):
@@ -55,6 +84,26 @@ pnpm dev
 
 Открыть `http://localhost:3000`. Документация API: `http://localhost:8000/docs`, каталог компонентов: `http://localhost:3000/design-system`.
 
+## Web interface
+
+Интерфейс — временная схема инженерной инфраструктуры: `Network → Risk → Reason → Action → Result`, прошлое, настоящее и прогноз на одной оси. Тема по умолчанию — Mineral Light (светлое инженерное полотно, графитовая шапка).
+
+| Раздел | Назначение |
+|---|---|
+| `/pulse` | живая активность инфраструктуры: состояние системы, события по типам оборудования, коррелированные паттерны, лента событий |
+| `/network` | схема состояния инфраструктуры, инспектор объекта, диагностика риска по объекту |
+| `/timeline` | история и прогноз вокруг текущего момента (PAST · NOW · FUTURE), сравнение до 5 объектов |
+| `/actions` | план обслуживания на 24/48/72 часа, фиксация результата работ |
+| `/dashboard` | отдельный аналитический модуль |
+
+Режим Replay воспроизводит исторический эпизод; события открываются только после текущего времени воспроизведения. Командная палитра — `Ctrl/Cmd + K`.
+
+Режим карты требует реальных пространственных данных (GeoJSON/WKT) и намеренно не имитируется: координаты и топология не выдумываются, схема группирует объекты только по имеющимся данным. Оценка риска показывается как `risk score N/100` и не выдаётся за вероятность, пока модель не откалибрована.
+
+Модуль Dashboard зарезервирован под отдельную реализацию. Pulse, Network, Timeline и Actions не зависят от его компонентов.
+
+Источник данных задаётся `NEXT_PUBLIC_VENA_DATA_MODE` (`demo` по умолчанию) и `NEXT_PUBLIC_VENA_ENVIRONMENT`; демонстрационный набор детерминирован и расположен в `frontend/src/entities/infrastructure/data`, обращение к нему идёт через сервисные функции, которые заменяются REST-клиентом.
+
 ## API
 
 | Метод и путь | Назначение |
@@ -64,6 +113,14 @@ pnpm dev
 | `GET /api/v1/ml/models` | замороженные модели (тип, число признаков, период обучения) |
 | `GET /api/v1/ml/results` | список таблиц результатов по группам |
 | `GET /api/v1/ml/results/{group}/{name}?limit=N` | строки таблицы результатов (`tables`, `formal_70_50`, `new_directions`) |
+| `GET/POST /api/v1/notifications`, `PATCH /api/v1/notifications/{id}` | уведомления и переходы `new → acknowledged → resolved` |
+| `POST /api/v1/notifications/test` | тестовое письмо (409, если SMTP не настроен) |
+| `GET/POST /api/v1/actions`, `PATCH /api/v1/actions/{id}` | работы обслуживания |
+| `POST /api/v1/actions/{id}/{approve,dismiss,assign,start,wait,cancel,result}` | жизненный цикл и результат работы |
+| `GET /api/v1/situations` | ситуации, собранные из уведомлений и открытых работ |
+| `GET /api/v1/system/notices`, `GET /api/v1/system/components` | системные уведомления и состояние компонентов |
+| `GET/PUT /api/v1/settings/notifications` | каналы, правила, получатели, дайджест |
+| `GET /api/v1/integrations/email/status` | состояние почтового канала без секретов |
 
 Путь к каталогу ML задаётся `VENA_ML_DIR` (по умолчанию `ml/` в корне репозитория).
 
@@ -71,6 +128,8 @@ pnpm dev
 
 ```bash
 cd backend && uv run ruff check . && uv run mypy app && uv run pytest
-cd frontend && pnpm lint && pnpm build
+cd frontend && pnpm lint && pnpm typecheck && pnpm test && pnpm build
 cd ml && python -m pytest
 ```
+
+Миграции базы: `cd backend && uv run alembic upgrade head` (в контейнере выполняются при старте).

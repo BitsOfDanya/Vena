@@ -1,0 +1,9 @@
+export const NAV_ITEMS = [
+  { href: "/pulse", label: "Pulse" },
+  { href: "/network", label: "Network" },
+  { href: "/timeline", label: "Timeline" },
+  { href: "/actions", label: "Actions" },
+  { href: "/dashboard", label: "Dashboard" },
+] as const
+
+export type NavHref = (typeof NAV_ITEMS)[number]["href"]

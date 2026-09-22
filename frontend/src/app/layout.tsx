@@ -1,5 +1,5 @@
 import type { Metadata } from "next"
-import { Geist } from "next/font/google"
+import { Geist, Geist_Mono } from "next/font/google"
 
 import { AppProviders } from "@/app/providers"
 
@@ -10,17 +10,22 @@ const geist = Geist({
   variable: "--font-geist",
 })
 
+const geistMono = Geist_Mono({
+  subsets: ["latin"],
+  variable: "--font-geist-mono",
+})
+
 export const metadata: Metadata = {
   title: {
     default: "Vena",
     template: "%s · Vena",
   },
-  description: "Full-stack product foundation for Vena.",
+  description: "Infrastructure health and maintenance system.",
 }
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
-    <html lang="ru" className={geist.variable} suppressHydrationWarning>
+    <html lang="ru" className={`${geist.variable} ${geistMono.variable}`} suppressHydrationWarning>
       <body>
         <AppProviders>{children}</AppProviders>
       </body>
