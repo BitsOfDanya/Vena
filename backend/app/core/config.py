@@ -26,6 +26,11 @@ class Settings(BaseSettings):
     public_url: str = "http://localhost:3100"
     seed_demo: bool = True
     digest_enabled: bool = True
+    prediction_stale_seconds: int = 86_400
+    prediction_critical_limit: int = 20
+    prediction_cooldown_minutes: int = 240
+    prediction_refresh_minutes: int = 15
+    ingest_on_startup: bool = True
     smtp_host: str = Field(default="", validation_alias=AliasChoices("SMTP_HOST", "VENA_SMTP_HOST"))
     smtp_port: int = Field(
         default=587, validation_alias=AliasChoices("SMTP_PORT", "VENA_SMTP_PORT")

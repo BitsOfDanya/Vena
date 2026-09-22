@@ -1,1 +1,1 @@
-export { PulseSummaryModules, ShiftSummary } from "./ui/pulse-summary"
+export { PulseSummaryModules, ShiftSummary, SnapshotLine } from "./ui/pulse-summary"

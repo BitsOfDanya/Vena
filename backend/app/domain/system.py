@@ -5,11 +5,14 @@ from sqlalchemy.orm import Session
 
 from app.core.config import Settings
 from app.db.models import Action, Notification
+from app.domain.actions import OPEN_STATUSES
+from app.domain.predictions import get_prediction_source
+from app.schemas.predictions import Prediction
 from app.schemas.system import HealthComponents, Situation, SystemNotice
 
-
-def _ml_available(settings: Settings) -> bool:
-    return (settings.ml_dir / "results" / "directions.json").is_file()
+# Deterministic product priority: risk level first, then score change, then
+# the shortest forecast horizon, then the newest prediction.
+LEVEL_RANK = {"critical": 0, "attention": 1, "observe": 2, "normal": 3}
 
 
 def _models_available(settings: Settings) -> bool:
@@ -17,14 +20,25 @@ def _models_available(settings: Settings) -> bool:
     return models.is_dir() and any(models.glob("*.json"))
 
 
+def _results_available(settings: Settings) -> bool:
+    return (settings.ml_dir / "results" / "directions.json").is_file()
+
+
 def health_components(settings: Settings) -> HealthComponents:
+    status = get_prediction_source(settings).status()
+    if not status.available:
+        ml_state = "unavailable"
+    elif status.stale:
+        ml_state = "stale"
+    else:
+        ml_state = "ok"
     return HealthComponents(
         api="ok",
-        ml="ok" if _models_available(settings) else "unavailable",
-        data="ok" if _ml_available(settings) else "unavailable",
+        ml=ml_state if _models_available(settings) else "unavailable",
+        data="ok" if _results_available(settings) else "unavailable",
         spatial="not_configured",
         notification_service="configured" if settings.smtp_configured else "not_configured",
-        last_prediction_at=None,
+        last_prediction_at=status.prediction_time,
         last_event_at=None,
     )
 
@@ -43,14 +57,31 @@ def system_notices(settings: Settings) -> list[SystemNotice]:
                 dismissible=False,
             )
         )
-    if not _ml_available(settings):
+    status = get_prediction_source(settings).status()
+    if not status.available:
         notices.append(
             SystemNotice(
-                id="data-unavailable",
+                id="predictions-unavailable",
+                kind="model_unavailable",
+                severity="critical",
+                title="ML predictions unavailable",
+                description="Снимок прогнозов не найден. Риски и ситуации не рассчитываются.",
+                href="/settings/integrations",
+                dismissible=False,
+            )
+        )
+    elif status.stale and status.age_seconds is not None:
+        days = status.age_seconds // 86_400
+        notices.append(
+            SystemNotice(
+                id="predictions-stale",
                 kind="data_delayed",
                 severity="attention",
-                title="Result tables unavailable",
-                description="Таблицы результатов ML не найдены в смонтированном каталоге.",
+                title="Prediction snapshot is outdated",
+                description=(
+                    f"Последний снимок прогнозов рассчитан {days} дн. назад: "
+                    "журнал событий не обновлялся."
+                ),
                 href="/settings/integrations",
                 dismissible=True,
             )
@@ -58,49 +89,82 @@ def system_notices(settings: Settings) -> list[SystemNotice]:
     return notices
 
 
-def situations(session: Session, settings: Settings) -> list[Situation]:
-    open_actions = {
-        action.asset_id: action
-        for action in session.scalars(
-            select(Action).where(
-                Action.status.in_(("suggested", "planned", "assigned", "in_progress", "waiting"))
-            )
-        )
-    }
-    result: list[Situation] = []
-    notifications = session.scalars(
+def situations(session: Session, settings: Settings, limit: int = 6) -> list[Situation]:
+    source = get_prediction_source(settings)
+    if not source.available:
+        return []
+
+    open_actions: dict[str, Action] = {}
+    for open_action in session.scalars(select(Action).where(Action.status.in_(OPEN_STATUSES))):
+        open_actions.setdefault(open_action.asset_id, open_action)
+
+    notifications: dict[str, Notification] = {}
+    for recent_notification in session.scalars(
         select(Notification)
-        .where(Notification.type.in_(("risk", "pattern")), Notification.status != "resolved")
+        .where(Notification.asset_id.is_not(None), Notification.status != "resolved")
         .order_by(Notification.created_at.desc())
-        .limit(20)
-    )
-    for notification in notifications:
-        action = open_actions.get(notification.asset_id or "")
-        status = "new"
+    ):
+        if recent_notification.asset_id is not None:
+            notifications.setdefault(recent_notification.asset_id, recent_notification)
+
+    candidates = [item for item in source.all() if item.risk_level in ("critical", "attention")]
+    best: dict[str, Prediction] = {}
+    for prediction in candidates:
+        current = best.get(prediction.asset_id)
+        if current is None or (LEVEL_RANK[prediction.risk_level], -prediction.score) < (
+            LEVEL_RANK[current.risk_level],
+            -current.score,
+        ):
+            best[prediction.asset_id] = prediction
+
+    result: list[Situation] = []
+    for asset_id, prediction in best.items():
+        action: Action | None = open_actions.get(asset_id)
+        notification: Notification | None = notifications.get(asset_id)
+        status: str = "new"
         if action is not None:
             status = "action_created"
-        elif notification.status == "acknowledged":
+        elif notification is not None and notification.status == "acknowledged":
             status = "acknowledged"
+        factor = (
+            max(prediction.factors, key=lambda item: item.value) if prediction.factors else None
+        )
+        delta = (
+            f", {prediction.score_delta:+.3f} since the previous snapshot"
+            if prediction.score_delta
+            else ""
+        )
         result.append(
             Situation(
-                id=f"situation-{notification.id}",
-                type="pattern" if notification.type == "pattern" else "risk",
-                severity="critical" if notification.severity == "critical" else "attention",
-                title=notification.title,
-                summary=notification.description,
-                asset_ids=[notification.asset_id] if notification.asset_id else [],
-                pattern_id=notification.pattern_id,
-                risk_score=None,
-                risk_delta=None,
-                forecast_horizon=None,
-                primary_reason=notification.description,
+                id=f"situation-{prediction.id}",
+                type="risk",
+                severity="critical" if prediction.risk_level == "critical" else "attention",
+                title=prediction.asset_id,
+                summary=(
+                    f"{prediction.model_id} score {prediction.score:.3f} "
+                    f"({prediction.risk_level}) for the next {prediction.horizon_hours}h{delta}."
+                ),
+                asset_ids=[asset_id],
+                pattern_id=None,
+                risk_score=prediction.score,
+                risk_delta=prediction.score_delta,
+                forecast_horizon=prediction.horizon_hours,
+                primary_reason=f"{factor.label} {factor.value:g}" if factor else "Model risk level",
                 status=status,  # type: ignore[arg-type]
-                updated_at=notification.acknowledged_at or notification.created_at,
+                updated_at=prediction.prediction_time,
                 open_action_id=action.id if action else None,
-                notification_id=notification.id,
+                notification_id=notification.id if notification else None,
             )
         )
-    return result
+
+    result.sort(
+        key=lambda item: (
+            LEVEL_RANK["critical" if item.severity == "critical" else "attention"],
+            -(item.risk_score or 0),
+            item.forecast_horizon or 0,
+        )
+    )
+    return result[:limit]
 
 
 def now() -> datetime:

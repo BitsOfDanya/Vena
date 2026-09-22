@@ -1,7 +1,8 @@
 "use client"
 
 import type { PulseSummary } from "@/entities/infrastructure"
-import { formatClock } from "@/shared/lib/time"
+import type { SnapshotStatus } from "@/entities/prediction"
+import { formatClock, formatDateTime } from "@/shared/lib/time"
 import { cn } from "@/shared/lib/utils"
 
 type Tone = "critical" | "attention" | "vena" | "neutral"
@@ -55,8 +56,39 @@ function Module({
   )
 }
 
+export function SnapshotLine({ snapshot }: { snapshot: SnapshotStatus | undefined }) {
+  if (!snapshot) return null
+  if (!snapshot.available) {
+    return (
+      <p className="text-[12px] text-status-critical">Prediction snapshot unavailable · {snapshot.detail}</p>
+    )
+  }
+  const days = snapshot.ageSeconds === null ? null : Math.floor(snapshot.ageSeconds / 86_400)
+  return (
+    <p className="flex flex-wrap items-baseline gap-x-4 gap-y-1 text-[12px] text-muted-foreground">
+      <span className="font-medium tracking-[0.1em] text-faint uppercase">Snapshot</span>
+      <span className="font-mono tabular-nums">{snapshot.snapshotId}</span>
+      <span className="font-mono tabular-nums">
+        {snapshot.predictionTime === null ? "" : formatDateTime(snapshot.predictionTime)}
+      </span>
+      <span className="font-mono tabular-nums">{snapshot.predictionCount} predictions</span>
+      <span className="font-mono tabular-nums">{snapshot.models.length} models</span>
+      {snapshot.stale && days !== null ? (
+        <span className="text-status-attention">outdated by {days} d</span>
+      ) : null}
+    </p>
+  )
+}
+
 export function PulseSummaryModules({
   summary,
+  apiMode = false,
+  predictionsUnavailable = false,
+  criticalCount = 0,
+  criticalAssets = [],
+  attentionCount = 0,
+  risingCount = 0,
+  risingTop = null,
   actionsDue,
   actionsOverdue,
   onInspectCritical,
@@ -65,6 +97,13 @@ export function PulseSummaryModules({
   onOpenPlan,
 }: {
   summary: PulseSummary | undefined
+  apiMode?: boolean
+  predictionsUnavailable?: boolean
+  criticalCount?: number
+  criticalAssets?: string[]
+  attentionCount?: number
+  risingCount?: number
+  risingTop?: string | null
   actionsDue: number
   actionsOverdue: number
   onInspectCritical: () => void
@@ -75,6 +114,61 @@ export function PulseSummaryModules({
   const critical = summary?.critical
   const rising = summary?.rising
   const patterns = summary?.patterns
+
+  if (apiMode) {
+    return (
+      <div className="grid gap-2.5 md:grid-cols-2 xl:grid-cols-4">
+        <Module
+          title="Critical"
+          value={predictionsUnavailable ? "—" : String(criticalCount).padStart(2, "0")}
+          unit={criticalCount === 1 ? "asset" : "assets"}
+          tone={criticalCount > 0 ? "critical" : "neutral"}
+          lines={
+            predictionsUnavailable
+              ? ["Predictions unavailable."]
+              : criticalAssets.length > 0
+                ? criticalAssets
+                : ["No critical risks."]
+          }
+          actionLabel="Inspect"
+          onAction={onInspectCritical}
+        />
+        <Module
+          title="Attention"
+          value={predictionsUnavailable ? "—" : String(attentionCount).padStart(2, "0")}
+          unit={attentionCount === 1 ? "asset" : "assets"}
+          tone={attentionCount > 0 ? "attention" : "neutral"}
+          lines={predictionsUnavailable ? ["Predictions unavailable."] : ["model risk level high"]}
+          actionLabel="Inspect"
+          onAction={onInspectCritical}
+        />
+        <Module
+          title="Risk rising"
+          value={predictionsUnavailable ? "—" : String(risingCount).padStart(2, "0")}
+          unit="assets"
+          tone={risingCount > 0 ? "attention" : "neutral"}
+          lines={
+            predictionsUnavailable
+              ? ["Predictions unavailable."]
+              : risingTop
+                ? ["largest increase", risingTop]
+                : ["No change since the previous snapshot."]
+          }
+          actionLabel="View changes"
+          onAction={onViewChanges}
+        />
+        <Module
+          title="Actions due"
+          value={String(actionsDue).padStart(2, "0")}
+          unit="within 24h"
+          tone={actionsOverdue > 0 ? "attention" : "neutral"}
+          lines={[`${String(actionsOverdue).padStart(2, "0")} overdue`]}
+          actionLabel="Open plan"
+          onAction={onOpenPlan}
+        />
+      </div>
+    )
+  }
 
   return (
     <div className="grid gap-2.5 md:grid-cols-2 xl:grid-cols-4">

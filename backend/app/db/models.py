@@ -1,6 +1,6 @@
 from datetime import UTC, datetime
 
-from sqlalchemy import DateTime, ForeignKey, Integer, String, Text
+from sqlalchemy import Boolean, DateTime, Float, ForeignKey, Integer, String, Text
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, relationship
 
 
@@ -53,6 +53,13 @@ class Action(Base):
     updated_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True), default=utcnow, onupdate=utcnow
     )
+    source_prediction_id: Mapped[str | None] = mapped_column(String(80), nullable=True)
+    source_model_id: Mapped[str | None] = mapped_column(String(40), nullable=True)
+    source_prediction_time: Mapped[datetime | None] = mapped_column(
+        DateTime(timezone=True), nullable=True
+    )
+    source_score: Mapped[float | None] = mapped_column(Float, nullable=True)
+    source_horizon_hours: Mapped[int | None] = mapped_column(Integer, nullable=True)
     result_outcome: Mapped[str | None] = mapped_column(String(40), nullable=True)
     result_note: Mapped[str] = mapped_column(Text, default="")
     completed_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
@@ -99,3 +106,29 @@ class SettingsRecord(Base):
     updated_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True), default=utcnow, onupdate=utcnow
     )
+
+
+class PredictionPoint(Base):
+    __tablename__ = "prediction_points"
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
+    snapshot_id: Mapped[str] = mapped_column(String(32), index=True)
+    asset_id: Mapped[str] = mapped_column(String(32), index=True)
+    model_id: Mapped[str] = mapped_column(String(40))
+    horizon_hours: Mapped[int | None] = mapped_column(Integer, nullable=True)
+    score: Mapped[float] = mapped_column(Float)
+    score_type: Mapped[str] = mapped_column(String(32), default="risk_score")
+    risk_level: Mapped[str] = mapped_column(String(16), default="normal")
+    prediction_time: Mapped[datetime] = mapped_column(DateTime(timezone=True), index=True)
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=utcnow)
+
+
+class ProcessedSnapshot(Base):
+    __tablename__ = "processed_snapshots"
+
+    snapshot_id: Mapped[str] = mapped_column(String(32), primary_key=True)
+    prediction_time: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
+    prediction_count: Mapped[int] = mapped_column(Integer, default=0)
+    notifications_created: Mapped[int] = mapped_column(Integer, default=0)
+    stale: Mapped[bool] = mapped_column(Boolean, default=False)
+    processed_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=utcnow)

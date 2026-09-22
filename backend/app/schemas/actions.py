@@ -56,6 +56,11 @@ class ActionOut(BaseModel):
     created_by: str
     created_at: datetime
     updated_at: datetime
+    source_prediction_id: str | None = None
+    source_model_id: str | None = None
+    source_prediction_time: datetime | None = None
+    source_score: float | None = None
+    source_horizon_hours: int | None = None
     result_outcome: ActionOutcome | None
     result_note: str
     completed_at: datetime | None
@@ -75,6 +80,11 @@ class ActionCreate(BaseModel):
     source_pattern_id: str | None = None
     notify_channels: list[Literal["in_app", "email"]] = []
     status: Literal["suggested", "planned"] = "planned"
+    source_prediction_id: str | None = None
+    source_model_id: str | None = None
+    source_prediction_time: datetime | None = None
+    source_score: float | None = None
+    source_horizon_hours: int | None = None
 
 
 class ActionPatch(BaseModel):

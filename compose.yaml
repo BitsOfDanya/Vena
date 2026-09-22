@@ -11,7 +11,8 @@ services:
       VENA_CORS_ORIGINS: '["http://localhost:3100"]'
       VENA_PUBLIC_URL: http://localhost:3100
       VENA_TIMEZONE: ${VENA_TIMEZONE:-Europe/Moscow}
-      VENA_SEED_DEMO: ${VENA_SEED_DEMO:-true}
+      VENA_SEED_DEMO: ${VENA_SEED_DEMO:-false}
+      VENA_PREDICTION_STALE_SECONDS: ${VENA_PREDICTION_STALE_SECONDS:-86400}
       SMTP_HOST: ${SMTP_HOST:-}
       SMTP_PORT: ${SMTP_PORT:-587}
       SMTP_USERNAME: ${SMTP_USERNAME:-}

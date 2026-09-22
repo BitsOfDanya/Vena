@@ -17,8 +17,10 @@ import {
 } from "@/entities/infrastructure"
 import { OPEN_STATUSES, useActions } from "@/entities/maintenance"
 import { useAcknowledgeNotification, useNotifications } from "@/entities/notification"
+import { useBackendSituations, useCriticalPredictions, useRiskRising, useSnapshotStatus } from "@/entities/prediction"
 import { CreateActionSheet, type ActionDraft } from "@/features/create-action"
 import { useWorkspace } from "@/features/workspace"
+import { dataMode, workflowMode } from "@/shared/config/env"
 import { formatClock } from "@/shared/lib/time"
 import { cn } from "@/shared/lib/utils"
 import { Button } from "@/shared/ui/button"
@@ -27,7 +29,7 @@ import { LoadingBar, StateMessage } from "@/shared/ui/state-message"
 import { ClusterInspector, PatternInspector } from "@/widgets/cluster-inspector"
 import { LEGEND, PulseSurface, patternLabel, type PulseSelection } from "@/widgets/pulse-surface"
 import { ReplayEntry } from "@/widgets/replay-controller"
-import { PulseSummaryModules, ShiftSummary } from "@/widgets/pulse-summary"
+import { PulseSummaryModules, ShiftSummary, SnapshotLine } from "@/widgets/pulse-summary"
 import { SituationRail } from "@/widgets/situation-rail"
 
 const WINDOWS = [
@@ -62,9 +64,14 @@ export function PulsePage() {
   const [sheetOpen, setSheetOpen] = React.useState(false)
   const [draft, setDraft] = React.useState<ActionDraft>({})
 
+  const apiMode = workflowMode === "api"
   const pulse = usePulse(now, windowHours)
-  const summary = usePulseSummary(now, horizon)
-  const situations = useSituations(now, horizon)
+  const demoSummary = usePulseSummary(now, horizon)
+  const snapshot = useSnapshotStatus()
+  const backendSituations = useBackendSituations()
+  const riskRising = useRiskRising()
+  const criticalPredictions = useCriticalPredictions()
+  const demoSituations = useSituations(now, horizon)
   const actions = useActions()
   const notifications = useNotifications()
   const acknowledge = useAcknowledgeNotification(now)
@@ -79,13 +86,32 @@ export function PulsePage() {
       ? "REPLAY"
       : "LIVE"
 
+  const summary = apiMode ? undefined : demoSummary.data
+  const predictionsUnavailable = apiMode && (snapshot.isError || snapshot.data?.available === false)
+  const apiSituations: Situation[] = (backendSituations.data ?? []).map((item) => ({
+    id: item.id,
+    type: item.type === "pattern" ? "pattern" : "risk",
+    severity: item.severity === "critical" ? "critical" : "warning",
+    title: item.title,
+    assetIds: item.assetIds,
+    patternId: item.patternId,
+    summary: item.summary,
+    changedAt: item.updatedAt,
+    riskScore: item.riskScore,
+    scoreText: item.riskScore === null ? null : item.riskScore.toFixed(3),
+    delta: item.riskDelta,
+    horizon: (item.forecastHorizon ?? null) as Situation["horizon"],
+    primaryReason: item.primaryReason,
+    status: item.status,
+  }))
+
   const openActions = (actions.data ?? []).filter((action) => OPEN_STATUSES.includes(action.status))
   const actionsDue = openActions.filter((action) => action.recommendedAt - now <= 24 * 3_600_000).length
   const actionsOverdue = openActions.filter((action) => action.recommendedAt < now).length
   const completedThisShift = (actions.data ?? []).filter(
-    (action) => action.result !== null && summary.data !== undefined && action.result.closedAt >= summary.data.shift.since
+    (action) => action.result !== null && summary !== undefined && action.result.closedAt >= summary.shift.since
   ).length
-  const resolved: Situation[] = (situations.data ?? []).map((situation) => {
+  const resolved: Situation[] = (apiMode ? apiSituations : (demoSituations.data ?? [])).map((situation) => {
     if (situation.type === "risk" && openActions.some((action) => situation.assetIds.includes(action.assetId))) {
       return { ...situation, status: "action_created" }
     }
@@ -152,11 +178,27 @@ export function PulsePage() {
 
       <div className="shrink-0 space-y-1.5 px-6 pb-3">
         <PulseSummaryModules
-          summary={summary.data}
+          summary={summary}
+          apiMode={apiMode}
+          predictionsUnavailable={Boolean(predictionsUnavailable)}
+          criticalCount={criticalPredictions.data?.critical.length ?? 0}
+          criticalAssets={(criticalPredictions.data?.critical ?? []).slice(0, 2).map((item) => `${item.assetId} · ${item.score.toFixed(3)}`)}
+          attentionCount={criticalPredictions.data?.attention.length ?? 0}
+          risingCount={(riskRising.data ?? []).filter((item) => (item.scoreDelta ?? 0) > 0).length}
+          risingTop={(() => {
+            const top = (riskRising.data ?? []).find((item) => (item.scoreDelta ?? 0) > 0)
+            return top ? `${top.assetId} +${(top.scoreDelta ?? 0).toFixed(3)}` : null
+          })()}
           actionsDue={actionsDue}
           actionsOverdue={actionsOverdue}
           onInspectCritical={() => {
-            const first = summary.data?.critical.assets[0]
+            const first = apiMode
+              ? criticalPredictions.data?.critical[0]
+                ? { id: criticalPredictions.data.critical[0].assetId }
+                : criticalPredictions.data?.attention[0]
+                  ? { id: criticalPredictions.data.attention[0].assetId }
+                  : undefined
+              : summary?.critical.assets[0]
             if (first) {
               selectAsset(first.id)
               setCompare([first.id])
@@ -167,19 +209,28 @@ export function PulsePage() {
           }}
           onViewChanges={() => router.push("/network")}
           onInvestigatePattern={() => {
-            const latest = summary.data?.patterns.latest
+            const latest = summary?.patterns.latest
             if (latest) setSelection({ kind: "pattern", id: latest.id })
           }}
           onOpenPlan={() => router.push("/actions")}
         />
-        <ShiftSummary summary={summary.data} completed={completedThisShift} />
+        {apiMode ? (
+          <SnapshotLine snapshot={snapshot.data} />
+        ) : (
+          <ShiftSummary summary={summary} completed={completedThisShift} />
+        )}
       </div>
 
       <div className="flex min-h-0 flex-1">
         <div className="relative flex min-w-0 flex-1 flex-col">
           <section aria-label="Needs attention" className="flex max-h-[32%] shrink-0 flex-col px-6 pb-3">
             <SectionTitle count={resolved.length}>Needs attention</SectionTitle>
-            {situations.isPending ? (
+            {predictionsUnavailable ? (
+              <StateMessage
+                title="Predictions unavailable"
+                description="Бэкенд не отдаёт снимок прогнозов, риски не рассчитываются. Демонстрационные значения в этом режиме не подставляются."
+              />
+            ) : (apiMode ? backendSituations.isPending : demoSituations.isPending) ? (
               <LoadingBar className="min-h-24" />
             ) : (
               <SituationRail
@@ -195,8 +246,11 @@ export function PulsePage() {
 
           <section aria-label="Activity" className="flex min-h-[200px] flex-1 flex-col border-t border-border-soft px-6 pt-2.5">
             <div className="mb-2 flex items-baseline gap-4">
-              <h2 className="text-[13px] font-medium tracking-[0.1em] text-muted-foreground uppercase">
+              <h2 className="flex items-baseline gap-2.5 text-[13px] font-medium tracking-[0.1em] text-muted-foreground uppercase">
                 Activity · last {windowHours} hours
+                {apiMode && dataMode === "demo" ? (
+                  <span className="text-[11px] tracking-[0.06em] text-faint normal-case">demo telemetry</span>
+                ) : null}
               </h2>
               <ul aria-label="Legend" className="ml-auto hidden items-center gap-3 text-[11px] text-faint lg:flex">
                 {LEGEND.map((item) => (
@@ -230,7 +284,12 @@ export function PulsePage() {
 
           <section aria-label="Recent events" className="mt-3 shrink-0 border-t border-border bg-surface">
             <div className="flex items-center gap-3 px-6 py-2">
-              <h2 className="text-[13px] font-medium tracking-[0.1em] text-muted-foreground uppercase">Recent events</h2>
+              <h2 className="flex items-baseline gap-2.5 text-[13px] font-medium tracking-[0.1em] text-muted-foreground uppercase">
+                Recent events
+                {apiMode && dataMode === "demo" ? (
+                  <span className="text-[11px] tracking-[0.06em] text-faint normal-case">demo telemetry</span>
+                ) : null}
+              </h2>
               <span className="font-mono text-[12px] text-faint tabular-nums">{data?.recent.length ?? 0}</span>
               <button
                 type="button"

@@ -9,6 +9,9 @@ from app.core.config import get_settings
 from app.db.models import Base
 from app.db.seed import seed_demo
 from app.db.session import SessionLocal, engine
+from app.domain.email import build_email_provider
+from app.domain.ingest import refresh_predictions
+from app.domain.predictions import get_prediction_source
 from app.domain.scheduler import build_scheduler
 
 
@@ -21,6 +24,15 @@ async def lifespan(_: FastAPI) -> AsyncIterator[None]:
         session = SessionLocal()
         try:
             seed_demo(session)
+            session.commit()
+        finally:
+            session.close()
+    if settings.ingest_on_startup:
+        session = SessionLocal()
+        try:
+            refresh_predictions(
+                session, settings, get_prediction_source(settings), build_email_provider(settings)
+            )
             session.commit()
         finally:
             session.close()

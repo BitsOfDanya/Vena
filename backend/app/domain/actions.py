@@ -104,6 +104,11 @@ def create_action(session: Session, payload: ActionCreate, actor: str) -> Action
         created_by=actor,
         created_at=now,
         updated_at=now,
+        source_prediction_id=payload.source_prediction_id,
+        source_model_id=payload.source_model_id,
+        source_prediction_time=payload.source_prediction_time,
+        source_score=payload.source_score,
+        source_horizon_hours=payload.source_horizon_hours,
     )
     session.add(action)
     session.flush()
@@ -190,6 +195,11 @@ def to_dict(action: Action) -> dict:
         "created_by": action.created_by,
         "created_at": action.created_at,
         "updated_at": action.updated_at,
+        "source_prediction_id": action.source_prediction_id,
+        "source_model_id": action.source_model_id,
+        "source_prediction_time": action.source_prediction_time,
+        "source_score": action.source_score,
+        "source_horizon_hours": action.source_horizon_hours,
         "result_outcome": action.result_outcome,
         "result_note": action.result_note,
         "completed_at": action.completed_at,

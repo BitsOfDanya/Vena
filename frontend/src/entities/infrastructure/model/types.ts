@@ -207,6 +207,7 @@ export type Situation = {
   summary: string
   changedAt: number
   riskScore: number | null
+  scoreText: string | null
   delta: number | null
   horizon: ForecastHorizon | null
   primaryReason: string

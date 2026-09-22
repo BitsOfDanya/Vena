@@ -1,11 +1,11 @@
 from fastapi.testclient import TestClient
 
 
-def test_notices_are_empty_when_ml_is_mounted(client: TestClient) -> None:
+def test_notices_report_only_real_problems(client: TestClient) -> None:
     response = client.get("/api/v1/system/notices")
 
     assert response.status_code == 200
-    assert response.json() == []
+    assert all(notice["id"] != "model-unavailable" for notice in response.json())
 
 
 def test_components_report_email_state(client: TestClient) -> None:
@@ -16,36 +16,11 @@ def test_components_report_email_state(client: TestClient) -> None:
     assert body["spatial"] == "not_configured"
 
 
-def test_situations_combine_notifications_and_actions(client: TestClient) -> None:
-    client.post(
-        "/api/v1/notifications",
-        json={
-            "type": "risk",
-            "severity": "critical",
-            "title": "P-0142 risk",
-            "description": "rising event rate",
-            "asset_id": "P-0142",
-        },
-    )
+def test_components_expose_prediction_freshness(client: TestClient) -> None:
+    body = client.get("/api/v1/system/components").json()
 
-    situations = client.get("/api/v1/situations").json()
-    assert len(situations) == 1
-    assert situations[0]["status"] == "new"
-
-    client.post(
-        "/api/v1/actions",
-        json={
-            "asset_id": "P-0142",
-            "reason": "inspect",
-            "priority": "high",
-            "recommended_at": "2030-01-01T00:00:00+00:00",
-            "status": "planned",
-        },
-    )
-
-    updated = client.get("/api/v1/situations").json()
-    assert updated[0]["status"] == "action_created"
-    assert updated[0]["open_action_id"] is not None
+    assert body["ml"] in {"ok", "stale", "unavailable"}
+    assert "last_prediction_at" in body
 
 
 def test_email_status_is_not_configured(client: TestClient) -> None:

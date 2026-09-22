@@ -7,6 +7,7 @@ import pytest
 
 os.environ.setdefault("VENA_SEED_DEMO", "false")
 os.environ.setdefault("VENA_DIGEST_ENABLED", "false")
+os.environ.setdefault("VENA_INGEST_ON_STARTUP", "false")
 _db_path = Path(tempfile.gettempdir()) / "vena-tests.db"
 _db_path.unlink(missing_ok=True)
 os.environ["VENA_DATABASE_URL"] = f"sqlite:///{_db_path}"

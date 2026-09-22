@@ -43,8 +43,8 @@ export function SituationRail({
             <div className="flex flex-wrap items-baseline gap-x-3">
               <StatusMark status={situation.severity === "critical" ? "critical" : "attention"} className="translate-y-0.5 size-3" />
               <span className={cn("text-[15px] font-semibold", situation.type === "pattern" && "text-vena")}>{situation.title}</span>
-              {situation.riskScore !== null ? (
-                <span className="font-mono text-[13px] tabular-nums">{Math.round(situation.riskScore)}/100</span>
+              {situation.scoreText !== null ? (
+                <span className="font-mono text-[13px] tabular-nums">{situation.scoreText}</span>
               ) : null}
               {situation.delta !== null && situation.delta !== 0 ? (
                 <span
@@ -54,7 +54,7 @@ export function SituationRail({
                   )}
                 >
                   {situation.delta > 0 ? "↑" : "↓"}
-                  {Math.abs(Math.round(situation.delta))}
+                  {Math.abs(situation.delta) < 1 ? Math.abs(situation.delta).toFixed(3) : Math.abs(Math.round(situation.delta))}
                 </span>
               ) : null}
               {situation.horizon !== null ? <span className="font-mono text-[12px] text-faint">{situation.horizon}h</span> : null}
