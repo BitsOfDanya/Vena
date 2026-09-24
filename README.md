@@ -117,7 +117,7 @@ pnpm dev
 
 Модуль Dashboard зарезервирован под отдельную реализацию. Pulse, Network, Timeline и Actions не зависят от его компонентов.
 
-Источник данных задаётся `NEXT_PUBLIC_VENA_DATA_MODE` (`demo` по умолчанию) и `NEXT_PUBLIC_VENA_ENVIRONMENT`; демонстрационный набор детерминирован и расположен в `frontend/src/entities/infrastructure/data`, обращение к нему идёт через сервисные функции, которые заменяются REST-клиентом.
+Источник данных задаётся `NEXT_PUBLIC_VENA_DATA_MODE` (`demo` по умолчанию) и `NEXT_PUBLIC_VENA_ENVIRONMENT`; демонстрационный набор детерминирован и расположен в `frontend/src/entities/infrastructure/fixtures/demo.ts`, обращение к нему идёт через сервисные функции, которые заменяются REST-клиентом.
 
 ## API
 
