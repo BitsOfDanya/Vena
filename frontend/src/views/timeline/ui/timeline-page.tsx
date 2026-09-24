@@ -4,17 +4,13 @@ import { Plus, Search, X } from "lucide-react"
 import * as React from "react"
 
 import {
-  DEFAULT_LAYERS,
   StatusMark,
-  TemporalCanvas,
   TYPE_LABEL,
-  ZOOM_STEPS,
   formatScore,
   useAssetSearch,
   useAssets,
   useTemporalBundles,
   type Asset,
-  type Layers,
 } from "@/entities/infrastructure"
 import { OPEN_STATUSES, STATUS_LABEL as ACTION_STATUS_LABEL, useActions } from "@/entities/maintenance"
 import { CreateActionSheet } from "@/features/create-action"
@@ -28,6 +24,7 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/shared/ui/popover"
 import { Segmented } from "@/shared/ui/segmented"
 import { LoadingBar, StateMessage } from "@/shared/ui/state-message"
 import { ReplayEntry } from "@/widgets/replay-controller"
+import { DEFAULT_LAYERS, TemporalCanvas, ZOOM_STEPS, type Layers } from "@/widgets/temporal-canvas"
 
 const MAX_ASSETS = 5
 

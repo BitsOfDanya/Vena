@@ -21,15 +21,10 @@ class Settings(BaseSettings):
     debug: bool = False
     cors_origins: list[AnyHttpUrl] = [AnyHttpUrl("http://localhost:3000")]
     ml_dir: Path = Path(__file__).resolve().parents[3] / "ml"
-    database_url: str = "postgresql+psycopg://vena:vena_local@localhost:5433/vena"
-    upload_dir: Path = Path("./data/uploads")
-    jwt_secret: str = "local-development-secret-change-me"
-    dispatcher_invite_code: str = ""
-    auth_cookie_secure: bool = False
-    max_upload_mb: int = 25
+    database_url: str = "sqlite:///./data/vena.db"
     timezone: str = "Europe/Moscow"
     public_url: str = "http://localhost:3100"
-    seed_demo: bool = False
+    seed_demo: bool = True
     digest_enabled: bool = True
     prediction_stale_seconds: int = 86_400
     prediction_critical_limit: int = 20

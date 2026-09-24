@@ -5,7 +5,6 @@ from fastapi import APIRouter, Depends, HTTPException, Query
 from sqlalchemy import select
 from sqlalchemy.orm import Session
 
-from app.core.auth import require_dispatcher
 from app.core.config import Settings, get_settings
 from app.db.models import Action, Notification
 from app.db.session import get_session
@@ -25,7 +24,6 @@ router = APIRouter(tags=["predictions"])
 
 SessionDep = Annotated[Session, Depends(get_session)]
 SettingsDep = Annotated[Settings, Depends(get_settings)]
-DispatcherDep = Annotated[object, Depends(require_dispatcher)]
 
 
 def _require_snapshot(settings: Settings) -> None:
@@ -59,9 +57,7 @@ def snapshot_status(settings: SettingsDep) -> SnapshotStatus:
 
 
 @router.post("/predictions/refresh", response_model=dict)
-def refresh(
-    session: SessionDep, settings: SettingsDep, _dispatcher: DispatcherDep, force: bool = False
-) -> dict:
+def refresh(session: SessionDep, settings: SettingsDep, force: bool = False) -> dict:
     source = get_prediction_source(settings)
     result = ingest_service.refresh_predictions(
         session, settings, source, build_email_provider(settings), force

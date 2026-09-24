@@ -2,7 +2,7 @@ import { describe, expect, it } from "vitest"
 
 import { HOUR, MINUTE } from "@/shared/lib/time"
 
-import { DEMO_NOW, getDataset } from "../fixtures/demo"
+import { DEMO_NOW, getDataset } from "../data/demo"
 import { getAsset, getForecast, getNetwork, getPulse, getRiskHistory } from "./service"
 
 const view = { now: DEMO_NOW, horizon: 72 as const }

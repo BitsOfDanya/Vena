@@ -3,7 +3,6 @@ from typing import Annotated
 from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
 
-from app.core.auth import require_dispatcher
 from app.core.config import Settings, get_settings
 from app.db.session import get_session
 from app.domain import settings_store
@@ -13,7 +12,6 @@ router = APIRouter(tags=["settings"])
 
 SessionDep = Annotated[Session, Depends(get_session)]
 SettingsDep = Annotated[Settings, Depends(get_settings)]
-DispatcherDep = Annotated[object, Depends(require_dispatcher)]
 
 
 @router.get("/settings/notifications", response_model=NotificationSettings)
@@ -23,10 +21,7 @@ def read_notification_settings(session: SessionDep, settings: SettingsDep) -> No
 
 @router.put("/settings/notifications", response_model=NotificationSettings)
 def update_notification_settings(
-    payload: NotificationSettingsUpdate,
-    session: SessionDep,
-    settings: SettingsDep,
-    _dispatcher: DispatcherDep,
+    payload: NotificationSettingsUpdate, session: SessionDep, settings: SettingsDep
 ) -> NotificationSettings:
     return settings_store.write_settings(session, settings, payload)
 

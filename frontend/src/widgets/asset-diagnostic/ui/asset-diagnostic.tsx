@@ -2,13 +2,14 @@
 
 import * as React from "react"
 
-import { DEFAULT_LAYERS, RiskLevelLabel, TemporalCanvas, scoreLabel, useAssetDetail, useTemporalBundles } from "@/entities/infrastructure"
+import { RiskLevelLabel, scoreLabel, useAssetDetail, useTemporalBundles } from "@/entities/infrastructure"
 import { useWorkspace } from "@/features/workspace"
 import { cn } from "@/shared/lib/utils"
 import { Button } from "@/shared/ui/button"
 import { Inspector, InspectorBody, InspectorFooter, InspectorHeader, InspectorSection } from "@/shared/ui/inspector"
 import { Segmented } from "@/shared/ui/segmented"
 import { LoadingBar, StateMessage } from "@/shared/ui/state-message"
+import { DEFAULT_LAYERS, TemporalCanvas } from "@/widgets/temporal-canvas"
 
 export function AssetDiagnostic({
   assetId,

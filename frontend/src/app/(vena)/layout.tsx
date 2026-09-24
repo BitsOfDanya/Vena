@@ -1,5 +1,5 @@
-import { WorkspaceLayout } from "./workspace-layout"
+import { AppShell } from "@/widgets/app-shell"
 
 export default function VenaLayout({ children }: LayoutProps<"/">) {
-  return <WorkspaceLayout>{children}</WorkspaceLayout>
+  return <AppShell>{children}</AppShell>
 }

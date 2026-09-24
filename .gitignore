@@ -29,9 +29,6 @@ Thumbs.db
 *.key
 
 data/
-!frontend/src/app/(vena)/data/
-!frontend/src/entities/data/
-!frontend/src/views/data/
 dataset/
 datasets/
 dataset*.zip
@@ -71,7 +68,6 @@ catboost_info/
 *.pptx
 *.docx
 .next/
-frontend/public/maplibre/
 node_modules/
 out/
 coverage/

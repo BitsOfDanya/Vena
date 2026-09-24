@@ -3,7 +3,6 @@ from typing import Annotated
 from fastapi import APIRouter, BackgroundTasks, Depends, HTTPException, Query, status
 from sqlalchemy.orm import Session
 
-from app.core.auth import require_dispatcher
 from app.core.config import Settings, get_settings
 from app.db.session import get_session
 from app.domain import notifications as service
@@ -17,7 +16,6 @@ from app.schemas.notifications import (
 )
 
 router = APIRouter(prefix="/notifications", tags=["notifications"])
-DispatcherDep = Annotated[object, Depends(require_dispatcher)]
 
 SessionDep = Annotated[Session, Depends(get_session)]
 SettingsDep = Annotated[Settings, Depends(get_settings)]
@@ -45,7 +43,6 @@ def create_notification(
     session: SessionDep,
     settings: SettingsDep,
     background: BackgroundTasks,
-    _dispatcher: DispatcherDep,
 ) -> NotificationOut:
     notification = service.create_notification(session, payload)
     trigger = (
@@ -76,10 +73,7 @@ def get_notification(notification_id: str, session: SessionDep) -> NotificationO
 
 @router.patch("/{notification_id}", response_model=NotificationOut)
 def patch_notification(
-    notification_id: str,
-    payload: NotificationPatch,
-    session: SessionDep,
-    _dispatcher: DispatcherDep,
+    notification_id: str, payload: NotificationPatch, session: SessionDep
 ) -> NotificationOut:
     notification = service.get_notification(session, notification_id)
     if notification is None:
@@ -92,9 +86,7 @@ def patch_notification(
 
 
 @router.post("/test", response_model=TestEmailResult)
-def send_test_notification(
-    payload: TestEmailRequest, settings: SettingsDep, _dispatcher: DispatcherDep
-) -> TestEmailResult:
+def send_test_notification(payload: TestEmailRequest, settings: SettingsDep) -> TestEmailResult:
     provider = build_email_provider(settings)
     if not provider.configured:
         raise HTTPException(status_code=409, detail="email provider is not configured")

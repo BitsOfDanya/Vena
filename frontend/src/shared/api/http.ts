@@ -14,10 +14,9 @@ export class ApiError extends Error {
 export async function apiFetch<T>(path: string, init?: RequestInit): Promise<T> {
   const response = await fetch(`${API_URL}${path}`, {
     ...init,
-    credentials: "include",
     headers: {
       Accept: "application/json",
-      ...(init?.body && !(init.body instanceof FormData) ? { "Content-Type": "application/json" } : {}),
+      ...(init?.body ? { "Content-Type": "application/json" } : {}),
       ...init?.headers,
     },
   })
