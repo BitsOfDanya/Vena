@@ -1,4 +1,4 @@
-export { DEMO_NOW } from "./data/demo"
+export { DEMO_NOW } from "./fixtures/demo"
 export {
   EVENT_TYPE_LABEL,
   LEVEL_LABEL,

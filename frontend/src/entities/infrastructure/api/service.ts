@@ -9,7 +9,7 @@ import {
   isOffline,
   scoreAt,
   type AssetRecord,
-} from "../data/demo"
+} from "../fixtures/demo"
 import { CANVAS_HEIGHT, CANVAS_WIDTH } from "../lib/layout"
 import { TYPE_LABEL, isWatch, levelFromScore, statusFromScore } from "../lib/risk"
 import { lowerBound } from "../lib/prng"
