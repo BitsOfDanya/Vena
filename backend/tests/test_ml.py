@@ -1,11 +1,7 @@
 from fastapi.testclient import TestClient
 
-from app.main import app
 
-client = TestClient(app)
-
-
-def test_directions_lists_statuses_and_never_claims_fire_labels() -> None:
+def test_directions_lists_statuses_and_never_claims_fire_labels(client: TestClient) -> None:
     response = client.get("/api/v1/ml/directions")
     assert response.status_code == 200
     items = response.json()
@@ -15,7 +11,7 @@ def test_directions_lists_statuses_and_never_claims_fire_labels() -> None:
     assert proxies and all(i["status"] == "PROXY ONLY" for i in proxies)
 
 
-def test_models_expose_frozen_model_metadata() -> None:
+def test_models_expose_frozen_model_metadata(client: TestClient) -> None:
     response = client.get("/api/v1/ml/models")
     assert response.status_code == 200
     by_name = {item["name"]: item for item in response.json()}
@@ -24,7 +20,7 @@ def test_models_expose_frozen_model_metadata() -> None:
     assert by_name["fan_72h"]["n_features"] > 0
 
 
-def test_results_listing_and_read_with_limit() -> None:
+def test_results_listing_and_read_with_limit(client: TestClient) -> None:
     listing = client.get("/api/v1/ml/results").json()
     assert "target_discovery_matrix.csv" in listing["tables"]
     url = "/api/v1/ml/results/tables/target_discovery_matrix.csv"
@@ -35,7 +31,7 @@ def test_results_listing_and_read_with_limit() -> None:
     assert "sensor_type" in body["columns"]
 
 
-def test_results_reject_unknown_group_and_path_traversal() -> None:
+def test_results_reject_unknown_group_and_path_traversal(client: TestClient) -> None:
     assert client.get("/api/v1/ml/results/secrets/x.csv").status_code == 404
     assert client.get("/api/v1/ml/results/tables/..%2Fdirections.json").status_code == 404
     assert client.get("/api/v1/ml/results/tables/not_there.csv").status_code == 404

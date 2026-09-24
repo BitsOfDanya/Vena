@@ -1,4 +1,4 @@
-export { DEMO_NOW } from "./data/demo"
+export { DEMO_NOW } from "./fixtures/demo"
 export {
   EVENT_TYPE_LABEL,
   LEVEL_LABEL,
@@ -35,3 +35,4 @@ export type * from "./model/types"
 export type { GlyphKind } from "./ui/event-glyph"
 export { EventGlyph, EVENT_GLYPH_LEGEND, GlyphShape, glyphKind } from "./ui/event-glyph"
 export { RiskLevelLabel, STATUS_TEXT, StatusLabel, StatusMark } from "./ui/status-mark"
+export { DEFAULT_LAYERS, TemporalCanvas, ZOOM_STEPS, type Layers } from "./ui/temporal-canvas"

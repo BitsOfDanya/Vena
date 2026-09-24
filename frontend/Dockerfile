@@ -27,6 +27,7 @@ ENV NODE_ENV=production \
     NEXT_TELEMETRY_DISABLED=1
 COPY --from=build /srv/app/node_modules ./node_modules
 COPY --from=build /srv/app/.next ./.next
+COPY --from=build /srv/app/public ./public
 COPY --from=build /srv/app/package.json ./package.json
 COPY --from=build /srv/app/next.config.ts ./next.config.ts
 EXPOSE 3000

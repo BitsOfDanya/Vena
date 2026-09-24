@@ -2,20 +2,14 @@
 
 import * as React from "react"
 
-import {
-  GlyphShape,
-  RISK_HIGH,
-  RISK_MEDIUM,
-  type RiskSnapshot,
-  type SensorEvent,
-  type StateSegment,
-  type TemporalBundle,
-  glyphKind,
-} from "@/entities/infrastructure"
 import { useElementSize } from "@/shared/lib/hooks/use-element-size"
 import { linePath, type Point } from "@/shared/lib/svg"
 import { HOUR, formatDateTime } from "@/shared/lib/time"
 import { cn } from "@/shared/lib/utils"
+
+import { RISK_HIGH, RISK_MEDIUM } from "../lib/risk"
+import type { RiskSnapshot, SensorEvent, StateSegment, TemporalBundle } from "../model/types"
+import { GlyphShape, glyphKind } from "./event-glyph"
 
 export type Layers = { state: boolean; events: boolean; alarms: boolean; failures: boolean; risk: boolean }
 

@@ -8,8 +8,8 @@ import { getBackendSituations, getPredictions, getSnapshotStatus } from "../api/
 
 const enabled = workflowMode === "api"
 
-export function useSnapshotStatus() {
-  return useQuery({ queryKey: ["prediction-snapshot"], queryFn: getSnapshotStatus, enabled, staleTime: 60_000 })
+export function useSnapshotStatus(available = true) {
+  return useQuery({ queryKey: ["prediction-snapshot"], queryFn: getSnapshotStatus, enabled: enabled && available, staleTime: 60_000 })
 }
 
 export function useBackendSituations() {

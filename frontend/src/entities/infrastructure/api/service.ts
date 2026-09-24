@@ -9,7 +9,7 @@ import {
   isOffline,
   scoreAt,
   type AssetRecord,
-} from "../data/demo"
+} from "../fixtures/demo"
 import { CANVAS_HEIGHT, CANVAS_WIDTH } from "../lib/layout"
 import { TYPE_LABEL, isWatch, levelFromScore, statusFromScore } from "../lib/risk"
 import { lowerBound } from "../lib/prng"
@@ -55,7 +55,7 @@ function lastEventAt(record: AssetRecord, at: number) {
 
 function toAsset(record: AssetRecord, view: View): Asset {
   const score = scaledScore(record, view.now, view.horizon)
-  const offline = isOffline(record, view.now)
+  const offline = isOffline(record)
   return {
     id: record.id,
     name: record.name,
@@ -385,7 +385,7 @@ export async function getPulse(view: { now: number; windowHours: number }): Prom
   const clusters = detectClusters(window.filter((event) => event.severity !== "info"), assetType)
   const patterns = detectPatterns(clusters)
 
-  const online = dataset.assets.filter((record) => !isOffline(record, view.now))
+  const online = dataset.assets.filter((record) => !isOffline(record))
   const scores = online.map((record) => scoreAt(record, view.now))
   const counts = {
     critical: scores.filter((score) => statusFromScore(score) === "critical").length,
@@ -398,7 +398,7 @@ export async function getPulse(view: { now: number; windowHours: number }): Prom
   const firstStep = Math.ceil(from / STEP) * STEP
   for (let at = firstStep; at <= view.now; at += STEP) {
     const top = dataset.assets
-      .filter((record) => !isOffline(record, at))
+      .filter((record) => !isOffline(record))
       .map((record) => scoreAt(record, at))
       .sort((left, right) => right - left)
       .slice(0, 15)
@@ -468,7 +468,7 @@ export async function getSituations(view: View, limit = 4): Promise<Situation[]>
   }
 
   const ranked = dataset.assets
-    .filter((record) => !isOffline(record, view.now))
+    .filter((record) => !isOffline(record))
     .map((record) => ({ record, score: scaledScore(record, view.now, view.horizon) }))
     .filter((item) => statusFromScore(item.score) !== "normal")
     .sort((left, right) => right.score - left.score)
@@ -519,7 +519,7 @@ function shiftStart(now: number) {
 export async function getPulseSummary(view: View): Promise<PulseSummary> {
   const dataset = getDataset()
   const since = shiftStart(view.now)
-  const online = dataset.assets.filter((record) => !isOffline(record, view.now))
+  const online = dataset.assets.filter((record) => !isOffline(record))
 
   const scored = online.map((record) => {
     const score = scaledScore(record, view.now, view.horizon)
