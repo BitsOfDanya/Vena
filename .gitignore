@@ -79,3 +79,4 @@ yarn-error.log*
 pnpm-debug.log*
 .tsbuildinfo
 *.tsbuildinfo
+backups/

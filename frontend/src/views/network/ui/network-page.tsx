@@ -13,6 +13,7 @@ import { AssetDiagnostic } from "@/widgets/asset-diagnostic"
 import { AssetTable } from "@/widgets/asset-table"
 import { NetworkCanvas } from "@/widgets/network-canvas"
 import { NetworkInspector } from "@/widgets/network-inspector"
+import { NetworkMap } from "@/widgets/network-map"
 import { NetworkToolbar, type NetworkMode, type RiskFilter, type SystemFilter } from "@/widgets/network-toolbar"
 
 export function NetworkPage() {
@@ -50,7 +51,14 @@ export function NetworkPage() {
   }, [matches, nodes])
 
   const openAction = (next: ActionDraft) => {
-    setDraft(next)
+    const asset = (assets.data ?? []).find((item) => item.id === next.assetId)
+    setDraft({
+      ...next,
+      sourcePredictionId: next.sourcePredictionId ?? asset?.predictionId ?? undefined,
+      sourceModelId: next.sourceModelId ?? asset?.predictionModelId ?? undefined,
+      sourceScore: next.sourceScore,
+      sourceHorizonHours: next.sourceHorizonHours ?? asset?.forecastHorizon,
+    })
     setSheetOpen(true)
   }
 
@@ -126,6 +134,16 @@ export function NetworkPage() {
               now={now}
               selectedId={selectedAssetId}
               onSelect={(id) => selectAsset(id)}
+            />
+          ) : mode === "map" && network.data ? (
+            <NetworkMap
+              nodes={matches}
+              selectedId={selectedAssetId}
+              dimmed={dimmed}
+              onSelect={(id) => {
+                selectAsset(id)
+                setFocusId(null)
+              }}
             />
           ) : network.data ? (
             <>

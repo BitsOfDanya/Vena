@@ -1,13 +1,16 @@
 "use client"
 
 import Link from "next/link"
+import { useQuery } from "@tanstack/react-query"
 
 import { useNotificationSettings } from "@/entities/notification"
+import { getAuthMe } from "@/entities/system"
 
 import { SettingsSection, SettingsShell, StateTag } from "./settings-shell"
 
 export function SettingsOverviewPage() {
   const settings = useNotificationSettings()
+  const me = useQuery({ queryKey: ["system", "auth-me"], queryFn: getAuthMe, retry: false, staleTime: 30_000 })
   const channels = settings.data?.channels ?? []
   const digest = settings.data?.digests[0]
 
@@ -17,11 +20,11 @@ export function SettingsOverviewPage() {
         <dl className="grid grid-cols-2 gap-x-6 gap-y-3 border border-border bg-elevated px-5 py-4 text-[14px]">
           <div>
             <dt className="text-[12px] text-faint uppercase">User</dt>
-            <dd className="mt-0.5">Duty engineer</dd>
+            <dd className="mt-0.5 font-mono text-[13px]">{me.data?.subject ?? "Duty engineer"}</dd>
           </div>
           <div>
-            <dt className="text-[12px] text-faint uppercase">Team</dt>
-            <dd className="mt-0.5">Dispatcher team</dd>
+            <dt className="text-[12px] text-faint uppercase">Role</dt>
+            <dd className="mt-0.5 font-mono text-[13px]">{me.data?.role ?? "dispatcher"}</dd>
           </div>
           <div>
             <dt className="text-[12px] text-faint uppercase">Time zone</dt>
@@ -32,6 +35,20 @@ export function SettingsOverviewPage() {
             <dd className="mt-0.5">English</dd>
           </div>
         </dl>
+        <div className="flex flex-wrap gap-4">
+          <Link
+            href="/settings/security"
+            className="text-[13px] text-vena underline-offset-4 hover:underline focus-visible:ring-2 focus-visible:ring-ring/60 focus-visible:outline-none"
+          >
+            Open security
+          </Link>
+          <Link
+            href="/settings/audit"
+            className="text-[13px] text-vena underline-offset-4 hover:underline focus-visible:ring-2 focus-visible:ring-ring/60 focus-visible:outline-none"
+          >
+            Open audit log
+          </Link>
+        </div>
       </SettingsSection>
 
       <SettingsSection title="Notification channels" description="Каналы доставки настраиваются на странице Notifications.">

@@ -12,12 +12,15 @@ RUN pip install --no-cache-dir \
     "sqlalchemy>=2.0.54" \
     "alembic>=1.20.0" \
     "apscheduler>=3.11.0" \
-    "email-validator>=2.2.0"
+    "email-validator>=2.2.0" \
+    "psycopg[binary]>=3.2.0"
 
 COPY app ./app
 COPY migrations ./migrations
 COPY alembic.ini ./alembic.ini
+COPY scripts/entrypoint.sh ./scripts/entrypoint.sh
+RUN chmod +x ./scripts/entrypoint.sh
 
 EXPOSE 8000
 
-CMD ["sh", "-c", "alembic upgrade head && uvicorn app.main:app --host 0.0.0.0 --port 8000"]
+CMD ["./scripts/entrypoint.sh"]

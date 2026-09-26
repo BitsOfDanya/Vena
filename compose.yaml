@@ -1,18 +1,37 @@
 name: vena
 
 services:
+  db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: vena
+      POSTGRES_PASSWORD: vena
+      POSTGRES_DB: vena
+    volumes:
+      - vena-postgres:/var/lib/postgresql/data
+      - ./backend/scripts/init-db.sql:/docker-entrypoint-initdb.d/01-init.sql:ro
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U vena -d vena"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+
   backend:
     build:
       context: ./backend
     environment:
       VENA_ML_DIR: /srv/ml
-      VENA_DATABASE_URL: sqlite:////srv/data/vena.db
+      VENA_DATABASE_URL: postgresql+psycopg://vena:vena@db:5432/vena
       VENA_ENVIRONMENT: local
       VENA_CORS_ORIGINS: '["http://localhost:3100"]'
       VENA_PUBLIC_URL: http://localhost:3100
       VENA_TIMEZONE: ${VENA_TIMEZONE:-Europe/Moscow}
       VENA_SEED_DEMO: ${VENA_SEED_DEMO:-false}
       VENA_PREDICTION_STALE_SECONDS: ${VENA_PREDICTION_STALE_SECONDS:-86400}
+      VENA_AUTH_ENABLED: ${VENA_AUTH_ENABLED:-false}
+      VENA_API_KEYS_JSON: ${VENA_API_KEYS_JSON:-}
       SMTP_HOST: ${SMTP_HOST:-}
       SMTP_PORT: ${SMTP_PORT:-587}
       SMTP_USERNAME: ${SMTP_USERNAME:-}
@@ -23,7 +42,9 @@ services:
       - ./ml/results:/srv/ml/results:ro
       - ./ml/configs:/srv/ml/configs:ro
       - ./ml/artifacts:/srv/ml/artifacts:ro
-      - vena-data:/srv/data
+    depends_on:
+      db:
+        condition: service_healthy
     ports:
       - "8100:8000"
     healthcheck:
@@ -35,6 +56,7 @@ services:
   frontend:
     build:
       context: ./frontend
+      network: host
       args:
         NEXT_PUBLIC_API_URL: http://localhost:8100
         NEXT_PUBLIC_VENA_DATA_MODE: demo
@@ -52,4 +74,4 @@ services:
       retries: 5
 
 volumes:
-  vena-data:
+  vena-postgres:

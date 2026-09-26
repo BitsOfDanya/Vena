@@ -4,6 +4,7 @@ from sqlalchemy import select
 from sqlalchemy.orm import Session
 
 from app.db.models import Action, ActionEvent, Notification
+from app.domain.spatial import ensure_demo_spatial
 
 
 def _now() -> datetime:
@@ -11,6 +12,7 @@ def _now() -> datetime:
 
 
 def seed_demo(session: Session) -> bool:
+    ensure_demo_spatial(session)
     if session.scalars(select(Action.id).limit(1)).first() is not None:
         return False
     now = _now()

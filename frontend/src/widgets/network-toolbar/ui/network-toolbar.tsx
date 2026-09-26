@@ -6,11 +6,10 @@ import { TYPE_LABEL, type AssetType, type ForecastHorizon } from "@/entities/inf
 import { cn } from "@/shared/lib/utils"
 import { Input } from "@/shared/ui/input"
 import { Segmented } from "@/shared/ui/segmented"
-import { Tooltip, TooltipContent, TooltipTrigger } from "@/shared/ui/tooltip"
 
 export type SystemFilter = "all" | AssetType
 export type RiskFilter = "all" | "attention" | "critical"
-export type NetworkMode = "network" | "assets"
+export type NetworkMode = "network" | "assets" | "map"
 
 const SYSTEMS: SystemFilter[] = ["all", "pump", "fan", "smoke", "power"]
 
@@ -71,22 +70,15 @@ export function NetworkToolbar({
           Assets
           {mode === "assets" ? <span aria-hidden className="absolute inset-x-2 bottom-0 h-px bg-vena" /> : null}
         </button>
-        <Tooltip>
-          <TooltipTrigger asChild>
-            <span
-              tabIndex={0}
-              role="button"
-              aria-disabled="true"
-              aria-label="Map view is unavailable until spatial data is connected."
-              className={cn(modeButton, "flex cursor-not-allowed items-center rounded-r-[5px] text-muted-foreground/50")}
-            >
-              Map
-            </span>
-          </TooltipTrigger>
-          <TooltipContent side="bottom" className="max-w-64">
-            Географический режим станет доступен после подключения GeoJSON/WKT объектов.
-          </TooltipContent>
-        </Tooltip>
+        <button
+          type="button"
+          aria-current={mode === "map"}
+          onClick={() => onMode("map")}
+          className={cn(modeButton, "rounded-r-[5px]", mode === "map" ? "bg-elevated text-foreground" : "text-muted-foreground hover:text-foreground")}
+        >
+          Map
+          {mode === "map" ? <span aria-hidden className="absolute inset-x-2 bottom-0 h-px bg-vena" /> : null}
+        </button>
       </div>
 
       <form

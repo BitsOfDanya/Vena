@@ -1,18 +1,21 @@
 from dataclasses import dataclass
-from datetime import UTC, datetime
+from datetime import UTC, datetime, timedelta
 
 from sqlalchemy import select
 from sqlalchemy.orm import Session
 
 from app.core.config import Settings
-from app.db.models import PredictionPoint, ProcessedSnapshot
+from app.db.models import Action, PredictionPoint, ProcessedSnapshot
+from app.domain import actions as action_service
 from app.domain import notifications as notification_service
 from app.domain.email import EmailProvider
 from app.domain.predictions import PredictionSource
+from app.schemas.actions import ActionCreate
 from app.schemas.notifications import NotificationCreate
 from app.schemas.predictions import Prediction
 
 RULE_FOR_LEVEL = {"critical": "critical_risk", "attention": "risk_horizon_24h"}
+PRIORITY_FOR_LEVEL = {"critical": "high", "attention": "medium"}
 
 
 @dataclass
@@ -21,6 +24,7 @@ class IngestResult:
     snapshot_id: str | None
     prediction_count: int = 0
     notifications_created: int = 0
+    actions_created: int = 0
     detail: str = ""
 
 
@@ -50,6 +54,74 @@ def apply_deltas(
         prediction.previous_score = earlier
         prediction.score_delta = round(prediction.score - earlier, 6)
     return predictions
+
+
+def _has_open_forecast_action(session: Session, prediction: Prediction) -> bool:
+    statement = (
+        select(Action.id)
+        .where(
+            Action.asset_id == prediction.asset_id,
+            Action.status.in_(action_service.OPEN_STATUSES),
+            Action.source == "vena_forecast",
+        )
+        .limit(1)
+    )
+    if prediction.id:
+        by_prediction = session.scalars(
+            select(Action.id)
+            .where(
+                Action.source_prediction_id == prediction.id,
+                Action.status.in_(action_service.OPEN_STATUSES),
+            )
+            .limit(1)
+        ).first()
+        if by_prediction is not None:
+            return True
+    if prediction.model_id:
+        by_model = session.scalars(
+            select(Action.id)
+            .where(
+                Action.asset_id == prediction.asset_id,
+                Action.source_model_id == prediction.model_id,
+                Action.status.in_(action_service.OPEN_STATUSES),
+            )
+            .limit(1)
+        ).first()
+        if by_model is not None:
+            return True
+    return session.scalars(statement).first() is not None
+
+
+def _suggest_action(session: Session, prediction: Prediction) -> bool:
+    if _has_open_forecast_action(session, prediction):
+        return False
+    horizon = prediction.horizon_hours or 24
+    priority = PRIORITY_FOR_LEVEL.get(prediction.risk_level, "medium")
+    action_service.create_action(
+        session,
+        ActionCreate(
+            asset_id=prediction.asset_id,
+            kind="inspect",
+            reason=(
+                f"ML {prediction.model_id}: {prediction.risk_level} risk "
+                f"score {prediction.score:.3f} over {horizon}h"
+            ),
+            priority=priority,  # type: ignore[arg-type]
+            recommended_at=prediction.prediction_time + timedelta(hours=horizon),
+            assignee="Дежурный инженер",
+            note="Auto-draft from prediction ingest",
+            source="vena_forecast",
+            source_detail=prediction.model_id,
+            status="suggested",
+            source_prediction_id=prediction.id,
+            source_model_id=prediction.model_id,
+            source_prediction_time=prediction.prediction_time,
+            source_score=prediction.score,
+            source_horizon_hours=horizon,
+        ),
+        actor="vena-ingest",
+    )
+    return True
 
 
 def refresh_predictions(
@@ -92,36 +164,38 @@ def refresh_predictions(
             )
 
     created = 0
+    actions_created = 0
     significant = [item for item in predictions if item.risk_level in RULE_FOR_LEVEL]
     significant.sort(key=lambda item: item.score, reverse=True)
     for prediction in significant[: settings.prediction_critical_limit]:
         trigger = RULE_FOR_LEVEL[prediction.risk_level]
         dedup_key = f"{trigger}:{prediction.asset_id}"
-        if notification_service.within_cooldown(
+        if not notification_service.within_cooldown(
             session, dedup_key, settings.prediction_cooldown_minutes
         ):
-            continue
-        change = (
-            f", {prediction.score_delta:+.3f} since the previous snapshot"
-            if prediction.score_delta is not None
-            else ""
-        )
-        notification = notification_service.create_notification(
-            session,
-            NotificationCreate(
-                type="risk",
-                severity="critical" if prediction.risk_level == "critical" else "attention",
-                title=f"{prediction.asset_id} · {prediction.model_id} {prediction.score:.3f}",
-                description=(
-                    f"Model {prediction.model_id} reports {prediction.risk_level} risk "
-                    f"for the next {prediction.horizon_hours}h{change}."
+            change = (
+                f", {prediction.score_delta:+.3f} since the previous snapshot"
+                if prediction.score_delta is not None
+                else ""
+            )
+            notification = notification_service.create_notification(
+                session,
+                NotificationCreate(
+                    type="risk",
+                    severity="critical" if prediction.risk_level == "critical" else "attention",
+                    title=f"{prediction.asset_id} · {prediction.model_id} {prediction.score:.3f}",
+                    description=(
+                        f"Model {prediction.model_id} reports {prediction.risk_level} risk "
+                        f"for the next {prediction.horizon_hours}h{change}."
+                    ),
+                    asset_id=prediction.asset_id,
+                    dedup_key=dedup_key,
                 ),
-                asset_id=prediction.asset_id,
-                dedup_key=dedup_key,
-            ),
-        )
-        notification_service.dispatch(session, settings, provider, notification, trigger)
-        created += 1
+            )
+            notification_service.dispatch(session, settings, provider, notification, trigger)
+            created += 1
+        if _suggest_action(session, prediction):
+            actions_created += 1
 
     if existing is None:
         session.add(
@@ -144,6 +218,7 @@ def refresh_predictions(
         snapshot_id=status.snapshot_id,
         prediction_count=len(predictions),
         notifications_created=created,
+        actions_created=actions_created,
     )
 
 

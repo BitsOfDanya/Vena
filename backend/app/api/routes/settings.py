@@ -4,7 +4,9 @@ from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
 
 from app.core.config import Settings, get_settings
+from app.core.security import Principal, get_principal, require_min_role
 from app.db.session import get_session
+from app.domain import audit as audit_service
 from app.domain import settings_store
 from app.schemas.notifications import EmailStatus, NotificationSettings, NotificationSettingsUpdate
 
@@ -12,18 +14,34 @@ router = APIRouter(tags=["settings"])
 
 SessionDep = Annotated[Session, Depends(get_session)]
 SettingsDep = Annotated[Settings, Depends(get_settings)]
+ReaderDep = Annotated[Principal, Depends(get_principal)]
+WriterDep = Annotated[Principal, Depends(require_min_role("admin"))]
 
 
 @router.get("/settings/notifications", response_model=NotificationSettings)
-def read_notification_settings(session: SessionDep, settings: SettingsDep) -> NotificationSettings:
+def read_notification_settings(
+    session: SessionDep, settings: SettingsDep, _: ReaderDep
+) -> NotificationSettings:
     return settings_store.read_settings(session, settings)
 
 
 @router.put("/settings/notifications", response_model=NotificationSettings)
 def update_notification_settings(
-    payload: NotificationSettingsUpdate, session: SessionDep, settings: SettingsDep
+    payload: NotificationSettingsUpdate,
+    session: SessionDep,
+    settings: SettingsDep,
+    principal: WriterDep,
 ) -> NotificationSettings:
-    return settings_store.write_settings(session, settings, payload)
+    result = settings_store.write_settings(session, settings, payload)
+    audit_service.record(
+        session,
+        actor=principal.subject,
+        role=principal.role,
+        action="settings.notifications.update",
+        resource_type="settings",
+        resource_id="notifications",
+    )
+    return result
 
 
 @router.get("/integrations/email/status", response_model=EmailStatus)

@@ -6,8 +6,10 @@ from sqlalchemy import select
 from sqlalchemy.orm import Session
 
 from app.core.config import Settings, get_settings
+from app.core.security import Principal, get_principal, require_min_role
 from app.db.models import Action, Notification
 from app.db.session import get_session
+from app.domain import audit as audit_service
 from app.domain import ingest as ingest_service
 from app.domain.actions import OPEN_STATUSES
 from app.domain.email import build_email_provider
@@ -24,6 +26,8 @@ router = APIRouter(tags=["predictions"])
 
 SessionDep = Annotated[Session, Depends(get_session)]
 SettingsDep = Annotated[Settings, Depends(get_settings)]
+ReaderDep = Annotated[Principal, Depends(get_principal)]
+ActorDep = Annotated[Principal, Depends(require_min_role("dispatcher"))]
 
 
 def _require_snapshot(settings: Settings) -> None:
@@ -57,16 +61,31 @@ def snapshot_status(settings: SettingsDep) -> SnapshotStatus:
 
 
 @router.post("/predictions/refresh", response_model=dict)
-def refresh(session: SessionDep, settings: SettingsDep, force: bool = False) -> dict:
+def refresh(
+    session: SessionDep,
+    settings: SettingsDep,
+    principal: ActorDep,
+    force: bool = False,
+) -> dict:
     source = get_prediction_source(settings)
     result = ingest_service.refresh_predictions(
         session, settings, source, build_email_provider(settings), force
+    )
+    audit_service.record(
+        session,
+        actor=principal.subject,
+        role=principal.role,
+        action="predictions.refresh",
+        resource_type="snapshot",
+        resource_id=result.snapshot_id or "",
+        detail=result.detail or "",
     )
     return {
         "processed": result.processed,
         "snapshot_id": result.snapshot_id,
         "prediction_count": result.prediction_count,
         "notifications_created": result.notifications_created,
+        "actions_created": result.actions_created,
         "detail": result.detail,
     }
 

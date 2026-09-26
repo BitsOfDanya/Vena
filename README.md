@@ -33,13 +33,14 @@ docker compose up -d --build
 | Сервис | Порт | Данные |
 |---|---|---|
 | frontend (Next.js) | `http://localhost:3100` | — |
-| backend (FastAPI) | `http://localhost:8100/docs` | том `vena-data` (SQLite) |
+| backend (FastAPI) | `http://localhost:8100/docs` | PostgreSQL (`db`) |
+| db (PostgreSQL 16) | `localhost:5432` | том `vena-postgres` |
 
 Каталоги `ml/results`, `ml/configs` и `ml/artifacts` монтируются в контейнер API только на чтение (`VENA_ML_DIR=/srv/ml`); датасет событий (15 ГБ) в образ не попадает и не монтируется.
 
 ### Environment
 
-Бэкенд читает переменные с префиксом `VENA_` (см. `backend/.env.example`): `VENA_DATABASE_URL`, `VENA_PUBLIC_URL`, `VENA_TIMEZONE`, `VENA_SEED_DEMO`, `VENA_DIGEST_ENABLED`. Почта настраивается только через окружение: `SMTP_HOST`, `SMTP_PORT`, `SMTP_USERNAME`, `SMTP_PASSWORD`, `SMTP_FROM`, `SMTP_TLS` — значения не хранятся ни в базе, ни во фронтенде, ни в репозитории. Пока `SMTP_HOST`/`SMTP_FROM` пусты, канал Email отображается как `Not configured`, а `POST /api/v1/notifications/test` возвращает `409`.
+Бэкенд читает переменные с префиксом `VENA_` (см. `backend/.env.example`): `VENA_DATABASE_URL` (PostgreSQL 12+; в Docker — `postgresql+psycopg://vena:vena@db:5432/vena`), `VENA_PUBLIC_URL`, `VENA_TIMEZONE`, `VENA_SEED_DEMO`, `VENA_DIGEST_ENABLED`. Почта настраивается только через окружение: `SMTP_HOST`, `SMTP_PORT`, `SMTP_USERNAME`, `SMTP_PASSWORD`, `SMTP_FROM`, `SMTP_TLS` — значения не хранятся ни в базе, ни во фронтенде, ни в репозитории. Пока `SMTP_HOST`/`SMTP_FROM` пусты, канал Email отображается как `Not configured`, а `POST /api/v1/notifications/test` возвращает `409`.
 
 Фронтенд собирается с `NEXT_PUBLIC_API_URL`, `NEXT_PUBLIC_VENA_DATA_MODE` (источник телеметрии: `demo` — детерминированный снимок) и `NEXT_PUBLIC_VENA_WORKFLOW_MODE` (`api` — уведомления, работы и настройки идут в бэкенд; `demo` — локальное хранилище браузера).
 
@@ -49,26 +50,43 @@ docker compose up -d --build
 
 ```bash
 cd ml && python score_snapshot.py
+# без журнала СМВУ (стенд):
+cd ml && python score_snapshot.py --demo
 ```
 
 Скрипт загружает замороженные артефакты (`ml/artifacts/models/*`), считает признаки по кэшу событий и записывает снимок `ml/results/predictions/snapshot.json`. Бэкенд читает этот файл только на чтение, отображает `risk_level` по порогам из `ml/configs/models/*.json` и никогда не выдаёт `probability`, пока `calibrated=false` (сейчас у всех моделей `false`, поэтому `score_type=risk_score`).
 
+В API-режиме (`NEXT_PUBLIC_VENA_WORKFLOW_MODE=api`) уровни риска на Pulse, Network, Timeline и Actions берутся из snapshot (шкала UI 0–100); телеметрия событий на Pulse пока остаётся демо.
+
 Уровни: `critical` / `attention` (`high` в конфиге) / `observe` (`medium`) / `normal`. Порог устаревания снимка — `VENA_PREDICTION_STALE_SECONDS`; при превышении появляется системное уведомление, но API остаётся здоровым. Если снимка нет, `/predictions` возвращает `503`, а интерфейс в API-режиме показывает «Predictions unavailable» и не подставляет демо-значения.
+
+Ingest критических прогнозов создаёт уведомления и черновики работ (`status=suggested`, `source=vena_forecast`).
 
 ### What is real and what is demo
 
 | Блок | Состояние |
 |---|---|
-| Прогнозы, уровни риска, ситуации, автоуведомления | считаются бэкендом по снимку реальных моделей |
+| Прогнозы, уровни риска, ситуации, автоуведомления и suggested-работы | считаются бэкендом по снимку реальных моделей |
+| Network / Timeline / Actions risk (api-режим) | overlay из `/predictions` на демо-активах |
 | Уведомления, подтверждения, работы, история, результаты, настройки уведомлений | хранятся в БД бэкенда |
 | Связка прогноз → работа → результат (`/ml/feedback`) | хранится в БД |
 | System notices | вычисляются бэкендом по доступности ML-каталогов и свежести снимка |
-| Телеметрия событий, активность, Network/Timeline | детерминированный демо-снимок во фронтенде (помечен «demo telemetry») |
+| Телеметрия событий, активность, Network topology | детерминированный демо-снимок во фронтенде (помечен «demo telemetry») |
 | Корреляционные паттерны | только в demo-режиме; бэкенд-детектора нет |
 | Email, Morning brief | код и планировщик есть, отправка включается только настроенным SMTP |
-| Аутентификация, карта, аналитический Dashboard | не реализованы |
+| Аутентификация | API-key RBAC (`VENA_AUTH_ENABLED`) + UI ключа/audit; LDAP/AD — следующий шаг |
+| Карта | режим Map на Network: demo GeoJSON / импорт GeoJSON+WKT через `/api/v1/spatial` |
+| SMVU | хук свежести `POST /api/v1/smvu/events` (батчи); полный журнал событий — отдельно |
+| Backup Postgres | `backend/scripts/backup-postgres.sh` |
+| Аналитический Dashboard | заглушка, отдельная реализация |
 
 ## Local development
+
+Сначала БД (PostgreSQL из compose):
+
+```bash
+docker compose up -d db
+```
 
 Backend (порт 8000; если занят — укажите другой):
 
@@ -76,6 +94,7 @@ Backend (порт 8000; если занят — укажите другой):
 cd backend
 cp .env.example .env
 uv sync
+uv run alembic upgrade head
 uv run fastapi dev
 ```
 
@@ -84,7 +103,8 @@ uv run fastapi dev
 ```bash
 cd backend
 python3 -m venv .venv
-.venv/bin/pip install "fastapi[standard-no-fastapi-cloud-cli]" pydantic-settings httpx mypy pytest ruff
+.venv/bin/pip install "fastapi[standard-no-fastapi-cloud-cli]" pydantic-settings httpx mypy pytest ruff "psycopg[binary]" alembic sqlalchemy apscheduler
+.venv/bin/alembic upgrade head
 .venv/bin/uvicorn app.main:app --port 8000
 ```
 
@@ -113,7 +133,7 @@ pnpm dev
 
 Режим Replay воспроизводит исторический эпизод; события открываются только после текущего времени воспроизведения. Командная палитра — `Ctrl/Cmd + K`.
 
-Режим карты требует реальных пространственных данных (GeoJSON/WKT) и намеренно не имитируется: координаты и топология не выдумываются, схема группирует объекты только по имеющимся данным. Оценка риска показывается как `risk score N/100` и не выдаётся за вероятность, пока модель не откалибрована.
+Режим карты на `/network` показывает GeoJSON-слой (коридор коллекторов + активы) с risk overlay; стендовый слой помечен `demo_spatial` и заменяется реальными данными через `PUT /api/v1/spatial` (FeatureCollection) или `PUT /api/v1/spatial/wkt` (POINT). Оценка риска показывается как `risk score N/100` и не выдаётся за вероятность, пока модель не откалибрована.
 
 Модуль Dashboard зарезервирован под отдельную реализацию. Pulse, Network, Timeline и Actions не зависят от его компонентов.
 
@@ -140,6 +160,10 @@ pnpm dev
 | `POST /api/v1/predictions/refresh` | приём нового снимка: дедупликация, история, правила уведомлений |
 | `GET /api/v1/assets/{id}/prediction`, `GET /api/v1/assets/{id}/predictions` | текущий прогноз и история по объекту |
 | `GET /api/v1/ml/feedback` | связка прогноз → работа → результат для будущего дообучения |
+| `GET /api/v1/spatial`, `GET /api/v1/spatial/status` | GeoJSON-слой карты |
+| `PUT /api/v1/spatial`, `PUT /api/v1/spatial/wkt`, `POST /api/v1/spatial/demo` | импорт GeoJSON/WKT / сброс demo (admin) |
+| `GET /api/v1/smvu/status`, `POST /api/v1/smvu/events` | свежесть потока СМВУ (батчи) |
+| `GET /api/v1/auth/me`, `GET /api/v1/audit` | текущий principal и audit log |
 | `GET /api/v1/integrations/email/status` | состояние почтового канала без секретов |
 
 Путь к каталогу ML задаётся `VENA_ML_DIR` (по умолчанию `ml/` в корне репозитория).
@@ -152,4 +176,4 @@ cd frontend && pnpm lint && pnpm typecheck && pnpm test && pnpm build
 cd ml && python -m pytest
 ```
 
-Миграции базы: `cd backend && uv run alembic upgrade head` (в контейнере выполняются при старте).
+Миграции базы: `cd backend && uv run alembic upgrade head` (в контейнере выполняются при старте). Перед тестами поднимите Postgres: `docker compose up -d db`, затем `cd backend && uv run pytest` (БД `vena_test`).

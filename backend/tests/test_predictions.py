@@ -135,9 +135,13 @@ def test_refresh_is_idempotent_and_creates_notifications(client: TestClient, ml_
 
     assert first["processed"] is True
     assert first["notifications_created"] == 2
+    assert first["actions_created"] == 2
     assert second["processed"] is False
     assert second["detail"] == "snapshot already processed"
     assert len(client.get("/api/v1/notifications").json()) == 2
+    suggested = client.get("/api/v1/actions", params={"status": "suggested"}).json()
+    assert len(suggested) == 2
+    assert all(item["source"] == "vena_forecast" for item in suggested)
 
 
 def test_cooldown_suppresses_repeated_notifications(client: TestClient, ml_root: Path) -> None:

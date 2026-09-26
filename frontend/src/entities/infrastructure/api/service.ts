@@ -12,6 +12,7 @@ import {
 } from "../fixtures/demo"
 import { CANVAS_HEIGHT, CANVAS_WIDTH } from "../lib/layout"
 import { TYPE_LABEL, isWatch, levelFromScore, statusFromScore } from "../lib/risk"
+import type { PredictionOverlay } from "../lib/prediction-overlay"
 import { lowerBound } from "../lib/prng"
 import type {
   Asset,
@@ -36,6 +37,7 @@ import type {
   StateSegment,
   TemporalBundle,
 } from "../model/types"
+import { predictionOverlays } from "./predictions-client"
 
 type View = { now: number; horizon: ForecastHorizon }
 
@@ -53,10 +55,31 @@ function lastEventAt(record: AssetRecord, at: number) {
   return index >= 0 ? list[index].timestamp : null
 }
 
-function toAsset(record: AssetRecord, view: View): Asset {
+function applyOverlay(asset: Asset, overlay: PredictionOverlay | undefined, offline: boolean): Asset {
+  if (!overlay || offline) {
+    return { ...asset, predictionId: null, predictionModelId: null }
+  }
+  return {
+    ...asset,
+    status: offline ? "offline" : overlay.status,
+    riskLevel: overlay.riskLevel,
+    riskScore: overlay.riskScore,
+    scoreType: overlay.scoreType,
+    forecastHorizon: overlay.forecastHorizon,
+    lastEventAt: overlay.lastEventAt ?? asset.lastEventAt,
+    predictionId: overlay.predictionId,
+    predictionModelId: overlay.modelId,
+  }
+}
+
+function toAsset(
+  record: AssetRecord,
+  view: View,
+  overlays: Map<string, PredictionOverlay> = new Map(),
+): Asset {
   const score = scaledScore(record, view.now, view.horizon)
   const offline = isOffline(record, view.now)
-  return {
+  const base: Asset = {
     id: record.id,
     name: record.name,
     type: record.type,
@@ -68,16 +91,21 @@ function toAsset(record: AssetRecord, view: View): Asset {
     scoreType: "risk_score",
     forecastHorizon: view.horizon,
     lastEventAt: lastEventAt(record, view.now),
+    predictionId: null,
+    predictionModelId: null,
   }
+  return applyOverlay(base, overlays.get(record.id), offline)
 }
 
 export async function getAssets(view: View): Promise<Asset[]> {
-  return getDataset().assets.map((record) => toAsset(record, view))
+  const overlays = await predictionOverlays()
+  return getDataset().assets.map((record) => toAsset(record, view, overlays))
 }
 
 export async function searchAssets(query: string, view: View, limit = 12): Promise<Asset[]> {
   const needle = query.trim().toLowerCase()
   const dataset = getDataset()
+  const overlays = await predictionOverlays()
   const matches = dataset.assets.filter((record) => {
     if (!needle) return true
     return (
@@ -88,15 +116,16 @@ export async function searchAssets(query: string, view: View, limit = 12): Promi
     )
   })
   return matches
-    .map((record) => toAsset(record, view))
+    .map((record) => toAsset(record, view, overlays))
     .sort((left, right) => right.riskScore - left.riskScore)
     .slice(0, limit)
 }
 
 export async function getNetwork(view: View): Promise<NetworkModel> {
   const dataset = getDataset()
+  const overlays = await predictionOverlays()
   const nodes = dataset.assets.map((record) => {
-    const asset = toAsset(record, view)
+    const asset = toAsset(record, view, overlays)
     const position = dataset.layout.positions.get(record.id) ?? { x: 0, y: 0 }
     return {
       id: record.id,
@@ -196,9 +225,12 @@ function factorsFor(record: AssetRecord, now: number, score: number) {
 export async function getAsset(id: string, view: View): Promise<AssetDetail | null> {
   const record = getDataset().byId.get(id)
   if (!record) return null
-  const asset = toAsset(record, view)
+  const overlays = await predictionOverlays()
+  const asset = toAsset(record, view, overlays)
+  const overlay = overlays.get(id)
   const deltaSince = Math.ceil((view.now - 6 * HOUR) / HOUR) * HOUR
-  const delta = asset.riskScore - scaledScore(record, deltaSince, view.horizon)
+  const delta =
+    overlay?.scoreDelta ?? asset.riskScore - scaledScore(record, deltaSince, view.horizon)
   const { factors, groups } = factorsFor(record, view.now, asset.riskScore)
   const events = getDataset().eventsByAsset.get(id) ?? []
   const recent = eventsBetween(events, view.now - 48 * HOUR, view.now)
@@ -432,6 +464,7 @@ export async function getPulse(view: { now: number; windowHours: number }): Prom
 export async function getTemporal(id: string, view: View, halfSpanHours: number): Promise<TemporalBundle | null> {
   const record = getDataset().byId.get(id)
   if (!record) return null
+  const overlays = await predictionOverlays()
   const from = view.now - halfSpanHours * HOUR
   const [events, states, history, forecast] = await Promise.all([
     getEvents(id, from, view.now),
@@ -439,7 +472,19 @@ export async function getTemporal(id: string, view: View, halfSpanHours: number)
     getRiskHistory(id, from, view.now, view.horizon),
     getForecast(id, view.now, halfSpanHours),
   ])
-  return { asset: toAsset(record, view), events, states, history, forecast }
+  const asset = toAsset(record, view, overlays)
+  const overlay = overlays.get(id)
+  if (overlay && history.length > 0) {
+    const last = history[history.length - 1]
+    history[history.length - 1] = {
+      ...last,
+      score: overlay.riskScore,
+      level: overlay.riskLevel,
+      scoreType: overlay.scoreType,
+      horizon: overlay.forecastHorizon,
+    }
+  }
+  return { asset, events, states, history, forecast }
 }
 
 export async function getSituations(view: View, limit = 4): Promise<Situation[]> {
@@ -467,23 +512,29 @@ export async function getSituations(view: View, limit = 4): Promise<Situation[]>
     })
   }
 
+  const overlays = await predictionOverlays()
   const ranked = dataset.assets
     .filter((record) => !isOffline(record, view.now))
-    .map((record) => ({ record, score: scaledScore(record, view.now, view.horizon) }))
-    .filter((item) => statusFromScore(item.score) !== "normal")
+    .map((record) => {
+      const asset = toAsset(record, view, overlays)
+      return { record, score: asset.riskScore, asset }
+    })
+    .filter((item) => item.asset.status !== "normal")
     .sort((left, right) => right.score - left.score)
     .slice(0, limit)
 
   for (const item of ranked) {
     const { factors } = factorsFor(item.record, view.now, item.score)
     const rising = factors.find((factor) => factor.direction === "up")
-    const delta = item.score - scaledScore(item.record, view.now - 6 * HOUR, view.horizon)
+    const overlay = overlays.get(item.record.id)
+    const delta =
+      overlay?.scoreDelta ?? item.score - scaledScore(item.record, view.now - 6 * HOUR, view.horizon)
     const events = getDataset().eventsByAsset.get(item.record.id) ?? []
     const last = events.filter((event) => event.timestamp <= view.now && event.severity !== "info").at(-1)
     situations.push({
       id: `situation-${item.record.id}`,
       type: "risk",
-      severity: statusFromScore(item.score) === "critical" ? "critical" : "warning",
+      severity: item.asset.status === "critical" ? "critical" : "warning",
       title: item.record.id,
       assetIds: [item.record.id],
       patternId: null,
@@ -495,7 +546,7 @@ export async function getSituations(view: View, limit = 4): Promise<Situation[]>
       riskScore: item.score,
       scoreText: `${Math.round(item.score)}/100`,
       delta: Math.round(delta),
-      horizon: view.horizon,
+      horizon: item.asset.forecastHorizon,
       primaryReason: rising ? `${rising.label} ${rising.value}` : "Sustained abnormal state",
       status: "new",
     })

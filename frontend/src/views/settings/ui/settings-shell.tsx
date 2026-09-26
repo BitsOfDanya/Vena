@@ -9,6 +9,8 @@ const TABS = [
   { href: "/settings", label: "Overview" },
   { href: "/settings/notifications", label: "Notifications" },
   { href: "/settings/integrations", label: "Integrations" },
+  { href: "/settings/security", label: "Security" },
+  { href: "/settings/audit", label: "Audit" },
 ]
 
 export function SettingsShell({ title, descriptor, children }: { title: string; descriptor: string; children: React.ReactNode }) {

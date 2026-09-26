@@ -132,3 +132,41 @@ class ProcessedSnapshot(Base):
     notifications_created: Mapped[int] = mapped_column(Integer, default=0)
     stale: Mapped[bool] = mapped_column(Boolean, default=False)
     processed_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=utcnow)
+
+
+class AuditLog(Base):
+    __tablename__ = "audit_log"
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
+    at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=utcnow, index=True)
+    actor: Mapped[str] = mapped_column(String(120), default="system")
+    role: Mapped[str] = mapped_column(String(32), default="dispatcher")
+    action: Mapped[str] = mapped_column(String(64))
+    resource_type: Mapped[str] = mapped_column(String(64), default="")
+    resource_id: Mapped[str] = mapped_column(String(80), default="")
+    detail: Mapped[str] = mapped_column(Text, default="")
+    ip: Mapped[str | None] = mapped_column(String(64), nullable=True)
+
+
+class SpatialLayer(Base):
+    __tablename__ = "spatial_layers"
+
+    id: Mapped[str] = mapped_column(String(32), primary_key=True)
+    feature_collection: Mapped[str] = mapped_column(Text, default="")
+    source: Mapped[str] = mapped_column(String(40), default="demo_spatial")
+    updated_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True), default=utcnow, onupdate=utcnow
+    )
+
+
+class SmvuIngestState(Base):
+    """Last accepted SMVU event batch metadata (integration hook, not full journal)."""
+
+    __tablename__ = "smvu_ingest_state"
+
+    id: Mapped[str] = mapped_column(String(32), primary_key=True, default="default")
+    last_batch_id: Mapped[str] = mapped_column(String(80), default="")
+    last_event_count: Mapped[int] = mapped_column(Integer, default=0)
+    last_event_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
+    received_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
+    detail: Mapped[str] = mapped_column(Text, default="")

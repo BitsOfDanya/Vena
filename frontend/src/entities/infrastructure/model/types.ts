@@ -22,6 +22,9 @@ export type Asset = {
   scoreType: ScoreType
   forecastHorizon: ForecastHorizon
   lastEventAt: number | null
+  /** Present when risk is overlaid from the ML snapshot API. */
+  predictionId?: string | null
+  predictionModelId?: string | null
 }
 
 export type RiskSnapshot = {

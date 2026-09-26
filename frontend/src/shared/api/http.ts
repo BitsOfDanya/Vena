@@ -1,3 +1,5 @@
+import { getStoredApiKey } from "./auth-storage"
+
 const API_URL = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8000"
 
 export class ApiError extends Error {
@@ -12,11 +14,13 @@ export class ApiError extends Error {
 }
 
 export async function apiFetch<T>(path: string, init?: RequestInit): Promise<T> {
+  const apiKey = getStoredApiKey()
   const response = await fetch(`${API_URL}${path}`, {
     ...init,
     headers: {
       Accept: "application/json",
       ...(init?.body ? { "Content-Type": "application/json" } : {}),
+      ...(apiKey ? { "X-API-Key": apiKey } : {}),
       ...init?.headers,
     },
   })

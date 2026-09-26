@@ -70,6 +70,11 @@ export type CreateActionInput = {
   sourceDetail?: string
   notifyChannels?: ActionChannel[]
   status?: ActionStatus
+  sourcePredictionId?: string | null
+  sourceModelId?: string | null
+  sourcePredictionTime?: number | null
+  sourceScore?: number | null
+  sourceHorizonHours?: number | null
 }
 
 export type CloseActionInput = {

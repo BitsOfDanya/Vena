@@ -21,7 +21,7 @@ class Settings(BaseSettings):
     debug: bool = False
     cors_origins: list[AnyHttpUrl] = [AnyHttpUrl("http://localhost:3000")]
     ml_dir: Path = Path(__file__).resolve().parents[3] / "ml"
-    database_url: str = "sqlite:///./data/vena.db"
+    database_url: str = "postgresql+psycopg://vena:vena@localhost:5432/vena"
     timezone: str = "Europe/Moscow"
     public_url: str = "http://localhost:3100"
     seed_demo: bool = True
@@ -31,6 +31,8 @@ class Settings(BaseSettings):
     prediction_cooldown_minutes: int = 240
     prediction_refresh_minutes: int = 15
     ingest_on_startup: bool = True
+    auth_enabled: bool = False
+    api_keys_json: str = ""
     smtp_host: str = Field(default="", validation_alias=AliasChoices("SMTP_HOST", "VENA_SMTP_HOST"))
     smtp_port: int = Field(
         default=587, validation_alias=AliasChoices("SMTP_PORT", "VENA_SMTP_PORT")

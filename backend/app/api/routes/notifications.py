@@ -4,7 +4,9 @@ from fastapi import APIRouter, BackgroundTasks, Depends, HTTPException, Query, s
 from sqlalchemy.orm import Session
 
 from app.core.config import Settings, get_settings
+from app.core.security import Principal, get_principal, require_min_role
 from app.db.session import get_session
+from app.domain import audit as audit_service
 from app.domain import notifications as service
 from app.domain.email import build_email_provider
 from app.schemas.notifications import (
@@ -19,11 +21,14 @@ router = APIRouter(prefix="/notifications", tags=["notifications"])
 
 SessionDep = Annotated[Session, Depends(get_session)]
 SettingsDep = Annotated[Settings, Depends(get_settings)]
+ReaderDep = Annotated[Principal, Depends(get_principal)]
+ActorDep = Annotated[Principal, Depends(require_min_role("dispatcher"))]
 
 
 @router.get("", response_model=list[NotificationOut])
 def list_notifications(
     session: SessionDep,
+    _: ReaderDep,
     status_filter: Annotated[str | None, Query(alias="status")] = None,
     severity: str | None = None,
     type_filter: Annotated[str | None, Query(alias="type")] = None,
@@ -43,6 +48,7 @@ def create_notification(
     session: SessionDep,
     settings: SettingsDep,
     background: BackgroundTasks,
+    principal: ActorDep,
 ) -> NotificationOut:
     notification = service.create_notification(session, payload)
     trigger = (
@@ -56,6 +62,14 @@ def create_notification(
         provider = build_email_provider(settings)
         background.add_task(_dispatch, notification.id, trigger)
         service.dispatch(session, settings, provider, notification, trigger)
+    audit_service.record(
+        session,
+        actor=principal.subject,
+        role=principal.role,
+        action="notification.create",
+        resource_type="notification",
+        resource_id=notification.id,
+    )
     return NotificationOut.model_validate(notification)
 
 
@@ -64,7 +78,7 @@ def _dispatch(notification_id: str, trigger: str) -> None:
 
 
 @router.get("/{notification_id}", response_model=NotificationOut)
-def get_notification(notification_id: str, session: SessionDep) -> NotificationOut:
+def get_notification(notification_id: str, session: SessionDep, _: ReaderDep) -> NotificationOut:
     notification = service.get_notification(session, notification_id)
     if notification is None:
         raise HTTPException(status_code=404, detail="notification not found")
@@ -73,7 +87,10 @@ def get_notification(notification_id: str, session: SessionDep) -> NotificationO
 
 @router.patch("/{notification_id}", response_model=NotificationOut)
 def patch_notification(
-    notification_id: str, payload: NotificationPatch, session: SessionDep
+    notification_id: str,
+    payload: NotificationPatch,
+    session: SessionDep,
+    principal: ActorDep,
 ) -> NotificationOut:
     notification = service.get_notification(session, notification_id)
     if notification is None:
@@ -82,11 +99,22 @@ def patch_notification(
         updated = service.patch_notification(session, notification, payload)
     except service.InvalidTransition as error:
         raise HTTPException(status_code=409, detail=str(error)) from error
+    audit_service.record(
+        session,
+        actor=principal.subject,
+        role=principal.role,
+        action="notification.patch",
+        resource_type="notification",
+        resource_id=notification_id,
+        detail=payload.status or "",
+    )
     return NotificationOut.model_validate(updated)
 
 
 @router.post("/test", response_model=TestEmailResult)
-def send_test_notification(payload: TestEmailRequest, settings: SettingsDep) -> TestEmailResult:
+def send_test_notification(
+    payload: TestEmailRequest, settings: SettingsDep, _: ActorDep
+) -> TestEmailResult:
     provider = build_email_provider(settings)
     if not provider.configured:
         raise HTTPException(status_code=409, detail="email provider is not configured")

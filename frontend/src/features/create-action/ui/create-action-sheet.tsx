@@ -33,6 +33,10 @@ export type ActionDraft = {
   priority?: ActionPriority
   kind?: ActionKind
   hours?: number
+  sourcePredictionId?: string
+  sourceModelId?: string
+  sourceScore?: number
+  sourceHorizonHours?: number
 }
 
 const PRIORITY_HOURS: Record<ActionPriority, number> = { high: 24, medium: 48, low: 72 }
@@ -79,6 +83,7 @@ export function CreateActionSheet({
   }, [open, defaults, reset])
 
   const submit = handleSubmit(async (values) => {
+    const fromPrediction = Boolean(draft.sourcePredictionId)
     const action = await create.mutateAsync({
       assetId: values.assetId,
       reason: values.reason,
@@ -87,9 +92,13 @@ export function CreateActionSheet({
       recommendedAt: fromDateTimeLocal(values.recommendedAt),
       assignee: values.assignee,
       note: values.note,
-      source: "manual",
-      sourceDetail: "Диспетчер",
+      source: fromPrediction ? "vena_forecast" : "manual",
+      sourceDetail: fromPrediction ? (draft.sourceModelId ?? "ML forecast") : "Диспетчер",
       notifyChannels: notify ? ["in_app", "email"] : ["in_app"],
+      sourcePredictionId: draft.sourcePredictionId,
+      sourceModelId: draft.sourceModelId,
+      sourceScore: draft.sourceScore,
+      sourceHorizonHours: draft.sourceHorizonHours,
     })
     onOpenChange(false)
     toast.success(`Action ${action.id} created`, {

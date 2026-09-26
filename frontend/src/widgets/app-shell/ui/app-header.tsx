@@ -75,6 +75,8 @@ export function AppHeader({ onOpenSearch }: { onOpenSearch: () => void }) {
             </DropdownMenuLabel>
             <DropdownMenuSeparator />
             <DropdownMenuItem onClick={() => router.push("/settings")}>Settings</DropdownMenuItem>
+            <DropdownMenuItem onClick={() => router.push("/settings/security")}>Security</DropdownMenuItem>
+            <DropdownMenuItem onClick={() => router.push("/settings/audit")}>Audit log</DropdownMenuItem>
             <DropdownMenuItem onClick={() => router.push("/settings/notifications")}>Notification settings</DropdownMenuItem>
             <DropdownMenuItem onClick={() => router.push("/settings/integrations")}>Integrations</DropdownMenuItem>
           </DropdownMenuContent>

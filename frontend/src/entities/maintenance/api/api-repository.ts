@@ -117,6 +117,13 @@ export const apiActionRepository: ActionRepository = {
         source_detail: input.sourceDetail ?? "",
         notify_channels: input.notifyChannels ?? [],
         status: input.status === "suggested" ? "suggested" : "planned",
+        source_prediction_id: input.sourcePredictionId ?? null,
+        source_model_id: input.sourceModelId ?? null,
+        source_prediction_time: input.sourcePredictionTime
+          ? new Date(input.sourcePredictionTime).toISOString()
+          : null,
+        source_score: input.sourceScore ?? null,
+        source_horizon_hours: input.sourceHorizonHours ?? null,
       }),
     })
     return toAction(item)

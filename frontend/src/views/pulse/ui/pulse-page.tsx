@@ -153,10 +153,21 @@ export function PulsePage() {
   }
 
   function createAction(situation: Situation) {
+    const assetId = situation.assetIds[0]
+    const prediction =
+      apiMode
+        ? [...(criticalPredictions.data?.critical ?? []), ...(criticalPredictions.data?.attention ?? [])].find(
+            (item) => item.assetId === assetId,
+          )
+        : undefined
     setDraft({
-      assetId: situation.assetIds[0],
+      assetId,
       reason: `${situation.title}: ${situation.primaryReason}`,
       priority: situation.severity === "critical" ? "high" : "medium",
+      sourcePredictionId: prediction?.id,
+      sourceModelId: prediction?.modelId,
+      sourceScore: prediction?.score,
+      sourceHorizonHours: prediction?.horizonHours ?? undefined,
     })
     setSheetOpen(true)
   }
