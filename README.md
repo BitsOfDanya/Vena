@@ -48,14 +48,16 @@ cd .. && docker compose up -d --build
 | Переменная | Назначение |
 |---|---|
 | `VENA_DATABASE_URL` | PostgreSQL 12+ (`postgresql+psycopg://…`); в Docker — `vena:vena@db:5432/vena` |
-| `VENA_AUTH_ENABLED` / `VENA_API_KEYS_JSON` | API-key RBAC (`admin` / `dispatcher` / `viewer`); без auth стенд работает с полным доступом |
+| `VENA_AUTH_ENABLED` / `VENA_API_KEYS_JSON` | API-key RBAC (`admin` / `dispatcher` / `viewer`); в Docker по умолчанию **включено** |
 | `VENA_PUBLIC_URL`, `VENA_TIMEZONE`, `VENA_SEED_DEMO`, `VENA_DIGEST_ENABLED` | публичный URL, TZ, демо-seed, morning digest |
 | `VENA_PREDICTION_STALE_SECONDS` | порог устаревания ML-снимка |
 | `SMTP_*` | почта только из окружения; секреты не в БД и не в репозитории |
 
 Пока `SMTP_HOST`/`SMTP_FROM` пусты, канал Email — `Not configured`, `POST /api/v1/notifications/test` → `409`.
 
-Фронтенд: `NEXT_PUBLIC_API_URL`, `NEXT_PUBLIC_VENA_DATA_MODE` (`demo` — детерминированная телеметрия), `NEXT_PUBLIC_VENA_WORKFLOW_MODE` (`api` — уведомления/работы/настройки в бэкенд; `demo` — localStorage). API-ключ UI хранится в `localStorage` и уходит как `X-API-Key` (`Settings → Security`).
+Фронтенд: `NEXT_PUBLIC_API_URL`, `NEXT_PUBLIC_VENA_DATA_MODE` (`demo` — детерминированная телеметрия), `NEXT_PUBLIC_VENA_WORKFLOW_MODE` (`api` — уведомления/работы/настройки в бэкенд; `demo` — localStorage). При включённом auth UI показывает экран Sign in; ключ хранится в `localStorage` и уходит как `X-API-Key`.
+
+Стендовые ключи Docker (если не переопределены): `vena-admin` (admin), `vena-dispatch` (dispatcher), `vena-view` (viewer).
 
 ### Predictions
 
@@ -93,7 +95,7 @@ Ingest критических прогнозов создаёт уведомле
 | Телеметрия событий, активность, topology | demo fixtures во фронтенде |
 | Корреляционные паттерны | только demo на фронте |
 | Email, Morning brief | код есть; нужна настройка SMTP |
-| Аутентификация | API-key RBAC + UI Security/Audit; LDAP/AD — следующий шаг |
+| Аутентификация | API-key RBAC + Sign in / Security / Audit; LDAP/AD — следующий шаг |
 | Карта | Map mode; стенд `demo_spatial`, импорт GeoJSON/WKT |
 | SMVU | хук свежести батчей; streaming journal — нет |
 | Backup Postgres | скрипт есть; нужен регламент cron/restore |
@@ -157,6 +159,8 @@ Replay — `Ctrl/Cmd + K` (command palette). Риск на UI — `risk score N/
 | Метод и путь | Назначение |
 |---|---|
 | `GET /api/v1/health` | состояние сервиса |
+| `GET /api/v1/auth/status` | публично: включён ли auth |
+| `POST /api/v1/auth/login`, `POST /api/v1/auth/logout` | проверка ключа / выход на клиенте |
 | `GET /api/v1/auth/me` | текущий principal / роль |
 | `GET /api/v1/audit` | журнал RBAC-действий (admin) |
 | `GET /api/v1/ml/directions` | направления, статусы и метрики |

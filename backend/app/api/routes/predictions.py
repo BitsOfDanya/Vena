@@ -41,6 +41,7 @@ def _require_snapshot(settings: Settings) -> None:
 @router.get("/predictions", response_model=list[Prediction])
 def list_predictions(
     settings: SettingsDep,
+    _: ReaderDep,
     asset_id: str | None = None,
     device_type: str | None = None,
     risk_level: str | None = None,
@@ -56,7 +57,7 @@ def list_predictions(
 
 
 @router.get("/predictions/snapshot", response_model=SnapshotStatus)
-def snapshot_status(settings: SettingsDep) -> SnapshotStatus:
+def snapshot_status(settings: SettingsDep, _: ReaderDep) -> SnapshotStatus:
     return get_prediction_source(settings).status()
 
 
@@ -92,7 +93,7 @@ def refresh(
 
 @router.get("/predictions/{prediction_id:path}", response_model=PredictionDetail)
 def get_prediction(
-    prediction_id: str, session: SessionDep, settings: SettingsDep
+    prediction_id: str, session: SessionDep, settings: SettingsDep, _: ReaderDep
 ) -> PredictionDetail:
     _require_snapshot(settings)
     source = get_prediction_source(settings)
@@ -125,7 +126,7 @@ def get_prediction(
 
 
 @router.get("/assets/{asset_id}/prediction", response_model=Prediction)
-def asset_prediction(asset_id: str, settings: SettingsDep) -> Prediction:
+def asset_prediction(asset_id: str, settings: SettingsDep, _: ReaderDep) -> Prediction:
     _require_snapshot(settings)
     prediction = get_prediction_source(settings).latest_for_asset(asset_id)
     if prediction is None:
@@ -137,6 +138,7 @@ def asset_prediction(asset_id: str, settings: SettingsDep) -> Prediction:
 def asset_prediction_history(
     asset_id: str,
     session: SessionDep,
+    _: ReaderDep,
     start: Annotated[datetime | None, Query(alias="from")] = None,
     end: Annotated[datetime | None, Query(alias="to")] = None,
     limit: Annotated[int, Query(ge=1, le=1000)] = 200,
@@ -159,7 +161,7 @@ def asset_prediction_history(
 
 @router.get("/ml/feedback", response_model=list[FeedbackRow])
 def feedback(
-    session: SessionDep, limit: Annotated[int, Query(ge=1, le=1000)] = 200
+    session: SessionDep, _: ReaderDep, limit: Annotated[int, Query(ge=1, le=1000)] = 200
 ) -> list[FeedbackRow]:
     statement = (
         select(Action)

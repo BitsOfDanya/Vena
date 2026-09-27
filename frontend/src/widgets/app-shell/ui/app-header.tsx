@@ -4,6 +4,7 @@ import { Search, UserRound } from "lucide-react"
 import Link from "next/link"
 import { usePathname, useRouter } from "next/navigation"
 
+import { useAuthSession } from "@/features/auth"
 import { NAV_ITEMS } from "@/shared/config/routes"
 import { cn } from "@/shared/lib/utils"
 import {
@@ -20,6 +21,9 @@ import { NotificationCenter } from "@/widgets/notification-center"
 export function AppHeader({ onOpenSearch }: { onOpenSearch: () => void }) {
   const pathname = usePathname()
   const router = useRouter()
+  const { me, authEnabled, signOut } = useAuthSession()
+  const title = me?.subject ?? "Duty engineer"
+  const subtitle = me ? `${me.role}${authEnabled ? ` · ${me.auth_method}` : " · auth off"}` : "…"
 
   return (
     <header className="flex h-14 shrink-0 items-center gap-8 border-b border-border px-6">
@@ -70,8 +74,8 @@ export function AppHeader({ onOpenSearch }: { onOpenSearch: () => void }) {
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end" className="w-56">
             <DropdownMenuLabel className="font-normal">
-              <span className="block text-[13px] font-medium">Duty engineer</span>
-              <span className="block text-[12px] text-muted-foreground">Dispatcher team</span>
+              <span className="block text-[13px] font-medium">{title}</span>
+              <span className="block font-mono text-[12px] text-muted-foreground">{subtitle}</span>
             </DropdownMenuLabel>
             <DropdownMenuSeparator />
             <DropdownMenuItem onClick={() => router.push("/settings")}>Settings</DropdownMenuItem>
@@ -79,6 +83,18 @@ export function AppHeader({ onOpenSearch }: { onOpenSearch: () => void }) {
             <DropdownMenuItem onClick={() => router.push("/settings/audit")}>Audit log</DropdownMenuItem>
             <DropdownMenuItem onClick={() => router.push("/settings/notifications")}>Notification settings</DropdownMenuItem>
             <DropdownMenuItem onClick={() => router.push("/settings/integrations")}>Integrations</DropdownMenuItem>
+            {authEnabled ? (
+              <>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem
+                  onClick={() => {
+                    void signOut()
+                  }}
+                >
+                  Sign out
+                </DropdownMenuItem>
+              </>
+            ) : null}
           </DropdownMenuContent>
         </DropdownMenu>
       </div>

@@ -45,7 +45,7 @@ def update_notification_settings(
 
 
 @router.get("/integrations/email/status", response_model=EmailStatus)
-def email_status(settings: SettingsDep) -> EmailStatus:
+def email_status(settings: SettingsDep, _principal: ReaderDep) -> EmailStatus:
     if not settings.smtp_configured:
         return EmailStatus(configured=False, provider="none")
     address = settings.smtp_from

@@ -30,8 +30,8 @@ services:
       VENA_TIMEZONE: ${VENA_TIMEZONE:-Europe/Moscow}
       VENA_SEED_DEMO: ${VENA_SEED_DEMO:-false}
       VENA_PREDICTION_STALE_SECONDS: ${VENA_PREDICTION_STALE_SECONDS:-86400}
-      VENA_AUTH_ENABLED: ${VENA_AUTH_ENABLED:-false}
-      VENA_API_KEYS_JSON: ${VENA_API_KEYS_JSON:-}
+      VENA_AUTH_ENABLED: ${VENA_AUTH_ENABLED:-true}
+      VENA_API_KEYS_JSON: ${VENA_API_KEYS_JSON:-{"vena-admin":"admin","vena-dispatch":"dispatcher","vena-view":"viewer"}}
       SMTP_HOST: ${SMTP_HOST:-}
       SMTP_PORT: ${SMTP_PORT:-587}
       SMTP_USERNAME: ${SMTP_USERNAME:-}

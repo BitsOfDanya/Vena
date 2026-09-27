@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import json
 from dataclasses import dataclass
-from typing import Annotated, Literal
+from typing import Annotated, Any, Literal
 
 from fastapi import Depends, Header, HTTPException, status
 
@@ -20,18 +20,65 @@ class Principal:
     auth_method: str = "disabled"
 
 
-def _parse_api_keys(raw: str) -> dict[str, Role]:
+@dataclass(frozen=True)
+class ApiKeyRecord:
+    role: Role
+    subject: str
+
+
+def _parse_api_keys(raw: str) -> dict[str, ApiKeyRecord]:
     if not raw.strip():
         return {}
     try:
         payload = json.loads(raw)
     except json.JSONDecodeError:
         return {}
-    result: dict[str, Role] = {}
-    for key, role in payload.items():
-        if isinstance(role, str) and role in ROLE_RANK:
-            result[str(key)] = role  # type: ignore[assignment]
+    if not isinstance(payload, dict):
+        return {}
+    result: dict[str, ApiKeyRecord] = {}
+    for key, value in payload.items():
+        token = str(key).strip()
+        if not token:
+            continue
+        role: str | None = None
+        subject: str | None = None
+        if isinstance(value, str):
+            role = value
+            subject = f"api-key:{value}"
+        elif isinstance(value, dict):
+            maybe_role = value.get("role")
+            if isinstance(maybe_role, str):
+                role = maybe_role
+            maybe_subject = value.get("subject") or value.get("name")
+            if isinstance(maybe_subject, str) and maybe_subject.strip():
+                subject = maybe_subject.strip()
+        if role in ROLE_RANK:
+            result[token] = ApiKeyRecord(
+                role=role,  # type: ignore[arg-type]
+                subject=subject or f"api-key:{role}",
+            )
     return result
+
+
+def resolve_api_key(settings: Settings, token: str | None) -> Principal | None:
+    if not token:
+        return None
+    keys = _parse_api_keys(settings.api_keys_json)
+    record = keys.get(token)
+    if record is None:
+        return None
+    return Principal(subject=record.subject, role=record.role, auth_method="api_key")
+
+
+def extract_bearer_or_api_key(
+    x_api_key: str | None,
+    authorization: str | None,
+) -> str | None:
+    if x_api_key:
+        return x_api_key.strip()
+    if authorization and authorization.lower().startswith("bearer "):
+        return authorization[7:].strip()
+    return None
 
 
 def get_principal(
@@ -43,17 +90,21 @@ def get_principal(
         return Principal(subject="Duty engineer", role="admin", auth_method="disabled")
 
     keys = _parse_api_keys(settings.api_keys_json)
-    token = x_api_key
-    if token is None and authorization and authorization.lower().startswith("bearer "):
-        token = authorization[7:].strip()
-    if not token or token not in keys:
+    if not keys:
+        raise HTTPException(
+            status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
+            detail="authentication enabled but VENA_API_KEYS_JSON is empty or invalid",
+        )
+
+    token = extract_bearer_or_api_key(x_api_key, authorization)
+    principal = resolve_api_key(settings, token)
+    if principal is None:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="authentication required",
             headers={"WWW-Authenticate": "API-Key"},
         )
-    role = keys[token]
-    return Principal(subject=f"api-key:{role}", role=role, auth_method="api_key")
+    return principal
 
 
 def require_min_role(minimum: Role):
@@ -65,3 +116,13 @@ def require_min_role(minimum: Role):
         return principal
 
     return dependency
+
+
+def auth_status_payload(settings: Settings) -> dict[str, Any]:
+    keys = _parse_api_keys(settings.api_keys_json) if settings.auth_enabled else {}
+    return {
+        "auth_enabled": settings.auth_enabled,
+        "methods": ["api_key"] if settings.auth_enabled else [],
+        "keys_configured": bool(keys),
+        "ldap_available": False,
+    }

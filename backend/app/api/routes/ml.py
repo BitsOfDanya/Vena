@@ -7,6 +7,7 @@ from typing import Annotated, Any
 from fastapi import APIRouter, Depends, HTTPException, Query
 
 from app.core.config import Settings, get_settings
+from app.core.security import Principal, get_principal
 
 router = APIRouter(prefix="/ml", tags=["ml"])
 
@@ -15,6 +16,7 @@ FILE_NAME = re.compile(r"^[A-Za-z0-9_.-]+\.csv$")
 MAX_ROWS = 1000
 
 SettingsDep = Annotated[Settings, Depends(get_settings)]
+ReaderDep = Annotated[Principal, Depends(get_principal)]
 
 
 def _read_json(path: Path) -> Any:
@@ -33,7 +35,7 @@ def _result_file(settings: Settings, group: str, name: str) -> Path:
 
 
 @router.get("/directions")
-def list_directions(settings: SettingsDep) -> list[dict[str, Any]]:
+def list_directions(settings: SettingsDep, _: ReaderDep) -> list[dict[str, Any]]:
     path = settings.ml_dir / "results" / "directions.json"
     if not path.is_file():
         raise HTTPException(status_code=404, detail="directions not available")
@@ -42,7 +44,7 @@ def list_directions(settings: SettingsDep) -> list[dict[str, Any]]:
 
 
 @router.get("/models")
-def list_models(settings: SettingsDep) -> list[dict[str, Any]]:
+def list_models(settings: SettingsDep, _: ReaderDep) -> list[dict[str, Any]]:
     models: list[dict[str, Any]] = []
     for path in sorted((settings.ml_dir / "configs" / "models").glob("*.json")):
         config = _read_json(path)
@@ -62,7 +64,7 @@ def list_models(settings: SettingsDep) -> list[dict[str, Any]]:
 
 
 @router.get("/results")
-def list_results(settings: SettingsDep) -> dict[str, list[str]]:
+def list_results(settings: SettingsDep, _: ReaderDep) -> dict[str, list[str]]:
     root = settings.ml_dir / "results"
     return {group: sorted(p.name for p in (root / group).glob("*.csv")) for group in RESULT_GROUPS}
 
@@ -72,6 +74,7 @@ def get_result(
     group: str,
     name: str,
     settings: SettingsDep,
+    _: ReaderDep,
     limit: Annotated[int, Query(ge=1, le=MAX_ROWS)] = 200,
 ) -> dict[str, Any]:
     path = _result_file(settings, group, name)
