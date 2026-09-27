@@ -1,5 +1,5 @@
-import type { Asset, AssetType, ForecastHorizon, ScoreType } from "@/entities/infrastructure"
-import { OPEN_STATUSES, type MaintenanceAction } from "@/entities/maintenance"
+import { TYPE_LABEL, type Asset, type AssetType, type ForecastHorizon, type ScoreType } from "@/entities/infrastructure"
+import { OPEN_STATUSES, STATUS_LABEL, type MaintenanceAction } from "@/entities/maintenance"
 import type { Prediction, PredictionRiskLevel } from "@/entities/prediction"
 
 export type DashboardLevel = PredictionRiskLevel | "offline"
@@ -22,6 +22,50 @@ export type DashboardRow = {
 
 const rank: Record<DashboardLevel, number> = { critical: 4, attention: 3, observe: 2, normal: 1, offline: 0 }
 const types = new Set(["pump", "fan", "smoke", "power", "other"])
+
+export type DashboardSortKey = "asset" | "system" | "risk" | "score" | "horizon" | "response"
+export type DashboardSort = { key: DashboardSortKey; direction: "asc" | "desc" }
+const collator = new Intl.Collator("ru", { numeric: true, sensitivity: "base" })
+
+export function responseLabels(actions: MaintenanceAction[]): Map<string, string> {
+  const grouped = new Map<string, MaintenanceAction[]>()
+  for (const action of actions) {
+    const list = grouped.get(action.assetId) ?? []
+    list.push(action)
+    grouped.set(action.assetId, list)
+  }
+  return new Map([...grouped].map(([id, list]) => [id, `${STATUS_LABEL[list[0].status]}${list.length > 1 ? ` +${list.length - 1}` : ""}`]))
+}
+
+/** Sort the complete filtered set before pagination; unavailable scores always go last. */
+export function sortDashboardRows(rows: DashboardRow[], sort: DashboardSort, responses: Map<string, string> = new Map()) {
+  const direction = sort.direction === "asc" ? 1 : -1
+  return [...rows].sort((left, right) => {
+    let difference = 0
+    switch (sort.key) {
+      case "asset":
+        difference = collator.compare(left.assetId, right.assetId) || collator.compare(left.group, right.group)
+        break
+      case "system":
+        difference = collator.compare(TYPE_LABEL[left.type], TYPE_LABEL[right.type])
+        break
+      case "risk":
+        difference = rank[left.level] - rank[right.level] || left.score - right.score
+        break
+      case "score":
+        if ((left.level === "offline") !== (right.level === "offline")) return left.level === "offline" ? 1 : -1
+        difference = left.level === "offline" ? 0 : left.score - right.score
+        break
+      case "horizon":
+        difference = left.horizon - right.horizon
+        break
+      case "response":
+        difference = collator.compare(responses.get(left.assetId) ?? "No open action", responses.get(right.assetId) ?? "No open action")
+        break
+    }
+    return difference * direction || collator.compare(left.assetId, right.assetId) || collator.compare(left.id, right.id)
+  })
+}
 
 export function dashboardRows(
   assets: Asset[],

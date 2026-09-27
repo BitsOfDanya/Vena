@@ -4,7 +4,7 @@ import type { Asset } from "@/entities/infrastructure"
 import type { MaintenanceAction } from "@/entities/maintenance"
 import type { Prediction } from "@/entities/prediction"
 
-import { dashboardRows, exportDashboardCsv, filterRows, summarizeDashboard } from "./analytics"
+import { dashboardRows, exportDashboardCsv, filterRows, responseLabels, sortDashboardRows, summarizeDashboard } from "./analytics"
 
 const asset: Asset = {
   id: "P-1",
@@ -39,6 +39,63 @@ const prediction: Prediction = {
 }
 
 describe("dashboard analytics", () => {
+  it("sorts the whole set numerically before paging without mutating it", () => {
+    const rows = dashboardRows(
+      Array.from({ length: 25 }, (_, i) => ({ ...asset, id: `P-${25 - i}`, riskScore: i })),
+      [],
+      "demo",
+      72,
+      1000
+    )
+    const original = rows.map((row) => row.id)
+    const byAsset = sortDashboardRows(rows, { key: "asset", direction: "asc" })
+    expect(byAsset.slice(0, 3).map((row) => row.assetId)).toEqual(["P-1", "P-2", "P-3"])
+    expect(byAsset.slice(20).map((row) => row.assetId)).toEqual(["P-21", "P-22", "P-23", "P-24", "P-25"])
+    expect(sortDashboardRows(rows, { key: "score", direction: "desc" })[0].score).toBe(24)
+    expect(sortDashboardRows(rows, { key: "score", direction: "asc" })[0].score).toBe(0)
+    expect(rows.map((row) => row.id)).toEqual(original)
+  })
+  it("orders risk by severity and keeps unavailable scores last in both directions", () => {
+    const rows = dashboardRows(
+      [
+        { ...asset, id: "offline", status: "offline", riskScore: 99 },
+        { ...asset, id: "normal", status: "normal", riskScore: 12 },
+        { ...asset, id: "attention", status: "attention", riskScore: 40 },
+        { ...asset, id: "critical", status: "critical", riskScore: 70 },
+      ],
+      [],
+      "demo",
+      72,
+      1000
+    )
+    expect(sortDashboardRows(rows, { key: "risk", direction: "desc" }).map((row) => row.assetId)).toEqual([
+      "critical",
+      "attention",
+      "normal",
+      "offline",
+    ])
+    for (const direction of ["asc", "desc"] as const) {
+      expect(sortDashboardRows(rows, { key: "score", direction }).at(-1)?.assetId).toBe("offline")
+    }
+  })
+  it("sorts systems, horizons and displayed response labels", () => {
+    const rows = dashboardRows(
+      [
+        { ...asset, id: "P-2" },
+        { ...asset, id: "F-1", type: "fan" },
+      ],
+      [],
+      "demo",
+      72,
+      1000
+    )
+    rows[0].horizon = 24
+    expect(sortDashboardRows(rows, { key: "system", direction: "asc" })[0].type).toBe("fan")
+    expect(sortDashboardRows(rows, { key: "horizon", direction: "desc" })[0].horizon).toBe(72)
+    const labels = responseLabels([{ assetId: "P-2", status: "assigned" }] as MaintenanceAction[])
+    expect(sortDashboardRows(rows, { key: "response", direction: "asc" }, labels)[0].assetId).toBe("P-2")
+    expect(sortDashboardRows(rows, { key: "response", direction: "desc" }, labels)[0].assetId).toBe("F-1")
+  })
   it("does not substitute demo assets when API predictions are absent", () => {
     expect(dashboardRows([asset], [], "api", 72, 1000)).toEqual([])
   })

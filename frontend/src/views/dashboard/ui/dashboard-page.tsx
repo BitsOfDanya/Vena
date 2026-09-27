@@ -1,12 +1,12 @@
 "use client"
 
-import { ArrowDownToLine, ArrowUpRight, RefreshCw, Search } from "lucide-react"
+import { ArrowDown, ArrowDownToLine, ArrowUp, ArrowUpDown, ArrowUpRight, RefreshCw, Search } from "lucide-react"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
 import * as React from "react"
 
 import { TYPE_LABEL, TYPE_ORDER, formatScore, useAssets, type ForecastHorizon } from "@/entities/infrastructure"
-import { OUTCOME_LABEL, STATUS_LABEL, useActions } from "@/entities/maintenance"
+import { OUTCOME_LABEL, useActions } from "@/entities/maintenance"
 import { useDashboardPredictions, useSnapshotStatus } from "@/entities/prediction"
 import { CreateActionSheet, type ActionDraft } from "@/features/create-action"
 import { useWorkspace } from "@/features/workspace"
@@ -24,9 +24,13 @@ import {
   dashboardRows,
   exportDashboardCsv,
   filterRows,
+  responseLabels,
+  sortDashboardRows,
   summarizeDashboard,
   type DashboardLevel,
   type DashboardRow,
+  type DashboardSort,
+  type DashboardSortKey,
 } from "../model/analytics"
 
 const HORIZONS: { value: ForecastHorizon; label: string }[] = [
@@ -57,6 +61,14 @@ const TONE: Record<DashboardLevel, string> = {
 }
 const EMPTY_ROWS: DashboardRow[] = []
 const PAGE_SIZE = 20
+const COLUMNS: { key: DashboardSortKey; label: string }[] = [
+  { key: "asset", label: "Asset / group" },
+  { key: "system", label: "System" },
+  { key: "risk", label: "Risk" },
+  { key: "score", label: "Score" },
+  { key: "horizon", label: "Horizon" },
+  { key: "response", label: "Response" },
+]
 
 function SectionTitle({ children, description, action }: { children: React.ReactNode; description?: string; action?: React.ReactNode }) {
   return (
@@ -251,6 +263,7 @@ export function DashboardPage() {
   const [system, setSystem] = React.useState("all")
   const [level, setLevel] = React.useState("all")
   const [page, setPage] = React.useState(0)
+  const [sort, setSort] = React.useState<DashboardSort>({ key: "risk", direction: "desc" })
   const [selectedId, setSelectedId] = React.useState<string | null>(null)
   const [sheetOpen, setSheetOpen] = React.useState(false)
   const [draft, setDraft] = React.useState<ActionDraft>({})
@@ -267,9 +280,11 @@ export function DashboardPage() {
     [filtered, actions.data, actions.isError]
   )
   const selected = filtered.find((row) => row.id === selectedId) ?? null
+  const responses = React.useMemo(() => responseLabels(summary.open), [summary.open])
+  const sorted = React.useMemo(() => sortDashboardRows(filtered, sort, responses), [filtered, sort, responses])
   const totalPages = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE))
   const currentPage = Math.min(page, totalPages - 1)
-  const currentRows = filtered.slice(currentPage * PAGE_SIZE, (currentPage + 1) * PAGE_SIZE)
+  const currentRows = sorted.slice(currentPage * PAGE_SIZE, (currentPage + 1) * PAGE_SIZE)
   const actionUnavailable = actions.isPending || actions.isError
   const sourceUnavailable = loading || source.isError
   const sampleTime = availableRows.length ? availableRows.reduce((latest, row) => Math.max(latest, row.time), 0) : null
@@ -279,6 +294,13 @@ export function DashboardPage() {
   }
   const changeLevel = (value: string) => {
     setLevel(value)
+    setPage(0)
+  }
+  const changeSort = (key: DashboardSortKey) => {
+    setSort((current) => ({
+      key,
+      direction: current.key === key ? (current.direction === "asc" ? "desc" : "asc") : key === "risk" || key === "score" ? "desc" : "asc",
+    }))
     setPage(0)
   }
   const reset = () => {
@@ -305,7 +327,7 @@ export function DashboardPage() {
     setSheetOpen(true)
   }
   const exportCsv = () => {
-    const url = URL.createObjectURL(new Blob([exportDashboardCsv(filtered, workflowMode)], { type: "text/csv;charset=utf-8" }))
+    const url = URL.createObjectURL(new Blob([exportDashboardCsv(sorted, workflowMode)], { type: "text/csv;charset=utf-8" }))
     const link = document.createElement("a")
     link.href = url
     link.download = `vena-dashboard-${workflowMode}-${horizon}h.csv`
@@ -498,7 +520,7 @@ export function DashboardPage() {
               </div>
               <section className="px-6 pt-7 pb-6">
                 <SectionTitle
-                  description="Приоритет по уровню риска, затем по score. Отдельная строка для каждого прогноза."
+                  description="Нажмите на заголовок столбца, чтобы изменить порядок. Повторное нажатие меняет направление."
                   action={
                     <Link href="/network" className="flex items-center gap-1 text-[12px] whitespace-nowrap text-vena">
                       Network & map <ArrowUpRight className="size-3.5" />
@@ -527,16 +549,39 @@ export function DashboardPage() {
                       <table className="w-full min-w-[760px] text-left text-[12px]">
                         <thead className="bg-surface/40 text-[10px] tracking-[0.08em] text-muted-foreground uppercase">
                           <tr>
-                            {["Asset / group", "System", "Risk", "Score", "Horizon", "Response", ""].map((heading, index) => (
-                              <th key={index} scope="col" className="px-3 py-3 font-medium">
-                                {heading || <span className="sr-only">Details</span>}
-                              </th>
-                            ))}
+                            {COLUMNS.map((column) => {
+                              const active = sort.key === column.key
+                              const SortIcon = active ? (sort.direction === "asc" ? ArrowUp : ArrowDown) : ArrowUpDown
+                              return (
+                                <th
+                                  key={column.key}
+                                  scope="col"
+                                  aria-sort={active ? (sort.direction === "asc" ? "ascending" : "descending") : undefined}
+                                  className="font-medium"
+                                >
+                                  <button
+                                    type="button"
+                                    onClick={() => changeSort(column.key)}
+                                    disabled={column.key === "response" && actionUnavailable}
+                                    aria-label={`Sort by ${column.label}`}
+                                    className={cn(
+                                      "flex w-full items-center gap-2 px-3 py-3 text-left tracking-[0.08em] uppercase outline-none hover:bg-surface/60 focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50",
+                                      active && "text-vena"
+                                    )}
+                                  >
+                                    {column.label}
+                                    <SortIcon aria-hidden className="size-3 shrink-0" />
+                                  </button>
+                                </th>
+                              )
+                            })}
+                            <th scope="col" className="px-3 py-3">
+                              <span className="sr-only">Details</span>
+                            </th>
                           </tr>
                         </thead>
                         <tbody>
                           {currentRows.map((row) => {
-                            const open = summary.open.filter((action) => action.assetId === row.assetId)
                             return (
                               <tr
                                 key={row.id}
@@ -563,11 +608,7 @@ export function DashboardPage() {
                                 </td>
                                 <td className="px-3 py-3 font-mono">{row.horizon}h</td>
                                 <td className="px-3 py-3 text-muted-foreground">
-                                  {actionUnavailable
-                                    ? "Unavailable"
-                                    : open.length
-                                      ? `${STATUS_LABEL[open[0].status]}${open.length > 1 ? ` +${open.length - 1}` : ""}`
-                                      : "No open action"}
+                                  {actionUnavailable ? "Unavailable" : (responses.get(row.assetId) ?? "No open action")}
                                 </td>
                                 <td className="px-3 py-3">
                                   <Button
