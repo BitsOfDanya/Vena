@@ -1,6 +1,6 @@
 import { afterEach, describe, expect, it, vi } from "vitest"
 
-import { getAssetPrediction, getBackendSituations, getPredictions, getSnapshotStatus } from "./service"
+import { getAssetPrediction, getBackendSituations, getDashboardPredictions, getPredictions, getSnapshotStatus } from "./service"
 
 function mockFetch(handler: (url: string) => { status?: number; body: unknown }) {
   const calls: string[] = []
@@ -36,6 +36,52 @@ afterEach(() => {
 })
 
 describe("prediction service", () => {
+  const status = {
+    available: true,
+    snapshot_id: "snap-1",
+    prediction_time: prediction.prediction_time,
+    age_seconds: 1,
+    stale: false,
+    prediction_count: 501,
+    models: [],
+    detail: "",
+  }
+
+  it("loads every dashboard page with the selected horizon", async () => {
+    const first = Array.from({ length: 500 }, (_, i) => ({ ...prediction, id: `prediction-${i}` }))
+    const calls = mockFetch((url) => ({
+      body: url.endsWith("/snapshot") ? status : url.includes("offset=500") ? [{ ...prediction, id: "last" }] : first,
+    }))
+    const result = await getDashboardPredictions(72)
+    expect(result).toHaveLength(501)
+    expect(calls.filter((url) => !url.endsWith("/snapshot"))).toEqual([
+      expect.stringContaining("horizon=72&sort=risk_desc&limit=500&offset=0"),
+      expect.stringContaining("horizon=72&sort=risk_desc&limit=500&offset=500"),
+    ])
+  })
+
+  it("rejects a failed page instead of returning partial counts", async () => {
+    const first = Array.from({ length: 500 }, (_, i) => ({ ...prediction, id: `prediction-${i}` }))
+    mockFetch((url) =>
+      url.endsWith("/snapshot") ? { body: status } : url.includes("offset=500") ? { status: 503, body: {} } : { body: first }
+    )
+    await expect(getDashboardPredictions(72)).rejects.toMatchObject({ status: 503 })
+  })
+
+  it("rejects mixed horizons and malformed scores", async () => {
+    mockFetch((url) => ({ body: url.endsWith("/snapshot") ? status : [prediction] }))
+    await expect(getDashboardPredictions(24)).rejects.toThrow("Inconsistent")
+    mockFetch((url) => ({ body: url.endsWith("/snapshot") ? status : [{ ...prediction, score: 120 }] }))
+    await expect(getDashboardPredictions(72)).rejects.toThrow()
+  })
+
+  it("rejects a snapshot replaced while pages were loading", async () => {
+    let reads = 0
+    mockFetch((url) => ({
+      body: url.endsWith("/snapshot") ? { ...status, snapshot_id: ++reads === 1 ? "snap-1" : "snap-2" } : [prediction],
+    }))
+    await expect(getDashboardPredictions(72)).rejects.toThrow("Snapshot changed")
+  })
   it("maps a backend prediction without inventing a probability", async () => {
     mockFetch(() => ({ body: [prediction] }))
 

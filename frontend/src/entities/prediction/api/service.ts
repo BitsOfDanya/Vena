@@ -1,3 +1,5 @@
+import { z } from "zod"
+
 import { apiFetch } from "@/shared/api/http"
 
 import type { BackendSituation, Prediction, SnapshotStatus } from "../model/types"
@@ -42,17 +44,65 @@ function toPrediction(item: ApiPrediction): Prediction {
   }
 }
 
-export async function getPredictions(params: {
-  riskLevel?: string
-  sort?: "risk_desc" | "delta_desc" | "latest"
-  limit?: number
-} = {}): Promise<Prediction[]> {
+export async function getPredictions(
+  params: {
+    riskLevel?: string
+    sort?: "risk_desc" | "delta_desc" | "latest"
+    limit?: number
+    offset?: number
+    horizon?: number
+  } = {}
+): Promise<Prediction[]> {
   const query = new URLSearchParams()
   if (params.riskLevel) query.set("risk_level", params.riskLevel)
   if (params.sort) query.set("sort", params.sort)
   query.set("limit", String(params.limit ?? 50))
+  if (params.offset !== undefined) query.set("offset", String(params.offset))
+  if (params.horizon !== undefined) query.set("horizon", String(params.horizon))
   const items = await apiFetch<ApiPrediction[]>(`/api/v1/predictions?${query.toString()}`)
   return items.map(toPrediction)
+}
+
+const PredictionSchema = z.object({
+  id: z.string(),
+  asset_id: z.string(),
+  device_type: z.string(),
+  model_id: z.string(),
+  model_version: z.string().nullable(),
+  prediction_time: z.iso.datetime({ offset: true }),
+  horizon_hours: z.number().int().positive().nullable(),
+  score: z.number().finite().min(0).max(1),
+  score_type: z.enum(["risk_score", "calibrated_probability"]),
+  risk_level: z.enum(["critical", "attention", "observe", "normal"]),
+  model_risk_level: z.string(),
+  score_delta: z.number().nullable(),
+  factors: z.array(z.object({ key: z.string(), label: z.string(), value: z.number() })),
+  sensor_type: z.string().nullable(),
+  system_type: z.string().nullable(),
+  last_event_at: z.iso.datetime({ offset: true }).nullable(),
+})
+
+/** A complete horizon-specific snapshot; a failed page never becomes a partial total. */
+export async function getDashboardPredictions(horizon: 24 | 72): Promise<Prediction[]> {
+  const before = await getSnapshotStatus()
+  if (!before.available || !before.snapshotId) throw new Error("Predictions unavailable")
+  const result: Prediction[] = []
+  const ids = new Set<string>()
+  for (let offset = 0; offset < 100_000; offset += 500) {
+    const raw = await apiFetch<unknown>(`/api/v1/predictions?horizon=${horizon}&sort=risk_desc&limit=500&offset=${offset}`)
+    const page = z.array(PredictionSchema).parse(raw).map(toPrediction)
+    for (const item of page) {
+      if (item.horizonHours !== horizon || ids.has(item.id)) throw new Error("Inconsistent prediction snapshot")
+      ids.add(item.id)
+      result.push(item)
+    }
+    if (page.length < 500) {
+      const after = await getSnapshotStatus()
+      if (!after.available || after.snapshotId !== before.snapshotId) throw new Error("Snapshot changed; refresh dashboard")
+      return result
+    }
+  }
+  throw new Error("Prediction snapshot exceeds dashboard capacity")
 }
 
 export async function getAssetPrediction(assetId: string): Promise<Prediction | null> {

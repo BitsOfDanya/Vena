@@ -98,7 +98,7 @@ Ingest критических прогнозов создаёт уведомле
 | SMVU | хук свежести батчей; streaming journal — нет |
 | Backup Postgres | скрипт есть; нужен регламент cron/restore |
 | TLS / reverse proxy | не в compose (вынести на ingress) |
-| Аналитический Dashboard | заглушка, отдельная реализация |
+| Аналитический Dashboard | сводка рисков, фильтры 24/72ч, полный реестр прогнозов, статусы работ, CSV; источники demo/API разделены |
 
 ## Local development
 
@@ -148,7 +148,7 @@ pnpm dev
 | `/timeline` | PAST · NOW · FUTURE, сравнение до 5 объектов |
 | `/actions` | план ТО 24/48/72ч, результат работ |
 | `/settings` | overview, notifications, integrations, **security**, **audit** |
-| `/dashboard` | заглушка аналитического модуля |
+| `/dashboard` | аналитика рисков по системам, реестр прогнозов, инспектор, переход к созданию работ и CSV |
 
 Replay — `Ctrl/Cmd + K` (command palette). Риск на UI — `risk score N/100`, не вероятность, пока модель не откалибрована.
 
