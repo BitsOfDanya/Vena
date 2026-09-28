@@ -1,6 +1,10 @@
 from __future__ import annotations
 
+import json
+import os
 from datetime import UTC, datetime
+from pathlib import Path
+from zoneinfo import ZoneInfo
 
 from sqlalchemy.orm import Session
 
@@ -31,6 +35,31 @@ def get_status(session: Session) -> dict:
         "fresh": age <= 300,
         "detail": state.detail or "",
     }
+
+
+def spool_events(inbox: Path, batch_id: str, events: list[dict], timezone: str) -> datetime:
+    """Hand a batch to the ML stream worker as one JSON Lines file.
+
+    The journal records local time without an offset, so timestamps that carry
+    an offset are converted to the service timezone first. The file appears
+    under its final name only when complete. Returns the latest local event time.
+    """
+    zone = ZoneInfo(timezone)
+    inbox.mkdir(parents=True, exist_ok=True)
+    name = f"{utcnow():%Y%m%dT%H%M%S%f}-{batch_id}.jsonl"
+    temporary = inbox / f".{name}.tmp"
+    latest: datetime | None = None
+    with temporary.open("w", encoding="utf-8") as handle:
+        for event in events:
+            ts: datetime = event["ts"]
+            if ts.tzinfo is not None:
+                ts = ts.astimezone(zone).replace(tzinfo=None)
+            latest = ts if latest is None else max(latest, ts)
+            record = {**event, "ts": ts.isoformat()}
+            handle.write(json.dumps(record, ensure_ascii=False) + "\n")
+    os.replace(temporary, inbox / name)
+    assert latest is not None
+    return latest
 
 
 def accept_batch(

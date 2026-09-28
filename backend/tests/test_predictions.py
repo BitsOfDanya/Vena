@@ -415,3 +415,25 @@ def test_ml_reports_are_whitelisted(client: TestClient, ml_root: Path) -> None:
     assert client.get("/api/v1/ml/reports/seasonality").json() == {"seasonal_share": {}}
     assert client.get("/api/v1/ml/reports/directions").status_code == 404
     assert client.get("/api/v1/ml/reports/..%2Fsecret").status_code == 404
+
+
+def test_stream_info_and_prospective_report(client: TestClient, ml_root: Path) -> None:
+    write_snapshot(ml_root, datetime.now(tz=UTC), [row("100", 0.5, "low")])
+    path = ml_root / "results" / "predictions" / "snapshot.json"
+    payload = json.loads(path.read_text(encoding="utf-8"))
+    payload["stream"] = {
+        "events": 12,
+        "channels_rescored": 3,
+        "received_at": "2026-07-01T09:00:00Z",
+        "published_at": "2026-07-01T09:00:04Z",
+        "latency_seconds": 4.2,
+    }
+    path.write_text(json.dumps(payload), encoding="utf-8")
+
+    assert client.get("/api/v1/ml/prospective").status_code == 404
+    (ml_root / "results" / "predictions" / "prospective.json").write_text(
+        json.dumps({"start": "2026-06-30T23:59:06", "models": {}}), encoding="utf-8"
+    )
+
+    assert client.get("/api/v1/predictions/snapshot").json()["stream"]["latency_seconds"] == 4.2
+    assert client.get("/api/v1/ml/prospective").json()["models"] == {}

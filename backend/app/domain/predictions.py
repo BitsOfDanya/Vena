@@ -19,6 +19,7 @@ from app.schemas.predictions import (
     RiskFactor,
     RiskLevel,
     SnapshotStatus,
+    StreamInfo,
 )
 
 SNAPSHOT_NAME = "snapshot.json"
@@ -66,6 +67,15 @@ def _factors(raw: dict[str, Any]) -> list[RiskFactor]:
             continue
         factors.append(RiskFactor(key=key, label=FACTOR_LABELS.get(key, key), value=float(value)))
     return factors
+
+
+def _stream(raw: Any) -> StreamInfo | None:
+    if not isinstance(raw, dict):
+        return None
+    try:
+        return StreamInfo(**raw)
+    except (TypeError, ValueError):
+        return None
 
 
 def _drivers(raw: Any) -> list[Driver]:
@@ -192,6 +202,7 @@ class PredictionSource:
             stale=age is not None and age > self._settings.prediction_stale_seconds,
             prediction_count=len(self._predictions),
             models=models,
+            stream=_stream(self._payload.get("stream")),
         )
 
     def all(self) -> list[Prediction]:

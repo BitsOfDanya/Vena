@@ -29,7 +29,11 @@ class Settings(BaseSettings):
     prediction_stale_seconds: int = 86_400
     prediction_critical_limit: int = 20
     prediction_cooldown_minutes: int = 240
-    prediction_refresh_minutes: int = 15
+    # The stream worker publishes a snapshot within seconds of an event batch;
+    # polling every 30 s keeps the end-to-end delay well under 300 s.
+    prediction_refresh_seconds: int = 30
+    # Spool directory shared with the ML stream worker; unset disables event intake.
+    inbox_dir: Path | None = None
     ingest_on_startup: bool = True
     auth_enabled: bool = False
     api_keys_json: str = ""

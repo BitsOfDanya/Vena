@@ -40,7 +40,7 @@ def build_scheduler(settings: Settings) -> BackgroundScheduler | None:
     scheduler = BackgroundScheduler(timezone=digest.timezone or settings.timezone)
     scheduler.add_job(
         _run_refresh,
-        IntervalTrigger(minutes=settings.prediction_refresh_minutes),
+        IntervalTrigger(seconds=settings.prediction_refresh_seconds),
         args=[settings],
         id="prediction_refresh",
         replace_existing=True,

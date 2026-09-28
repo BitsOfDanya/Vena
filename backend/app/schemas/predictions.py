@@ -65,6 +65,15 @@ class PredictionDetail(BaseModel):
     notification_id: str | None = None
 
 
+class StreamInfo(BaseModel):
+    events: int
+    channels_rescored: int
+    received_at: datetime
+    published_at: datetime
+    # Seconds from the batch reaching the API to the snapshot being published.
+    latency_seconds: float
+
+
 class SnapshotStatus(BaseModel):
     available: bool
     snapshot_id: str | None = None
@@ -74,6 +83,7 @@ class SnapshotStatus(BaseModel):
     stale: bool = False
     prediction_count: int = 0
     models: list[ModelInfo] = []
+    stream: StreamInfo | None = None
     detail: str = ""
 
 

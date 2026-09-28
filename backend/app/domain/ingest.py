@@ -148,6 +148,9 @@ def refresh_predictions(
 
     if existing is None:
         for prediction in predictions:
+            # The stream republishes every channel; history keeps only changed scores.
+            if prediction.previous_score is not None and prediction.score_delta == 0:
+                continue
             session.add(
                 PredictionPoint(
                     snapshot_id=status.snapshot_id,

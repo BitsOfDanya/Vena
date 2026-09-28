@@ -50,3 +50,44 @@ def test_smvu_ingest_marks_fresh(client: TestClient) -> None:
     assert body["configured"] is True
     assert body["fresh"] is True
     assert body["last_event_count"] == 42
+
+
+def test_smvu_events_are_spooled_for_the_stream(client: TestClient, monkeypatch, tmp_path) -> None:
+    import json
+
+    from app.core.config import get_settings
+
+    events = [
+        {
+            "event_id": "1",
+            "channel_id": "96463",
+            "ts": "2026-07-01T09:00:00",
+            "value": "Неисправен",
+            "alarm": True,
+        },
+        {
+            "event_id": "2",
+            "channel_id": "96463",
+            "ts": "2026-07-01T06:05:00+00:00",
+            "value": "Норма",
+        },
+    ]
+    unconfigured = client.post(
+        "/api/v1/smvu/events", json={"batch_id": "b-0", "event_count": 2, "events": events}
+    )
+    assert unconfigured.status_code == 503
+
+    monkeypatch.setattr(get_settings(), "inbox_dir", tmp_path)
+    accepted = client.post(
+        "/api/v1/smvu/events", json={"batch_id": "b-1", "event_count": 0, "events": events}
+    )
+    assert accepted.status_code == 202
+    assert accepted.json()["last_event_count"] == 2
+
+    files = [path for path in tmp_path.iterdir() if path.suffix == ".jsonl"]
+    assert len(files) == 1
+    records = [json.loads(line) for line in files[0].read_text(encoding="utf-8").splitlines()]
+    assert records[0]["ts"] == "2026-07-01T09:00:00"
+    # An offset is converted to the journal's local time (Europe/Moscow, UTC+3).
+    assert records[1]["ts"] == "2026-07-01T09:05:00"
+    assert records[1]["alarm"] is False

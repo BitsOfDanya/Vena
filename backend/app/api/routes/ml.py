@@ -52,6 +52,15 @@ def list_directions(settings: SettingsDep, _: ReaderDep) -> list[dict[str, Any]]
     return directions
 
 
+@router.get("/prospective")
+def get_prospective(settings: SettingsDep, _: ReaderDep) -> Any:
+    """Forecasts checked against events that arrived after the training journal."""
+    path = settings.ml_dir / "results" / "predictions" / "prospective.json"
+    if not path.is_file():
+        raise HTTPException(status_code=404, detail="prospective check has not started")
+    return _read_json(path)
+
+
 @router.get("/reports/{name}")
 def get_report(name: str, settings: SettingsDep, _: ReaderDep) -> Any:
     path = settings.ml_dir / "results" / f"{name}.json"
