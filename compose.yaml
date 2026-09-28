@@ -10,8 +10,9 @@ services:
     volumes:
       - vena-postgres:/var/lib/postgresql/data
       - ./backend/scripts/init-db.sql:/docker-entrypoint-initdb.d/01-init.sql:ro
+    # Loopback only: the database is reached by the backend over the compose network.
     ports:
-      - "5432:5432"
+      - "127.0.0.1:${VENA_DB_PORT:-5432}:5432"
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U vena -d vena"]
       interval: 5s
