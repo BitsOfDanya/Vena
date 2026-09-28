@@ -17,6 +17,7 @@ COPY --chmod=755 backend/scripts/entrypoint.sh ./scripts/entrypoint.sh
 COPY --chown=app:app ml/configs /srv/ml/configs
 COPY --chown=app:app ml/artifacts /srv/ml/artifacts
 COPY --chown=app:app ml/results /srv/ml/results
+RUN mkdir -p /srv/ml/inbox && chown app:app /srv/ml/inbox
 USER 10001
 EXPOSE 8000
 CMD ["./scripts/entrypoint.sh"]

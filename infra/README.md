@@ -77,6 +77,23 @@ docker compose --env-file "$VENA_ENV_FILE" -f /opt/vena/current/infra/compose.ya
 прогнозов, чтение работ/журнала/геоданных и запись результатов refresh в БД.
 Workflow дополнительно проверяет публичные `/pulse` и `/api/v1/health` через Caddy.
 
+### Журнал СМВУ и поток событий
+
+Загрузка журнала и включение режима `journal` одной командой со своего компьютера (нужен SSH-доступ `vena-deploy`):
+
+```sh
+infra/scripts/upload-dataset.sh --enable vena-deploy@5.129.225.86
+```
+
+Скрипт копирует `ml/dataset/ext-journal-*.csv` и справочник каналов в `/opt/vena/shared/dataset`, выставляет `VENA_ML_MODE=journal` и перезапускает `ml` и `backend`. В режиме `journal` ML-контейнер один раз оценивает журнал целиком (десятки минут, в это время API отвечает «Predictions unavailable»), затем работает как поток:
+
+- СМВУ передаёт события в `POST /api/v1/smvu/events` (роль dispatcher или admin): `batch_id`, `event_count` и массив `events` из записей `event_id`, `channel_id`, `ts`, `value`, `alarm` — формат Приложения 1 ТЗ.
+- API кладёт батч в общий том `inbox`; ML каждые `VENA_STREAM_POLL_SECONDS` (30 с) пересчитывает только каналы с новыми событиями и публикует снимок; backend забирает снимок каждые 30 с. Задержка потока видна в `GET /api/v1/predictions/snapshot` → `stream.latency_seconds`.
+- По мере поступления событий прогнозы, выданные после конца журнала, сверяются с фактом: `GET /api/v1/ml/prospective`.
+- Раз в сутки выполняется полный пересчёт, включая разделы тревог и доступа.
+
+Для демонстрации потока на уже загруженном журнале задайте `VENA_STREAM_HISTORY_UNTIL=2026-06-01` и воспроизведите последующий период: `python ml/replay_journal.py --url http://5.129.225.86 --start 2026-06-01 --end 2026-06-08` с ключом в `VENA_API_KEY`.
+
 SMTP включается переменными `SMTP_HOST`, `SMTP_PORT`, `SMTP_USERNAME`,
 `SMTP_PASSWORD`, `SMTP_FROM`, `SMTP_TLS` в серверном `.env`. Без SMTP почта
 не отправляется; внутренние уведомления сохраняются в БД.

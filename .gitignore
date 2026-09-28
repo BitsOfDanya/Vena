@@ -52,6 +52,7 @@ research/
 
 artifacts/experimental/
 predictions/
+inbox/
 runs/
 checkpoints/
 logs/
