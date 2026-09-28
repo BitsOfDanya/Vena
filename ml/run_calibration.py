@@ -7,6 +7,7 @@ Risk levels keep using the raw score: isotonic steps can tie neighbouring scores
 
 Power Health is trained through 2024 and 2026 is closed, so its calibrator is
 fitted on 2025 and evaluated by two-fold cross-fitting over alternate months.
+Fan models are trained through 2025 and calibrated in run_fan_refresh.py.
 """
 
 import json
@@ -24,7 +25,6 @@ from pipeline.targets import modules
 HORIZON_FULL_WINDOW = pd.Timedelta(hours=72)
 DEVICE_MODELS = {
     "pump": ["pump_24h", "pump_72h", "pump_baseline_72h"],
-    "fan": ["fan_24h", "fan_72h"],
     "smoke": ["smoke_24h"],
 }
 OUTPUT = os.path.join(config.ROOT, "results", "calibration.json")

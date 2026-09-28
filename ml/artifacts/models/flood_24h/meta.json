@@ -81,12 +81,13 @@
     "calibrated": true,
     "calibration": {
       "method": "isotonic",
-      "fit_period": "2024",
-      "evaluated_on": "test 2025-2026H1",
+      "fit_period": "2024-2025",
+      "evaluated_on": "2026H1",
       "brier_raw": 0.0992,
       "brier_calibrated": 0.0633,
       "ece_raw": 0.1255,
-      "ece_calibrated": 0.0052
+      "ece_calibrated": 0.0256,
+      "ece_2024_fit": 0.0256
     },
     "risk_level_thresholds": {
       "critical": 0.8640124666304491,

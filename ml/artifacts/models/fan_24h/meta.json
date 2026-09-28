@@ -65,247 +65,34 @@
     },
     "calibrated": true,
     "risk_level_thresholds": {
-      "critical": 0.9548382966765594,
-      "high": 0.9196315518047402,
-      "medium": 0.8529314279361205
+      "critical": 0.9468563088856343,
+      "high": 0.9129475119250258,
+      "medium": 0.8534658984720865
     },
     "calibration": {
       "method": "isotonic",
-      "fit_period": "2024",
-      "evaluated_on": "test 2025-2026H1",
-      "n": 427702,
-      "base_rate": 0.0513,
-      "brier_raw": 0.1718,
-      "brier_calibrated": 0.0458,
-      "ece_raw": 0.243,
-      "ece_calibrated": 0.0149,
-      "reliability": [
-        {
-          "n": 396222,
-          "predicted": 0.0272,
-          "observed": 0.0398
-        },
-        {
-          "n": 28195,
-          "predicted": 0.1445,
-          "observed": 0.1765
-        },
-        {
-          "n": 82,
-          "predicted": 0.2019,
-          "observed": 0.2805
-        },
-        {
-          "n": 497,
-          "predicted": 0.3021,
-          "observed": 0.2736
-        },
-        {
-          "n": 1927,
-          "predicted": 0.4279,
-          "observed": 0.342
-        },
-        {
-          "n": 1,
-          "predicted": 0.5,
-          "observed": 0.0
-        },
-        {
-          "n": 297,
-          "predicted": 0.6903,
-          "observed": 0.4377
-        },
-        {
-          "n": 143,
-          "predicted": 0.7217,
-          "observed": 0.6084
-        },
-        {
-          "n": 1,
-          "predicted": 0.8886,
-          "observed": 0.0
-        },
-        {
-          "n": 337,
-          "predicted": 1.0,
-          "observed": 0.451
-        }
-      ]
+      "fit_period": "2025, model trained through 2024",
+      "evaluated_on": "2026H1",
+      "ece_calibrated": 0.0042,
+      "predicted": 0.0378,
+      "observed": 0.0421
     }
   },
   "training_period": {
-    "train_years": "2019-2023"
+    "train_years": "2019-2025"
   },
-  "version": "2026-09-28",
+  "version": "2026-09-29",
   "metrics_snapshot": {
-    "valid": {
-      "n": 179440,
-      "n_positive": 8395,
-      "roc_auc": 0.7576,
-      "avg_precision": 0.1383,
-      "precision_at_recall_0.5": 0.1097,
-      "recall_at_precision_0.7": 0.005,
-      "precision_top_0.1pct": 0.4749,
-      "recall_top_0.1pct": 0.0101,
-      "precision_top_0.5pct": 0.3779,
-      "recall_top_0.5pct": 0.0404,
-      "precision_top_1pct": 0.2754,
-      "recall_top_1pct": 0.0588,
-      "precision_top_2pct": 0.2252,
-      "recall_top_2pct": 0.0962,
-      "precision_top_5pct": 0.1753,
-      "recall_top_5pct": 0.1874
-    },
     "test": {
-      "n": 430030,
-      "n_positive": 21997,
-      "roc_auc": 0.8101,
-      "avg_precision": 0.1736,
-      "precision_at_recall_0.5": 0.144,
-      "recall_at_precision_0.7": 0.0001,
-      "precision_top_0.1pct": 0.4907,
-      "recall_top_0.1pct": 0.0096,
-      "precision_top_0.5pct": 0.4028,
-      "recall_top_0.5pct": 0.0394,
-      "precision_top_1pct": 0.3463,
-      "recall_top_1pct": 0.0677,
-      "precision_top_2pct": 0.2767,
-      "recall_top_2pct": 0.1082,
-      "precision_top_5pct": 0.2177,
-      "recall_top_5pct": 0.2128
+      "period": "2026H1",
+      "n": 221061,
+      "n_positive": 9297,
+      "avg_precision": 0.23956263782578094,
+      "roc_auc": 0.8788498279911743,
+      "recall_at_precision_0.7": 0.03441970528127353,
+      "precision_at_recall_0.5": 0.19639320776977204
     },
-    "daily_valid": {
-      "n_days": 366,
-      "daily_precision_top_0.1pct": 0.1962,
-      "daily_recall_top_0.1pct": 0.0086,
-      "daily_precision_top_0.5pct": 0.1897,
-      "daily_recall_top_0.5pct": 0.0172,
-      "daily_precision_top_1pct": 0.1911,
-      "daily_recall_top_1pct": 0.0367,
-      "daily_precision_top_2pct": 0.1833,
-      "daily_recall_top_2pct": 0.0743,
-      "daily_precision_top_5pct": 0.1506,
-      "daily_recall_top_5pct": 0.1578
-    },
-    "daily_test": {
-      "n_days": 546,
-      "daily_precision_top_0.1pct": 0.1526,
-      "daily_recall_top_0.1pct": 0.0045,
-      "daily_precision_top_0.5pct": 0.1645,
-      "daily_recall_top_0.5pct": 0.0143,
-      "daily_precision_top_1pct": 0.1621,
-      "daily_recall_top_1pct": 0.0297,
-      "daily_precision_top_2pct": 0.1631,
-      "daily_recall_top_2pct": 0.0618,
-      "daily_precision_top_5pct": 0.1483,
-      "daily_recall_top_5pct": 0.1433
-    },
-    "fixed_topk_test": {
-      "precision_top5_per_day": 0.1476,
-      "recall_top5_per_day": 0.0183,
-      "precision_top10_per_day": 0.1445,
-      "recall_top10_per_day": 0.0359,
-      "precision_top20_per_day": 0.1369,
-      "recall_top20_per_day": 0.068,
-      "precision_top50_per_day": 0.1286,
-      "recall_top50_per_day": 0.1596
-    },
-    "formal_70_50": {
-      "max_recall_at_precision_0.7": {
-        "frozen_on_valid": {
-          "threshold": 0.9470039721312912,
-          "precision": 0.7,
-          "recall": 0.005002977963073258
-        },
-        "applied_on_test": {
-          "threshold": 0.9470039721312912,
-          "precision": 0.47368421052631576,
-          "recall": 0.01677501477474201,
-          "tp": 369,
-          "fp": 410,
-          "fn": 21628
-        }
-      },
-      "max_precision_at_recall_0.5": {
-        "frozen_on_valid": {
-          "threshold": 0.6597052840354107,
-          "precision": 0.10973442074445838,
-          "recall": 0.5000595592614652
-        },
-        "applied_on_test": {
-          "threshold": 0.6597052840354107,
-          "precision": 0.14399339588028723,
-          "recall": 0.4995681229258535,
-          "tp": 10989,
-          "fp": 65327,
-          "fn": 11008
-        }
-      }
-    },
-    "alerts": {
-      "cooldown_24h": {
-        "n_alerts": 2217,
-        "alerts_per_day": 4.062921526772116,
-        "unique_assets_alerted_per_day": 4.11317254174397,
-        "duplicate_alert_rate": 0.44960278053624625,
-        "alert_precision": 0.15787099684258007,
-        "failure_episodes_total": 8481,
-        "failure_episodes_detected": 375,
-        "failure_episodes_missed": 8106,
-        "end_to_end_recall": 0.04421648390519986,
-        "median_lead_time_hours": 13.465555555555556,
-        "p25_lead_time_hours": 5.805833333333333,
-        "p75_lead_time_hours": 19.56277777777778
-      },
-      "cooldown_48h": {
-        "n_alerts": 1735,
-        "alerts_per_day": 3.1795980374152553,
-        "unique_assets_alerted_per_day": 3.4019607843137254,
-        "duplicate_alert_rate": 0.5692651439920556,
-        "alert_precision": 0.15273775216138327,
-        "failure_episodes_total": 8481,
-        "failure_episodes_detected": 274,
-        "failure_episodes_missed": 8207,
-        "end_to_end_recall": 0.032307510906732693,
-        "median_lead_time_hours": 13.460833333333333,
-        "p25_lead_time_hours": 5.538194444444445,
-        "p75_lead_time_hours": 20.293055555555554
-      },
-      "cooldown_72h": {
-        "n_alerts": 1507,
-        "alerts_per_day": 2.7617603702505993,
-        "unique_assets_alerted_per_day": 3.063008130081301,
-        "duplicate_alert_rate": 0.6258689175769613,
-        "alert_precision": 0.14465826144658261,
-        "failure_episodes_total": 8481,
-        "failure_episodes_detected": 220,
-        "failure_episodes_missed": 8261,
-        "end_to_end_recall": 0.02594033722438392,
-        "median_lead_time_hours": 12.995277777777776,
-        "p25_lead_time_hours": 6.768680555555556,
-        "p75_lead_time_hours": 20.915833333333335
-      }
-    },
-    "calibration": {
-      "method": "isotonic",
-      "brier_raw": 0.17225360885855967,
-      "brier_calibrated": 0.04567321398903462,
-      "ece_raw": 0.2437628606189779,
-      "ece_calibrated": 0.014657945068867254
-    },
-    "fn_breakdown": {
-      "total_episodes": 8481,
-      "detected": 375,
-      "candidate_generator_miss": 613,
-      "model_miss": 7493,
-      "candidate_generator_miss_share": 0.07227921235703337,
-      "model_miss_share": 0.8835043037377668
-    },
-    "fp_near_miss": {
-      "n_fp": 410,
-      "near_miss_48h": 0.4853658536585366,
-      "near_miss_72h": 0.551219512195122,
-      "near_miss_168h": 0.5707317073170731
-    }
+    "previous_test_avg_precision": 0.1736,
+    "reason": "score drift between 2024 and 2026H1, PSI about 1.0"
   }
 }

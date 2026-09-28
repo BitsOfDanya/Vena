@@ -79,14 +79,14 @@
     "min_history_days": 30,
     "calibration": {
       "method": "isotonic",
-      "fit_period": "2024",
-      "evaluated_on": "test 2025-2026H1",
+      "fit_period": "2024-2025",
+      "evaluated_on": "2026H1",
       "n": 501685,
       "base_rate": 0.2257,
       "brier_raw": 0.2198,
       "brier_calibrated": 0.1561,
       "ece_raw": 0.2387,
-      "ece_calibrated": 0.0276,
+      "ece_calibrated": 0.0381,
       "reliability": [
         {
           "n": 14466,
@@ -138,7 +138,8 @@
           "predicted": 0.9757,
           "observed": 0.8876
         }
-      ]
+      ],
+      "ece_2024_fit": 0.0381
     }
   },
   "training_period": {

@@ -146,3 +146,12 @@ def test_inbox_batches_are_read_in_order(tmp_path):
     assert files == ["1-a.jsonl", "2-b.jsonl"]
     assert batch["raw_value"].tolist() == ["Неисправен", "Норма"]
     assert batch["alarm_flag"].tolist() == [1, 0]
+
+
+def test_population_stability_flags_a_shifted_score():
+    import run_model_report
+
+    rng = np.random.default_rng(1)
+    reference = rng.normal(size=5000)
+    assert run_model_report.psi(reference, rng.normal(size=5000)) < 0.05
+    assert run_model_report.psi(reference, rng.normal(loc=1.5, size=5000)) > 0.25

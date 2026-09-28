@@ -25,13 +25,12 @@ SENSOR_TYPES = [config.SENSOR_ALIASES[key] for key in ("pump", "fan", "smoke", "
 ]
 FINAL_MODELS = [
     ("pump", 24, "catboost"),
-    ("fan", 24, "catboost"),
-    ("fan", 72, "catboost"),
     ("smoke", 24, "catboost"),
 ]
 SCRIPTS = [
     ("run_pump_blend_freeze.py", ["pump_72h"]),
     ("run_power_freeze.py", ["phase_24h"]),
+    ("run_fan_refresh.py", ["fan_24h", "fan_72h"]),
     ("run_flood_freeze.py", ["flood_24h"]),
     ("run_alarm_freeze.py", ["alarm_30m"]),
 ]
@@ -109,6 +108,8 @@ def main() -> None:
         challenge(names, lambda s=script: run(s))
 
     run("run_calibration.py")
+    run("run_model_report.py")
+    run("run_incident_calibration.py")
     run("run_access_analysis.py")
     run("run_seasonality.py")
     run("score_snapshot.py")
