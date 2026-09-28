@@ -24,6 +24,21 @@ class HealthComponents(BaseModel):
     last_event_at: datetime | None = None
 
 
+class Recommendation(BaseModel):
+    title: str
+    actions: list[str]
+    # Reason-specific hint from the main driver of the lead forecast.
+    hint: str | None = None
+    note: str
+
+
+class LocationHistory(BaseModel):
+    episodes_365d: int
+    channels: int
+    last_episode_at: datetime
+    median_duration_minutes: float
+
+
 class Situation(BaseModel):
     id: str
     type: Literal["risk", "pattern", "action"]
@@ -46,3 +61,6 @@ class Situation(BaseModel):
     # Calibrated probability that at least one channel of the location loses
     # power within 24 hours; only the power-loss scenario has a location model.
     incident_probability: float | None = None
+    health_index: int | None = None
+    recommendation: Recommendation | None = None
+    history: LocationHistory | None = None

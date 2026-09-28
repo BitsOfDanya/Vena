@@ -163,6 +163,7 @@ class PredictionSource:
                     lead_time_hours=row.get("horizon_hours"),
                     factors=_factors(row.get("factors", {})),
                     drivers=_drivers(row.get("drivers")),
+                    name=row.get("name") if isinstance(row.get("name"), str) else None,
                     sensor_type=row.get("sensor_type"),
                     system_type=row.get("system_type"),
                     last_event_at=_parse_time(row.get("last_event_at")),
@@ -170,6 +171,10 @@ class PredictionSource:
                 )
             )
         return result
+
+    @property
+    def settings(self) -> Settings:
+        return self._settings
 
     @property
     def available(self) -> bool:
@@ -257,6 +262,12 @@ class PredictionSource:
             except (KeyError, TypeError, ValueError):
                 continue
         return result
+
+    def location_history(self) -> dict[str, dict[str, dict[str, Any]]]:
+        """Past episodes per location group and device, from the last full pass."""
+        self._read()
+        raw = (self._payload or {}).get("location_history")
+        return raw if isinstance(raw, dict) else {}
 
     def alarms(self) -> list[AlarmAssessment]:
         result = []

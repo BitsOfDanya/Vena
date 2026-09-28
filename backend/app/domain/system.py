@@ -6,10 +6,12 @@ from sqlalchemy.orm import Session
 from app.core.config import Settings
 from app.db.models import Action, Notification
 from app.domain.actions import OPEN_STATUSES
+from app.domain.health import load_calibration, location_health
 from app.domain.incidents import group_incidents, location_label, reason_text, score_text
 from app.domain.predictions import get_prediction_source
+from app.domain.recommendations import recommend
 from app.schemas.predictions import Prediction
-from app.schemas.system import HealthComponents, Situation, SystemNotice
+from app.schemas.system import HealthComponents, LocationHistory, Situation, SystemNotice
 
 # Deterministic product priority: risk level first, then score change, then
 # the shortest forecast horizon, then the newest prediction.
@@ -122,6 +124,8 @@ def situations(session: Session, settings: Settings, limit: int = 6) -> list[Sit
             best[prediction.asset_id] = prediction
 
     incident_probability = source.incident_probabilities()
+    health = location_health(source.all(), incident_probability, load_calibration(settings.ml_dir))
+    histories = source.location_history()
     result: list[Situation] = []
     for incident in group_incidents(best.values()):
         lead = incident.lead
@@ -176,6 +180,11 @@ def situations(session: Session, settings: Settings, limit: int = 6) -> list[Sit
                 location=location_label(incident.location),
                 asset_count=count,
                 incident_probability=location_probability,
+                health_index=health[incident.location].index
+                if incident.location in health
+                else None,
+                recommendation=recommend(settings, incident.scenario, lead),
+                history=_history(histories, incident.location, lead.device_type),
             )
         )
 
@@ -187,6 +196,18 @@ def situations(session: Session, settings: Settings, limit: int = 6) -> list[Sit
         )
     )
     return result[:limit]
+
+
+def _history(
+    histories: dict[str, dict[str, dict]], group: str | None, device: str
+) -> LocationHistory | None:
+    raw = histories.get(group or "", {}).get(device)
+    if not raw:
+        return None
+    try:
+        return LocationHistory(**raw)
+    except (TypeError, ValueError):
+        return None
 
 
 def now() -> datetime:

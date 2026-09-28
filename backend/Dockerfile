@@ -13,7 +13,8 @@ RUN pip install --no-cache-dir \
     "alembic>=1.20.0" \
     "apscheduler>=3.11.0" \
     "email-validator>=2.2.0" \
-    "psycopg[binary]>=3.2.0"
+    "psycopg[binary]>=3.2.0" \
+    "openpyxl>=3.1"
 
 COPY app ./app
 COPY migrations ./migrations

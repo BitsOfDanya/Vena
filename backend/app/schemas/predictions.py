@@ -51,6 +51,7 @@ class Prediction(BaseModel):
     lead_time_hours: int | None = None
     factors: list[RiskFactor] = []
     drivers: list[Driver] = []
+    name: str | None = None
     sensor_type: str | None = None
     system_type: str | None = None
     last_event_at: datetime | None = None

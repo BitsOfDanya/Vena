@@ -437,3 +437,99 @@ def test_stream_info_and_prospective_report(client: TestClient, ml_root: Path) -
 
     assert client.get("/api/v1/predictions/snapshot").json()["stream"]["latency_seconds"] == 4.2
     assert client.get("/api/v1/ml/prospective").json()["models"] == {}
+
+
+def _snapshot_with_sections(ml_root: Path) -> None:
+    rows = [
+        {
+            **tagged("11", 0.83, "critical", "16-2.1.1.4.22."),
+            "horizon_hours": 24,
+            "model_id": "phase_24h",
+            "score_type": "calibrated_probability",
+            "name": "Фаза ПК12",
+            "drivers": [
+                {
+                    "feature": "failures_1d",
+                    "label": "Эпизодов за 1 сут",
+                    "value": 3.0,
+                    "contribution": 0.4,
+                }
+            ],
+        },
+        {
+            **tagged("21", 0.10, "low", "16-2.1.1.4.30.", device="smoke"),
+            "horizon_hours": 24,
+            "model_id": "smoke_24h",
+            "score_type": "calibrated_probability",
+        },
+        {
+            **tagged("31", 0.05, "low", "798-2.3.1.3.19."),
+            "horizon_hours": 24,
+            "model_id": "phase_24h",
+            "score_type": "calibrated_probability",
+        },
+    ]
+    write_snapshot(ml_root, datetime.now(tz=UTC), rows)
+    path = ml_root / "results" / "predictions" / "snapshot.json"
+    payload = json.loads(path.read_text(encoding="utf-8"))
+    payload["location_history"] = {
+        "16-2.1.1": {
+            "phase": {
+                "episodes_365d": 40,
+                "channels": 5,
+                "last_episode_at": "2026-06-30T15:34:17",
+                "median_duration_minutes": 0.0,
+            }
+        }
+    }
+    path.write_text(json.dumps(payload), encoding="utf-8")
+    (ml_root / "configs" / "recommendations.json").write_text(
+        json.dumps(
+            {
+                "note": "Сверить с РТЭК",
+                "scenarios": {
+                    "power_loss": {"title": "Проверить питание", "actions": ["Проверить ввод"]}
+                },
+                "drivers": {"failures_1d": "Сбои повторяются"},
+            }
+        ),
+        encoding="utf-8",
+    )
+
+
+def test_situation_explains_the_incident(client: TestClient, ml_root: Path) -> None:
+    _snapshot_with_sections(ml_root)
+
+    situation = client.get("/api/v1/situations").json()[0]
+
+    assert situation["recommendation"]["title"] == "Проверить питание"
+    assert situation["recommendation"]["hint"] == "Сбои повторяются"
+    assert situation["history"]["episodes_365d"] == 40
+    # Power 0.83 and smoke 0.10 at one location: 100 * 0.17 * 0.90 = 15.
+    assert situation["health_index"] == 15
+
+
+def test_asset_tree_effect_and_report(client: TestClient, ml_root: Path) -> None:
+    _snapshot_with_sections(ml_root)
+
+    tree = client.get("/api/v1/assets/tree").json()
+    effect = client.get("/api/v1/analytics/effect").json()
+    report = client.get("/api/v1/reports/management.xlsx")
+
+    assert [item["object_id"] for item in tree] == ["16", "798"]
+    assert tree[0]["health_index"] == 15
+    assert tree[0]["sections"][0]["channels"][0]["name"] == "Фаза ПК12"
+    assert tree[1]["health_index"] == 95
+    assert effect["channels_at_risk"] == 1
+    assert effect["incidents"] == 1
+    assert report.status_code == 200
+    assert report.content[:2] == b"PK"
+
+
+def test_health_calibration_interpolates_between_points() -> None:
+    from app.domain.health import calibrate
+
+    points = ([0.0, 0.5, 1.0], [0.02, 0.2, 0.5])
+    assert calibrate(0.25, points) == pytest.approx(0.11)
+    assert calibrate(2.0, points) == 0.5
+    assert calibrate(0.3, None) == 0.3
