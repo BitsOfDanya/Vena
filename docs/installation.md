@@ -55,7 +55,7 @@ cd ml
 python run_production_refresh.py
 ```
 
-Скрипт заново извлекает события, замораживает модели насосов, вентиляторов, дыма и питания, сравнивает смесь моделей насоса 72 ч с базовой и пишет новый снимок. Отдельные шаги: `run_final_freeze.py <device> <horizon> <model>`, `run_pump_blend_freeze.py`, `run_power_freeze.py`, `score_snapshot.py`.
+Скрипт заново извлекает события и переобучает все модели. Новая модель заменяет текущую, только если её метрика на отложенных данных не хуже. Затем модели калибруются, пересчитываются аналитика доступа и сезонности и пишется новый снимок. Отдельные шаги: `run_final_freeze.py <device> <horizon> <model>`, `run_pump_blend_freeze.py`, `run_power_freeze.py`, `run_flood_freeze.py`, `run_alarm_freeze.py`, `run_calibration.py`, `run_access_analysis.py`, `run_seasonality.py`, `score_snapshot.py`.
 
 ## Локальная разработка
 
