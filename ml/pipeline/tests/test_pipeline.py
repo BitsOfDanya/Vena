@@ -7,13 +7,12 @@ import numpy as np
 import pandas as pd
 import pytest
 
-from pipeline import candidates as candidates_mod
-from pipeline import episodes as episodes_mod
-from pipeline import features as features_mod
-from pipeline import splits
-from pipeline import config
 from pipeline import alerts as alerts_mod
 from pipeline import backtest as backtest_mod
+from pipeline import candidates as candidates_mod
+from pipeline import config, splits
+from pipeline import episodes as episodes_mod
+from pipeline import features as features_mod
 
 
 def _synthetic_channel(n=400, seed=0):
@@ -121,17 +120,17 @@ def test_split_periods_do_not_overlap():
 def test_feature_columns_shared_between_run_and_experiments():
     from pipeline import training
     assert training.feature_columns() == list(features_mod.FEATURE_COLUMNS)
-    from pipeline import run as run_mod
     from pipeline import experiments as experiments_mod
+    from pipeline import run as run_mod
     assert run_mod.training.feature_columns is training.feature_columns
     assert experiments_mod.training.feature_columns is training.feature_columns
 
 
 def test_model_output_example_matches_schema():
-    root = config.ROOT
-    with open(os.path.join(root, "analysis", "model_output_schema.json")) as f:
+    fixture_dir = os.path.join(os.path.dirname(__file__), "fixtures")
+    with open(os.path.join(fixture_dir, "model_output_schema.json")) as f:
         schema = json.load(f)
-    with open(os.path.join(root, "analysis", "model_output_example.json")) as f:
+    with open(os.path.join(fixture_dir, "model_output_example.json")) as f:
         example = json.load(f)
 
     for key in schema["required"]:
@@ -216,8 +215,6 @@ def test_calibration_fit_uses_only_validation_data():
     rng = np.random.default_rng(3)
     valid_scores = rng.random(200)
     valid_targets = (valid_scores + rng.normal(scale=0.1, size=200) > 0.5).astype(int)
-    cal_a = calibration.fit_isotonic(valid_scores, valid_targets)
-
     different_test_scores = rng.random(50)
     different_test_targets = rng.integers(0, 2, 50)
     class DummyModel:
@@ -276,7 +273,8 @@ def test_inference_feature_parity_with_batch_pipeline():
 
 
 def test_artifact_save_and_load_roundtrip(tmp_path, monkeypatch):
-    from pipeline import artifacts, models as models_mod
+    from pipeline import artifacts
+    from pipeline import models as models_mod
     monkeypatch.setattr(config, "ROOT", str(tmp_path))
     monkeypatch.setattr(artifacts.config, "ROOT", str(tmp_path))
     model = models_mod.LogisticRegressionModel()
@@ -307,8 +305,8 @@ def test_candidate_ablation_trigger_removes_alarm_points():
 def test_cli_smoke_and_determinism():
     cmd = [sys.executable, "-m", "pipeline.run", "--sensor-type", "temperature",
            "--horizon", "24", "--models", "logistic_regression"]
-    r1 = subprocess.run(cmd, cwd=config.ROOT, capture_output=True, text=True, timeout=300)
+    r1 = subprocess.run(cmd, cwd=config.ROOT, capture_output=True, text=True, timeout=300, check=False)
     assert r1.returncode == 0, r1.stderr
-    r2 = subprocess.run(cmd, cwd=config.ROOT, capture_output=True, text=True, timeout=300)
+    r2 = subprocess.run(cmd, cwd=config.ROOT, capture_output=True, text=True, timeout=300, check=False)
     assert r2.returncode == 0, r2.stderr
     assert r1.stdout.strip().splitlines()[-2:] == r2.stdout.strip().splitlines()[-2:]

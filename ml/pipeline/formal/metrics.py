@@ -1,5 +1,9 @@
 import numpy as np
-from sklearn.metrics import average_precision_score, precision_recall_curve, roc_auc_score
+from sklearn.metrics import (
+    average_precision_score,
+    precision_recall_curve,
+    roc_auc_score,
+)
 
 TARGET_PRECISION = 0.70
 TARGET_RECALL = 0.50
@@ -23,7 +27,7 @@ def _gaps(p, r):
 def frontier_metrics(y, score):
     y = np.asarray(y)
     score = np.asarray(score)
-    p, r, thr = _curve(y, score)
+    p, r, _ = _curve(y, score)
     out = {
         "pr_auc": float(average_precision_score(y, score)),
         "roc_auc": float(roc_auc_score(y, score)),
@@ -43,7 +47,7 @@ def frontier_metrics(y, score):
     out["formal_gap_oracle"] = float(gaps[i])
     out["oracle_precision"] = float(p[i])
     out["oracle_recall"] = float(r[i])
-    out["formal_reached_oracle"] = bool(gaps[i] == 0.0)
+    out["formal_reached_oracle"] = bool(((p > TARGET_PRECISION) & (r > TARGET_RECALL)).any())
     return out
 
 
@@ -60,18 +64,21 @@ def pick_threshold(y_valid, score_valid):
 def eval_at_threshold(y, score, threshold):
     y = np.asarray(y)
     pred = np.asarray(score) >= threshold
-    tp = float((pred & (y == 1)).sum())
-    n_pred = float(pred.sum())
-    n_pos = float((y == 1).sum())
+    tp = int((pred & (y == 1)).sum())
+    n_pred = int(pred.sum())
+    n_pos = int((y == 1).sum())
     precision = tp / n_pred if n_pred else 0.0
     recall = tp / n_pos if n_pos else 0.0
     return {
         "threshold": float(threshold),
+        "tp": tp,
+        "fp": n_pred - tp,
+        "fn": n_pos - tp,
         "precision": precision,
         "recall": recall,
         "formal_gap": formal_gap(precision, recall),
         "alert_fraction": n_pred / len(y) if len(y) else 0.0,
-        "formal_reached": bool(precision >= TARGET_PRECISION and recall >= TARGET_RECALL),
+        "formal_reached": bool(precision > TARGET_PRECISION and recall > TARGET_RECALL),
     }
 
 

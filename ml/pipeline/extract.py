@@ -1,4 +1,5 @@
 import os
+
 import duckdb
 import pyarrow as pa
 import pyarrow.parquet as pq
@@ -30,7 +31,7 @@ def _build_views(con):
     types_sql = "{" + ",".join(f"'{k}':'{v}'" for k, v in col_types.items()) + "}"
     con.execute(f"""
         CREATE OR REPLACE VIEW events_all AS
-        SELECT ид_канала_данных, дата, время, тревожное, значение_датчика
+        SELECT ид_события, ид_канала_данных, дата, время, тревожное, значение_датчика
         FROM read_csv({files_sql}, header=True, columns={types_sql}, ignore_errors=False)
         WHERE ид_события != 'ид_события'
     """)
@@ -56,7 +57,8 @@ def _extract_and_cache(sensor_type, path, batch_rows):
         FROM events_all e
         JOIN channels c ON c.ид_канала_данных = e.ид_канала_данных
         WHERE c.тип_датчика = ?
-        ORDER BY e.ид_канала_данных, ts
+        ORDER BY e.ид_канала_данных, ts, e.ид_события,
+                 e.значение_датчика, e.тревожное
     """, [sensor_type])
     reader = con.to_arrow_reader(batch_rows)
 

@@ -1,0 +1,1 @@
+{"year": 2025, "block": "calendar_week", "seed": 42, "repeats": 300, "n_candidates": 238073, "n_positive": 44995, "baseline_ap": 0.4473075435125522, "candidate_ap": 0.49597715213569266, "ap_gain": 0.04866960862314046, "ap_gain_ci95": [0.018218535914998692, 0.07957650817515549], "fraction_positive_gain": 1.0}

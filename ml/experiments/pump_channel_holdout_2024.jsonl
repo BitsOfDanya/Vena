@@ -1,0 +1,3 @@
+{"year": 2024, "seed": 7, "group": "channels_excluded_from_supervised_training", "n_channels": 34, "n_candidates": 33525, "n_positive": 9127, "baseline_ap": 0.48191338952640755, "blend_ap": 0.6531482229575984}
+{"year": 2024, "seed": 42, "group": "channels_excluded_from_supervised_training", "n_channels": 34, "n_candidates": 48927, "n_positive": 11737, "baseline_ap": 0.26955793943790607, "blend_ap": 0.3247113254682006}
+{"year": 2024, "seed": 2026, "group": "channels_excluded_from_supervised_training", "n_channels": 34, "n_candidates": 37854, "n_positive": 13851, "baseline_ap": 0.6807068181376157, "blend_ap": 0.6174821253434288}

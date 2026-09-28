@@ -1,0 +1,17 @@
+{
+  "channel_id": "example-channel",
+  "prediction_timestamp": "2025-01-01T00:00:00",
+  "sensor_type": "Состояние насоса",
+  "engineering_system_type": "Пример системы",
+  "risk_score": 0.42,
+  "risk_level": "medium",
+  "top_factors": [],
+  "recommended_action": "monitor",
+  "model": {
+    "name": "example-model",
+    "version": "example-version",
+    "horizon_hours": 72,
+    "trained_on_sensor_type": "Состояние насоса",
+    "calibrated": false
+  }
+}

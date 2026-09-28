@@ -50,6 +50,18 @@ def test_eval_at_threshold_counts():
     out = metrics.eval_at_threshold(y, s, 0.5)
     assert out["precision"] == 2 / 3
     assert out["recall"] == 2 / 3
+    assert (out["tp"], out["fp"], out["fn"]) == (2, 1, 1)
+
+
+def test_formal_target_requires_strictly_exceeding_both_limits():
+    y = np.array([1] * 7 + [0] * 3)
+    score = np.ones(len(y))
+    threshold = metrics.eval_at_threshold(y, score, 0.5)
+    frontier = metrics.frontier_metrics(y, score)
+    assert threshold["precision"] == 0.7
+    assert threshold["recall"] == 1.0
+    assert not threshold["formal_reached"]
+    assert not frontier["formal_reached_oracle"]
 
 
 def _episodes():
@@ -124,6 +136,7 @@ def test_lockbox_selection_is_lockbox_only_and_purges_final_horizon():
 
 def test_lockbox_can_only_be_opened_once(tmp_path):
     import pytest
+
     from pipeline.formal import lockbox
     marker = tmp_path / "opened"
     marker.write_text("x")

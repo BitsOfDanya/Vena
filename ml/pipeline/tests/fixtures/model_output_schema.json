@@ -1,0 +1,24 @@
+{
+  "required": [
+    "channel_id",
+    "prediction_timestamp",
+    "sensor_type",
+    "engineering_system_type",
+    "risk_score",
+    "risk_level",
+    "top_factors",
+    "recommended_action",
+    "model"
+  ],
+  "properties": {
+    "channel_id": {"type": "string"},
+    "prediction_timestamp": {"type": "string"},
+    "sensor_type": {"type": "string"},
+    "engineering_system_type": {"type": "string"},
+    "risk_score": {"type": "number"},
+    "risk_level": {"type": "string"},
+    "top_factors": {"type": "array"},
+    "recommended_action": {"type": "string"},
+    "model": {"type": "object"}
+  }
+}

@@ -262,7 +262,7 @@ def _channel_features(cand_ts, ev_ts, ev_alarm, ev_value, fail_starts, numeric_m
         out["last_inter_failure_interval_days"] = np.zeros(n_cand)
         out["ratio_last_interval_to_historical_median"] = np.zeros(n_cand)
         out["historical_failure_rate"] = np.zeros(n_cand)
-        out["channel_failure_prior"] = np.full(n_cand, alpha * global_rates["failure"] / (observed_days.mean() + alpha) if n_cand else 0.0)
+        out["channel_failure_prior"] = alpha * global_rates["failure"] / (observed_days + alpha)
         out["ewma_failure_rate_7d"] = np.zeros(n_cand)
         out["ewma_failure_rate_30d"] = np.zeros(n_cand)
 
@@ -278,7 +278,7 @@ def _channel_features(cand_ts, ev_ts, ev_alarm, ev_value, fail_starts, numeric_m
 
 
 def compute_features(candidates, events, episodes, numeric_mode=False, duty_cycle_mode=False, global_rates=None):
-    events = events.sort_values(["channel_id", "ts"]).reset_index(drop=True)
+    events = events.sort_values(["channel_id", "ts"], kind="stable").reset_index(drop=True)
     episodes_by_channel = {
         cid: np.sort(g["episode_start"].values) for cid, g in episodes.groupby("channel_id", observed=True)
     } if len(episodes) else {}
