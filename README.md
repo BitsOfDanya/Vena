@@ -6,6 +6,8 @@
 
 ## Запуск
 
+Развёртывание на сервере с Caddy, HTTPS и GitHub Actions: [infra/README.md](infra/README.md).
+
 ```bash
 docker compose up -d --build
 ```

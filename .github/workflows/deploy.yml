@@ -1,0 +1,42 @@
+name: Deploy Vena
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: vena-production
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@v4
+      - name: Configure SSH
+        env:
+          DEPLOY_KEY: ${{ secrets.VENA_DEPLOY_KEY }}
+          KNOWN_HOSTS: ${{ secrets.VENA_KNOWN_HOSTS }}
+        run: |
+          install -d -m 700 ~/.ssh
+          printf '%s\n' "$DEPLOY_KEY" > ~/.ssh/id_ed25519
+          printf '%s\n' "$KNOWN_HOSTS" > ~/.ssh/known_hosts
+          chmod 600 ~/.ssh/id_ed25519 ~/.ssh/known_hosts
+      - name: Upload exact commit and deploy
+        env:
+          DEPLOY_HOST: ${{ vars.VENA_DEPLOY_HOST || '5.129.225.86' }}
+        run: |
+          git archive --format=tar.gz -o "$RUNNER_TEMP/$GITHUB_SHA.tar.gz" "$GITHUB_SHA"
+          scp -o BatchMode=yes "$RUNNER_TEMP/$GITHUB_SHA.tar.gz" "vena-deploy@$DEPLOY_HOST:/opt/vena/incoming/"
+          scp -o BatchMode=yes infra/scripts/deploy.sh "vena-deploy@$DEPLOY_HOST:/opt/vena/deploy.sh"
+          ssh -o BatchMode=yes "vena-deploy@$DEPLOY_HOST" "bash /opt/vena/deploy.sh '$GITHUB_SHA'"
+      - name: Check public entrypoint
+        env:
+          PUBLIC_URL: ${{ vars.VENA_PUBLIC_URL || 'http://5.129.225.86' }}
+        run: |
+          curl --fail --retry 5 --retry-all-errors --retry-delay 3 "$PUBLIC_URL/api/v1/health"
+          curl --fail --retry 5 --retry-all-errors --retry-delay 3 --output /dev/null "$PUBLIC_URL/pulse"

@@ -1,0 +1,123 @@
+name: vena
+
+x-service: &service
+  restart: unless-stopped
+  logging:
+    driver: json-file
+    options:
+      max-size: "10m"
+      max-file: "3"
+
+services:
+  db:
+    <<: *service
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_DB: vena
+      POSTGRES_USER: vena
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?Set POSTGRES_PASSWORD}
+    volumes:
+      - postgres:/var/lib/postgresql/data
+    healthcheck:
+      test: [CMD-SHELL, "pg_isready -U vena -d vena"]
+      interval: 5s
+      timeout: 3s
+      retries: 30
+    networks: [database]
+
+  ml:
+    <<: *service
+    image: vena-ml:${VENA_REVISION:-local}
+    build:
+      context: ..
+      dockerfile: infra/docker/ml.Dockerfile
+    environment:
+      VENA_ML_MODE: ${VENA_ML_MODE:-demo}
+      VENA_ML_REFRESH_SECONDS: ${VENA_ML_REFRESH_SECONDS:-3600}
+    volumes:
+      - predictions:/srv/ml/results/predictions
+      - ${VENA_DATASET_DIR:-/opt/vena/shared/dataset}:/srv/ml/dataset:ro
+    healthcheck:
+      test: [CMD, python, -c, "import json,time; p=json.load(open('/srv/ml/results/predictions/snapshot.json')); from datetime import datetime; assert p['predictions'] and time.time()-datetime.fromisoformat(p['generated_at']).timestamp()<7200"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 120s
+    networks: [database]
+
+  backend:
+    <<: *service
+    image: vena-backend:${VENA_REVISION:-local}
+    build:
+      context: ..
+      dockerfile: infra/docker/backend.Dockerfile
+    env_file: ${VENA_ENV_FILE:-.env}
+    environment:
+      VENA_DATABASE_URL: postgresql+psycopg://vena:${POSTGRES_PASSWORD:?Set POSTGRES_PASSWORD}@db:5432/vena
+      VENA_ENVIRONMENT: production
+      VENA_CORS_ORIGINS: '[]'
+      VENA_PUBLIC_URL: ${VENA_PUBLIC_URL:?Set VENA_PUBLIC_URL}
+      VENA_AUTH_ENABLED: "true"
+      VENA_API_KEYS_JSON: ${VENA_API_KEYS_JSON:?Set VENA_API_KEYS_JSON}
+      VENA_SEED_DEMO: "false"
+      VENA_ML_DIR: /srv/ml
+    volumes:
+      - predictions:/srv/ml/results/predictions:ro
+    depends_on:
+      db:
+        condition: service_healthy
+      ml:
+        condition: service_healthy
+    healthcheck:
+      test: [CMD, python, -c, "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8000/api/v1/health',timeout=3)"]
+      interval: 10s
+      timeout: 5s
+      retries: 12
+      start_period: 60s
+    networks: [database, web]
+
+  frontend:
+    <<: *service
+    image: vena-frontend:${VENA_REVISION:-local}
+    build:
+      context: ..
+      dockerfile: infra/docker/frontend.Dockerfile
+    depends_on:
+      backend:
+        condition: service_healthy
+    healthcheck:
+      test: [CMD, node, -e, "fetch('http://127.0.0.1:3000/pulse').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))"]
+      interval: 10s
+      timeout: 5s
+      retries: 12
+      start_period: 30s
+    networks: [web]
+
+  caddy:
+    <<: *service
+    image: caddy:2-alpine
+    environment:
+      VENA_SITE_ADDRESS: ${VENA_SITE_ADDRESS:?Set VENA_SITE_ADDRESS}
+    ports:
+      - "80:80"
+      - "443:443"
+      - "443:443/udp"
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy-data:/data
+      - caddy-config:/config
+    depends_on:
+      frontend:
+        condition: service_healthy
+    networks: [web]
+
+volumes:
+  postgres:
+  predictions:
+  caddy-data:
+  caddy-config:
+
+networks:
+  database:
+    internal: true
+  web:

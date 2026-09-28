@@ -1,0 +1,9 @@
+[Unit]
+Description=Vena PostgreSQL backup
+Requires=docker.service
+After=docker.service
+
+[Service]
+Type=oneshot
+User=vena-deploy
+ExecStart=/opt/vena/current/infra/scripts/backup.sh
