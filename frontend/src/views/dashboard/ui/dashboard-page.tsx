@@ -32,6 +32,7 @@ import {
   type DashboardSort,
   type DashboardSortKey,
 } from "../model/analytics"
+import { ProspectivePanel } from "./prospective-panel"
 import { SeasonalityPanel } from "./seasonality-panel"
 
 const HORIZONS: { value: ForecastHorizon; label: string }[] = [
@@ -520,6 +521,7 @@ export function DashboardPage() {
                 </section>
               </div>
               <div className="pt-7">
+                <ProspectivePanel />
                 <SeasonalityPanel />
               </div>
               <section className="px-6 pt-1 pb-6">

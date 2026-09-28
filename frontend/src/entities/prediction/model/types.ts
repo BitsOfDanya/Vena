@@ -49,6 +49,8 @@ export type SnapshotStatus = {
   stale: boolean
   predictionCount: number
   models: { modelId: string; modelVersion: string | null; horizonHours: number | null; calibrated: boolean }[]
+  /** Last stream batch: events, channels rescored and seconds from the API to the published snapshot. */
+  stream: { events: number; channelsRescored: number; publishedAt: number; latencySeconds: number } | null
   detail: string
 }
 

@@ -146,6 +146,7 @@ export async function getSnapshotStatus(): Promise<SnapshotStatus> {
     stale: boolean
     prediction_count: number
     models: { model_id: string; model_version: string | null; horizon_hours: number | null; calibrated: boolean }[]
+    stream?: { events: number; channels_rescored: number; published_at: string; latency_seconds: number } | null
     detail: string
   }>("/api/v1/predictions/snapshot")
   return {
@@ -161,6 +162,14 @@ export async function getSnapshotStatus(): Promise<SnapshotStatus> {
       horizonHours: model.horizon_hours,
       calibrated: model.calibrated,
     })),
+    stream: item.stream
+      ? {
+          events: item.stream.events,
+          channelsRescored: item.stream.channels_rescored,
+          publishedAt: Date.parse(item.stream.published_at),
+          latencySeconds: item.stream.latency_seconds,
+        }
+      : null,
     detail: item.detail,
   }
 }

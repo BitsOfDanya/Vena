@@ -73,6 +73,11 @@ export function SnapshotLine({ snapshot }: { snapshot: SnapshotStatus | undefine
       </span>
       <span className="font-mono tabular-nums">{snapshot.predictionCount} predictions</span>
       <span className="font-mono tabular-nums">{snapshot.models.length} models</span>
+      {snapshot.stream ? (
+        <span className="font-mono tabular-nums text-vena">
+          stream · {snapshot.stream.events} events · {Math.round(snapshot.stream.latencySeconds)} s
+        </span>
+      ) : null}
       {snapshot.stale && days !== null ? (
         <span className="text-status-attention">outdated by {days} d</span>
       ) : null}
