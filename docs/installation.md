@@ -11,6 +11,10 @@
 | Node.js / pnpm | 22 / 10.9 (frontend) |
 | Браузер | актуальные Google Chrome, Яндекс.Браузер |
 
+## Production-стенд
+
+Развёрнут на http://5.129.225.86. Установка на сервер, HTTPS, автодеплой из `main`, откат и резервные копии — [infra/README.md](../infra/README.md).
+
 ## Запуск в Docker
 
 ```bash
