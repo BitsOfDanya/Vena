@@ -68,6 +68,31 @@ class SnapshotStatus(BaseModel):
     detail: str = ""
 
 
+class AlarmAssessment(BaseModel):
+    channel_id: str
+    ts: datetime
+    sensor_type: str
+    # Calibrated probability that the alarm is confirmed within 30 minutes by a
+    # repeat, a neighbouring channel or a sustained detection state.
+    corroboration_probability: float
+    needs_verification: bool
+    location: str | None = None
+    name: str | None = None
+
+
+class AccessEvent(BaseModel):
+    channel_id: str
+    ts: datetime
+    sensor_type: str
+    object: str
+    # Triage index for verification, not a probability of intrusion.
+    access_index: float
+    night: bool
+    chain: bool
+    location: str | None = None
+    name: str | None = None
+
+
 class FeedbackRow(BaseModel):
     prediction_id: str | None
     asset_id: str

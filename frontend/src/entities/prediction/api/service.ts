@@ -32,8 +32,9 @@ function toScenario(value: string | null | undefined): PredictionScenario {
   return value && SCENARIOS.has(value as PredictionScenario) ? (value as PredictionScenario) : "equipment"
 }
 
-// ML names the power-supply model after its phase-monitor sensor; the UI groups it as power.
-const DEVICE_ALIASES: Record<string, string> = { phase: "power" }
+// ML names models after the sensor they read: phase monitors belong to power supply,
+// and the flooding model reads the pump chamber state.
+const DEVICE_ALIASES: Record<string, string> = { phase: "power", flood: "pump" }
 
 function toPrediction(item: ApiPrediction): Prediction {
   return {

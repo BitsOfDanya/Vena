@@ -15,6 +15,8 @@ from app.domain.actions import OPEN_STATUSES
 from app.domain.email import build_email_provider
 from app.domain.predictions import get_prediction_source
 from app.schemas.predictions import (
+    AccessEvent,
+    AlarmAssessment,
     FeedbackRow,
     ModelInfo,
     Prediction,
@@ -157,6 +159,28 @@ def asset_prediction_history(
         }
         for point in points
     ]
+
+
+@router.get("/alarms", response_model=list[AlarmAssessment])
+def list_alarms(
+    settings: SettingsDep,
+    _: ReaderDep,
+    needs_verification: bool | None = None,
+    limit: Annotated[int, Query(ge=1, le=2000)] = 200,
+) -> list[AlarmAssessment]:
+    _require_snapshot(settings)
+    items = get_prediction_source(settings).alarms()
+    if needs_verification is not None:
+        items = [item for item in items if item.needs_verification == needs_verification]
+    return items[:limit]
+
+
+@router.get("/access-events", response_model=list[AccessEvent])
+def list_access_events(
+    settings: SettingsDep, _: ReaderDep, limit: Annotated[int, Query(ge=1, le=2000)] = 200
+) -> list[AccessEvent]:
+    _require_snapshot(settings)
+    return get_prediction_source(settings).access_events()[:limit]
 
 
 @router.get("/ml/feedback", response_model=list[FeedbackRow])

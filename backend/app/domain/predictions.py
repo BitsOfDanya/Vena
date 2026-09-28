@@ -11,6 +11,8 @@ from app.domain.incidents import (
     scenario_for,
 )
 from app.schemas.predictions import (
+    AccessEvent,
+    AlarmAssessment,
     ModelInfo,
     Prediction,
     RiskFactor,
@@ -213,6 +215,27 @@ class PredictionSource:
             # risk level orders first and the score only breaks ties inside a level.
             items.sort(key=lambda item: (LEVEL_RANK[item.risk_level], -item.score))
         return items[offset : offset + limit]
+
+    def _section(self, key: str) -> list[dict[str, Any]]:
+        self._read()
+        rows = (self._payload or {}).get(key) or []
+        return [row for row in rows if isinstance(row, dict)]
+
+    def alarms(self) -> list[AlarmAssessment]:
+        result = []
+        for row in self._section("alarms"):
+            group = location_group(row.get("tag"))
+            result.append(AlarmAssessment(**row, location=location_label(group)))
+        result.sort(key=lambda item: item.ts, reverse=True)
+        return result
+
+    def access_events(self) -> list[AccessEvent]:
+        result = []
+        for row in self._section("access_events"):
+            group = location_group(row.get("tag"))
+            result.append(AccessEvent(**row, location=location_label(group)))
+        result.sort(key=lambda item: (-item.access_index, item.ts))
+        return result
 
     def get(self, prediction_id: str) -> Prediction | None:
         return next((item for item in self.all() if item.id == prediction_id), None)

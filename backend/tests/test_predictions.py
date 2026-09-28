@@ -315,3 +315,50 @@ def test_dismiss_records_catalogue_reason_in_journal(client: TestClient, ml_root
     assert journal[0]["scenario"] == "flooding"
     assert summary["by_scenario"][0]["rejected"] == 1
     assert summary["by_scenario"][0]["confirmation_rate"] == 0.0
+
+
+def test_alarm_and_access_sections_are_served(client: TestClient, ml_root: Path) -> None:
+    write_snapshot(ml_root, datetime.now(tz=UTC), [row("100", 0.5, "low")])
+    path = ml_root / "results" / "predictions" / "snapshot.json"
+    payload = json.loads(path.read_text(encoding="utf-8"))
+    payload["alarms"] = [
+        {
+            "channel_id": "7",
+            "ts": "2026-06-30T10:00:00",
+            "sensor_type": "Датчик дыма",
+            "corroboration_probability": 0.12,
+            "needs_verification": True,
+            "tag": "16-2.1.1.4.22.",
+            "name": "ДИП ПК12",
+        },
+        {
+            "channel_id": "8",
+            "ts": "2026-06-30T11:00:00",
+            "sensor_type": "Газовый датчик",
+            "corroboration_probability": 0.93,
+            "needs_verification": False,
+        },
+    ]
+    payload["access_events"] = [
+        {
+            "channel_id": "9",
+            "ts": "2026-06-29T02:00:00",
+            "sensor_type": "КД Люк",
+            "object": "16",
+            "access_index": 0.8,
+            "night": True,
+            "chain": False,
+            "tag": "16-1.1.66.1.",
+        }
+    ]
+    path.write_text(json.dumps(payload), encoding="utf-8")
+
+    alarms = client.get("/api/v1/alarms").json()
+    false_alarms = client.get("/api/v1/alarms", params={"needs_verification": True}).json()
+    access = client.get("/api/v1/access-events").json()
+
+    assert [item["channel_id"] for item in alarms] == ["8", "7"]
+    assert [item["channel_id"] for item in false_alarms] == ["7"]
+    assert false_alarms[0]["location"] == "Объект 16 · 2.1.1"
+    assert access[0]["access_index"] == pytest.approx(0.8)
+    assert access[0]["location"] == "Объект 16 · 1.1.66"

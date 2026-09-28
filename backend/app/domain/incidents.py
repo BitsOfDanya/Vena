@@ -18,6 +18,7 @@ SCENARIO_BY_DEVICE = {
     "smoke": "fire",
     "phase": "power_loss",
     "power": "power_loss",
+    "flood": "flooding",
 }
 
 SCENARIO_LABELS = {
