@@ -25,9 +25,12 @@ RUN pnpm build
 FROM node:22-alpine AS runtime
 WORKDIR /srv/app
 ENV NODE_ENV=production \
-    NEXT_TELEMETRY_DISABLED=1
-COPY --from=build /srv/app/package.json /srv/app/next.config.ts ./
-COPY --from=build /srv/app/node_modules ./node_modules
-COPY --from=build /srv/app/.next ./.next
+    NEXT_TELEMETRY_DISABLED=1 \
+    HOSTNAME=0.0.0.0 \
+    PORT=3000
+# next.config.ts builds a standalone server with only the runtime dependencies.
+COPY --from=build --chown=node:node /srv/app/.next/standalone ./
+COPY --from=build --chown=node:node /srv/app/.next/static ./.next/static
+USER node
 EXPOSE 3000
-CMD ["node", "node_modules/next/dist/bin/next", "start", "--port", "3000", "--hostname", "0.0.0.0"]
+CMD ["node", "server.js"]
