@@ -11,7 +11,7 @@ export VENA_REVISION="$revision"
 release="$root/releases/$revision"
 if [[ ! -d $release ]]; then
   mkdir "$release"
-  tar -xzf "$root/incoming/$revision.tar.gz" -C "$release" --no-same-owner
+  tar -xzf "$root/incoming/$revision.tar.gz" -C "$release" --no-same-owner --same-permissions
 fi
 compose() { docker compose --env-file "$VENA_ENV_FILE" -f "$release/infra/compose.yaml" "$@"; }
 compose config --quiet

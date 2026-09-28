@@ -10,13 +10,13 @@ ENV PYTHONDONTWRITEBYTECODE=1 PYTHONUNBUFFERED=1 PATH=/srv/app/.venv/bin:$PATH V
 WORKDIR /srv/app
 RUN useradd --uid 10001 --create-home app
 COPY --from=build /srv/app/.venv ./.venv
-COPY backend/app ./app
-COPY backend/migrations ./migrations
-COPY backend/alembic.ini ./
+COPY --chown=app:app backend/app ./app
+COPY --chown=app:app backend/migrations ./migrations
+COPY --chown=app:app backend/alembic.ini ./
 COPY --chmod=755 backend/scripts/entrypoint.sh ./scripts/entrypoint.sh
-COPY ml/configs /srv/ml/configs
-COPY ml/artifacts /srv/ml/artifacts
-COPY ml/results /srv/ml/results
+COPY --chown=app:app ml/configs /srv/ml/configs
+COPY --chown=app:app ml/artifacts /srv/ml/artifacts
+COPY --chown=app:app ml/results /srv/ml/results
 USER 10001
 EXPOSE 8000
 CMD ["./scripts/entrypoint.sh"]
