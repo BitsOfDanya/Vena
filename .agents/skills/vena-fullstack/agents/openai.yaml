@@ -1,3 +1,0 @@
-interface:
-  display_name: "Vena full-stack conventions"
-  short_description: "Build Vena with FastAPI and Next.js FSD conventions"
