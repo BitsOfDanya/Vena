@@ -2,7 +2,7 @@ import { z } from "zod"
 
 import { apiFetch } from "@/shared/api/http"
 
-import type { BackendSituation, Prediction, SnapshotStatus } from "../model/types"
+import type { BackendSituation, Prediction, PredictionScenario, SnapshotStatus } from "../model/types"
 
 type ApiPrediction = {
   id: string
@@ -21,13 +21,25 @@ type ApiPrediction = {
   sensor_type: string | null
   system_type: string | null
   last_event_at: string | null
+  scenario?: string
+  location?: string | null
+  location_tag?: string | null
 }
+
+const SCENARIOS = new Set<PredictionScenario>(["flooding", "fire", "power_loss", "ventilation", "equipment"])
+
+function toScenario(value: string | null | undefined): PredictionScenario {
+  return value && SCENARIOS.has(value as PredictionScenario) ? (value as PredictionScenario) : "equipment"
+}
+
+// ML names the power-supply model after its phase-monitor sensor; the UI groups it as power.
+const DEVICE_ALIASES: Record<string, string> = { phase: "power" }
 
 function toPrediction(item: ApiPrediction): Prediction {
   return {
     id: item.id,
     assetId: item.asset_id,
-    deviceType: item.device_type,
+    deviceType: DEVICE_ALIASES[item.device_type] ?? item.device_type,
     modelId: item.model_id,
     modelVersion: item.model_version,
     predictionTime: Date.parse(item.prediction_time),
@@ -41,6 +53,9 @@ function toPrediction(item: ApiPrediction): Prediction {
     sensorType: item.sensor_type,
     systemType: item.system_type,
     lastEventAt: item.last_event_at ? Date.parse(item.last_event_at) : null,
+    scenario: toScenario(item.scenario),
+    location: item.location ?? null,
+    locationTag: item.location_tag ?? null,
   }
 }
 
@@ -80,6 +95,9 @@ const PredictionSchema = z.object({
   sensor_type: z.string().nullable(),
   system_type: z.string().nullable(),
   last_event_at: z.iso.datetime({ offset: true }).nullable(),
+  scenario: z.string().optional(),
+  location: z.string().nullable().optional(),
+  location_tag: z.string().nullable().optional(),
 })
 
 /** A complete horizon-specific snapshot; a failed page never becomes a partial total. */
@@ -159,6 +177,9 @@ export async function getBackendSituations(): Promise<BackendSituation[]> {
       updated_at: string
       open_action_id: string | null
       notification_id: string | null
+      scenario?: string | null
+      location?: string | null
+      asset_count?: number
     }[]
   >("/api/v1/situations")
   return items.map((item) => ({
@@ -177,5 +198,8 @@ export async function getBackendSituations(): Promise<BackendSituation[]> {
     updatedAt: Date.parse(item.updated_at),
     openActionId: item.open_action_id,
     notificationId: item.notification_id,
+    scenario: item.scenario ? toScenario(item.scenario) : null,
+    location: item.location ?? null,
+    assetCount: item.asset_count ?? item.asset_ids.length,
   }))
 }

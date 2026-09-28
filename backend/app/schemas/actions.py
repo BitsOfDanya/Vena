@@ -100,6 +100,16 @@ class AssignRequest(BaseModel):
     notify: bool = False
 
 
+DismissReason = Literal[
+    "false_alarm", "planned_works", "verified_normal", "monitoring", "duplicate", "other"
+]
+
+
+class DismissRequest(BaseModel):
+    reason: DismissReason = "false_alarm"
+    note: str = Field(default="", max_length=500)
+
+
 class ResultRequest(BaseModel):
     outcome: ActionOutcome
     note: str = ""

@@ -19,7 +19,8 @@ def test_models_expose_frozen_model_metadata() -> None:
     response = client.get("/api/v1/ml/models")
     assert response.status_code == 200
     by_name = {item["name"]: item for item in response.json()}
-    assert by_name["pump_72h"]["model_name"] == "logistic_regression"
+    assert by_name["pump_72h"]["model_name"] == "blend_lr_lightgbm"
+    assert by_name["pump_baseline_72h"]["model_name"] == "logistic_regression"
     assert by_name["fan_72h"]["model_name"] == "catboost"
     assert by_name["fan_72h"]["n_features"] > 0
 

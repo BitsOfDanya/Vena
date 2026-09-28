@@ -188,7 +188,8 @@ def test_situations_are_built_from_predictions(client: TestClient, ml_root: Path
 
     situations = client.get("/api/v1/situations").json()
 
-    assert [item["title"] for item in situations] == ["100", "200"]
+    assert [item["title"] for item in situations] == ["Подтопление · 100", "Подтопление · 200"]
+    assert situations[0]["scenario"] == "flooding"
     assert situations[0]["severity"] == "critical"
     assert situations[0]["risk_score"] == pytest.approx(0.995)
     assert situations[0]["forecast_horizon"] == 72
@@ -257,3 +258,60 @@ def test_feedback_export_links_prediction_action_and_result(
     assert feedback[0]["model_id"] == "pump_72h"
     assert feedback[0]["action_result"] == "confirmed_issue"
     assert feedback[0]["completed_at"] is not None
+
+
+def tagged(channel: str, score: float, level: str, tag: str, device: str = "phase") -> dict:
+    return {
+        **row(channel, score, level),
+        "device_type": device,
+        "model_id": "pump_72h",
+        "tag": tag,
+    }
+
+
+def test_channels_of_one_location_form_one_incident(client: TestClient, ml_root: Path) -> None:
+    write_snapshot(
+        ml_root,
+        datetime.now(tz=UTC),
+        [
+            tagged("11", 0.97, "critical", "16-2.1.1.4.22."),
+            tagged("12", 0.96, "critical", "16-2.1.1.4.23."),
+            tagged("13", 0.95, "critical", "16-2.1.1.1.5."),
+            tagged("21", 0.93, "high", "798-2.3.1.3.19."),
+        ],
+    )
+
+    situations = client.get("/api/v1/situations").json()
+    refresh = client.post("/api/v1/predictions/refresh").json()
+    prediction = client.get("/api/v1/assets/11/prediction").json()
+
+    assert [item["asset_count"] for item in situations] == [3, 1]
+    assert situations[0]["asset_ids"] == ["11", "12", "13"]
+    assert situations[0]["title"] == "Потеря питания · Объект 16 · 2.1.1"
+    assert refresh["notifications_created"] == 2
+    assert refresh["actions_created"] == 2
+    assert prediction["scenario"] == "power_loss"
+    assert prediction["location"] == "Объект 16 · 2.1.1"
+
+
+def test_dismiss_records_catalogue_reason_in_journal(client: TestClient, ml_root: Path) -> None:
+    write_snapshot(ml_root, datetime.now(tz=UTC), [row("100", 0.995, "critical")])
+    client.post("/api/v1/predictions/refresh")
+    action = client.get("/api/v1/actions", params={"status": "suggested"}).json()[0]
+
+    reasons = client.get("/api/v1/journal/reasons").json()
+    dismissed = client.post(
+        f"/api/v1/actions/{action['id']}/dismiss",
+        json={"reason": "false_alarm", "note": "камера 12"},
+    ).json()
+    journal = client.get("/api/v1/journal").json()
+    summary = client.get("/api/v1/journal/summary").json()
+
+    assert "false_alarm" in {item["code"] for item in reasons}
+    assert dismissed["status"] == "dismissed"
+    assert dismissed["result_outcome"] == "false_or_irrelevant_signal"
+    assert dismissed["result_note"] == "Ложное срабатывание. камера 12"
+    assert journal[0]["decision"] == "no_dispatch"
+    assert journal[0]["scenario"] == "flooding"
+    assert summary["by_scenario"][0]["rejected"] == 1
+    assert summary["by_scenario"][0]["confirmation_rate"] == 0.0

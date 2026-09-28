@@ -4,6 +4,12 @@ from pathlib import Path
 from typing import Any
 
 from app.core.config import Settings
+from app.domain.incidents import (
+    LEVEL_RANK,
+    location_group,
+    location_label,
+    scenario_for,
+)
 from app.schemas.predictions import (
     ModelInfo,
     Prediction,
@@ -105,11 +111,15 @@ class PredictionSource:
                 continue
             model_level = str(row.get("model_risk_level", "low"))
             score_type = row.get("score_type", "risk_score")
+            device_type = str(row.get("device_type", ""))
+            scenario = str(row.get("scenario") or scenario_for(device_type, model_id))
+            tag = row.get("tag") if isinstance(row.get("tag"), str) else None
+            group = location_group(tag)
             result.append(
                 Prediction(
                     id=f"{snapshot_id}:{model_id}:{asset_id}",
                     asset_id=asset_id,
-                    device_type=str(row.get("device_type", "")),
+                    device_type=device_type,
                     model_id=model_id,
                     model_version=row.get("model_version"),
                     prediction_time=prediction_time,
@@ -120,7 +130,11 @@ class PredictionSource:
                     else "risk_score",
                     risk_level=LEVEL_MAP.get(model_level, "normal"),
                     model_risk_level=model_level,
-                    predicted_event_type=f"{row.get('device_type', 'asset')}_failure",
+                    predicted_event_type=scenario,
+                    scenario=scenario,
+                    location_tag=tag,
+                    location_group=group,
+                    location=location_label(group),
                     lead_time_hours=row.get("horizon_hours"),
                     factors=_factors(row.get("factors", {})),
                     sensor_type=row.get("sensor_type"),
@@ -195,7 +209,9 @@ class PredictionSource:
         elif sort == "latest":
             items.sort(key=lambda item: item.prediction_time, reverse=True)
         else:
-            items.sort(key=lambda item: item.score, reverse=True)
+            # Scores of different models are not on one scale, so the model's own
+            # risk level orders first and the score only breaks ties inside a level.
+            items.sort(key=lambda item: (LEVEL_RANK[item.risk_level], -item.score))
         return items[offset : offset + limit]
 
     def get(self, prediction_id: str) -> Prediction | None:

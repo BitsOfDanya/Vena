@@ -9,6 +9,8 @@ export {
 export {
   ACTION_EVENT_LABEL,
   ASSIGNEES,
+  DISMISS_REASON_LABEL,
+  DISMISS_REASON_OUTCOME,
   KIND_LABEL,
   OPEN_STATUSES,
   OUTCOME_LABEL,
@@ -23,5 +25,7 @@ export {
   type ActionSource,
   type ActionStatus,
   type CreateActionInput,
+  type DismissActionInput,
+  type DismissReason,
   type MaintenanceAction,
 } from "./model/types"

@@ -5,10 +5,11 @@ from sqlalchemy import select
 from sqlalchemy.orm import Session
 
 from app.core.config import Settings
-from app.db.models import Action, PredictionPoint, ProcessedSnapshot
+from app.db.models import Action, Notification, PredictionPoint, ProcessedSnapshot
 from app.domain import actions as action_service
 from app.domain import notifications as notification_service
 from app.domain.email import EmailProvider
+from app.domain.incidents import Incident, group_incidents
 from app.domain.predictions import PredictionSource
 from app.schemas.actions import ActionCreate
 from app.schemas.notifications import NotificationCreate
@@ -56,67 +57,64 @@ def apply_deltas(
     return predictions
 
 
-def _has_open_forecast_action(session: Session, prediction: Prediction) -> bool:
+def _recently_notified(session: Session, dedup_key: str, minutes: int, now: datetime) -> bool:
+    # Delivery logs are keyed per rule and asset, while an incident can change its
+    # lead channel between snapshots, so the incident key is checked directly.
+    if minutes <= 0:
+        return False
+    statement = (
+        select(Notification.id)
+        .where(
+            Notification.dedup_key == dedup_key,
+            Notification.created_at >= now - timedelta(minutes=minutes),
+        )
+        .limit(1)
+    )
+    return session.scalars(statement).first() is not None
+
+
+def _has_open_forecast_action(session: Session, asset_ids: list[str]) -> bool:
     statement = (
         select(Action.id)
         .where(
-            Action.asset_id == prediction.asset_id,
+            Action.asset_id.in_(asset_ids),
             Action.status.in_(action_service.OPEN_STATUSES),
             Action.source == "vena_forecast",
         )
         .limit(1)
     )
-    if prediction.id:
-        by_prediction = session.scalars(
-            select(Action.id)
-            .where(
-                Action.source_prediction_id == prediction.id,
-                Action.status.in_(action_service.OPEN_STATUSES),
-            )
-            .limit(1)
-        ).first()
-        if by_prediction is not None:
-            return True
-    if prediction.model_id:
-        by_model = session.scalars(
-            select(Action.id)
-            .where(
-                Action.asset_id == prediction.asset_id,
-                Action.source_model_id == prediction.model_id,
-                Action.status.in_(action_service.OPEN_STATUSES),
-            )
-            .limit(1)
-        ).first()
-        if by_model is not None:
-            return True
     return session.scalars(statement).first() is not None
 
 
-def _suggest_action(session: Session, prediction: Prediction) -> bool:
-    if _has_open_forecast_action(session, prediction):
+def _suggest_action(session: Session, incident: Incident, now: datetime) -> bool:
+    if _has_open_forecast_action(session, incident.asset_ids):
         return False
-    horizon = prediction.horizon_hours or 24
-    priority = PRIORITY_FOR_LEVEL.get(prediction.risk_level, "medium")
+    lead = incident.lead
+    horizon = lead.horizon_hours or 24
+    priority = PRIORITY_FOR_LEVEL.get(lead.risk_level, "medium")
+    count = len(incident.asset_ids)
+    scope = f"; {count} channels at this location" if count > 1 else ""
     action_service.create_action(
         session,
         ActionCreate(
-            asset_id=prediction.asset_id,
+            asset_id=lead.asset_id,
             kind="inspect",
             reason=(
-                f"ML {prediction.model_id}: {prediction.risk_level} risk "
-                f"score {prediction.score:.3f} over {horizon}h"
+                f"{incident.title}: ML {lead.model_id} {lead.risk_level} risk "
+                f"score {lead.score:.3f} over {horizon}h{scope}"
             ),
             priority=priority,  # type: ignore[arg-type]
-            recommended_at=prediction.prediction_time + timedelta(hours=horizon),
+            # A stale snapshot would otherwise schedule the work in the past.
+            recommended_at=max(lead.prediction_time, now) + timedelta(hours=horizon),
             assignee="Дежурный инженер",
             note="Auto-draft from prediction ingest",
             source="vena_forecast",
-            source_detail=prediction.model_id,
+            source_detail=lead.model_id,
             status="suggested",
-            source_prediction_id=prediction.id,
-            source_model_id=prediction.model_id,
-            source_prediction_time=prediction.prediction_time,
-            source_score=prediction.score,
+            source_prediction_id=lead.id,
+            source_model_id=lead.model_id,
+            source_prediction_time=lead.prediction_time,
+            source_score=lead.score,
             source_horizon_hours=horizon,
         ),
         actor="vena-ingest",
@@ -165,36 +163,43 @@ def refresh_predictions(
 
     created = 0
     actions_created = 0
+    now = datetime.now(tz=UTC)
     significant = [item for item in predictions if item.risk_level in RULE_FOR_LEVEL]
-    significant.sort(key=lambda item: item.score, reverse=True)
-    for prediction in significant[: settings.prediction_critical_limit]:
-        trigger = RULE_FOR_LEVEL[prediction.risk_level]
-        dedup_key = f"{trigger}:{prediction.asset_id}"
-        if not notification_service.within_cooldown(
-            session, dedup_key, settings.prediction_cooldown_minutes
-        ):
+    # The limit applies per scenario, so a mass power outage cannot crowd out a
+    # flooding or fire forecast from the dispatcher's queue.
+    per_scenario: dict[str, int] = {}
+    for incident in group_incidents(significant):
+        if per_scenario.get(incident.scenario, 0) >= settings.prediction_critical_limit:
+            continue
+        per_scenario[incident.scenario] = per_scenario.get(incident.scenario, 0) + 1
+        lead = incident.lead
+        trigger = RULE_FOR_LEVEL[lead.risk_level]
+        dedup_key = f"{trigger}:{incident.key}"
+        if not _recently_notified(session, dedup_key, settings.prediction_cooldown_minutes, now):
             change = (
-                f", {prediction.score_delta:+.3f} since the previous snapshot"
-                if prediction.score_delta is not None
+                f", {lead.score_delta:+.3f} since the previous snapshot"
+                if lead.score_delta is not None
                 else ""
             )
+            count = len(incident.asset_ids)
+            scope = f" {count} channels at this location share the risk." if count > 1 else ""
             notification = notification_service.create_notification(
                 session,
                 NotificationCreate(
                     type="risk",
-                    severity="critical" if prediction.risk_level == "critical" else "attention",
-                    title=f"{prediction.asset_id} · {prediction.model_id} {prediction.score:.3f}",
+                    severity="critical" if lead.risk_level == "critical" else "attention",
+                    title=f"{incident.title} · {lead.model_id} {lead.score:.3f}",
                     description=(
-                        f"Model {prediction.model_id} reports {prediction.risk_level} risk "
-                        f"for the next {prediction.horizon_hours}h{change}."
+                        f"Model {lead.model_id} reports {lead.risk_level} risk "
+                        f"for the next {lead.horizon_hours}h{change}.{scope}"
                     ),
-                    asset_id=prediction.asset_id,
+                    asset_id=lead.asset_id,
                     dedup_key=dedup_key,
                 ),
             )
             notification_service.dispatch(session, settings, provider, notification, trigger)
             created += 1
-        if _suggest_action(session, prediction):
+        if _suggest_action(session, incident, now):
             actions_created += 1
 
     if existing is None:

@@ -40,3 +40,6 @@ class Situation(BaseModel):
     updated_at: datetime
     open_action_id: str | None
     notification_id: str | None
+    scenario: str | None = None
+    location: str | None = None
+    asset_count: int = 1

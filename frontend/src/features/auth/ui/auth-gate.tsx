@@ -47,7 +47,7 @@ export function AuthGate({ children }: { children: React.ReactNode }) {
 
   if (session.isPending) {
     return (
-      <div className="flex size-full items-center justify-center">
+      <div className="flex min-h-svh w-full items-center justify-center">
         <LoadingBar />
       </div>
     )
@@ -55,7 +55,7 @@ export function AuthGate({ children }: { children: React.ReactNode }) {
 
   if (session.isError) {
     return (
-      <div className="flex size-full items-center justify-center p-8">
+      <div className="flex min-h-svh w-full items-center justify-center p-8">
         <StateMessage
           title="Сервис авторизации недоступен"
           description="Не удалось получить /api/v1/auth/status. Проверьте backend."
@@ -72,7 +72,7 @@ export function AuthGate({ children }: { children: React.ReactNode }) {
   const data = session.data
   if (data?.needsLogin) {
     return (
-      <div className="flex size-full items-center justify-center bg-background px-6">
+      <div className="flex min-h-svh w-full items-center justify-center bg-background px-6">
         <div className="w-full max-w-md border border-border bg-elevated p-8">
           <div className="mb-6 flex items-center gap-3">
             <VenaMark className="text-vena" />

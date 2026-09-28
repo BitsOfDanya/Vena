@@ -7,7 +7,14 @@ from app.core.security import Principal, get_principal, require_min_role
 from app.db.session import get_session
 from app.domain import actions as service
 from app.domain import audit as audit_service
-from app.schemas.actions import ActionCreate, ActionOut, ActionPatch, AssignRequest, ResultRequest
+from app.schemas.actions import (
+    ActionCreate,
+    ActionOut,
+    ActionPatch,
+    AssignRequest,
+    DismissRequest,
+    ResultRequest,
+)
 
 router = APIRouter(prefix="/actions", tags=["actions"])
 
@@ -100,8 +107,22 @@ def approve_action(action_id: str, session: SessionDep, principal: ActorDep) -> 
 
 
 @router.post("/{action_id}/dismiss", response_model=ActionOut)
-def dismiss_action(action_id: str, session: SessionDep, principal: ActorDep) -> ActionOut:
-    return _transition(session, action_id, "dismissed", principal)
+def dismiss_action(
+    action_id: str,
+    session: SessionDep,
+    principal: ActorDep,
+    payload: DismissRequest | None = None,
+) -> ActionOut:
+    decision = payload or DismissRequest()
+    action = _get(session, action_id)
+    try:
+        updated = service.dismiss(
+            session, action, decision.reason, decision.note, principal.subject
+        )
+    except service.InvalidTransition as error:
+        raise HTTPException(status_code=409, detail=str(error)) from error
+    _audit(session, principal, "action.dismissed", action_id, decision.reason)
+    return _out(updated)
 
 
 @router.post("/{action_id}/assign", response_model=ActionOut)

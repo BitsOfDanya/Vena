@@ -1,7 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
 
 import { actionRepository } from "../api/repository"
-import type { ActionStatus, CloseActionInput, CreateActionInput } from "./types"
+import type { ActionStatus, CloseActionInput, CreateActionInput, DismissActionInput } from "./types"
 
 const KEY = ["actions"] as const
 
@@ -44,7 +44,7 @@ export function useApproveAction(now: number) {
 export function useDismissAction(now: number) {
   const client = useQueryClient()
   return useMutation({
-    mutationFn: (id: string) => actionRepository.dismiss(id, now),
+    mutationFn: (input: DismissActionInput) => actionRepository.dismiss(input, now),
     onSuccess: () => client.invalidateQueries({ queryKey: KEY }),
   })
 }

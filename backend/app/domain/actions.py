@@ -176,6 +176,29 @@ def complete(session: Session, action: Action, outcome: str, note: str, actor: s
     return action
 
 
+# Dispatcher decision catalogue (ТЗ, section 12, step 5): why a forecast did not
+# lead to a crew dispatch, and which feedback outcome it gives the model.
+DISMISS_REASONS: dict[str, tuple[str, str]] = {
+    "false_alarm": ("Ложное срабатывание", "false_or_irrelevant_signal"),
+    "planned_works": ("Плановые работы на объекте", "false_or_irrelevant_signal"),
+    "verified_normal": ("Проверено по камерам и телеметрии: норма", "no_issue_found"),
+    "monitoring": ("Мониторинг ситуации без выезда", "monitoring_required"),
+    "duplicate": ("Дубль уже открытой работы", "other"),
+    "other": ("Другое", "other"),
+}
+
+
+def dismiss(session: Session, action: Action, reason: str, note: str, actor: str) -> Action:
+    label, outcome = DISMISS_REASONS[reason]
+    detail = f"{label}. {note}".strip() if note else label
+    updated = transition(session, action, "dismissed", actor, detail)
+    updated.result_outcome = outcome
+    updated.result_note = detail
+    updated.completed_at = _now()
+    session.flush()
+    return updated
+
+
 def to_dict(action: Action) -> dict:
     return {
         "id": action.id,

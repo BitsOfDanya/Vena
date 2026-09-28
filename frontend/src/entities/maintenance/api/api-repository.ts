@@ -143,5 +143,5 @@ export const apiActionRepository: ActionRepository = {
     return command(id, path)
   },
   approve: (id) => command(id, "approve"),
-  dismiss: (id) => command(id, "dismiss"),
+  dismiss: (input) => command(input.id, "dismiss", { reason: input.reason, note: input.note }),
 }

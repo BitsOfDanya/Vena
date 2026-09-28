@@ -1,6 +1,7 @@
 import { DEMO_NOW } from "@/entities/infrastructure"
 import { HOUR, MINUTE } from "@/shared/lib/time"
 
+import { DISMISS_REASON_LABEL, DISMISS_REASON_OUTCOME } from "../model/types"
 import type {
   ActionEvent,
   ActionEventType,
@@ -264,11 +265,14 @@ export const actionRepository: ActionRepository = {
       history: [...action.history, event(now, "approved", USER_ACTOR), event(now, "planned", USER_ACTOR)],
     }))
   },
-  async dismiss(id, now) {
-    return update(id, (action) => ({
+  async dismiss(input, now) {
+    const label = DISMISS_REASON_LABEL[input.reason]
+    const note = input.note ? `${label}. ${input.note}` : label
+    return update(input.id, (action) => ({
       ...action,
       status: "cancelled",
-      history: [...action.history, event(now, "dismissed", USER_ACTOR)],
+      history: [...action.history, event(now, "dismissed", USER_ACTOR, note)],
+      result: { outcome: DISMISS_REASON_OUTCOME[input.reason], note, closedAt: now },
     }))
   },
 }

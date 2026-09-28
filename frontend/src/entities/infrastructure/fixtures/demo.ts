@@ -101,7 +101,7 @@ export function eventsBetween(events: SensorEvent[], from: number, to: number): 
   return events.filter((event) => event.timestamp >= from && event.timestamp <= to)
 }
 
-export function isOffline(record: AssetRecord, _at?: number): boolean {
+export function isOffline(record: AssetRecord): boolean {
   return record.offline
 }
 

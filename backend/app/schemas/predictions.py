@@ -36,6 +36,10 @@ class Prediction(BaseModel):
     previous_score: float | None = None
     score_delta: float | None = None
     predicted_event_type: str
+    scenario: str = "equipment"
+    location_tag: str | None = None
+    location_group: str | None = None
+    location: str | None = None
     lead_time_hours: int | None = None
     factors: list[RiskFactor] = []
     sensor_type: str | None = None

@@ -60,6 +60,13 @@ describe("prediction service", () => {
     ])
   })
 
+  it("groups power-supply predictions under the power asset type", async () => {
+    const phase = { ...prediction, id: "snap-1:phase_24h:179172", device_type: "phase", model_id: "phase_24h", horizon_hours: 24 }
+    mockFetch((url) => ({ body: url.endsWith("/snapshot") ? status : [phase] }))
+    const [result] = await getDashboardPredictions(24)
+    expect(result.deviceType).toBe("power")
+  })
+
   it("rejects a failed page instead of returning partial counts", async () => {
     const first = Array.from({ length: 500 }, (_, i) => ({ ...prediction, id: `prediction-${i}` }))
     mockFetch((url) =>

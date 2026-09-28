@@ -12,9 +12,9 @@ import {
   STATUS_LABEL,
   useActions,
   useApproveAction,
-  useDismissAction,
 } from "@/entities/maintenance"
 import { CreateActionSheet } from "@/features/create-action"
+import { DismissActionDialog } from "@/features/dismiss-action"
 import { useWorkspace } from "@/features/workspace"
 import { HOUR, formatAgo, formatDateTime } from "@/shared/lib/time"
 import { Button } from "@/shared/ui/button"
@@ -42,7 +42,6 @@ export function ActionsPage() {
   const { now } = useWorkspace()
   const actions = useActions()
   const approve = useApproveAction(now)
-  const dismiss = useDismissAction(now)
   const [hours, setHours] = React.useState(72)
   const [selectedId, setSelectedId] = React.useState<string | null>(null)
   const [sheetOpen, setSheetOpen] = React.useState(false)
@@ -114,7 +113,7 @@ export function ActionsPage() {
                         <span className="text-[13px] text-muted-foreground">
                           {KIND_LABEL[action.kind]} · {action.reason}
                         </span>
-                        <span className="font-mono text-[12px] text-faint tabular-nums">{formatAgo(action.createdAt, now)}</span>
+                        <span className="font-mono text-[12px] text-faint tabular-nums">{action.createdAt > now ? formatDateTime(action.createdAt) : formatAgo(action.createdAt, now)}</span>
                         <span className="ml-auto flex items-center gap-3">
                           <button
                             type="button"
@@ -123,14 +122,17 @@ export function ActionsPage() {
                           >
                             Review
                           </button>
-                          <button
-                            type="button"
-                            disabled={dismiss.isPending}
-                            onClick={() => dismiss.mutate(action.id)}
-                            className="text-[13px] text-muted-foreground underline-offset-4 outline-none hover:text-foreground hover:underline focus-visible:ring-2 focus-visible:ring-ring/60"
-                          >
-                            Dismiss
-                          </button>
+                          <DismissActionDialog
+                            actionId={action.id}
+                            trigger={
+                              <button
+                                type="button"
+                                className="text-[13px] text-muted-foreground underline-offset-4 outline-none hover:text-foreground hover:underline focus-visible:ring-2 focus-visible:ring-ring/60"
+                              >
+                                Dismiss
+                              </button>
+                            }
+                          />
                           <Button size="sm" disabled={approve.isPending} onClick={() => approve.mutate(action.id)}>
                             Approve
                           </Button>

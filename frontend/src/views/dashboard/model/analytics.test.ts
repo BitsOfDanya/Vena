@@ -36,6 +36,9 @@ const prediction: Prediction = {
   sensorType: null,
   systemType: null,
   lastEventAt: null,
+  scenario: "flooding",
+  location: null,
+  locationTag: null,
 }
 
 describe("dashboard analytics", () => {

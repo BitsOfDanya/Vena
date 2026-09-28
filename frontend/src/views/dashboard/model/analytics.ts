@@ -85,7 +85,8 @@ export function dashboardRows(
               id: item.id,
               assetId: item.assetId,
               name: asset?.name ?? item.assetId,
-              group: asset?.group ?? "Not in registry",
+              // Channels outside the demo registry are placed by their SMVU tag location.
+              group: asset?.group ?? item.location ?? "Not in registry",
               type: types.has(item.deviceType) ? (item.deviceType as AssetType) : "other",
               level: item.riskLevel,
               score: item.score * 100,

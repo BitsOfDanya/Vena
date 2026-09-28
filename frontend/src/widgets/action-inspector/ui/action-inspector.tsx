@@ -11,12 +11,12 @@ import {
   SOURCE_LABEL,
   STATUS_LABEL,
   useApproveAction,
-  useDismissAction,
   useSetActionStatus,
   type ActionStatus,
   type MaintenanceAction,
 } from "@/entities/maintenance"
 import { CloseActionForm } from "@/features/close-action"
+import { DismissActionDialog } from "@/features/dismiss-action"
 import { useWorkspace } from "@/features/workspace"
 import { formatClock, formatDateTime } from "@/shared/lib/time"
 import { cn } from "@/shared/lib/utils"
@@ -52,7 +52,6 @@ export function ActionInspector({ action, onClose }: { action: MaintenanceAction
   const { now, selectAsset } = useWorkspace()
   const setStatus = useSetActionStatus(now)
   const approve = useApproveAction(now)
-  const dismiss = useDismissAction(now)
   const transitions = NEXT_STATUS[action.status] ?? []
 
   return (
@@ -99,9 +98,14 @@ export function ActionInspector({ action, onClose }: { action: MaintenanceAction
               <Button size="sm" disabled={approve.isPending} onClick={() => approve.mutate(action.id)}>
                 Approve
               </Button>
-              <Button variant="outline" size="sm" disabled={dismiss.isPending} onClick={() => dismiss.mutate(action.id)}>
-                Dismiss
-              </Button>
+              <DismissActionDialog
+                actionId={action.id}
+                trigger={
+                  <Button variant="outline" size="sm">
+                    Dismiss
+                  </Button>
+                }
+              />
             </div>
           </InspectorSection>
         ) : null}

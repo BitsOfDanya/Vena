@@ -1,6 +1,9 @@
 export type PredictionRiskLevel = "critical" | "attention" | "observe" | "normal"
 export type PredictionScoreType = "risk_score" | "calibrated_probability"
 
+/** Incident scenario a device model forecasts; `equipment` covers unknown devices. */
+export type PredictionScenario = "flooding" | "fire" | "power_loss" | "ventilation" | "equipment"
+
 export type PredictionFactor = {
   key: string
   label: string
@@ -24,6 +27,9 @@ export type Prediction = {
   sensorType: string | null
   systemType: string | null
   lastEventAt: number | null
+  scenario: PredictionScenario
+  location: string | null
+  locationTag: string | null
 }
 
 export type SnapshotStatus = {
@@ -53,4 +59,7 @@ export type BackendSituation = {
   updatedAt: number
   openActionId: string | null
   notificationId: string | null
+  scenario: PredictionScenario | null
+  location: string | null
+  assetCount: number
 }

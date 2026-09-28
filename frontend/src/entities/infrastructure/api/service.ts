@@ -78,7 +78,7 @@ function toAsset(
   overlays: Map<string, PredictionOverlay> = new Map(),
 ): Asset {
   const score = scaledScore(record, view.now, view.horizon)
-  const offline = isOffline(record, view.now)
+  const offline = isOffline(record)
   const base: Asset = {
     id: record.id,
     name: record.name,
@@ -417,7 +417,7 @@ export async function getPulse(view: { now: number; windowHours: number }): Prom
   const clusters = detectClusters(window.filter((event) => event.severity !== "info"), assetType)
   const patterns = detectPatterns(clusters)
 
-  const online = dataset.assets.filter((record) => !isOffline(record, view.now))
+  const online = dataset.assets.filter((record) => !isOffline(record))
   const scores = online.map((record) => scoreAt(record, view.now))
   const counts = {
     critical: scores.filter((score) => statusFromScore(score) === "critical").length,
@@ -430,7 +430,7 @@ export async function getPulse(view: { now: number; windowHours: number }): Prom
   const firstStep = Math.ceil(from / STEP) * STEP
   for (let at = firstStep; at <= view.now; at += STEP) {
     const top = dataset.assets
-      .filter((record) => !isOffline(record, at))
+      .filter((record) => !isOffline(record))
       .map((record) => scoreAt(record, at))
       .sort((left, right) => right - left)
       .slice(0, 15)
@@ -514,7 +514,7 @@ export async function getSituations(view: View, limit = 4): Promise<Situation[]>
 
   const overlays = await predictionOverlays()
   const ranked = dataset.assets
-    .filter((record) => !isOffline(record, view.now))
+    .filter((record) => !isOffline(record))
     .map((record) => {
       const asset = toAsset(record, view, overlays)
       return { record, score: asset.riskScore, asset }
@@ -570,7 +570,7 @@ function shiftStart(now: number) {
 export async function getPulseSummary(view: View): Promise<PulseSummary> {
   const dataset = getDataset()
   const since = shiftStart(view.now)
-  const online = dataset.assets.filter((record) => !isOffline(record, view.now))
+  const online = dataset.assets.filter((record) => !isOffline(record))
 
   const scored = online.map((record) => {
     const score = scaledScore(record, view.now, view.horizon)

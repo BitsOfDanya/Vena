@@ -5,6 +5,9 @@ export type {
   Prediction,
   PredictionFactor,
   PredictionRiskLevel,
+  PredictionScenario,
   PredictionScoreType,
   SnapshotStatus,
 } from "./model/types"
+
+export { SCENARIO_LABEL } from "./model/scenario"

@@ -6,6 +6,7 @@ from sqlalchemy.orm import Session
 from app.core.config import Settings
 from app.db.models import Action, Notification
 from app.domain.actions import OPEN_STATUSES
+from app.domain.incidents import group_incidents, location_label
 from app.domain.predictions import get_prediction_source
 from app.schemas.predictions import Prediction
 from app.schemas.system import HealthComponents, Situation, SystemNotice
@@ -107,9 +108,12 @@ def situations(session: Session, settings: Settings, limit: int = 6) -> list[Sit
         if recent_notification.asset_id is not None:
             notifications.setdefault(recent_notification.asset_id, recent_notification)
 
-    candidates = [item for item in source.all() if item.risk_level in ("critical", "attention")]
+    # One asset keeps only its strongest model before grouping, so a pump with
+    # 24h and 72h forecasts is counted once inside its incident.
     best: dict[str, Prediction] = {}
-    for prediction in candidates:
+    for prediction in source.all():
+        if prediction.risk_level not in ("critical", "attention"):
+            continue
         current = best.get(prediction.asset_id)
         if current is None or (LEVEL_RANK[prediction.risk_level], -prediction.score) < (
             LEVEL_RANK[current.risk_level],
@@ -118,42 +122,46 @@ def situations(session: Session, settings: Settings, limit: int = 6) -> list[Sit
             best[prediction.asset_id] = prediction
 
     result: list[Situation] = []
-    for asset_id, prediction in best.items():
-        action: Action | None = open_actions.get(asset_id)
-        notification: Notification | None = notifications.get(asset_id)
+    for incident in group_incidents(best.values()):
+        lead = incident.lead
+        action = next(
+            (open_actions[asset] for asset in incident.asset_ids if asset in open_actions), None
+        )
+        notification = next(
+            (notifications[asset] for asset in incident.asset_ids if asset in notifications), None
+        )
         status: str = "new"
         if action is not None:
             status = "action_created"
         elif notification is not None and notification.status == "acknowledged":
             status = "acknowledged"
-        factor = (
-            max(prediction.factors, key=lambda item: item.value) if prediction.factors else None
-        )
-        delta = (
-            f", {prediction.score_delta:+.3f} since the previous snapshot"
-            if prediction.score_delta
-            else ""
-        )
+        factor = max(lead.factors, key=lambda item: item.value) if lead.factors else None
+        delta = f", {lead.score_delta:+.3f} since the previous snapshot" if lead.score_delta else ""
+        count = len(incident.asset_ids)
+        scope = f"{count} channels, lead {lead.asset_id}" if count > 1 else lead.asset_id
         result.append(
             Situation(
-                id=f"situation-{prediction.id}",
+                id=f"situation-{lead.source_snapshot}:{incident.key}",
                 type="risk",
-                severity="critical" if prediction.risk_level == "critical" else "attention",
-                title=prediction.asset_id,
+                severity="critical" if incident.risk_level == "critical" else "attention",
+                title=incident.title,
                 summary=(
-                    f"{prediction.model_id} score {prediction.score:.3f} "
-                    f"({prediction.risk_level}) for the next {prediction.horizon_hours}h{delta}."
+                    f"{scope}: {lead.model_id} score {lead.score:.3f} "
+                    f"({lead.risk_level}) for the next {lead.horizon_hours}h{delta}."
                 ),
-                asset_ids=[asset_id],
+                asset_ids=incident.asset_ids,
                 pattern_id=None,
-                risk_score=prediction.score,
-                risk_delta=prediction.score_delta,
-                forecast_horizon=prediction.horizon_hours,
+                risk_score=lead.score,
+                risk_delta=lead.score_delta,
+                forecast_horizon=lead.horizon_hours,
                 primary_reason=f"{factor.label} {factor.value:g}" if factor else "Model risk level",
                 status=status,  # type: ignore[arg-type]
-                updated_at=prediction.prediction_time,
+                updated_at=lead.prediction_time,
                 open_action_id=action.id if action else None,
                 notification_id=notification.id if notification else None,
+                scenario=incident.scenario,
+                location=location_label(incident.location),
+                asset_count=count,
             )
         )
 
