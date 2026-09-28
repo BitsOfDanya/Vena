@@ -20,7 +20,7 @@ compose run --rm --no-deps caddy caddy validate --config /etc/caddy/Caddyfile --
 
 # Back up before migrations. Failed migrations are not automatically downgraded.
 if [[ -n $(compose ps -q db) ]]; then
-  compose exec -T db pg_dump -U vena vena | gzip > "$root/shared/backups/pre-$revision.sql.gz"
+  compose exec -T db pg_dump --clean --if-exists -U vena vena | gzip > "$root/shared/backups/pre-$revision.sql.gz"
 fi
 previous=$(cat "$root/deployed-revision" 2>/dev/null || true)
 rollback() {

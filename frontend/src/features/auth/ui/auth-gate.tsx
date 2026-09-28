@@ -5,6 +5,7 @@ import { useQuery, useQueryClient } from "@tanstack/react-query"
 
 import { loginWithApiKey, logoutSession, resolveSession, type AuthMe } from "@/entities/system"
 import { ApiError } from "@/shared/api/http"
+import { environmentLabel } from "@/shared/config/env"
 import { Button } from "@/shared/ui/button"
 import { Input } from "@/shared/ui/input"
 import { LoadingBar, StateMessage } from "@/shared/ui/state-message"
@@ -81,7 +82,7 @@ export function AuthGate({ children }: { children: React.ReactNode }) {
               <h1 className="text-[22px] font-semibold tracking-[-0.01em]">Sign in</h1>
             </div>
           </div>
-          <div className="mb-6 border border-border bg-surface px-4 py-4">
+          {environmentLabel !== "production" && <div className="mb-6 border border-border bg-surface px-4 py-4">
             <p className="text-[11px] font-medium tracking-[0.12em] text-faint uppercase">Тестовый стенд · API keys</p>
             <ul className="mt-3 space-y-2 font-mono text-[18px] leading-snug tracking-tight text-foreground">
               <li>
@@ -97,7 +98,7 @@ export function AuthGate({ children }: { children: React.ReactNode }) {
                 <span className="ml-2 text-[13px] text-muted-foreground">viewer</span>
               </li>
             </ul>
-          </div>
+          </div>}
           {!data.status.keys_configured ? (
             <p className="mb-4 border border-status-attention/40 bg-status-attention/10 px-3 py-2 text-[12px] text-status-attention">
               Auth включён, но `VENA_API_KEYS_JSON` пуст или некорректен.
@@ -134,7 +135,7 @@ export function AuthGate({ children }: { children: React.ReactNode }) {
                 })()
               }
             }}
-            placeholder="vena-admin"
+            placeholder={environmentLabel === "production" ? "Введите ключ доступа" : "vena-admin"}
             className="font-mono text-xs"
           />
           {error ? <p className="mt-2 text-[12px] text-status-critical">{error}</p> : null}

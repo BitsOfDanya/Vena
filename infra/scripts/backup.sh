@@ -7,6 +7,6 @@ export VENA_REVISION
 VENA_REVISION=$(cat "$root/deployed-revision")
 destination="$root/shared/backups/vena-$(date -u +%Y%m%dT%H%M%SZ).sql.gz"
 docker compose --env-file "$VENA_ENV_FILE" -f "$root/current/infra/compose.yaml" \
-  exec -T db pg_dump -U vena vena | gzip > "$destination.tmp"
+  exec -T db pg_dump --clean --if-exists -U vena vena | gzip > "$destination.tmp"
 mv "$destination.tmp" "$destination"
 find "$root/shared/backups" -name '*.sql.gz' -mtime +14 -delete
