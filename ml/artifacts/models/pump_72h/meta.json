@@ -63,7 +63,7 @@
       "alarm": 0.6561627307771795,
       "failure": 0.21625595637455772
     },
-    "calibrated": false,
+    "calibrated": true,
     "risk_level_thresholds": {
       "critical": 0.9820003022026244,
       "high": 0.9689136059121185,
@@ -76,7 +76,70 @@
     },
     "window_years": 3,
     "fallback_artifact": "pump_baseline_72h",
-    "min_history_days": 30
+    "min_history_days": 30,
+    "calibration": {
+      "method": "isotonic",
+      "fit_period": "2024",
+      "evaluated_on": "test 2025-2026H1",
+      "n": 501685,
+      "base_rate": 0.2257,
+      "brier_raw": 0.2198,
+      "brier_calibrated": 0.1561,
+      "ece_raw": 0.2387,
+      "ece_calibrated": 0.0276,
+      "reliability": [
+        {
+          "n": 14466,
+          "predicted": 0.0563,
+          "observed": 0.2176
+        },
+        {
+          "n": 252027,
+          "predicted": 0.1554,
+          "observed": 0.1466
+        },
+        {
+          "n": 144856,
+          "predicted": 0.2448,
+          "observed": 0.2079
+        },
+        {
+          "n": 45199,
+          "predicted": 0.3599,
+          "observed": 0.3435
+        },
+        {
+          "n": 7031,
+          "predicted": 0.4529,
+          "observed": 0.3642
+        },
+        {
+          "n": 13263,
+          "predicted": 0.5503,
+          "observed": 0.5274
+        },
+        {
+          "n": 6338,
+          "predicted": 0.6275,
+          "observed": 0.5413
+        },
+        {
+          "n": 160,
+          "predicted": 0.7117,
+          "observed": 0.6
+        },
+        {
+          "n": 12435,
+          "predicted": 0.8344,
+          "observed": 0.7357
+        },
+        {
+          "n": 5910,
+          "predicted": 0.9757,
+          "observed": 0.8876
+        }
+      ]
+    }
   },
   "training_period": {
     "train_years": "2021-2023"

@@ -1,0 +1,9 @@
+{
+  "flag_threshold": 0.35,
+  "weights": {
+    "rarity": 0.4,
+    "breach_sensor": 0.25,
+    "night": 0.2,
+    "chain": 0.15
+  }
+}

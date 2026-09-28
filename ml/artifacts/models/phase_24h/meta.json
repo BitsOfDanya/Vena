@@ -64,13 +64,76 @@
       "alarm": 0.006919864047465592,
       "failure": 0.5403365904321925
     },
-    "calibrated": false,
+    "calibrated": true,
     "risk_level_thresholds": {
       "critical": 0.7386165818855198,
       "high": 0.4693174179556136,
       "medium": 0.1976860989644908
     },
-    "risk_level_basis": "validation precision targets 0.9 / 0.7 / 0.5"
+    "risk_level_basis": "validation precision targets 0.9 / 0.7 / 0.5",
+    "calibration": {
+      "method": "isotonic",
+      "fit_period": "2025",
+      "evaluated_on": "2025, two-fold cross-fitting by alternate months",
+      "n": 332326,
+      "base_rate": 0.2904,
+      "brier_raw": 0.104,
+      "brier_calibrated": 0.091,
+      "ece_raw": 0.0852,
+      "ece_calibrated": 0.0062,
+      "reliability": [
+        {
+          "n": 155343,
+          "predicted": 0.0417,
+          "observed": 0.0431
+        },
+        {
+          "n": 47635,
+          "predicted": 0.1544,
+          "observed": 0.1547
+        },
+        {
+          "n": 27575,
+          "predicted": 0.243,
+          "observed": 0.2613
+        },
+        {
+          "n": 13357,
+          "predicted": 0.3355,
+          "observed": 0.3521
+        },
+        {
+          "n": 17955,
+          "predicted": 0.4465,
+          "observed": 0.4237
+        },
+        {
+          "n": 9725,
+          "predicted": 0.5582,
+          "observed": 0.5503
+        },
+        {
+          "n": 1930,
+          "predicted": 0.6426,
+          "observed": 0.7098
+        },
+        {
+          "n": 3547,
+          "predicted": 0.7521,
+          "observed": 0.7559
+        },
+        {
+          "n": 2290,
+          "predicted": 0.8454,
+          "observed": 0.8044
+        },
+        {
+          "n": 52969,
+          "predicted": 0.9832,
+          "observed": 0.9758
+        }
+      ]
+    }
   },
   "training_period": {
     "train_years": "2019-2024"

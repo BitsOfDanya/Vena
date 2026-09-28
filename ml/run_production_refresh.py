@@ -1,28 +1,40 @@
-"""Refreeze every production artifact on the corrected feature pipeline.
+"""Retrain every production model on the current journal and publish a snapshot.
 
-The follow-up research fixed a leak in ``channel_failure_prior`` and made the
-event order deterministic, so artifacts frozen before 2026-09-28 were trained on
-slightly different features than the scorer now computes. This script re-extracts
-the event caches and refreezes each model with its original recipe, then
-promotes the pump 72-hour blend and writes a fresh prediction snapshot.
+This is the retraining module: when new journal data arrives it re-extracts the
+events, refits each model with its frozen recipe, recalibrates it and writes a
+new prediction snapshot. Each refit is a challenger: it replaces the current
+artifact only when its reported quality is not worse than the current one by
+more than TOLERANCE, otherwise the previous artifact is restored.
 """
 
+import json
 import os
 import shutil
 import subprocess
 import sys
+import tempfile
 import time
 
-from pipeline import config, extract
+from pipeline import artifacts, config, extract
+from pipeline.targets import access
 
-# (device, horizon, model) — recipes of the frozen artifacts in configs/models.
+TOLERANCE = 0.005
+SENSOR_TYPES = [config.SENSOR_ALIASES[key] for key in ("pump", "fan", "smoke", "phase")] + [
+    *access.ACCESS_SENSORS,
+    access.GUARD_SENSOR,
+]
 FINAL_MODELS = [
     ("pump", 24, "catboost"),
     ("fan", 24, "catboost"),
     ("fan", 72, "catboost"),
     ("smoke", 24, "catboost"),
 ]
-SENSORS = ["pump", "fan", "smoke", "phase"]
+SCRIPTS = [
+    ("run_pump_blend_freeze.py", ["pump_72h"]),
+    ("run_power_freeze.py", ["phase_24h"]),
+    ("run_flood_freeze.py", ["flood_24h"]),
+    ("run_alarm_freeze.py", ["alarm_30m"]),
+]
 
 
 def log(message):
@@ -34,27 +46,71 @@ def run(*args):
     subprocess.run([sys.executable, *args], check=True, cwd=config.ROOT)
 
 
+def quality(name):
+    """Primary held-out metric each freeze script records for its artifact."""
+    path = os.path.join(artifacts.artifact_dir(name), "meta.json")
+    if not os.path.exists(path):
+        return None
+    with open(path, encoding="utf-8") as handle:
+        metrics = json.load(handle)["metrics_snapshot"]
+    if "variants" in metrics:
+        return metrics["variants"][metrics["selected"]]["test"]["pr_auc"]
+    test = metrics.get("test") or {}
+    for key in ("avg_precision", "pr_auc"):
+        if key in test:
+            return test[key]
+    return metrics.get("valid", {}).get("pr_auc")
+
+
+def challenge(names, refit):
+    """Refit `names`; restore the previous artifacts of any model that got worse."""
+    backup = tempfile.mkdtemp(prefix="vena-champion-")
+    before = {}
+    for name in names:
+        before[name] = quality(name)
+        if before[name] is not None:
+            shutil.copytree(artifacts.artifact_dir(name), os.path.join(backup, name))
+            config_path = os.path.join(config.ROOT, "configs", "models", f"{name}.json")
+            if os.path.exists(config_path):
+                shutil.copy2(config_path, os.path.join(backup, f"{name}.json"))
+    refit()
+    for name in names:
+        after = quality(name)
+        if before[name] is not None and (after is None or after < before[name] - TOLERANCE):
+            shutil.rmtree(artifacts.artifact_dir(name))
+            shutil.copytree(os.path.join(backup, name), artifacts.artifact_dir(name))
+            saved_config = os.path.join(backup, f"{name}.json")
+            if os.path.exists(saved_config):
+                shutil.copy2(saved_config, os.path.join(config.ROOT, "configs", "models", f"{name}.json"))
+            log(f"{name}: challenger {after} < champion {before[name]}, champion kept")
+        else:
+            log(f"{name}: {before[name]} -> {after}")
+    shutil.rmtree(backup)
+
+
 def main() -> None:
     import run_final_freeze
 
-    stale = os.path.join(config.ANALYSIS_DIR, "ml_ready", "cache_before_20260928")
-    for device in SENSORS:
-        path = extract.cache_path(config.SENSOR_ALIASES[device])
-        if os.path.exists(path):
-            os.makedirs(stale, exist_ok=True)
-            shutil.move(path, os.path.join(stale, os.path.basename(path)))
-        extract.extract_events(config.SENSOR_ALIASES[device], force=True)
-        log(f"extracted {device}")
+    for sensor_type in SENSOR_TYPES:
+        extract.extract_events(sensor_type, force=True)
+        log(f"extracted {sensor_type}")
 
     for device, horizon, model in FINAL_MODELS:
-        run_final_freeze.run_final_for_device(config.SENSOR_ALIASES[device], device, horizon, model)
-        log(f"frozen {device}_{horizon}h")
-    # The previous pump_72h recipe stays available as the short-history fallback.
-    run_final_freeze.run_final_for_device(config.SENSOR_ALIASES["pump"], "pump_baseline", 72, "logistic_regression")
-    log("frozen pump_baseline_72h")
+        challenge(
+            [f"{device}_{horizon}h"],
+            lambda d=device, h=horizon, m=model: run_final_freeze.run_final_for_device(config.SENSOR_ALIASES[d], d, h, m),
+        )
+    # The single-model pump_72h recipe is kept as the short-history fallback of the blend.
+    challenge(
+        ["pump_baseline_72h"],
+        lambda: run_final_freeze.run_final_for_device(config.SENSOR_ALIASES["pump"], "pump_baseline", 72, "logistic_regression"),
+    )
+    for script, names in SCRIPTS:
+        challenge(names, lambda s=script: run(s))
 
-    run("run_pump_blend_freeze.py")
-    run("run_power_freeze.py")
+    run("run_calibration.py")
+    run("run_access_analysis.py")
+    run("run_seasonality.py")
     run("score_snapshot.py")
     log("production refresh done")
 

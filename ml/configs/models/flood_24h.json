@@ -1,23 +1,40 @@
 {
   "sensor_type": "Состояние насоса",
-  "tag": "pump_baseline",
+  "tag": "flood",
   "model": {
-    "model_name": "logistic_regression",
-    "horizon_hours": 72,
+    "model_name": "lightgbm",
+    "horizon_hours": 24,
+    "target_state": "Затоплен",
     "numeric_mode": false,
-    "duty_cycle_mode": false,
+    "duty_cycle_mode": true,
+    "weather_features": false,
     "with_neighbors": false,
     "global_rates": {
       "event": 3.8710772143801213,
       "alarm": 0.6561627307771795,
-      "failure": 0.21625595637455772
+      "failure": 0.14778057442879045
     },
     "calibrated": true,
+    "calibration": {
+      "method": "isotonic",
+      "fit_period": "2024",
+      "evaluated_on": "test 2025-2026H1",
+      "brier_raw": 0.0992,
+      "brier_calibrated": 0.0633,
+      "ece_raw": 0.1255,
+      "ece_calibrated": 0.0052
+    },
     "risk_level_thresholds": {
-      "critical": 0.9962668556891047,
-      "high": 0.9861815138747381,
-      "medium": 0.9448702018202455
-    }
+      "critical": 0.8640124666304491,
+      "high": 0.7695749577057486,
+      "medium": 0.6121831300674003
+    },
+    "risk_level_basis": {
+      "critical": "precision 0.7",
+      "high": "precision 0.5",
+      "medium": "precision 0.3"
+    },
+    "feature_set": "events+duty"
   },
   "feature_columns": [
     "events_10m",
@@ -70,7 +87,20 @@
     "hour_sin",
     "hour_cos",
     "weekday_sin",
-    "weekday_cos"
+    "weekday_cos",
+    "time_in_current_state_hours",
+    "mean_on_duration_hours",
+    "mean_off_duration_hours",
+    "max_on_duration_hours",
+    "max_off_duration_hours",
+    "transition_count_1h",
+    "transition_count_6h",
+    "transition_count_24h",
+    "transition_count_7d",
+    "on_off_cycles_1h",
+    "on_off_cycles_6h",
+    "on_off_cycles_24h",
+    "on_off_cycles_7d"
   ],
-  "artifact": "pump_baseline_72h"
+  "artifact": "flood_24h"
 }

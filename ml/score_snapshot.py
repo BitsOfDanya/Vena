@@ -7,8 +7,8 @@ from datetime import datetime, timezone
 import numpy as np
 import pandas as pd
 
-from pipeline import artifacts, config, episodes as episodes_mod, inference
-from pipeline.targets import discovery
+from pipeline import artifacts, calibration, config, episodes as episodes_mod, inference
+from pipeline.targets import access, discovery, flood
 
 # Each device carries the state literal its models were trained to predict, so
 # failure-history features are built from the matching episodes.
@@ -17,7 +17,11 @@ DEVICES = [
     ("fan", ["fan_24h", "fan_72h"], config.FAULT_LITERAL),
     ("smoke", ["smoke_24h"], config.FAULT_LITERAL),
     ("phase", ["phase_24h"], "Обесточен"),
+    ("flood", ["flood_24h"], flood.FLOOD_STATE),
 ]
+
+# The flooding model reads the pump chamber state of the pump channels.
+DEVICE_SENSOR = {"flood": "pump"}
 
 # Incident scenario each device model forecasts (ТЗ, section 6: incident types).
 SCENARIOS = {
@@ -25,7 +29,15 @@ SCENARIOS = {
     "fan": "ventilation",
     "smoke": "fire",
     "phase": "power_loss",
+    "flood": "flooding",
 }
+
+RECENT_DAYS = 30
+# The top isotonic step can be a small all-positive bin, so the published
+# probability never claims certainty.
+PROBABILITY_RANGE = (0.001, 0.99)
+ALARM_MODEL = "alarm_30m"
+ACCESS_CONFIG = os.path.join(config.ROOT, "configs", "access.json")
 
 OUTPUT = os.path.join(config.ROOT, "results", "predictions", "snapshot.json")
 
@@ -157,17 +169,35 @@ def build_episodes(events, target_state):
     return discovery.state_episodes(events, target_state)
 
 
+def sensor_of(device):
+    return config.SENSOR_ALIASES[DEVICE_SENSOR.get(device, device)]
+
+
+def calibrated(calibrator, score):
+    if calibrator is None:
+        return score
+    return float(np.clip(calibration.apply_isotonic(calibrator, [score])[0], *PROBABILITY_RANGE))
+
+
 def score_rows(device, model_names, target_state, events, reference):
     events = events.sort_values(["channel_id", "ts"])
     all_episodes = build_episodes(events, target_state)
     models = {}
     fallbacks = {}
+    calibrators = {}
+    weather = None
     for name in model_names:
         model, meta = artifacts.load_artifact(name)
         models[name] = (model, meta)
+        calibrators[name] = artifacts.load_calibrator(name)
         fallback = meta["model_config"].get("fallback_artifact")
         if fallback:
             fallbacks[name] = artifacts.load_artifact(fallback)
+            calibrators[fallback] = artifacts.load_calibrator(fallback)
+        if meta["model_config"].get("weather_features"):
+            from pipeline import weather as weather_mod
+
+            weather = weather_mod.fetch_weather()
 
     grouped = {key: frame for key, frame in events.groupby("channel_id", observed=True)}
     episode_groups = {key: frame for key, frame in all_episodes.groupby("channel_id", observed=True)}
@@ -185,17 +215,21 @@ def score_rows(device, model_names, target_state, events, reference):
         channel_time = channel_events["ts"].max()
         history_days = (channel_time - channel_events["ts"].min()) / pd.Timedelta(days=1)
         for name, (primary, primary_meta) in models.items():
-            model, meta, variant = primary, primary_meta, "primary"
+            model, meta, variant, source = primary, primary_meta, "primary", name
             # Blends were weaker on channels with a short history, so those
             # channels are scored by the single-model fallback and its own bands.
             if name in fallbacks and history_days < primary_meta["model_config"].get("min_history_days", 0):
                 model, meta = fallbacks[name]
-                variant = "fallback"
+                variant, source = "fallback", primary_meta["model_config"]["fallback_artifact"]
             model_config = meta["model_config"]
             feature_row = inference.build_feature_row(
                 channel_time, channel_events, channel_episodes, model_config
             )
-            score = float(model.predict_proba(feature_row[meta["feature_columns"]])[0])
+            if model_config.get("weather_features"):
+                feature_row = flood.attach_to_row(feature_row, channel_time, weather)
+            raw = float(model.predict_proba(feature_row[meta["feature_columns"]])[0])
+            # Risk levels use the raw score: isotonic steps can tie neighbouring scores.
+            probability = calibrated(calibrators.get(source), raw)
             thresholds = model_config.get("risk_level_thresholds", {})
             rows.append(
                 {
@@ -206,11 +240,12 @@ def score_rows(device, model_names, target_state, events, reference):
                     "model_variant": variant,
                     "scenario": SCENARIOS.get(device),
                     "horizon_hours": model_config.get("horizon_hours"),
-                    "score": round(score, 6),
+                    "score": round(probability, 6),
+                    "raw_score": round(raw, 6),
                     "score_type": "calibrated_probability"
-                    if model_config.get("calibrated")
+                    if calibrators.get(source) is not None
                     else "risk_score",
-                    "model_risk_level": risk_level(score, thresholds),
+                    "model_risk_level": risk_level(raw, thresholds),
                     "thresholds": thresholds,
                     "last_event_at": channel_time.isoformat(),
                     "scored_at": channel_time.isoformat(),
@@ -242,6 +277,7 @@ def score_rows(device, model_names, target_state, events, reference):
                     "sensor_type": info.get("sensor_type"),
                     "system_type": info.get("system_type"),
                     "tag": info.get("tag"),
+                    "name": info.get("name"),
                 }
             )
     return rows
@@ -250,14 +286,70 @@ def score_rows(device, model_names, target_state, events, reference):
 def score_device(device, model_names, target_state, limit, reference):
     from pipeline import extract
 
-    events = extract.extract_events(config.SENSOR_ALIASES[device])
+    events = extract.extract_events(sensor_of(device))
     counts = events.groupby("channel_id", observed=True).size().sort_values(ascending=False)
     channels = list(counts.index[:limit]) if limit else list(counts.index)
     events = events[events["channel_id"].isin(channels)]
     return score_rows(device, model_names, target_state, events, reference)
 
 
-def write_snapshot(predictions, prediction_time, output):
+def assess_alarms(reference, until):
+    """Probability that each recent detection alarm is corroborated within 30 minutes."""
+    from pipeline.targets import modules
+
+    model, meta = artifacts.load_artifact(ALARM_MODEL)
+    calibrator = artifacts.load_calibrator(ALARM_MODEL)
+    frame = modules.build_alarm_frame(include_lockbox=True)
+    recent = frame.loc[frame["ts"] > until - pd.Timedelta(days=RECENT_DAYS)].reset_index(drop=True)
+    raw = model.predict_proba(recent[meta["feature_columns"]])
+    probability = np.clip(calibration.apply_isotonic(calibrator, raw), *PROBABILITY_RANGE)
+    threshold = meta["model_config"]["isolated_threshold"]
+    rows = []
+    for item, score, prob in zip(recent.itertuples(), raw, probability, strict=True):
+        info = reference.get(str(item.channel_id), {})
+        rows.append({
+            "channel_id": str(item.channel_id),
+            "ts": item.ts.isoformat(),
+            "sensor_type": item.sensor_type,
+            "corroboration_probability": round(float(prob), 4),
+            "needs_verification": bool(score < threshold),
+            "tag": info.get("tag"),
+            "name": info.get("name"),
+        })
+    return rows
+
+
+def assess_access(reference, until):
+    """Entry-point triggers at armed objects above the verification threshold."""
+    from pipeline import extract
+
+    with open(ACCESS_CONFIG, encoding="utf-8") as handle:
+        threshold = json.load(handle)["flag_threshold"]
+    tag_by_channel = {key: value.get("tag") for key, value in reference.items()}
+    guard = access.guard_states(extract.extract_events(access.GUARD_SENSOR), tag_by_channel)
+    triggers = pd.concat(
+        [access.triggers(extract.extract_events(sensor), sensor, tag_by_channel) for sensor in access.ACCESS_SENSORS],
+        ignore_index=True,
+    )
+    scored = access.assess(triggers, guard)
+    recent = scored.loc[(scored["ts"] > until - pd.Timedelta(days=RECENT_DAYS)) & (scored["index"] >= threshold)]
+    return [
+        {
+            "channel_id": item.channel_id,
+            "ts": item.ts.isoformat(),
+            "sensor_type": item.sensor_type,
+            "object": item.object,
+            "access_index": round(float(item.index), 4),
+            "night": bool(item.night),
+            "chain": bool(item.chain),
+            "tag": reference.get(item.channel_id, {}).get("tag"),
+            "name": reference.get(item.channel_id, {}).get("name"),
+        }
+        for item in recent.itertuples()
+    ]
+
+
+def write_snapshot(predictions, prediction_time, output, alarms=None, access_events=None):
     model_info = {}
     for _, names, _ in DEVICES:
         for name in names:
@@ -273,6 +365,10 @@ def write_snapshot(predictions, prediction_time, output):
         "models": model_info,
         "predictions": predictions,
     }
+    if alarms is not None:
+        payload["alarms"] = alarms
+    if access_events is not None:
+        payload["access_events"] = access_events
     payload["snapshot_id"] = hashlib.sha256(
         json.dumps(payload["predictions"], sort_keys=True).encode()
     ).hexdigest()[:16]
@@ -313,7 +409,7 @@ def main() -> None:
     prediction_time = None
     predictions = []
     for device, _, _ in DEVICES:
-        events = extract.extract_events(config.SENSOR_ALIASES[device])
+        events = extract.extract_events(sensor_of(device))
         device_time = events["ts"].max()
         prediction_time = device_time if prediction_time is None else max(prediction_time, device_time)
 
@@ -322,7 +418,14 @@ def main() -> None:
             score_device(device, model_names, target_state, arguments.limit, reference)
         )
 
-    write_snapshot(predictions, prediction_time, arguments.output)
+    until = pd.Timestamp(prediction_time)
+    write_snapshot(
+        predictions,
+        prediction_time,
+        arguments.output,
+        alarms=assess_alarms(reference, until),
+        access_events=assess_access(reference, until),
+    )
 
 
 if __name__ == "__main__":

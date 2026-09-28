@@ -1,0 +1,69 @@
+{
+ "selected": "events+duty",
+ "variants": {
+  "events": {
+   "valid": {
+    "pr_auc": 0.2515,
+    "roc_auc": 0.7789,
+    "recall_at_precision_0.7": 0.0633,
+    "precision_at_recall_0.5": 0.1784,
+    "base_rate": 0.071
+   },
+   "test": {
+    "pr_auc": 0.2204,
+    "roc_auc": 0.6869,
+    "recall_at_precision_0.7": 0.0118,
+    "precision_at_recall_0.5": 0.1299,
+    "base_rate": 0.0736
+   }
+  },
+  "events+duty": {
+   "valid": {
+    "pr_auc": 0.2518,
+    "roc_auc": 0.7663,
+    "recall_at_precision_0.7": 0.0725,
+    "precision_at_recall_0.5": 0.1723,
+    "base_rate": 0.071
+   },
+   "test": {
+    "pr_auc": 0.2353,
+    "roc_auc": 0.6691,
+    "recall_at_precision_0.7": 0.0641,
+    "precision_at_recall_0.5": 0.1242,
+    "base_rate": 0.0736
+   }
+  },
+  "events+duty+weather": {
+   "valid": {
+    "pr_auc": 0.2337,
+    "roc_auc": 0.7597,
+    "recall_at_precision_0.7": 0.0677,
+    "precision_at_recall_0.5": 0.1547,
+    "base_rate": 0.071
+   },
+   "test": {
+    "pr_auc": 0.2297,
+    "roc_auc": 0.6841,
+    "recall_at_precision_0.7": 0.068,
+    "precision_at_recall_0.5": 0.1145,
+    "base_rate": 0.0736
+   }
+  },
+  "events+duty+weather+forecast": {
+   "valid": {
+    "pr_auc": 0.2379,
+    "roc_auc": 0.7509,
+    "recall_at_precision_0.7": 0.0664,
+    "precision_at_recall_0.5": 0.164,
+    "base_rate": 0.071
+   },
+   "test": {
+    "pr_auc": 0.2166,
+    "roc_auc": 0.6735,
+    "recall_at_precision_0.7": 0.069,
+    "precision_at_recall_0.5": 0.1246,
+    "base_rate": 0.0736
+   }
+  }
+ }
+}

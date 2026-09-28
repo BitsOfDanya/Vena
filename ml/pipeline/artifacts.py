@@ -32,3 +32,9 @@ def load_artifact(name):
     with open(os.path.join(d, "meta.json")) as f:
         meta = json.load(f)
     return model, meta
+
+
+def load_calibrator(name):
+    """Isotonic calibrator of a frozen model, or None when the model is not calibrated."""
+    path = os.path.join(artifact_dir(name), "calibrator.joblib")
+    return joblib.load(path) if os.path.exists(path) else None

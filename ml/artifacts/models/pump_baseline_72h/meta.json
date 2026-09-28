@@ -63,11 +63,74 @@
       "alarm": 0.6561627307771795,
       "failure": 0.21625595637455772
     },
-    "calibrated": false,
+    "calibrated": true,
     "risk_level_thresholds": {
       "critical": 0.9962668556891047,
       "high": 0.9861815138747381,
       "medium": 0.9448702018202455
+    },
+    "calibration": {
+      "method": "isotonic",
+      "fit_period": "2024",
+      "evaluated_on": "test 2025-2026H1",
+      "n": 501685,
+      "base_rate": 0.2257,
+      "brier_raw": 0.2355,
+      "brier_calibrated": 0.1573,
+      "ece_raw": 0.2699,
+      "ece_calibrated": 0.0216,
+      "reliability": [
+        {
+          "n": 11278,
+          "predicted": 0.0962,
+          "observed": 0.0819
+        },
+        {
+          "n": 248678,
+          "predicted": 0.1655,
+          "observed": 0.1514
+        },
+        {
+          "n": 157593,
+          "predicted": 0.2376,
+          "observed": 0.2197
+        },
+        {
+          "n": 50641,
+          "predicted": 0.3526,
+          "observed": 0.3459
+        },
+        {
+          "n": 20231,
+          "predicted": 0.4443,
+          "observed": 0.5861
+        },
+        {
+          "n": 76,
+          "predicted": 0.5948,
+          "observed": 0.7895
+        },
+        {
+          "n": 4591,
+          "predicted": 0.6524,
+          "observed": 0.6953
+        },
+        {
+          "n": 14,
+          "predicted": 0.7568,
+          "observed": 0.9286
+        },
+        {
+          "n": 604,
+          "predicted": 0.8039,
+          "observed": 0.8361
+        },
+        {
+          "n": 7979,
+          "predicted": 0.9726,
+          "observed": 0.8611
+        }
+      ]
     }
   },
   "training_period": {

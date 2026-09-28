@@ -1,0 +1,413 @@
+{
+ "pump_24h": {
+  "method": "isotonic",
+  "fit_period": "2024",
+  "evaluated_on": "test 2025-2026H1",
+  "n": 501685,
+  "base_rate": 0.1002,
+  "brier_raw": 0.1538,
+  "brier_calibrated": 0.0843,
+  "ece_raw": 0.2202,
+  "ece_calibrated": 0.0097,
+  "reliability": [
+   {
+    "n": 396359,
+    "predicted": 0.071,
+    "observed": 0.0732
+   },
+   {
+    "n": 69505,
+    "predicted": 0.1493,
+    "observed": 0.1266
+   },
+   {
+    "n": 28159,
+    "predicted": 0.2227,
+    "observed": 0.2698
+   },
+   {
+    "n": 2264,
+    "predicted": 0.3466,
+    "observed": 0.5486
+   },
+   {
+    "n": 117,
+    "predicted": 0.4009,
+    "observed": 0.5556
+   },
+   {
+    "n": 287,
+    "predicted": 0.5606,
+    "observed": 0.7282
+   },
+   {
+    "n": 4994,
+    "predicted": 0.7831,
+    "observed": 0.6664
+   }
+  ]
+ },
+ "pump_72h": {
+  "method": "isotonic",
+  "fit_period": "2024",
+  "evaluated_on": "test 2025-2026H1",
+  "n": 501685,
+  "base_rate": 0.2257,
+  "brier_raw": 0.2198,
+  "brier_calibrated": 0.1561,
+  "ece_raw": 0.2387,
+  "ece_calibrated": 0.0276,
+  "reliability": [
+   {
+    "n": 14466,
+    "predicted": 0.0563,
+    "observed": 0.2176
+   },
+   {
+    "n": 252027,
+    "predicted": 0.1554,
+    "observed": 0.1466
+   },
+   {
+    "n": 144856,
+    "predicted": 0.2448,
+    "observed": 0.2079
+   },
+   {
+    "n": 45199,
+    "predicted": 0.3599,
+    "observed": 0.3435
+   },
+   {
+    "n": 7031,
+    "predicted": 0.4529,
+    "observed": 0.3642
+   },
+   {
+    "n": 13263,
+    "predicted": 0.5503,
+    "observed": 0.5274
+   },
+   {
+    "n": 6338,
+    "predicted": 0.6275,
+    "observed": 0.5413
+   },
+   {
+    "n": 160,
+    "predicted": 0.7117,
+    "observed": 0.6
+   },
+   {
+    "n": 12435,
+    "predicted": 0.8344,
+    "observed": 0.7357
+   },
+   {
+    "n": 5910,
+    "predicted": 0.9757,
+    "observed": 0.8876
+   }
+  ]
+ },
+ "pump_baseline_72h": {
+  "method": "isotonic",
+  "fit_period": "2024",
+  "evaluated_on": "test 2025-2026H1",
+  "n": 501685,
+  "base_rate": 0.2257,
+  "brier_raw": 0.2355,
+  "brier_calibrated": 0.1573,
+  "ece_raw": 0.2699,
+  "ece_calibrated": 0.0216,
+  "reliability": [
+   {
+    "n": 11278,
+    "predicted": 0.0962,
+    "observed": 0.0819
+   },
+   {
+    "n": 248678,
+    "predicted": 0.1655,
+    "observed": 0.1514
+   },
+   {
+    "n": 157593,
+    "predicted": 0.2376,
+    "observed": 0.2197
+   },
+   {
+    "n": 50641,
+    "predicted": 0.3526,
+    "observed": 0.3459
+   },
+   {
+    "n": 20231,
+    "predicted": 0.4443,
+    "observed": 0.5861
+   },
+   {
+    "n": 76,
+    "predicted": 0.5948,
+    "observed": 0.7895
+   },
+   {
+    "n": 4591,
+    "predicted": 0.6524,
+    "observed": 0.6953
+   },
+   {
+    "n": 14,
+    "predicted": 0.7568,
+    "observed": 0.9286
+   },
+   {
+    "n": 604,
+    "predicted": 0.8039,
+    "observed": 0.8361
+   },
+   {
+    "n": 7979,
+    "predicted": 0.9726,
+    "observed": 0.8611
+   }
+  ]
+ },
+ "fan_24h": {
+  "method": "isotonic",
+  "fit_period": "2024",
+  "evaluated_on": "test 2025-2026H1",
+  "n": 427702,
+  "base_rate": 0.0513,
+  "brier_raw": 0.1718,
+  "brier_calibrated": 0.0458,
+  "ece_raw": 0.243,
+  "ece_calibrated": 0.0149,
+  "reliability": [
+   {
+    "n": 396222,
+    "predicted": 0.0272,
+    "observed": 0.0398
+   },
+   {
+    "n": 28195,
+    "predicted": 0.1445,
+    "observed": 0.1765
+   },
+   {
+    "n": 82,
+    "predicted": 0.2019,
+    "observed": 0.2805
+   },
+   {
+    "n": 497,
+    "predicted": 0.3021,
+    "observed": 0.2736
+   },
+   {
+    "n": 1927,
+    "predicted": 0.4279,
+    "observed": 0.342
+   },
+   {
+    "n": 1,
+    "predicted": 0.5,
+    "observed": 0.0
+   },
+   {
+    "n": 297,
+    "predicted": 0.6903,
+    "observed": 0.4377
+   },
+   {
+    "n": 143,
+    "predicted": 0.7217,
+    "observed": 0.6084
+   },
+   {
+    "n": 1,
+    "predicted": 0.8886,
+    "observed": 0.0
+   },
+   {
+    "n": 337,
+    "predicted": 1.0,
+    "observed": 0.451
+   }
+  ]
+ },
+ "fan_72h": {
+  "method": "isotonic",
+  "fit_period": "2024",
+  "evaluated_on": "test 2025-2026H1",
+  "n": 427702,
+  "base_rate": 0.1154,
+  "brier_raw": 0.17,
+  "brier_calibrated": 0.0817,
+  "ece_raw": 0.2091,
+  "ece_calibrated": 0.0157,
+  "reliability": [
+   {
+    "n": 212855,
+    "predicted": 0.0,
+    "observed": 0.0
+   },
+   {
+    "n": 157377,
+    "predicted": 0.1414,
+    "observed": 0.1676
+   },
+   {
+    "n": 20152,
+    "predicted": 0.2287,
+    "observed": 0.2786
+   },
+   {
+    "n": 18111,
+    "predicted": 0.3564,
+    "observed": 0.3817
+   },
+   {
+    "n": 10801,
+    "predicted": 0.4766,
+    "observed": 0.4654
+   },
+   {
+    "n": 7772,
+    "predicted": 0.5137,
+    "observed": 0.6302
+   },
+   {
+    "n": 22,
+    "predicted": 0.6468,
+    "observed": 0.6364
+   },
+   {
+    "n": 13,
+    "predicted": 0.7473,
+    "observed": 0.8462
+   },
+   {
+    "n": 18,
+    "predicted": 0.8474,
+    "observed": 0.7222
+   },
+   {
+    "n": 581,
+    "predicted": 0.9994,
+    "observed": 0.8399
+   }
+  ]
+ },
+ "smoke_24h": {
+  "method": "isotonic",
+  "fit_period": "2024",
+  "evaluated_on": "test 2025-2026H1",
+  "n": 1410650,
+  "base_rate": 0.0127,
+  "brier_raw": 0.0425,
+  "brier_calibrated": 0.0113,
+  "ece_raw": 0.0802,
+  "ece_calibrated": 0.0072,
+  "reliability": [
+   {
+    "n": 1340628,
+    "predicted": 0.0112,
+    "observed": 0.0052
+   },
+   {
+    "n": 29601,
+    "predicted": 0.1395,
+    "observed": 0.0833
+   },
+   {
+    "n": 40074,
+    "predicted": 0.2136,
+    "observed": 0.2057
+   },
+   {
+    "n": 142,
+    "predicted": 0.3444,
+    "observed": 0.6972
+   },
+   {
+    "n": 18,
+    "predicted": 0.4179,
+    "observed": 0.8889
+   },
+   {
+    "n": 55,
+    "predicted": 0.5029,
+    "observed": 0.7818
+   },
+   {
+    "n": 132,
+    "predicted": 0.6665,
+    "observed": 0.8636
+   }
+  ]
+ },
+ "phase_24h": {
+  "method": "isotonic",
+  "fit_period": "2025",
+  "evaluated_on": "2025, two-fold cross-fitting by alternate months",
+  "n": 332326,
+  "base_rate": 0.2904,
+  "brier_raw": 0.104,
+  "brier_calibrated": 0.091,
+  "ece_raw": 0.0852,
+  "ece_calibrated": 0.0062,
+  "reliability": [
+   {
+    "n": 155343,
+    "predicted": 0.0417,
+    "observed": 0.0431
+   },
+   {
+    "n": 47635,
+    "predicted": 0.1544,
+    "observed": 0.1547
+   },
+   {
+    "n": 27575,
+    "predicted": 0.243,
+    "observed": 0.2613
+   },
+   {
+    "n": 13357,
+    "predicted": 0.3355,
+    "observed": 0.3521
+   },
+   {
+    "n": 17955,
+    "predicted": 0.4465,
+    "observed": 0.4237
+   },
+   {
+    "n": 9725,
+    "predicted": 0.5582,
+    "observed": 0.5503
+   },
+   {
+    "n": 1930,
+    "predicted": 0.6426,
+    "observed": 0.7098
+   },
+   {
+    "n": 3547,
+    "predicted": 0.7521,
+    "observed": 0.7559
+   },
+   {
+    "n": 2290,
+    "predicted": 0.8454,
+    "observed": 0.8044
+   },
+   {
+    "n": 52969,
+    "predicted": 0.9832,
+    "observed": 0.9758
+   }
+  ]
+ }
+}

@@ -1,0 +1,89 @@
+{
+ "entry_triggers_total": 2220907,
+ "armed_triggers": 123058,
+ "armed_share": 0.0554,
+ "armed_triggers_per_day": 45.0,
+ "flag_threshold": 0.35,
+ "flagged": 15586,
+ "flagged_per_day": 5.7,
+ "weights": {
+  "rarity": 0.4,
+  "breach_sensor": 0.25,
+  "night": 0.2,
+  "chain": 0.15
+ },
+ "by_year": [
+  {
+   "year": 2019,
+   "armed_triggers": 15375,
+   "flagged": 3086
+  },
+  {
+   "year": 2020,
+   "armed_triggers": 22247,
+   "flagged": 3725
+  },
+  {
+   "year": 2021,
+   "armed_triggers": 14790,
+   "flagged": 1532
+  },
+  {
+   "year": 2022,
+   "armed_triggers": 14269,
+   "flagged": 2069
+  },
+  {
+   "year": 2023,
+   "armed_triggers": 17995,
+   "flagged": 1448
+  },
+  {
+   "year": 2024,
+   "armed_triggers": 16400,
+   "flagged": 1520
+  },
+  {
+   "year": 2025,
+   "armed_triggers": 16329,
+   "flagged": 1529
+  },
+  {
+   "year": 2026,
+   "armed_triggers": 5653,
+   "flagged": 677
+  }
+ ],
+ "by_sensor": [
+  {
+   "sensor_type": "КД Дверь",
+   "armed_triggers": 121814,
+   "flagged": 14597
+  },
+  {
+   "sensor_type": "КД Люк",
+   "armed_triggers": 153,
+   "flagged": 153
+  },
+  {
+   "sensor_type": "Стекло",
+   "armed_triggers": 1091,
+   "flagged": 836
+  }
+ ],
+ "flagged_profile": {
+  "night_share": {
+   "flagged": 0.1422,
+   "all_armed": 0.0279
+  },
+  "breach_sensor_share": {
+   "flagged": 0.0635,
+   "all_armed": 0.0101
+  },
+  "chain_share": {
+   "flagged": 0.7418,
+   "all_armed": 0.2149
+  },
+  "objects_with_flags": 23
+ }
+}

@@ -23,7 +23,7 @@ def build_phase_frame(events, horizons=(24,), sustained_minutes=30):
     return frame, episodes, sustained
 
 
-def build_alarm_frame(con=None, windows=alarm.WINDOWS_MINUTES):
+def build_alarm_frame(con=None, windows=alarm.WINDOWS_MINUTES, include_lockbox=False):
     if con is None:
         con = extract._connect()
         extract._build_views(con)
@@ -49,6 +49,8 @@ def build_alarm_frame(con=None, windows=alarm.WINDOWS_MINUTES):
         labels = alarm.corroboration_labels(frame, w)
         for col in labels.columns:
             frame[f"c{w}_{col}"] = labels[col].astype(int).values
+    if include_lockbox:
+        return frame
     return frame.loc[frame["ts"] < state_target.LOCKBOX_START].reset_index(drop=True)
 
 

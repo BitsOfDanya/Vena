@@ -15,7 +15,7 @@
       "alarm": 0.006919864047465592,
       "failure": 0.5403365904321925
     },
-    "calibrated": false,
+    "calibrated": true,
     "risk_level_thresholds": {
       "critical": 0.7386165818855198,
       "high": 0.4693174179556136,
