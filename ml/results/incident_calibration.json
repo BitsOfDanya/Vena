@@ -1,0 +1,66 @@
+{
+ "model": "phase_24h",
+ "period": "2025",
+ "location_days": 102394,
+ "locations": 379,
+ "base_rate": 0.2974,
+ "channels_per_location_median": 1.0,
+ "pr_auc": 0.5136,
+ "roc_auc": 0.7485,
+ "ece_raw": 0.1607,
+ "ece_calibrated": 0.0042,
+ "brier_raw": 0.2402,
+ "brier_calibrated": 0.1737,
+ "reliability": [
+  {
+   "n": 25657,
+   "predicted": 0.0555,
+   "observed": 0.0561
+  },
+  {
+   "n": 13558,
+   "predicted": 0.1401,
+   "observed": 0.1404
+  },
+  {
+   "n": 10564,
+   "predicted": 0.255,
+   "observed": 0.2561
+  },
+  {
+   "n": 9321,
+   "predicted": 0.356,
+   "observed": 0.372
+  },
+  {
+   "n": 35964,
+   "predicted": 0.4586,
+   "observed": 0.4551
+  },
+  {
+   "n": 3670,
+   "predicted": 0.5678,
+   "observed": 0.5766
+  },
+  {
+   "n": 2409,
+   "predicted": 0.6403,
+   "observed": 0.6189
+  },
+  {
+   "n": 625,
+   "predicted": 0.7376,
+   "observed": 0.7568
+  },
+  {
+   "n": 625,
+   "predicted": 0.8318,
+   "observed": 0.7936
+  },
+  {
+   "n": 1,
+   "predicted": 1.0,
+   "observed": 0.0
+  }
+ ]
+}

@@ -7,7 +7,8 @@ from datetime import datetime, timezone
 import numpy as np
 import pandas as pd
 
-from pipeline import artifacts, calibration, config, episodes as episodes_mod, inference
+from pipeline import artifacts, calibration, config, episodes as episodes_mod, explain, inference
+from pipeline.locations import location_group
 from pipeline.targets import access, discovery, flood
 
 # Each device carries the state literal its models were trained to predict, so
@@ -33,6 +34,7 @@ SCENARIOS = {
 }
 
 RECENT_DAYS = 30
+INCIDENT_MODEL = "phase_24h"
 # The top isotonic step can be a small all-positive bin, so the published
 # probability never claims certainty.
 PROBABILITY_RANGE = (0.001, 0.99)
@@ -230,6 +232,7 @@ def score_rows(device, model_names, target_state, events, reference):
             raw = float(model.predict_proba(feature_row[meta["feature_columns"]])[0])
             # Risk levels use the raw score: isotonic steps can tie neighbouring scores.
             probability = calibrated(calibrators.get(source), raw)
+            drivers = explain.drivers(model, feature_row[meta["feature_columns"]])
             thresholds = model_config.get("risk_level_thresholds", {})
             rows.append(
                 {
@@ -278,6 +281,7 @@ def score_rows(device, model_names, target_state, events, reference):
                     "system_type": info.get("system_type"),
                     "tag": info.get("tag"),
                     "name": info.get("name"),
+                    "drivers": drivers,
                 }
             )
     return rows
@@ -291,6 +295,35 @@ def score_device(device, model_names, target_state, limit, reference):
     channels = list(counts.index[:limit]) if limit else list(counts.index)
     events = events[events["channel_id"].isin(channels)]
     return score_rows(device, model_names, target_state, events, reference)
+
+
+def incident_probabilities(predictions):
+    """Probability that at least one channel of a location loses power within 24 hours."""
+    path = os.path.join(artifacts.artifact_dir(INCIDENT_MODEL), "incident_calibrator.joblib")
+    if not os.path.exists(path):
+        return []
+    import joblib
+
+    calibrator = joblib.load(path)
+    locations = {}
+    for row in predictions:
+        group = location_group(row.get("tag"))
+        if row["model_id"] != INCIDENT_MODEL or group is None:
+            continue
+        best = locations.setdefault(group, {"raw": row["raw_score"], "channels": 0})
+        best["raw"] = max(best["raw"], row["raw_score"])
+        best["channels"] += 1
+    return [
+        {
+            "location_group": group,
+            "scenario": SCENARIOS["phase"],
+            "model_id": INCIDENT_MODEL,
+            "horizon_hours": 24,
+            "probability": round(calibrated(calibrator, item["raw"]), 4),
+            "channels": item["channels"],
+        }
+        for group, item in locations.items()
+    ]
 
 
 def assess_alarms(reference, until):
@@ -349,7 +382,7 @@ def assess_access(reference, until):
     ]
 
 
-def write_snapshot(predictions, prediction_time, output, alarms=None, access_events=None):
+def write_snapshot(predictions, prediction_time, output, alarms=None, access_events=None, incidents=None):
     model_info = {}
     for _, names, _ in DEVICES:
         for name in names:
@@ -365,6 +398,8 @@ def write_snapshot(predictions, prediction_time, output, alarms=None, access_eve
         "models": model_info,
         "predictions": predictions,
     }
+    if incidents is not None:
+        payload["incidents"] = incidents
     if alarms is not None:
         payload["alarms"] = alarms
     if access_events is not None:
@@ -425,6 +460,7 @@ def main() -> None:
         arguments.output,
         alarms=assess_alarms(reference, until),
         access_events=assess_access(reference, until),
+        incidents=incident_probabilities(predictions),
     )
 
 

@@ -80,3 +80,23 @@ def test_retraining_keeps_the_better_champion(tmp_path, monkeypatch):
     assert json.loads((tmp_path / "artifacts" / "models" / "m" / "meta.json").read_text())["version"] == "0.4"
     refresh.challenge(["m"], lambda: freeze(0.45))
     assert json.loads((tmp_path / "artifacts" / "models" / "m" / "meta.json").read_text())["version"] == "0.45"
+
+
+def test_contributions_add_up_to_the_model_logit():
+    from pipeline import explain
+    from pipeline.models import LogisticRegressionModel
+    from pipeline.targets.model_zoo import LightGBMModel
+
+    rng = np.random.default_rng(0)
+    features = pd.DataFrame(rng.normal(size=(400, 3)), columns=["failures_1d", "events_24h", "hour"])
+    target = (features["failures_1d"] + 0.5 * rng.normal(size=400) > 0).astype(int)
+    for model in (LogisticRegressionModel(), LightGBMModel({"n_estimators": 20, "num_leaves": 4, "min_child_samples": 10})):
+        model.fit(features, target)
+        score = model.predict_proba(features)
+        logit = np.log(score / (1 - score))
+        summed = explain.contributions(model, features).sum(axis=1).to_numpy()
+        # The remaining difference is the constant bias term.
+        assert np.allclose(logit - summed, (logit - summed)[0], atol=1e-6)
+    drivers = explain.drivers(model, features.iloc[[int(np.argmax(score))]])
+    assert "hour" not in {item["feature"] for item in drivers}
+    assert drivers[0]["label"] == "Эпизодов за 1 сут"

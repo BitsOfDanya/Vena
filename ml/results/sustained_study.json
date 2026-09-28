@@ -1,0 +1,102 @@
+{
+ "sustained_minutes": 60,
+ "horizon_hours": 72,
+ "pump": {
+  "all_fault_episodes": 26017,
+  "current_model_on_any_fault": {
+   "base_rate": 0.2257,
+   "pr_auc": 0.4596,
+   "roc_auc": 0.6686,
+   "recall_at_precision_0.7": 0.1864,
+   "precision_at_recall_0.5": 0.3755,
+   "daily_top1pct_precision": 0.7075
+  },
+  "continuous": {
+   "episodes": 80,
+   "current_model": {
+    "base_rate": 0.0007,
+    "pr_auc": 0.0034,
+    "roc_auc": 0.7728,
+    "recall_at_precision_0.7": 0.0,
+    "precision_at_recall_0.5": 0.0064,
+    "daily_top1pct_precision": 0.0002
+   },
+   "relabeled_model": {
+    "base_rate": 0.0007,
+    "pr_auc": 0.006,
+    "roc_auc": 0.6734,
+    "recall_at_precision_0.7": 0.0,
+    "precision_at_recall_0.5": 0.0018,
+    "daily_top1pct_precision": 0.0019
+   }
+  },
+  "episode": {
+   "episodes": 4177,
+   "current_model": {
+    "base_rate": 0.0564,
+    "pr_auc": 0.2548,
+    "roc_auc": 0.6927,
+    "recall_at_precision_0.7": 0.0734,
+    "precision_at_recall_0.5": 0.1593,
+    "daily_top1pct_precision": 0.39
+   },
+   "relabeled_model": {
+    "base_rate": 0.0564,
+    "pr_auc": 0.1761,
+    "roc_auc": 0.6429,
+    "recall_at_precision_0.7": 0.0,
+    "precision_at_recall_0.5": 0.1279,
+    "daily_top1pct_precision": 0.3289
+   }
+  }
+ },
+ "fan": {
+  "all_fault_episodes": 27084,
+  "current_model_on_any_fault": {
+   "base_rate": 0.1154,
+   "pr_auc": 0.4221,
+   "roc_auc": 0.8593,
+   "recall_at_precision_0.7": 0.0375,
+   "precision_at_recall_0.5": 0.3847,
+   "daily_top1pct_precision": 0.3882
+  },
+  "continuous": {
+   "episodes": 253,
+   "current_model": {
+    "base_rate": 0.0005,
+    "pr_auc": 0.0028,
+    "roc_auc": 0.8907,
+    "recall_at_precision_0.7": 0.0,
+    "precision_at_recall_0.5": 0.0032,
+    "daily_top1pct_precision": 0.0012
+   },
+   "relabeled_model": {
+    "base_rate": 0.0005,
+    "pr_auc": 0.0031,
+    "roc_auc": 0.7722,
+    "recall_at_precision_0.7": 0.0,
+    "precision_at_recall_0.5": 0.002,
+    "daily_top1pct_precision": 0.0027
+   }
+  },
+  "episode": {
+   "episodes": 3699,
+   "current_model": {
+    "base_rate": 0.0273,
+    "pr_auc": 0.1317,
+    "roc_auc": 0.8564,
+    "recall_at_precision_0.7": 0.0,
+    "precision_at_recall_0.5": 0.133,
+    "daily_top1pct_precision": 0.1246
+   },
+   "relabeled_model": {
+    "base_rate": 0.0273,
+    "pr_auc": 0.0987,
+    "roc_auc": 0.8086,
+    "recall_at_precision_0.7": 0.0,
+    "precision_at_recall_0.5": 0.0867,
+    "daily_top1pct_precision": 0.0946
+   }
+  }
+ }
+}
