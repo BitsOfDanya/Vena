@@ -1,0 +1,83 @@
+{
+ "start": "2026-05-31T23:53:20",
+ "now": "2026-06-07T23:59:56",
+ "models": {
+  "fan_24h": {
+   "forecasts": 1960,
+   "event_rate": 0.0332,
+   "mean_probability": 0.0463,
+   "brier": 0.0313,
+   "alerts": 0,
+   "alert_precision": null,
+   "episodes": 55,
+   "episodes_warned": 0,
+   "episode_recall": 0.0
+  },
+  "fan_72h": {
+   "forecasts": 1276,
+   "event_rate": 0.1152,
+   "mean_probability": 0.1114,
+   "brier": 0.0889,
+   "alerts": 0,
+   "alert_precision": null,
+   "episodes": 17,
+   "episodes_warned": 0,
+   "episode_recall": 0.0
+  },
+  "flood_24h": {
+   "forecasts": 971,
+   "event_rate": 0.0772,
+   "mean_probability": 0.0925,
+   "brier": 0.0599,
+   "alerts": 30,
+   "alert_precision": 0.5,
+   "episodes": 74,
+   "episodes_warned": 4,
+   "episode_recall": 0.0541
+  },
+  "phase_24h": {
+   "forecasts": 2291,
+   "event_rate": 0.4889,
+   "mean_probability": 0.5421,
+   "brier": 0.1107,
+   "alerts": 1631,
+   "alert_precision": 0.6536,
+   "episodes": 1092,
+   "episodes_warned": 804,
+   "episode_recall": 0.7363
+  },
+  "pump_24h": {
+   "forecasts": 971,
+   "event_rate": 0.1123,
+   "mean_probability": 0.1129,
+   "brier": 0.0964,
+   "alerts": 0,
+   "alert_precision": null,
+   "episodes": 132,
+   "episodes_warned": 0,
+   "episode_recall": 0.0
+  },
+  "pump_72h": {
+   "forecasts": 610,
+   "event_rate": 0.2672,
+   "mean_probability": 0.2752,
+   "brier": 0.1798,
+   "alerts": 0,
+   "alert_precision": null,
+   "episodes": 84,
+   "episodes_warned": 0,
+   "episode_recall": 0.0
+  },
+  "smoke_24h": {
+   "forecasts": 1921,
+   "event_rate": 0.0115,
+   "mean_probability": 0.0415,
+   "brier": 0.014,
+   "alerts": 1,
+   "alert_precision": 0.0,
+   "episodes": 123,
+   "episodes_warned": 0,
+   "episode_recall": 0.0
+  }
+ }
+}

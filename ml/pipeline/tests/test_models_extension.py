@@ -90,7 +90,7 @@ def test_contributions_add_up_to_the_model_logit():
     rng = np.random.default_rng(0)
     features = pd.DataFrame(rng.normal(size=(400, 3)), columns=["failures_1d", "events_24h", "hour"])
     target = (features["failures_1d"] + 0.5 * rng.normal(size=400) > 0).astype(int)
-    for model in (LogisticRegressionModel(), LightGBMModel({"n_estimators": 20, "num_leaves": 4, "min_child_samples": 10})):
+    for model in (LogisticRegressionModel(), LightGBMModel({"n_estimators": 20, "num_leaves": 4, "min_child_samples": 10, "n_jobs": 1})):
         model.fit(features, target)
         score = model.predict_proba(features)
         logit = np.log(score / (1 - score))
@@ -100,3 +100,49 @@ def test_contributions_add_up_to_the_model_logit():
     drivers = explain.drivers(model, features.iloc[[int(np.argmax(score))]])
     assert "hour" not in {item["feature"] for item in drivers}
     assert drivers[0]["label"] == "Эпизодов за 1 сут"
+
+
+def test_prospective_check_matures_forecasts_after_their_horizon():
+    from pipeline.prospective import ProspectiveMonitor
+
+    start = pd.Timestamp("2026-07-01")
+    monitor = ProspectiveMonitor(start)
+    rows = [
+        {"model_id": "phase_24h", "channel_id": "a", "scored_at": "2026-07-01T10:00:00", "horizon_hours": 24,
+         "score": 0.8, "model_risk_level": "critical", "target_state": "Обесточен", "sensor_type": "Состояние фазы"},
+        {"model_id": "phase_24h", "channel_id": "b", "scored_at": "2026-07-01T10:00:00", "horizon_hours": 24,
+         "score": 0.1, "model_risk_level": "low", "target_state": "Обесточен", "sensor_type": "Состояние фазы"},
+        {"model_id": "phase_24h", "channel_id": "a", "scored_at": "2026-06-30T10:00:00", "horizon_hours": 24,
+         "score": 0.9, "model_risk_level": "critical", "target_state": "Обесточен", "sensor_type": "Состояние фазы"},
+    ]
+    monitor.record(rows)
+    events = pd.DataFrame({
+        "channel_id": ["a", "a", "b"],
+        "ts": pd.to_datetime(["2026-07-01T09:00:00", "2026-07-01T20:00:00", "2026-07-01T12:00:00"]),
+        "alarm_flag": [0, 1, 0],
+        "raw_value": ["Норма", "Обесточен", "Норма"],
+    })
+    early = monitor.evaluate({"Состояние фазы": events}, pd.Timestamp("2026-07-02T05:00:00"))
+    assert early["models"] == {}
+    report = monitor.evaluate({"Состояние фазы": events}, pd.Timestamp("2026-07-02T12:00:00"))["models"]["phase_24h"]
+    assert report["forecasts"] == 2
+    assert report["event_rate"] == 0.5
+    assert report["alert_precision"] == 1.0
+
+
+def test_inbox_batches_are_read_in_order(tmp_path):
+    import stream_scoring
+
+    (tmp_path / "2-b.jsonl").write_text(
+        json.dumps({"event_id": "2", "channel_id": "7", "ts": "2026-07-01T10:00:00", "value": "Норма", "alarm": False}) + "\n",
+        encoding="utf-8",
+    )
+    (tmp_path / "1-a.jsonl").write_text(
+        json.dumps({"event_id": "1", "channel_id": "7", "ts": "2026-07-01T09:00:00", "value": "Неисправен", "alarm": True}) + "\n",
+        encoding="utf-8",
+    )
+    (tmp_path / ".3-c.jsonl.tmp").write_text("partial", encoding="utf-8")
+    batch, files = stream_scoring.read_inbox(str(tmp_path))
+    assert files == ["1-a.jsonl", "2-b.jsonl"]
+    assert batch["raw_value"].tolist() == ["Неисправен", "Норма"]
+    assert batch["alarm_flag"].tolist() == [1, 0]

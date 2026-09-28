@@ -382,7 +382,7 @@ def assess_access(reference, until):
     ]
 
 
-def write_snapshot(predictions, prediction_time, output, alarms=None, access_events=None, incidents=None):
+def write_snapshot(predictions, prediction_time, output, alarms=None, access_events=None, incidents=None, stream=None):
     model_info = {}
     for _, names, _ in DEVICES:
         for name in names:
@@ -400,6 +400,8 @@ def write_snapshot(predictions, prediction_time, output, alarms=None, access_eve
     }
     if incidents is not None:
         payload["incidents"] = incidents
+    if stream is not None:
+        payload["stream"] = stream
     if alarms is not None:
         payload["alarms"] = alarms
     if access_events is not None:
