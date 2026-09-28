@@ -1,6 +1,6 @@
 {
-  "device": "fan",
-  "horizon": "72h",
+  "sensor_type": "Состояние вентилятора",
+  "tag": "fan",
   "model": {
     "model_name": "catboost",
     "horizon_hours": 72,
@@ -14,9 +14,9 @@
     },
     "calibrated": false,
     "risk_level_thresholds": {
-      "critical": 0.9725483211375708,
-      "high": 0.942779007260222,
-      "medium": 0.8907749327596831
+      "critical": 0.9626639737820691,
+      "high": 0.9462106390123008,
+      "medium": 0.9008610854114223
     }
   },
   "feature_columns": [
@@ -72,9 +72,5 @@
     "weekday_sin",
     "weekday_cos"
   ],
-  "artifact": "fan_72h",
-  "training_period": {
-    "train_years": "2019-2023"
-  },
-  "version": "2026-09-16"
+  "artifact": "fan_72h"
 }

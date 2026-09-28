@@ -1,0 +1,60 @@
+{
+ "pr_auc": 0.0167,
+ "roc_auc": 0.3666,
+ "base_rate": 0.0219,
+ "dataset": "MetroPT-3 air production unit",
+ "channel_kinds": {
+  "binary": 8,
+  "analog_bands": 6
+ },
+ "channels": [
+  "COMP",
+  "Caudal_impulses",
+  "DV_eletric",
+  "DV_pressure_band",
+  "H1_band",
+  "LPS",
+  "MPG",
+  "Motor_current_band",
+  "Oil_level",
+  "Oil_temperature_band",
+  "Pressure_switch",
+  "TP2_band",
+  "TP3_band",
+  "Towers"
+ ],
+ "events": 394939,
+ "candidates": 406183,
+ "train_until": "2020-06-01",
+ "validation_failures": 2,
+ "alert_threshold_top1pct": 0.9967,
+ "median_routine_score": 0.0,
+ "alerts_per_day": 26.36,
+ "per_failure": [
+  {
+   "failure_start": "2020-06-05 10:00",
+   "candidates_in_window": 1715,
+   "max_score": 0.0001,
+   "score_percentile": 0.9355,
+   "alerted_before_failure": false,
+   "lead_time_hours": null
+  },
+  {
+   "failure_start": "2020-07-15 14:30",
+   "candidates_in_window": 2620,
+   "max_score": 0.0,
+   "score_percentile": 0.7968,
+   "alerted_before_failure": false,
+   "lead_time_hours": null
+  }
+ ],
+ "note": "Four documented failures do not support a precision estimate. The check is whether the pipeline separates pre-failure windows from routine operation.",
+ "verdict": "negative_transfer",
+ "interpretation": [
+  "Two training failures are far below what the supervised setup needs; the Moskollektor models train on tens of thousands of episodes.",
+  "The MetroPT leak signature lives in analog magnitudes, while the feature set describes event dynamics (rates, interarrival, state entropy, failure history).",
+  "Quantile bands fixed on the training period do not follow the drift of the unit operating point, so the excursion events stop marking the fault.",
+  "No further tuning was done: with four documented failures any threshold search would fit the answer rather than validate the method."
+ ],
+ "scope_conclusion": "The pipeline requires many labelled episodes and a fault signature that is present in discrete state or alarm events. Both hold for the Moskollektor journal and neither holds for MetroPT-3, so the dataset does not serve as a transfer benchmark."
+}

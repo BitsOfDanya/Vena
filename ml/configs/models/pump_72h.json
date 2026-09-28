@@ -1,8 +1,8 @@
 {
-  "device": "pump",
-  "horizon": "72h",
+  "sensor_type": "Состояние насоса",
+  "tag": "pump",
   "model": {
-    "model_name": "logistic_regression",
+    "model_name": "blend_lr_lightgbm",
     "horizon_hours": 72,
     "numeric_mode": false,
     "duty_cycle_mode": false,
@@ -14,10 +14,18 @@
     },
     "calibrated": false,
     "risk_level_thresholds": {
-      "critical": 0.9962959326518478,
-      "high": 0.9862084946677229,
-      "medium": 0.9449420618818717
-    }
+      "critical": 0.9820003022026244,
+      "high": 0.9689136059121185,
+      "medium": 0.9090196824226232
+    },
+    "linear_weight": 0.5,
+    "tree_params": {
+      "num_leaves": 7,
+      "min_child_samples": 500
+    },
+    "window_years": 3,
+    "fallback_artifact": "pump_baseline_72h",
+    "min_history_days": 30
   },
   "feature_columns": [
     "events_10m",
@@ -72,9 +80,5 @@
     "weekday_sin",
     "weekday_cos"
   ],
-  "artifact": "pump_72h",
-  "training_period": {
-    "train_years": "2019-2023"
-  },
-  "version": "2026-09-16"
+  "artifact": "pump_72h"
 }

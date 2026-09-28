@@ -1,22 +1,22 @@
 {
-  "sensor_type": "Датчик дыма",
-  "tag": "smoke",
+  "sensor_type": "Состояние насоса",
+  "tag": "pump_baseline",
   "model": {
-    "model_name": "catboost",
-    "horizon_hours": 24,
+    "model_name": "logistic_regression",
+    "horizon_hours": 72,
     "numeric_mode": false,
     "duty_cycle_mode": false,
     "with_neighbors": false,
     "global_rates": {
-      "event": 0.45440486464973706,
-      "alarm": 0.15734195621892177,
-      "failure": 0.16016149835992977
+      "event": 3.8710772143801213,
+      "alarm": 0.6561627307771795,
+      "failure": 0.21625595637455772
     },
     "calibrated": false,
     "risk_level_thresholds": {
-      "critical": 0.9693134690783064,
-      "high": 0.937100775167875,
-      "medium": 0.8233728393563412
+      "critical": 0.9962668556891047,
+      "high": 0.9861815138747381,
+      "medium": 0.9448702018202455
     }
   },
   "feature_columns": [
@@ -72,5 +72,5 @@
     "weekday_sin",
     "weekday_cos"
   ],
-  "artifact": "smoke_24h"
+  "artifact": "pump_baseline_72h"
 }

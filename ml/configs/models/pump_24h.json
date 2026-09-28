@@ -1,6 +1,6 @@
 {
-  "device": "pump",
-  "horizon": "24h",
+  "sensor_type": "Состояние насоса",
+  "tag": "pump",
   "model": {
     "model_name": "catboost",
     "horizon_hours": 24,
@@ -14,9 +14,9 @@
     },
     "calibrated": false,
     "risk_level_thresholds": {
-      "critical": 0.9724835015652264,
-      "high": 0.9503506542842108,
-      "medium": 0.8477696943658808
+      "critical": 0.9688491630468433,
+      "high": 0.9456142610932083,
+      "medium": 0.8616813532504273
     }
   },
   "feature_columns": [
@@ -72,9 +72,5 @@
     "weekday_sin",
     "weekday_cos"
   ],
-  "artifact": "pump_24h",
-  "training_period": {
-    "train_years": "2019-2023"
-  },
-  "version": "2026-09-16"
+  "artifact": "pump_24h"
 }

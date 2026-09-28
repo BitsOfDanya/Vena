@@ -12,7 +12,7 @@ ML-компонент предиктивного обслуживания инж
 |---|---|---|
 | Sensor Health | эпизод «Неисправен» датчика (дым 24ч) | замороженная модель в `artifacts/models` |
 | Equipment Health | эпизод «Неисправен» насоса и вентилятора (24ч, 72ч) | замороженные модели в `artifacts/models` |
-| Power Health | onset «Обесточен» у «Состояние фазы» (24ч; любой и устойчивый ≥30 мин) | модуль `pipeline.targets`, кандидат в production |
+| Power Health | onset «Обесточен» у «Состояние фазы» (24ч; любой и устойчивый ≥30 мин) | замороженная модель `artifacts/models/phase_24h` |
 | Alarm Intelligence | подтверждение detection-alarm (дым, газ, температура) поведением системы за 15/30/60 мин | модуль `pipeline.targets`, shadow-режим |
 | Incident Risk Proxies | Fire/Smoke Risk Index, Hydraulic Load Anomaly | только proxy-индексы (`pipeline.targets.proxies`), не вероятности инцидентов |
 | Maintenance Priority | взвешенная композиция сигналов | решающее правило (`pipeline.targets.priority`), не обучаемый target |
@@ -49,7 +49,7 @@ events → candidate generation → causal features → model → risk score →
 - `pipeline/models.py`, `training.py`, `backtest.py`, `evaluate.py`, `alerts.py`, `decision.py`, `calibration.py` — модели, rolling backtest, метрики, алерты, пороги.
 - `pipeline/artifacts.py`, `inference.py` — сохранение и инференс замороженных моделей.
 - `pipeline/targets/` — новые направления: target discovery, generic state-target, Power Health, Alarm Corroboration, proxy-индексы, приоритет.
-- `pipeline/formal/` — инструменты для формальной цели Precision ≥ 0.70 и Recall ≥ 0.50 (PR-frontier, перенос порога, hard-negative веса, lockbox-guard).
+- `pipeline/formal/` — инструменты для формальной цели Precision > 0.70 и Recall > 0.50 (PR-frontier, перенос порога, hard-negative веса, lockbox-guard).
 - `pipeline/sequence/` — экспериментальные последовательные модели (transformer, hybrid); research-only, production baseline не заменяют.
 
 ## Models
@@ -57,13 +57,44 @@ events → candidate generation → causal features → model → risk score →
 | Направление | Модель | Где |
 |---|---|---|
 | Pump 24ч | CatBoost | `artifacts/models/pump_24h` |
-| Pump 72ч | LogisticRegression | `artifacts/models/pump_72h` |
+| Pump 72ч | смесь LogisticRegression + LightGBM 50/50, окно 3 года | `artifacts/models/pump_72h` |
+| Pump 72ч, fallback для каналов с историей < 30 сут | LogisticRegression | `artifacts/models/pump_baseline_72h` |
 | Fan 24ч, 72ч | CatBoost | `artifacts/models/fan_24h`, `fan_72h` |
 | Smoke 24ч | CatBoost | `artifacts/models/smoke_24h` |
-| Power Health | LightGBM | `python -m pipeline.targets.run phase` |
+| Power Health 24ч | LightGBM | `artifacts/models/phase_24h` |
 | Alarm Corroboration | LightGBM | `python -m pipeline.targets.run alarm` |
 
 Конфиги инференса замороженных моделей — `configs/models/*.json`. Артефакты компактные (до ≈350 КБ каждый) и нужны для запуска инференса.
+
+Все артефакты переобучены 28.09.2026 скриптом `run_production_refresh.py` после исправления признака `channel_failure_prior` и порядка событий. Метрики на тесте 2025 — 2026H1 (питание — на проверке 2025):
+
+| Модель | AP | ROC AUC | Recall при P ≥ 0,70 | Precision при R ≥ 0,50 |
+|---|---|---|---|---|
+| `pump_24h` | 0.262 | 0.635 | 0.034 | 0.164 |
+| `pump_72h` | 0.460 | 0.669 | 0.186 | 0.376 |
+| `fan_24h` | 0.174 | 0.810 | 0.000 | 0.144 |
+| `fan_72h` | 0.421 | 0.859 | 0.037 | 0.383 |
+| `smoke_24h` | 0.227 | 0.915 | 0.025 | 0.202 |
+| `phase_24h` | 0.871 | 0.918 | 0.813 | 0.987 |
+
+## Prediction snapshot
+
+`python score_snapshot.py` загружает замороженные артефакты, считает признаки по кэшу событий и пишет `results/predictions/snapshot.json` для API. Переобучения нет: используются только артефакты из `artifacts/models`.
+
+Каждый канал оценивается в момент своего последнего события, а не в общую фиксированную секунду: модели обучены на моментах-кандидатах, и оценка «тихого» канала в произвольный момент выводит признаки за пределы обучающего распределения.
+
+Уровни риска берутся из `risk_level_thresholds` конфига. У всех моделей `calibrated=false`, поэтому API отдаёт `score_type=risk_score`, а полосы — это операционные границы, а не вероятности. Основание полос различается по направлениям и указано в конфиге:
+
+| Модели | Основание полос | Причина |
+|---|---|---|
+| `pump_*`, `fan_*`, `smoke_24h` | квантили 0.1% / 0.5% / 2% скорингового распределения | редкие события, хвост распределения совпадает с операционным интересом |
+| `phase_24h` | пороги по измеренному precision 0.90 / 0.70 / 0.50 (`risk_level_basis`) | base rate 29%: квантиль топ-2% даёт порог 0.996 при операционной точке P=0.70 на 0.466, то есть полосы никогда не срабатывают |
+
+## External validation
+
+`python validate_external.py` прогоняет генератор кандидатов и признаки на MetroPT-3 (воздушный компрессор метро, 4 подтверждённых отказа из отчёта эксплуатации). Результат отрицательный и зафиксирован в `results/external/metropt3_validation.json`: ROC AUC 0.37, PR AUC 0.017, ни один предотказный интервал не попал в верхний 1% скоринга.
+
+Причины: два отказа в обучающем периоде против десятков тысяч эпизодов в данных Москоллектора, и сигнатура утечки в MetroPT живёт в аналоговых величинах, тогда как признаки описывают динамику дискретных событий. Подбор порогов под четыре известных отказа не проводился — это была бы подгонка под ответ. Вывод о границах применимости: подход требует большого числа размеченных эпизодов и сигнатуры отказа в дискретных событиях или тревогах.
 
 ## Validation
 
@@ -77,11 +108,13 @@ events → candidate generation → causal features → model → risk score →
 |---|---|
 | Pump 72ч (LogReg) | AP 0.405; вариант с hard-negative весами (исследовательский) — AP 0.425; formal 70/50 **не достигнут** (на валидации 2025 P=0.70 достигается только при R=0.21) |
 | Fan 72ч (CatBoost) | AP 0.338; formal 70/50 **не достигнут**; blend CatBoost+hybrid улучшает только operational ranking |
-| Power Health, onset за 24ч (LightGBM) | AP 0.87, ROC AUC 0.92; на всех фолдах существует порог с P ≥ 0.70 и R ≥ 0.50; при пороге предыдущего фолда: alert precision 0.66, episode recall 0.75 |
+| Power Health, onset за 24ч (LightGBM, `phase_24h`) | train ≤2024, валидация 2025: AP 0.87, ROC AUC 0.92, recall@P0.70 = 0.82, precision@R0.50 = 0.99; на операционной точке P=0.70 — alert precision 0.66, episode recall 0.75, медианный запас 5.9 ч, 181 алерт в сутки на 957 каналов |
 | Power Health, устойчивое отключение за 24ч (LightGBM) | AP 0.93, ROC AUC 0.96 |
 | Alarm Corroboration, 30 мин (LightGBM / CatBoost) | ROC AUC 0.89, PR-AUC 0.96 |
 
-Формальная цель Precision ≥ 0.70 и Recall ≥ 0.50 для отказов Pump72/Fan72 **не достигнута**; для Pump72 на закрытом периоде 2026H1 при замороженном пороге: P=0.51, R=0.25.
+Формальная цель Precision > 0.70 и Recall > 0.50 для отказов Pump72/Fan72 **не достигнута**; исторические результаты замороженных production-моделей приведены выше.
+
+Для Pump72 в production используется смесь логистической регрессии и LightGBM с окном обучения 3 года, найденная в [исследовании метрик](experiments/metric-improvement-2026-09-24.md) (`run_pump_blend_freeze.py`): на тесте она превосходит логистическую регрессию (AP 0.460 против 0.448), формальная цель остаётся недостигнутой. [Продолжение проверки метрик и исправление признака вентилятора](experiments/metric-improvement-followup-2026-09-24.md).
 
 ## Reproduction
 
@@ -111,7 +144,12 @@ pipeline/            основной код (данные, признаки, м
 configs/models/      конфиги инференса замороженных моделей
 artifacts/models/    замороженные модели
 results/             таблицы результатов экспериментов и directions.json (для API)
-run_final_freeze.py, run_baseline_suite.py   воспроизведение замороженных моделей и baseline
+run_production_refresh.py                     переобучение всех production-моделей и снимок прогнозов
+run_final_freeze.py, run_pump_blend_freeze.py, run_power_freeze.py   заморозка отдельных моделей
+score_snapshot.py                             снимок прогнозов для API
+validate_external.py                          проверка на MetroPT-3
+experiments/                                  исследования метрик Pump72/Fan72: скрипты и агрегированные результаты
+run_baseline_suite.py                         baseline
 ```
 
 ## Tests
@@ -120,7 +158,7 @@ run_final_freeze.py, run_baseline_suite.py   воспроизведение за
 cd ml && python -m pytest
 ```
 
-100 тестов, все проходят (≈75 с).
+108 тестов, все проходят (≈80 с). `pipeline/tests` запускается раньше `experiments/` (см. `pytest.ini`).
 
 ## Installation
 

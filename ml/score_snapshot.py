@@ -8,12 +8,24 @@ import numpy as np
 import pandas as pd
 
 from pipeline import artifacts, config, episodes as episodes_mod, inference
+from pipeline.targets import discovery
 
+# Each device carries the state literal its models were trained to predict, so
+# failure-history features are built from the matching episodes.
 DEVICES = [
-    ("pump", ["pump_24h", "pump_72h"]),
-    ("fan", ["fan_24h", "fan_72h"]),
-    ("smoke", ["smoke_24h"]),
+    ("pump", ["pump_24h", "pump_72h"], config.FAULT_LITERAL),
+    ("fan", ["fan_24h", "fan_72h"], config.FAULT_LITERAL),
+    ("smoke", ["smoke_24h"], config.FAULT_LITERAL),
+    ("phase", ["phase_24h"], "Обесточен"),
 ]
+
+# Incident scenario each device model forecasts (ТЗ, section 6: incident types).
+SCENARIOS = {
+    "pump": "flooding",
+    "fan": "ventilation",
+    "smoke": "fire",
+    "phase": "power_loss",
+}
 
 OUTPUT = os.path.join(config.ROOT, "results", "predictions", "snapshot.json")
 
@@ -139,13 +151,23 @@ def build_demo_events(prediction_time):
     return pd.concat(frames, ignore_index=True)
 
 
-def score_rows(device, model_names, prediction_time, events, reference):
+def build_episodes(events, target_state):
+    if target_state == config.FAULT_LITERAL:
+        return episodes_mod.build_episodes(events)
+    return discovery.state_episodes(events, target_state)
+
+
+def score_rows(device, model_names, target_state, events, reference):
     events = events.sort_values(["channel_id", "ts"])
-    all_episodes = episodes_mod.build_episodes(events)
+    all_episodes = build_episodes(events, target_state)
     models = {}
+    fallbacks = {}
     for name in model_names:
         model, meta = artifacts.load_artifact(name)
         models[name] = (model, meta)
+        fallback = meta["model_config"].get("fallback_artifact")
+        if fallback:
+            fallbacks[name] = artifacts.load_artifact(fallback)
 
     grouped = {key: frame for key, frame in events.groupby("channel_id", observed=True)}
     episode_groups = {key: frame for key, frame in all_episodes.groupby("channel_id", observed=True)}
@@ -157,10 +179,21 @@ def score_rows(device, model_names, prediction_time, events, reference):
             continue
         channel_episodes = episode_groups.get(channel_id, all_episodes.iloc[0:0])
         info = reference.get(str(channel_id), fallback)
-        for name, (model, meta) in models.items():
+        # Models are trained on candidate moments, so each channel is scored at its
+        # own latest event instead of one global timestamp: a fixed instant would
+        # push quiet channels far outside the training distribution.
+        channel_time = channel_events["ts"].max()
+        history_days = (channel_time - channel_events["ts"].min()) / pd.Timedelta(days=1)
+        for name, (primary, primary_meta) in models.items():
+            model, meta, variant = primary, primary_meta, "primary"
+            # Blends were weaker on channels with a short history, so those
+            # channels are scored by the single-model fallback and its own bands.
+            if name in fallbacks and history_days < primary_meta["model_config"].get("min_history_days", 0):
+                model, meta = fallbacks[name]
+                variant = "fallback"
             model_config = meta["model_config"]
             feature_row = inference.build_feature_row(
-                prediction_time, channel_events, channel_episodes, model_config
+                channel_time, channel_events, channel_episodes, model_config
             )
             score = float(model.predict_proba(feature_row[meta["feature_columns"]])[0])
             thresholds = model_config.get("risk_level_thresholds", {})
@@ -169,7 +202,9 @@ def score_rows(device, model_names, prediction_time, events, reference):
                     "channel_id": str(channel_id),
                     "device_type": device,
                     "model_id": name,
-                    "model_version": meta.get("version"),
+                    "model_version": primary_meta.get("version"),
+                    "model_variant": variant,
+                    "scenario": SCENARIOS.get(device),
                     "horizon_hours": model_config.get("horizon_hours"),
                     "score": round(score, 6),
                     "score_type": "calibrated_probability"
@@ -177,17 +212,18 @@ def score_rows(device, model_names, prediction_time, events, reference):
                     else "risk_score",
                     "model_risk_level": risk_level(score, thresholds),
                     "thresholds": thresholds,
-                    "last_event_at": channel_events["ts"].max().isoformat(),
+                    "last_event_at": channel_time.isoformat(),
+                    "scored_at": channel_time.isoformat(),
                     "event_count_30d": int(
                         (
                             channel_events["ts"]
-                            >= pd.Timestamp(prediction_time) - pd.Timedelta(days=30)
+                            >= channel_time - pd.Timedelta(days=30)
                         ).sum()
                     ),
                     "failure_count_90d": int(
                         (
                             channel_episodes["episode_start"]
-                            >= pd.Timestamp(prediction_time) - pd.Timedelta(days=90)
+                            >= channel_time - pd.Timedelta(days=90)
                         ).sum()
                     )
                     if len(channel_episodes)
@@ -211,19 +247,19 @@ def score_rows(device, model_names, prediction_time, events, reference):
     return rows
 
 
-def score_device(device, model_names, prediction_time, limit, reference):
+def score_device(device, model_names, target_state, limit, reference):
     from pipeline import extract
 
     events = extract.extract_events(config.SENSOR_ALIASES[device])
     counts = events.groupby("channel_id", observed=True).size().sort_values(ascending=False)
     channels = list(counts.index[:limit]) if limit else list(counts.index)
     events = events[events["channel_id"].isin(channels)]
-    return score_rows(device, model_names, prediction_time, events, reference)
+    return score_rows(device, model_names, target_state, events, reference)
 
 
 def write_snapshot(predictions, prediction_time, output):
     model_info = {}
-    for _, names in DEVICES:
+    for _, names, _ in DEVICES:
         for name in names:
             _, meta = artifacts.load_artifact(name)
             model_info[name] = {
@@ -262,10 +298,12 @@ def main() -> None:
         prediction_time = pd.Timestamp(datetime.now(tz=timezone.utc)).tz_localize(None)
         demo_events = build_demo_events(prediction_time)
         predictions = []
-        for device, model_names in DEVICES:
+        for device, model_names, target_state in DEVICES:
+            if device not in DEMO_CHANNELS:
+                continue
             device_ids = {channel_id for channel_id, _ in DEMO_CHANNELS[device]}
             events = demo_events[demo_events["channel_id"].isin(device_ids)]
-            predictions.extend(score_rows(device, model_names, prediction_time, events, {}))
+            predictions.extend(score_rows(device, model_names, target_state, events, {}))
         write_snapshot(predictions, prediction_time, arguments.output)
         return
 
@@ -274,14 +312,14 @@ def main() -> None:
     reference = channel_reference()
     prediction_time = None
     predictions = []
-    for device, model_names in DEVICES:
+    for device, _, _ in DEVICES:
         events = extract.extract_events(config.SENSOR_ALIASES[device])
         device_time = events["ts"].max()
         prediction_time = device_time if prediction_time is None else max(prediction_time, device_time)
 
-    for device, model_names in DEVICES:
+    for device, model_names, target_state in DEVICES:
         predictions.extend(
-            score_device(device, model_names, prediction_time, arguments.limit, reference)
+            score_device(device, model_names, target_state, arguments.limit, reference)
         )
 
     write_snapshot(predictions, prediction_time, arguments.output)
