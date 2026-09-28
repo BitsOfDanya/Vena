@@ -297,6 +297,31 @@ def score_device(device, model_names, target_state, limit, reference):
     return score_rows(device, model_names, target_state, events, reference)
 
 
+def location_history(events_by_sensor, reference, until):
+    """Past episodes of each device's target state per location, for the incident card."""
+    tags = {key: value.get("tag") for key, value in reference.items()}
+    history = {}
+    for device, _, target_state in DEVICES:
+        events = events_by_sensor.get(sensor_of(device))
+        if events is None or events.empty:
+            continue
+        episodes = build_episodes(events, target_state)
+        if episodes.empty:
+            continue
+        episodes = episodes.assign(group=episodes["channel_id"].astype(str).map(tags).map(location_group))
+        episodes = episodes.dropna(subset=["group"])
+        recent = episodes.loc[episodes["episode_start"] > until - pd.Timedelta(days=365)]
+        duration = (recent["episode_end"] - recent["episode_start"]).dt.total_seconds() / 60
+        for group, part in recent.assign(duration=duration).groupby("group"):
+            history.setdefault(group, {})[device] = {
+                "episodes_365d": int(len(part)),
+                "channels": int(part["channel_id"].nunique()),
+                "last_episode_at": part["episode_start"].max().isoformat(),
+                "median_duration_minutes": round(float(part["duration"].median()), 1),
+            }
+    return history
+
+
 def incident_probabilities(predictions):
     """Probability that at least one channel of a location loses power within 24 hours."""
     path = os.path.join(artifacts.artifact_dir(INCIDENT_MODEL), "incident_calibrator.joblib")
@@ -382,7 +407,9 @@ def assess_access(reference, until):
     ]
 
 
-def write_snapshot(predictions, prediction_time, output, alarms=None, access_events=None, incidents=None, stream=None):
+def write_snapshot(
+    predictions, prediction_time, output, alarms=None, access_events=None, incidents=None, stream=None, history=None
+):
     model_info = {}
     for _, names, _ in DEVICES:
         for name in names:
@@ -402,6 +429,8 @@ def write_snapshot(predictions, prediction_time, output, alarms=None, access_eve
         payload["incidents"] = incidents
     if stream is not None:
         payload["stream"] = stream
+    if history is not None:
+        payload["location_history"] = history
     if alarms is not None:
         payload["alarms"] = alarms
     if access_events is not None:
@@ -463,6 +492,9 @@ def main() -> None:
         alarms=assess_alarms(reference, until),
         access_events=assess_access(reference, until),
         incidents=incident_probabilities(predictions),
+        history=location_history(
+            {sensor_of(device): extract.extract_events(sensor_of(device)) for device, _, _ in DEVICES}, reference, until
+        ),
     )
 
 

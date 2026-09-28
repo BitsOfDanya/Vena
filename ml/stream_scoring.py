@@ -45,6 +45,11 @@ class StreamScorer:
         self.now = self.history_end
         self.predictions = {}
         self.monitor = ProspectiveMonitor(self.history_end)
+        self.history = None
+
+    def refresh_history(self):
+        """Location history is recomputed with each full pass, not per batch."""
+        self.history = score_snapshot.location_history(self.events, self.reference, self.now)
 
     def score(self, channels_by_sensor=None):
         """Score every channel, or only the given channels of each sensor type."""
@@ -92,6 +97,7 @@ class StreamScorer:
             access_events=carried.get("access_events"),
             incidents=score_snapshot.incident_probabilities(predictions),
             stream=stream,
+            history=self.history,
         )
         os.replace(temporary, output)
         report = self.monitor.evaluate(self.events, self.now)
@@ -163,6 +169,7 @@ def run(output, inbox, poll_seconds=30, full_refresh_hours=24, history_until=Non
     reference = score_snapshot.channel_reference()
     scorer = StreamScorer(reference, history_until)
     carried = full_sections(reference, scorer.history_end, output)
+    scorer.refresh_history()
     scorer.score()
     scorer.publish(output, carried)
     log(f"initial snapshot: {len(scorer.predictions)} predictions, history until {scorer.history_end}")
@@ -189,6 +196,7 @@ def run(output, inbox, poll_seconds=30, full_refresh_hours=24, history_until=Non
             log(f"{len(batch)} events -> {len(rows)} forecasts rescored, data time {scorer.now}")
         if time.monotonic() - last_full >= full_refresh_hours * 3600:
             carried = full_sections(reference, scorer.now, output)
+            scorer.refresh_history()
             scorer.score()
             scorer.publish(output, carried)
             last_full = time.monotonic()
