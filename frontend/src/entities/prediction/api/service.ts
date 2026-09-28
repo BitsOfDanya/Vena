@@ -24,6 +24,7 @@ type ApiPrediction = {
   scenario?: string
   location?: string | null
   location_tag?: string | null
+  drivers?: { feature: string; label: string; value: number | null; contribution: number }[]
 }
 
 const SCENARIOS = new Set<PredictionScenario>(["flooding", "fire", "power_loss", "ventilation", "equipment"])
@@ -57,6 +58,7 @@ function toPrediction(item: ApiPrediction): Prediction {
     scenario: toScenario(item.scenario),
     location: item.location ?? null,
     locationTag: item.location_tag ?? null,
+    drivers: item.drivers ?? [],
   }
 }
 
@@ -99,6 +101,9 @@ const PredictionSchema = z.object({
   scenario: z.string().optional(),
   location: z.string().nullable().optional(),
   location_tag: z.string().nullable().optional(),
+  drivers: z
+    .array(z.object({ feature: z.string(), label: z.string(), value: z.number().nullable(), contribution: z.number() }))
+    .optional(),
 })
 
 /** A complete horizon-specific snapshot; a failed page never becomes a partial total. */
@@ -181,6 +186,7 @@ export async function getBackendSituations(): Promise<BackendSituation[]> {
       scenario?: string | null
       location?: string | null
       asset_count?: number
+      incident_probability?: number | null
     }[]
   >("/api/v1/situations")
   return items.map((item) => ({
@@ -202,5 +208,6 @@ export async function getBackendSituations(): Promise<BackendSituation[]> {
     scenario: item.scenario ? toScenario(item.scenario) : null,
     location: item.location ?? null,
     assetCount: item.asset_count ?? item.asset_ids.length,
+    incidentProbability: item.incident_probability ?? null,
   }))
 }

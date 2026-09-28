@@ -17,7 +17,14 @@ import {
 } from "@/entities/infrastructure"
 import { OPEN_STATUSES, useActions } from "@/entities/maintenance"
 import { useAcknowledgeNotification, useNotifications } from "@/entities/notification"
-import { useBackendSituations, useCriticalPredictions, useRiskRising, useSnapshotStatus } from "@/entities/prediction"
+import {
+  formatProbability,
+  formatProbabilityDelta,
+  useBackendSituations,
+  useCriticalPredictions,
+  useRiskRising,
+  useSnapshotStatus,
+} from "@/entities/prediction"
 import { CreateActionSheet, type ActionDraft } from "@/features/create-action"
 import { useWorkspace } from "@/features/workspace"
 import { dataMode, workflowMode } from "@/shared/config/env"
@@ -98,7 +105,7 @@ export function PulsePage() {
     summary: item.summary,
     changedAt: item.updatedAt,
     riskScore: item.riskScore,
-    scoreText: item.riskScore === null ? null : item.riskScore.toFixed(3),
+    scoreText: item.riskScore === null ? null : formatProbability(item.riskScore),
     delta: item.riskDelta,
     horizon: (item.forecastHorizon ?? null) as Situation["horizon"],
     primaryReason: item.primaryReason,
@@ -193,12 +200,12 @@ export function PulsePage() {
           apiMode={apiMode}
           predictionsUnavailable={Boolean(predictionsUnavailable)}
           criticalCount={criticalPredictions.data?.critical.length ?? 0}
-          criticalAssets={(criticalPredictions.data?.critical ?? []).slice(0, 2).map((item) => `${item.assetId} · ${item.score.toFixed(3)}`)}
+          criticalAssets={(criticalPredictions.data?.critical ?? []).slice(0, 2).map((item) => `${item.assetId} · ${formatProbability(item.score)}`)}
           attentionCount={criticalPredictions.data?.attention.length ?? 0}
           risingCount={(riskRising.data ?? []).filter((item) => (item.scoreDelta ?? 0) > 0).length}
           risingTop={(() => {
             const top = (riskRising.data ?? []).find((item) => (item.scoreDelta ?? 0) > 0)
-            return top ? `${top.assetId} +${(top.scoreDelta ?? 0).toFixed(3)}` : null
+            return top ? `${top.assetId} ${formatProbabilityDelta(top.scoreDelta ?? 0)}` : null
           })()}
           actionsDue={actionsDue}
           actionsOverdue={actionsOverdue}

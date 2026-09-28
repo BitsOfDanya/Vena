@@ -4,6 +4,14 @@ export type PredictionScoreType = "risk_score" | "calibrated_probability"
 /** Incident scenario a device model forecasts; `equipment` covers unknown devices. */
 export type PredictionScenario = "flooding" | "fire" | "power_loss" | "ventilation" | "equipment"
 
+/** Feature that raised this forecast the most, with its log-odds contribution. */
+export type PredictionDriver = {
+  feature: string
+  label: string
+  value: number | null
+  contribution: number
+}
+
 export type PredictionFactor = {
   key: string
   label: string
@@ -30,6 +38,7 @@ export type Prediction = {
   scenario: PredictionScenario
   location: string | null
   locationTag: string | null
+  drivers: PredictionDriver[]
 }
 
 export type SnapshotStatus = {
@@ -62,4 +71,5 @@ export type BackendSituation = {
   scenario: PredictionScenario | null
   location: string | null
   assetCount: number
+  incidentProbability: number | null
 }

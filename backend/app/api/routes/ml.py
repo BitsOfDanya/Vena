@@ -12,6 +12,15 @@ from app.core.security import Principal, get_principal
 router = APIRouter(prefix="/ml", tags=["ml"])
 
 RESULT_GROUPS = ("tables", "formal_70_50", "new_directions")
+# Analytics reports written by the ML scripts next to directions.json.
+REPORTS = (
+    "seasonality",
+    "calibration",
+    "incident_calibration",
+    "access_analysis",
+    "flood_variants",
+    "sustained_study",
+)
 FILE_NAME = re.compile(r"^[A-Za-z0-9_.-]+\.csv$")
 MAX_ROWS = 1000
 
@@ -41,6 +50,14 @@ def list_directions(settings: SettingsDep, _: ReaderDep) -> list[dict[str, Any]]
         raise HTTPException(status_code=404, detail="directions not available")
     directions: list[dict[str, Any]] = _read_json(path)
     return directions
+
+
+@router.get("/reports/{name}")
+def get_report(name: str, settings: SettingsDep, _: ReaderDep) -> Any:
+    path = settings.ml_dir / "results" / f"{name}.json"
+    if name not in REPORTS or not path.is_file():
+        raise HTTPException(status_code=404, detail="report not found")
+    return _read_json(path)
 
 
 @router.get("/models")

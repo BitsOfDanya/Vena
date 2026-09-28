@@ -9,7 +9,7 @@ from app.db.models import Action, Notification, PredictionPoint, ProcessedSnapsh
 from app.domain import actions as action_service
 from app.domain import notifications as notification_service
 from app.domain.email import EmailProvider
-from app.domain.incidents import Incident, group_incidents
+from app.domain.incidents import Incident, group_incidents, reason_text, score_text
 from app.domain.predictions import PredictionSource
 from app.schemas.actions import ActionCreate
 from app.schemas.notifications import NotificationCreate
@@ -101,7 +101,7 @@ def _suggest_action(session: Session, incident: Incident, now: datetime) -> bool
             kind="inspect",
             reason=(
                 f"{incident.title}: ML {lead.model_id} {lead.risk_level} risk "
-                f"score {lead.score:.3f} over {horizon}h{scope}"
+                f"{score_text(lead)} over {horizon}h{scope}"
             ),
             priority=priority,  # type: ignore[arg-type]
             # A stale snapshot would otherwise schedule the work in the past.
@@ -188,10 +188,11 @@ def refresh_predictions(
                 NotificationCreate(
                     type="risk",
                     severity="critical" if lead.risk_level == "critical" else "attention",
-                    title=f"{incident.title} · {lead.model_id} {lead.score:.3f}",
+                    title=f"{incident.title} · {lead.model_id} {score_text(lead)}",
                     description=(
                         f"Model {lead.model_id} reports {lead.risk_level} risk "
-                        f"for the next {lead.horizon_hours}h{change}.{scope}"
+                        f"for the next {lead.horizon_hours}h{change}.{scope} "
+                        f"Main reason: {reason_text(lead)}."
                     ),
                     asset_id=lead.asset_id,
                     dedup_key=dedup_key,

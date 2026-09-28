@@ -6,7 +6,7 @@ from sqlalchemy.orm import Session
 from app.core.config import Settings
 from app.db.models import Action, Notification
 from app.domain.actions import OPEN_STATUSES
-from app.domain.incidents import group_incidents, location_label
+from app.domain.incidents import group_incidents, location_label, reason_text, score_text
 from app.domain.predictions import get_prediction_source
 from app.schemas.predictions import Prediction
 from app.schemas.system import HealthComponents, Situation, SystemNotice
@@ -121,6 +121,7 @@ def situations(session: Session, settings: Settings, limit: int = 6) -> list[Sit
         ):
             best[prediction.asset_id] = prediction
 
+    incident_probability = source.incident_probabilities()
     result: list[Situation] = []
     for incident in group_incidents(best.values()):
         lead = incident.lead
@@ -135,10 +136,22 @@ def situations(session: Session, settings: Settings, limit: int = 6) -> list[Sit
             status = "action_created"
         elif notification is not None and notification.status == "acknowledged":
             status = "acknowledged"
-        factor = max(lead.factors, key=lambda item: item.value) if lead.factors else None
-        delta = f", {lead.score_delta:+.3f} since the previous snapshot" if lead.score_delta else ""
         count = len(incident.asset_ids)
         scope = f"{count} channels, lead {lead.asset_id}" if count > 1 else lead.asset_id
+        location_probability = (
+            incident_probability.get((incident.scenario, incident.location))
+            if incident.location
+            else None
+        )
+        # The location model scores once a day, the channel model at a fresh event;
+        # the chance that any channel fails is never below the lead channel's.
+        if location_probability is not None and lead.score_type == "calibrated_probability":
+            location_probability = max(location_probability, lead.score)
+        location_text = (
+            f" Location risk {location_probability:.0%} within 24h."
+            if location_probability is not None
+            else ""
+        )
         result.append(
             Situation(
                 id=f"situation-{lead.source_snapshot}:{incident.key}",
@@ -146,15 +159,15 @@ def situations(session: Session, settings: Settings, limit: int = 6) -> list[Sit
                 severity="critical" if incident.risk_level == "critical" else "attention",
                 title=incident.title,
                 summary=(
-                    f"{scope}: {lead.model_id} score {lead.score:.3f} "
-                    f"({lead.risk_level}) for the next {lead.horizon_hours}h{delta}."
+                    f"{scope}: {lead.model_id} {score_text(lead)} "
+                    f"({lead.risk_level}) for the next {lead.horizon_hours}h.{location_text}"
                 ),
                 asset_ids=incident.asset_ids,
                 pattern_id=None,
                 risk_score=lead.score,
                 risk_delta=lead.score_delta,
                 forecast_horizon=lead.horizon_hours,
-                primary_reason=f"{factor.label} {factor.value:g}" if factor else "Model risk level",
+                primary_reason=reason_text(lead),
                 status=status,  # type: ignore[arg-type]
                 updated_at=lead.prediction_time,
                 open_action_id=action.id if action else None,
@@ -162,6 +175,7 @@ def situations(session: Session, settings: Settings, limit: int = 6) -> list[Sit
                 scenario=incident.scenario,
                 location=location_label(incident.location),
                 asset_count=count,
+                incident_probability=location_probability,
             )
         )
 

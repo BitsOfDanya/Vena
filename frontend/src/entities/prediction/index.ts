@@ -3,6 +3,7 @@ export { useBackendSituations, useCriticalPredictions, useDashboardPredictions, 
 export type {
   BackendSituation,
   Prediction,
+  PredictionDriver,
   PredictionFactor,
   PredictionRiskLevel,
   PredictionScenario,
@@ -11,3 +12,4 @@ export type {
 } from "./model/types"
 
 export { SCENARIO_LABEL } from "./model/scenario"
+export { formatProbability, formatProbabilityDelta } from "./lib/format"

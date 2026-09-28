@@ -32,6 +32,7 @@ import {
   type DashboardSort,
   type DashboardSortKey,
 } from "../model/analytics"
+import { SeasonalityPanel } from "./seasonality-panel"
 
 const HORIZONS: { value: ForecastHorizon; label: string }[] = [
   { value: 24, label: "24h" },
@@ -211,7 +212,7 @@ function PredictionInspector({
           <p className="mt-2 text-[12px] text-muted-foreground">{row.modelId ?? "Demo telemetry"}</p>
           <p className="mt-3 text-[11px] text-faint">Точное время до отказа в источнике не указано. Горизонт — окно прогноза.</p>
         </InspectorSection>
-        <InspectorSection title="Reported factors">
+        <InspectorSection title="Why this risk">
           {row.factors.length ? (
             <ul className="space-y-3">
               {row.factors.map((factor, index) => (
@@ -518,7 +519,10 @@ export function DashboardPage() {
                   )}
                 </section>
               </div>
-              <section className="px-6 pt-7 pb-6">
+              <div className="pt-7">
+                <SeasonalityPanel />
+              </div>
+              <section className="px-6 pt-1 pb-6">
                 <SectionTitle
                   description="Нажмите на заголовок столбца, чтобы изменить порядок. Повторное нажатие меняет направление."
                   action={

@@ -37,6 +37,30 @@ LOCATION_LEVELS = 3
 LEVEL_RANK: dict[RiskLevel, int] = {"critical": 0, "attention": 1, "observe": 2, "normal": 3}
 
 
+def score_text(prediction: Prediction) -> str:
+    """Probability as a percentage for calibrated models, the raw score otherwise."""
+    if prediction.score_type == "calibrated_probability":
+        return f"{prediction.score:.0%}"
+    return f"score {prediction.score:.3f}"
+
+
+def reason_text(prediction: Prediction) -> str:
+    """Strongest driver of the forecast, or the largest raw factor for older snapshots."""
+    if prediction.drivers:
+        driver = prediction.drivers[0]
+        if driver.value is None:
+            value = ""
+        elif float(driver.value).is_integer():
+            value = f": {driver.value:.0f}"
+        else:
+            value = f": {driver.value:.2f}"
+        return f"{driver.label}{value}"
+    if prediction.factors:
+        factor = max(prediction.factors, key=lambda item: item.value)
+        return f"{factor.label} {factor.value:g}"
+    return "Model risk level"
+
+
 def scenario_for(device_type: str, model_id: str = "") -> str:
     device = device_type or model_id.split("_", 1)[0]
     return SCENARIO_BY_DEVICE.get(device, "equipment")

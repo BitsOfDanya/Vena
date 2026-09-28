@@ -27,6 +27,10 @@ export type DashboardSortKey = "asset" | "system" | "risk" | "score" | "horizon"
 export type DashboardSort = { key: DashboardSortKey; direction: "asc" | "desc" }
 const collator = new Intl.Collator("ru", { numeric: true, sensitivity: "base" })
 
+function formatValue(value: number): string {
+  return Number.isInteger(value) ? String(value) : value.toFixed(2)
+}
+
 export function responseLabels(actions: MaintenanceAction[]): Map<string, string> {
   const grouped = new Map<string, MaintenanceAction[]>()
   for (const action of actions) {
@@ -93,7 +97,10 @@ export function dashboardRows(
               scoreType: item.scoreType,
               horizon,
               time: item.predictionTime,
-              factors: item.factors.map((factor) => `${factor.label}: ${factor.value}`),
+              // Drivers explain the forecast; raw factors remain for snapshots without them.
+              factors: item.drivers.length
+                ? item.drivers.map((driver) => (driver.value === null ? driver.label : `${driver.label}: ${formatValue(driver.value)}`))
+                : item.factors.map((factor) => `${factor.label}: ${factor.value}`),
               modelId: item.modelId,
               predictionId: item.id,
               registered: Boolean(asset),

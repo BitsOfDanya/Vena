@@ -43,3 +43,6 @@ class Situation(BaseModel):
     scenario: str | None = None
     location: str | None = None
     asset_count: int = 1
+    # Calibrated probability that at least one channel of the location loses
+    # power within 24 hours; only the power-loss scenario has a location model.
+    incident_probability: float | None = None

@@ -166,7 +166,7 @@ def list_alarms(
     settings: SettingsDep,
     _: ReaderDep,
     needs_verification: bool | None = None,
-    limit: Annotated[int, Query(ge=1, le=2000)] = 200,
+    limit: Annotated[int, Query(ge=1, le=20000)] = 200,
 ) -> list[AlarmAssessment]:
     _require_snapshot(settings)
     items = get_prediction_source(settings).alarms()
@@ -177,7 +177,7 @@ def list_alarms(
 
 @router.get("/access-events", response_model=list[AccessEvent])
 def list_access_events(
-    settings: SettingsDep, _: ReaderDep, limit: Annotated[int, Query(ge=1, le=2000)] = 200
+    settings: SettingsDep, _: ReaderDep, limit: Annotated[int, Query(ge=1, le=20000)] = 200
 ) -> list[AccessEvent]:
     _require_snapshot(settings)
     return get_prediction_source(settings).access_events()[:limit]

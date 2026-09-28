@@ -21,6 +21,14 @@ class RiskFactor(BaseModel):
     basis: Literal["feature_value"] = "feature_value"
 
 
+class Driver(BaseModel):
+    feature: str
+    label: str
+    value: float | None
+    # Additive log-odds contribution to the model score (SHAP for trees).
+    contribution: float
+
+
 class Prediction(BaseModel):
     id: str
     asset_id: str
@@ -42,6 +50,7 @@ class Prediction(BaseModel):
     location: str | None = None
     lead_time_hours: int | None = None
     factors: list[RiskFactor] = []
+    drivers: list[Driver] = []
     sensor_type: str | None = None
     system_type: str | None = None
     last_event_at: datetime | None = None

@@ -39,6 +39,7 @@ const prediction: Prediction = {
   scenario: "flooding",
   location: null,
   locationTag: null,
+  drivers: [],
 }
 
 describe("dashboard analytics", () => {

@@ -13,6 +13,7 @@ from app.domain.incidents import (
 from app.schemas.predictions import (
     AccessEvent,
     AlarmAssessment,
+    Driver,
     ModelInfo,
     Prediction,
     RiskFactor,
@@ -65,6 +66,18 @@ def _factors(raw: dict[str, Any]) -> list[RiskFactor]:
             continue
         factors.append(RiskFactor(key=key, label=FACTOR_LABELS.get(key, key), value=float(value)))
     return factors
+
+
+def _drivers(raw: Any) -> list[Driver]:
+    if not isinstance(raw, list):
+        return []
+    result = []
+    for item in raw:
+        try:
+            result.append(Driver(**item))
+        except (TypeError, ValueError):
+            continue
+    return result
 
 
 class PredictionSource:
@@ -139,6 +152,7 @@ class PredictionSource:
                     location=location_label(group),
                     lead_time_hours=row.get("horizon_hours"),
                     factors=_factors(row.get("factors", {})),
+                    drivers=_drivers(row.get("drivers")),
                     sensor_type=row.get("sensor_type"),
                     system_type=row.get("system_type"),
                     last_event_at=_parse_time(row.get("last_event_at")),
@@ -220,6 +234,18 @@ class PredictionSource:
         self._read()
         rows = (self._payload or {}).get(key) or []
         return [row for row in rows if isinstance(row, dict)]
+
+    def incident_probabilities(self) -> dict[tuple[str, str], float]:
+        """Location-level probability keyed by (scenario, location group)."""
+        result = {}
+        for row in self._section("incidents"):
+            try:
+                result[(str(row["scenario"]), str(row["location_group"]))] = float(
+                    row["probability"]
+                )
+            except (KeyError, TypeError, ValueError):
+                continue
+        return result
 
     def alarms(self) -> list[AlarmAssessment]:
         result = []

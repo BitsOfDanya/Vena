@@ -362,3 +362,56 @@ def test_alarm_and_access_sections_are_served(client: TestClient, ml_root: Path)
     assert false_alarms[0]["location"] == "Объект 16 · 2.1.1"
     assert access[0]["access_index"] == pytest.approx(0.8)
     assert access[0]["location"] == "Объект 16 · 1.1.66"
+
+
+def test_drivers_and_location_probability_reach_situations(
+    client: TestClient, ml_root: Path
+) -> None:
+    rows = [
+        {
+            **tagged("11", 0.83, "critical", "16-2.1.1.4.22."),
+            "score_type": "calibrated_probability",
+            "drivers": [
+                {
+                    "feature": "failures_1d",
+                    "label": "Эпизодов за 1 сут",
+                    "value": 3.0,
+                    "contribution": 0.4,
+                }
+            ],
+        },
+        {
+            **tagged("12", 0.61, "critical", "16-2.1.1.4.23."),
+            "score_type": "calibrated_probability",
+        },
+    ]
+    write_snapshot(ml_root, datetime.now(tz=UTC), rows)
+    path = ml_root / "results" / "predictions" / "snapshot.json"
+    payload = json.loads(path.read_text(encoding="utf-8"))
+    payload["incidents"] = [
+        {"location_group": "16-2.1.1", "scenario": "power_loss", "probability": 0.57, "channels": 2}
+    ]
+    path.write_text(json.dumps(payload), encoding="utf-8")
+
+    prediction = client.get("/api/v1/assets/11/prediction").json()
+    situation = client.get("/api/v1/situations").json()[0]
+
+    assert prediction["drivers"][0]["label"] == "Эпизодов за 1 сут"
+    assert situation["primary_reason"] == "Эпизодов за 1 сут: 3"
+    assert situation["incident_probability"] == pytest.approx(0.83)
+    payload["incidents"][0]["probability"] = 0.95
+    path.write_text(json.dumps(payload), encoding="utf-8")
+    assert client.get("/api/v1/situations").json()[0]["incident_probability"] == pytest.approx(0.95)
+    assert "83%" in situation["summary"]
+    assert "Location risk 83%" in situation["summary"]
+
+
+def test_ml_reports_are_whitelisted(client: TestClient, ml_root: Path) -> None:
+    (ml_root / "results").mkdir(parents=True, exist_ok=True)
+    (ml_root / "results" / "seasonality.json").write_text(
+        '{"seasonal_share": {}}', encoding="utf-8"
+    )
+
+    assert client.get("/api/v1/ml/reports/seasonality").json() == {"seasonal_share": {}}
+    assert client.get("/api/v1/ml/reports/directions").status_code == 404
+    assert client.get("/api/v1/ml/reports/..%2Fsecret").status_code == 404

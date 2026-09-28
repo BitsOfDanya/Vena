@@ -12,7 +12,7 @@ import {
   type JournalDecision,
   type JournalEntry,
 } from "@/entities/journal"
-import { SCENARIO_LABEL, type PredictionScenario } from "@/entities/prediction"
+import { SCENARIO_LABEL, formatProbability, type PredictionScenario } from "@/entities/prediction"
 import { workflowMode } from "@/shared/config/env"
 import { formatDateTime } from "@/shared/lib/time"
 import { cn } from "@/shared/lib/utils"
@@ -45,7 +45,7 @@ function Metric({ label, value, hint }: { label: string; value: React.ReactNode;
 }
 
 function scoreText(row: JournalEntry) {
-  return row.score === null ? "—" : `${Math.round(row.score * 100)}/100`
+  return row.score === null ? "—" : formatProbability(row.score)
 }
 
 export function JournalPage() {
