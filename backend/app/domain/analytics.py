@@ -18,6 +18,7 @@ from app.domain.incidents import (
     reason_text,
 )
 from app.domain.predictions import PredictionSource
+from app.domain.recommendations import driver_hints
 from app.schemas.analytics import (
     BacktestDay,
     ChannelNode,
@@ -230,6 +231,13 @@ PLAN_MODELS = ("pump_72h", "fan_72h", "phase_24h", "flood_24h", "pump_24h", "fan
 PLAN_SKIP_REPEATS = {"fan_72h", "fan_24h"}
 
 
+def _plain_reason(item: Prediction, hints: dict[str, str]) -> str | None:
+    for driver in item.drivers:
+        if driver.feature in hints:
+            return hints[driver.feature]
+    return reason_text(item) if (item.drivers or item.factors) else None
+
+
 def inspection_plan(
     session: Session, source: PredictionSource, model_id: str, count: int, now: datetime
 ) -> InspectionPlan:
@@ -242,6 +250,7 @@ def inspection_plan(
     if model_id in PLAN_SKIP_REPEATS:
         statement = select(Action.asset_id).where(Action.created_at >= now - timedelta(hours=24))
         recent = set(session.scalars(statement))
+    hints = driver_hints(source.settings)
     items, skipped = [], []
     for item in candidates:
         if item.asset_id in recent:
@@ -255,7 +264,7 @@ def inspection_plan(
                 model_id=item.model_id,
                 probability=item.score,
                 risk_level=item.risk_level,
-                reason=reason_text(item) if (item.drivers or item.factors) else None,
+                reason=_plain_reason(item, hints),
             )
         )
         if len(items) == count:
