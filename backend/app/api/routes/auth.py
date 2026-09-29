@@ -58,7 +58,6 @@ class PasswordRequest(BaseModel):
 def throttle(session: Session, settings: Settings, identity: str, ip: str) -> None:
     now = datetime.now(UTC)
     session.execute(delete(LoginBucket).where(LoginBucket.expires_at < now - timedelta(hours=1)))
-    # Row locks make attempts shared across workers and serialize concurrent logins.
     for name, limit in [(f"ip:{ip}", 100), (f"login:{identity}", settings.auth_login_limit)]:
         key = hmac.new(signing_key(settings).encode(), name.encode(), hashlib.sha256).hexdigest()
         session.execute(
@@ -137,7 +136,7 @@ def login(
     )
     valid = PASSWORDS.verify(body.password, user.password_hash if user else DUMMY_HASH)
     if not valid or not user or not user.is_active:
-        session.commit()  # Failed attempts must survive the dependency's rollback.
+        session.commit()
         raise HTTPException(
             401, "Invalid email or password", headers={"WWW-Authenticate": "Bearer"}
         )
@@ -176,8 +175,6 @@ def change_password(
     if not user:
         raise HTTPException(400, "Password authentication is not enabled")
     throttle(session, settings, f"password:{user.id}", f"user:{user.id}")
-    # Serialize with login so a concurrent password change cannot leave a new
-    # session authenticated with the previous password.
     user = session.execute(
         select(User)
         .where(User.id == user.id)

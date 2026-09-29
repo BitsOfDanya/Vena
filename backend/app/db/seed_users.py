@@ -1,5 +1,3 @@
-"""Explicit, idempotent user provisioning: python -m app.db.seed_users."""
-
 import argparse
 import getpass
 import os
@@ -30,7 +28,7 @@ def create_user(
     if existing:
         if existing.username != username or existing.email != email:
             raise ValueError(f"Username or email collision for {username}")
-        return False  # Never reset an existing user's password, role or activity.
+        return False
     session.add(
         User(
             id=uuid4().hex,

@@ -1,5 +1,3 @@
-"""Users, revocable JWT sessions and shared login throttling."""
-
 import sqlalchemy as sa
 from alembic import op
 

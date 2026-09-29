@@ -35,8 +35,7 @@ export function AuthGate({ children }: { children: React.ReactNode }) {
   const [pending, setPending] = React.useState(false)
 
   React.useEffect(() => {
-    // Discard credentials left by older API-key versions.
-    try { localStorage.removeItem("vena.apiKey.v1") } catch { /* storage may be disabled */ }
+    try { localStorage.removeItem("vena.apiKey.v1") } catch {}
     const expired = () => { void queryClient.invalidateQueries({ queryKey: ["system", "auth-session"] }) }
     window.addEventListener("vena:unauthorized", expired)
     return () => window.removeEventListener("vena:unauthorized", expired)

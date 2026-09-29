@@ -1,4 +1,3 @@
-"""Exercise JWT authentication, revocation, RBAC, database API and ML snapshot."""
 import json
 import secrets
 import urllib.error

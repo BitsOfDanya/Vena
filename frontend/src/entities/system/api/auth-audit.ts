@@ -44,7 +44,6 @@ export async function loginWithPassword(login: string, password: string): Promis
   const result = await apiFetch<{ user: unknown }>("/api/v1/auth/login", {
     method: "POST", body: JSON.stringify({ email: login, password }),
   })
-  // The browser keeps the JWT in an HttpOnly cookie; never persist it in JS storage.
   return MeSchema.parse(result.user)
 }
 
