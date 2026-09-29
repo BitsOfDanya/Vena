@@ -1,4 +1,5 @@
 import numpy as np
+from scipy.interpolate import PchipInterpolator
 from sklearn.isotonic import IsotonicRegression
 from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import brier_score_loss
@@ -22,6 +23,27 @@ def apply_platt(model, scores):
 
 def apply_isotonic(model, scores):
     return model.transform(scores)
+
+
+def fit_smooth_isotonic(scores, targets, bins=40, grid=200, eps=1e-6):
+    scores = np.clip(np.asarray(scores, dtype=float), eps, 1 - eps)
+    targets = np.asarray(targets, dtype=float)
+    groups = np.array_split(np.argsort(scores, kind="stable"), bins)
+    logits = np.log(scores / (1 - scores))
+    x = np.array([logits[group].mean() for group in groups])
+    rate = np.array([targets[group].mean() for group in groups])
+    y = np.clip(fit_isotonic(x, rate).transform(x), 0, 1) + np.arange(len(x)) * 1e-6
+    keep = np.concatenate([[True], np.diff(x) > 1e-9])
+    curve = PchipInterpolator(x[keep], y[keep])
+    points = np.linspace(x[keep][0], x[keep][-1], grid)
+    raw = np.concatenate([[0.0], 1 / (1 + np.exp(-points)), [1.0]])
+    risk = np.clip(np.concatenate([[y[keep][0]], curve(points), [y[keep][-1]]]), 0, 1)
+    return raw, np.maximum.accumulate(risk)
+
+
+def apply_points(points, scores):
+    raw, risk = points
+    return np.interp(np.asarray(scores, dtype=float), raw, risk)
 
 
 def expected_calibration_error(y_true, y_prob, n_bins=10):

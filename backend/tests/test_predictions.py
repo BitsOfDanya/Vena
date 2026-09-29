@@ -642,19 +642,13 @@ def test_health_calibration_interpolates_between_points() -> None:
     assert to_index(0.3, None) == 70
 
 
-def test_health_index_keeps_discriminating_above_calibration_plateau() -> None:
+def test_health_index_is_the_calibrated_event_probability() -> None:
     from app.domain.health import to_index
 
-    # Mimic the production isotonic plateau: raw 0.35…0.95 → calibrated ~0.45 (HI≈55).
-    points = ([0.0, 0.32, 0.98, 1.0], [0.0, 0.45, 0.45, 0.95])
-    mild = to_index(0.40, points)
-    mid = to_index(0.70, points)
-    severe = to_index(0.95, points)
-    assert mild == 55
-    assert mid < mild
-    assert severe < mid
-    assert severe < 40
-    assert to_index(0.10, points) > 55
+    points = ([0.0, 0.5, 0.9, 1.0], [0.0, 0.3, 0.6, 0.9])
+    assert to_index(0.5, points) == 70
+    assert to_index(0.7, points) == 55
+    assert to_index(0.9, points) < to_index(0.7, points)
 
 
 def test_access_routes_and_alarm_categories(client: TestClient, ml_root: Path) -> None:

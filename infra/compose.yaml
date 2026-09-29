@@ -31,6 +31,9 @@ services:
     build:
       context: ..
       dockerfile: infra/docker/ml.Dockerfile
+    mem_limit: ${VENA_ML_MEMORY:-5g}
+    memswap_limit: ${VENA_ML_MEMORY:-5g}
+    cpus: ${VENA_ML_CPUS:-3}
     environment:
       VENA_ML_MODE: ${VENA_ML_MODE:-auto}
       VENA_ML_REFRESH_SECONDS: ${VENA_ML_REFRESH_SECONDS:-3600}

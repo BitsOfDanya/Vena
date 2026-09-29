@@ -1,42 +1,60 @@
 {
- "ece_raw": 0.0842,
- "ece_calibrated": 0.002,
- "period": "2025",
- "location_days": 194353,
+ "method": "isotonic on 40 logit bins smoothed with PCHIP, fitted on 2025, checked on 2026H1",
+ "ece_raw": 0.0746,
+ "ece_calibrated": 0.0135,
+ "period": "2026H1",
+ "location_days": 103599,
  "locations": 910,
- "event_rate": 0.1854,
- "roc_auc": 0.8316,
- "pr_auc": 0.4886,
+ "event_rate": 0.2033,
+ "roc_auc": 0.8222,
+ "pr_auc": 0.5091,
+ "compared": {
+  "raw": {
+   "ece": 0.0746,
+   "roc_auc": 0.8222,
+   "pr_auc": 0.5093
+  },
+  "isotonic": {
+   "ece": 0.0215,
+   "roc_auc": 0.8199,
+   "pr_auc": 0.4973
+  },
+  "smooth_isotonic": {
+   "ece": 0.0135,
+   "roc_auc": 0.8222,
+   "pr_auc": 0.5091
+  }
+ },
  "bands": [
   {
    "index": "0-25",
-   "location_days": 2293,
-   "event_rate": 0.7881,
-   "predicted_risk": 0.7874
+   "location_days": 0,
+   "event_rate": null,
+   "predicted_risk": null
   },
   {
    "index": "25-50",
-   "location_days": 7024,
-   "event_rate": 0.5907,
-   "predicted_risk": 0.5905
+   "location_days": 6194,
+   "event_rate": 0.6004,
+   "predicted_risk": 0.6357
   },
   {
    "index": "50-75",
-   "location_days": 48318,
-   "event_rate": 0.4209,
-   "predicted_risk": 0.4209
+   "location_days": 27336,
+   "event_rate": 0.4329,
+   "predicted_risk": 0.4257
   },
   {
    "index": "75-90",
-   "location_days": 35124,
-   "event_rate": 0.1684,
-   "predicted_risk": 0.1692
+   "location_days": 17745,
+   "event_rate": 0.1668,
+   "predicted_risk": 0.1631
   },
   {
    "index": "90-100",
-   "location_days": 101594,
-   "event_rate": 0.0376,
-   "predicted_risk": 0.0375
+   "location_days": 52324,
+   "event_rate": 0.0487,
+   "predicted_risk": 0.0402
   }
  ]
 }
