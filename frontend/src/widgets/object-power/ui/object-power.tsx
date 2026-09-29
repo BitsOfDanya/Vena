@@ -3,6 +3,7 @@
 import * as React from "react"
 
 import { useAssetTree, type ChannelNode, type ObjectNode } from "@/entities/analytics"
+import { plural } from "@/shared/lib/plural"
 import { LoadingBar, StateMessage } from "@/shared/ui/state-message"
 import { ObjectList } from "@/widgets/object-schema"
 
@@ -38,6 +39,7 @@ const BUS_Y = 100
 const FEEDER_Y = 132
 const FEEDER_H = 60
 const CONSUMER_Y = 230
+const HEAD_H = 22
 
 function compact(name: string | null) {
   return (name ?? "").replace(/\s+/g, " ").trim()
@@ -151,14 +153,26 @@ function pct(channel: ChannelNode | null) {
   return channel?.probability == null ? "—" : `${Math.round(channel.probability * 100)}%`
 }
 
-function Diagram({ object, selectedId, onSelect }: { object: ObjectNode; selectedId: string | null; onSelect: (id: string) => void }) {
+function Diagram({
+  object,
+  selectedId,
+  onSelect,
+  focus,
+  onFocus,
+}: {
+  object: ObjectNode
+  selectedId: string | null
+  onSelect: (id: string) => void
+  focus: string | null
+  onFocus: (key: string | null) => void
+}) {
   const { inputs, columns, orphans } = React.useMemo(() => build(object), [object])
   const shownInputs = inputs.slice(0, MAX_INPUTS)
   const rows = Math.max(1, ...columns.map((column) => Math.min(column.consumers.length, MAX_CONSUMERS) + (column.consumers.length > MAX_CONSUMERS ? 1 : 0)))
   const busLeft = 24
   const busRight = Math.max(busLeft + 4 * COLUMN - (COLUMN - BOX_W), busLeft + columns.length * COLUMN - (COLUMN - BOX_W))
   const width = busRight + 24
-  const height = CONSUMER_Y + 24 + rows * 22 + (orphans.length ? 30 : 12)
+  const height = CONSUMER_Y + HEAD_H + 12 + rows * 22 + (orphans.length ? 30 : 12)
   const inputSpan = shownInputs.length ? (busRight - busLeft) / shownInputs.length : 0
   const mono = "var(--font-plex-mono)"
 
@@ -175,7 +189,11 @@ function Diagram({ object, selectedId, onSelect }: { object: ObjectNode; selecte
         const cx = busLeft + inputSpan * index + inputSpan / 2
         const selected = input.assetId === selectedId
         return (
-          <g key={input.assetId} className="cursor-pointer" onClick={() => onSelect(input.assetId)}>
+          <g
+            key={input.assetId}
+            className="cursor-pointer"
+            onClick={() => onFocus(focus === "all" ? null : "all")}
+          >
             <line x1={cx} x2={cx} y1={TOP + INPUT_H} y2={BUS_Y} stroke="var(--foreground)" strokeWidth="1.5" />
             <circle cx={cx} cy={TOP + INPUT_H + 14} r="6" fill="var(--elevated)" stroke="var(--foreground)" strokeWidth="1.5" />
             <rect x={cx - 80} y={TOP} width={160} height={INPUT_H} fill={fill(input)} stroke={selected ? "var(--vena)" : stroke(input)} strokeWidth={selected ? 2 : 1} />
@@ -199,7 +217,7 @@ function Diagram({ object, selectedId, onSelect }: { object: ObjectNode; selecte
         </text>
       ) : null}
 
-      <line x1={busLeft} x2={busRight} y1={BUS_Y} y2={BUS_Y} stroke="var(--foreground)" strokeWidth="4" />
+      <line x1={busLeft} x2={busRight} y1={BUS_Y} y2={BUS_Y} stroke={focus === "all" ? "var(--vena)" : "var(--foreground)"} strokeWidth="4" />
       <text x={busLeft} y={BUS_Y - 8} fontSize="10" fill="var(--muted-foreground)" fontFamily={mono}>
         ШИНА 0,4 кВ
       </text>
@@ -209,12 +227,15 @@ function Diagram({ object, selectedId, onSelect }: { object: ObjectNode; selecte
         const cx = x + BOX_W / 2
         const selected = column.members.some((member) => member.assetId === selectedId)
         const shown = column.consumers.slice(0, MAX_CONSUMERS)
-        const terminal = column.consumers.length === 0
+        const lit = focus === "all" || focus === column.key
         return (
-          <g key={column.key}>
-            <line x1={cx} x2={cx} y1={BUS_Y} y2={FEEDER_Y} stroke="var(--foreground)" strokeWidth="1.5" />
+          <g key={column.key} opacity={focus && !lit ? 0.32 : 1}>
+            <line x1={cx} x2={cx} y1={BUS_Y} y2={FEEDER_Y} stroke={lit ? "var(--vena)" : "var(--foreground)"} strokeWidth={lit ? 2.5 : 1.5} />
             <path d={`M${cx - 6},${BUS_Y + 10} L${cx + 6},${BUS_Y + 20}`} stroke="var(--foreground)" strokeWidth="1.5" />
-            <g className="cursor-pointer" onClick={() => onSelect(column.head.assetId)}>
+            <g
+              className="cursor-pointer"
+              onClick={() => onFocus(focus === column.key ? null : column.key)}
+            >
               <rect x={x} y={FEEDER_Y} width={BOX_W} height={FEEDER_H} fill={fill(column.head)} stroke={selected ? "var(--vena)" : stroke(column.head)} strokeWidth={selected ? 2 : 1} />
               <text x={x + 8} y={FEEDER_Y + 18} fontSize="12.5" fontWeight="600" fill="var(--foreground)" fontFamily={mono}>
                 {column.title.slice(0, 13)}
@@ -226,23 +247,14 @@ function Diagram({ object, selectedId, onSelect }: { object: ObjectNode; selecte
                 {column.members.length > 1 ? "макс. " : ""}откл. {pct(column.head)}
               </text>
             </g>
-            <line
-              x1={cx}
-              x2={cx}
-              y1={FEEDER_Y + FEEDER_H}
-              y2={CONSUMER_Y - 4}
-              stroke="var(--foreground)"
-              strokeWidth="1.5"
-              strokeDasharray={terminal ? "3 3" : undefined}
-            />
-            {terminal ? (
-              <path d={`M${cx - 8},${CONSUMER_Y - 4} L${cx + 8},${CONSUMER_Y - 4} L${cx},${CONSUMER_Y + 6} Z`} fill="none" stroke="var(--foreground)" strokeWidth="1.5" />
-            ) : null}
-            <text x={x} y={CONSUMER_Y + (terminal ? 22 : 12)} fontSize="11" fontWeight="600" fill="var(--foreground)">
+            <line x1={cx} x2={cx} y1={FEEDER_Y + FEEDER_H} y2={CONSUMER_Y} stroke={lit ? "var(--vena)" : "var(--foreground)"} strokeWidth={lit ? 2.5 : 1.5} />
+            <rect x={x} y={CONSUMER_Y} width={BOX_W} height={HEAD_H} fill="var(--surface)" stroke={lit ? "var(--vena)" : "var(--foreground)"} strokeWidth={lit ? 2 : 1.2} />
+            <text x={cx} y={CONSUMER_Y + 15} textAnchor="middle" fontSize="11" fontWeight="600" fill="var(--foreground)">
               {column.consumerTitle}
+              {column.consumers.length ? ` · ${column.consumers.length}` : column.members.length > 1 ? ` · ${column.members.length}` : ""}
             </text>
             {shown.map((channel, row) => {
-              const y = CONSUMER_Y + 20 + row * 22
+              const y = CONSUMER_Y + HEAD_H + 4 + row * 22
               const active = channel.assetId === selectedId
               return (
                 <g key={channel.assetId} className="cursor-pointer" onClick={() => onSelect(channel.assetId)}>
@@ -257,7 +269,7 @@ function Diagram({ object, selectedId, onSelect }: { object: ObjectNode; selecte
               )
             })}
             {column.consumers.length > shown.length ? (
-              <text x={x} y={CONSUMER_Y + 20 + shown.length * 22 + 12} fontSize="10.5" fill="var(--muted-foreground)">
+              <text x={cx} y={CONSUMER_Y + HEAD_H + 4 + shown.length * 22 + 12} textAnchor="middle" fontSize="10.5" fill="var(--muted-foreground)">
                 ещё {column.consumers.length - shown.length}
               </text>
             ) : null}
@@ -274,9 +286,83 @@ function Diagram({ object, selectedId, onSelect }: { object: ObjectNode; selecte
   )
 }
 
+function Cascade({
+  columns,
+  focus,
+  onClear,
+  onOpen,
+}: {
+  columns: Column[]
+  focus: string | null
+  onClear: () => void
+  onOpen: (assetId: string) => void
+}) {
+  if (!focus) {
+    return (
+      <p className="font-mono text-[12px] text-muted-foreground">
+        НАЖМИТЕ НА ФИДЕР ИЛИ ВВОД — ПОКАЖЕМ, ЧТО ОСТАНОВИТСЯ ПРИ ЕГО ОТКЛЮЧЕНИИ
+      </p>
+    )
+  }
+  const scope = focus === "all" ? columns : columns.filter((column) => column.key === focus)
+  const consumers = scope.flatMap((column) => column.consumers)
+  const riskiest = worst(consumers)
+  const column = scope[0]
+  const title =
+    focus === "all"
+      ? `Отключение ввода обесточит шину: ${scope.reduce((total, item) => total + item.members.length, 0)} фидеров`
+      : `Отключение ${column?.title ?? ""} · ${column?.subtitle ?? ""}`
+  return (
+    <div className="flex flex-col gap-3 border border-vena bg-elevated px-4 py-3 xl:flex-row xl:items-start xl:gap-8">
+      <div className="min-w-0 flex-1">
+        <p className="text-[14px] font-semibold">{title}</p>
+        <p className="mt-0.5 text-[13px] text-muted-foreground">
+          {consumers.length
+            ? `${consumers.length === 1 ? "Остановится" : "Остановятся"} ${consumers.length} ${plural(consumers.length, ["агрегат", "агрегата", "агрегатов"])} под прогнозом: ${consumers
+                .slice(0, 6)
+                .map((item) => compact(item.name))
+                .join(", ")}${consumers.length > 6 ? " и другие" : ""}.`
+            : `Нагрузка — ${column?.consumerTitle ?? "без агрегатов под прогнозом"}, агрегатов с прогнозом отказа нет.`}
+        </p>
+      </div>
+      <dl className="flex gap-6 font-mono text-[12px]">
+        {focus !== "all" && column ? (
+          <div>
+            <dt className="text-muted-foreground">ОТКЛЮЧЕНИЕ</dt>
+            <dd className="text-[18px]" style={{ color: stroke(column.head) }}>
+              {pct(column.head)}
+            </dd>
+          </div>
+        ) : null}
+        <div>
+          <dt className="text-muted-foreground">АГРЕГАТОВ</dt>
+          <dd className="text-[18px]">{consumers.length}</dd>
+        </div>
+        <div>
+          <dt className="text-muted-foreground">МАКС. РИСК ОТКАЗА</dt>
+          <dd className="text-[18px]" style={{ color: stroke(riskiest ?? null) }}>
+            {pct(riskiest ?? null)}
+          </dd>
+        </div>
+      </dl>
+      <div className="flex shrink-0 gap-4 text-[12.5px] xl:flex-col xl:gap-1.5">
+        {focus !== "all" && column ? (
+          <button type="button" onClick={() => onOpen(column.head.assetId)} className="text-left text-vena hover:underline hover:underline-offset-4">
+            Карточка фидера
+          </button>
+        ) : null}
+        <button type="button" onClick={onClear} className="text-left text-muted-foreground hover:text-foreground">
+          Снять выделение
+        </button>
+      </div>
+    </div>
+  )
+}
+
 export function ObjectPower({ selectedId, onSelect }: { selectedId: string | null; onSelect: (assetId: string) => void }) {
   const tree = useAssetTree()
   const [objectId, setObjectId] = React.useState<string | null>(null)
+  const [focus, setFocus] = React.useState<string | null>(null)
   const objects = React.useMemo(
     () =>
       (tree.data ?? []).filter((object) =>
@@ -289,7 +375,14 @@ export function ObjectPower({ selectedId, onSelect }: { selectedId: string | nul
 
   return (
     <div className="flex size-full min-h-0">
-      {tree.isPending ? null : <ObjectList objects={objects} selected={current?.objectId ?? null} onSelect={setObjectId} />}
+      {tree.isPending ? null : <ObjectList
+          objects={objects}
+          selected={current?.objectId ?? null}
+          onSelect={(id) => {
+            setObjectId(id)
+            setFocus(null)
+          }}
+        />}
       <div className="min-w-0 flex-1 overflow-auto">
         {tree.isPending ? (
           <LoadingBar />
@@ -311,8 +404,9 @@ export function ObjectPower({ selectedId, onSelect }: { selectedId: string | nul
               технические средства. Агрегат привязан к фидеру своего типа с ближайшим пикетом. 81 % отказов насосов и 86 %
               вентиляторов совпадают с отключением питания объекта, поэтому риск фидера — первое, что стоит проверить.
             </p>
+            <Cascade columns={summary.columns} focus={focus} onClear={() => setFocus(null)} onOpen={onSelect} />
             <div className="overflow-x-auto border border-border bg-elevated">
-              <Diagram object={current} selectedId={selectedId} onSelect={onSelect} />
+              <Diagram object={current} selectedId={selectedId} onSelect={onSelect} focus={focus} onFocus={setFocus} />
             </div>
           </div>
         )}
