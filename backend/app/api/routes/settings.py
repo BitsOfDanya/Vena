@@ -1,10 +1,13 @@
+from email.utils import parseaddr
 from typing import Annotated
 
 from fastapi import APIRouter, Depends
+from sqlalchemy import func, select
 from sqlalchemy.orm import Session
 
 from app.core.config import Settings, get_settings
 from app.core.security import Principal, get_principal, require_min_role
+from app.db.models import DeliveryLog
 from app.db.session import get_session
 from app.domain import audit as audit_service
 from app.domain import settings_store
@@ -48,7 +51,40 @@ def update_notification_settings(
 def email_status(settings: SettingsDep, _principal: ReaderDep) -> EmailStatus:
     if not settings.smtp_configured:
         return EmailStatus(configured=False, provider="none")
-    address = settings.smtp_from
+    address = parseaddr(settings.smtp_from)[1]
     local, _, domain = address.partition("@")
     masked = f"{local[:2]}***@{domain}" if domain else "***"
     return EmailStatus(configured=True, provider="smtp", from_address=masked)
+
+
+@router.get("/integrations/email/deliveries")
+def email_deliveries(session: SessionDep, _: WriterDep) -> dict:
+    rows = session.scalars(
+        select(DeliveryLog)
+        .where(DeliveryLog.channel == "email")
+        .order_by(DeliveryLog.id.desc())
+        .limit(50)
+    )
+    return {
+        "counts": dict(
+            session.execute(
+                select(DeliveryLog.status, func.count())
+                .where(DeliveryLog.channel == "email")
+                .group_by(DeliveryLog.status)
+            ).all()
+        ),
+        "items": [
+            {
+                "id": row.id,
+                "recipient": row.recipient,
+                "subject": row.subject,
+                "status": row.status,
+                "attempts": row.attempts,
+                "detail": row.detail,
+                "created_at": row.created_at,
+                "sent_at": row.sent_at,
+                "next_attempt_at": row.next_attempt_at,
+            }
+            for row in rows
+        ],
+    }

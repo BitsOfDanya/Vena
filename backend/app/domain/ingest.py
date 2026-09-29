@@ -205,7 +205,14 @@ def refresh_predictions(
                     dedup_key=dedup_key,
                 ),
             )
-            notification_service.dispatch(session, settings, provider, notification, trigger)
+            notification_service.dispatch(
+                session,
+                settings,
+                provider,
+                notification,
+                trigger,
+                allow_email=status.data_source == "journal",
+            )
             created += 1
         if _suggest_action(session, incident, now):
             actions_created += 1

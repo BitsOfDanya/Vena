@@ -69,6 +69,8 @@ export type RecipientGroup = {
 }
 
 export type NotificationRuleTrigger =
+  | "new_events"
+  | "alarm_event"
   | "critical_risk"
   | "risk_horizon_24h"
   | "new_pattern"
@@ -87,6 +89,8 @@ export type NotificationRule = {
 }
 
 export const RULE_TRIGGER_LABEL: Record<NotificationRuleTrigger, string> = {
+  new_events: "Новые события журнала",
+  alarm_event: "Тревожные события оборудования",
   critical_risk: "Обнаружен критический риск",
   risk_horizon_24h: "Горизонт риска 24 ч или меньше",
   new_pattern: "Новая коррелированная связка",

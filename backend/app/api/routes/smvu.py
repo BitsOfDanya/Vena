@@ -73,6 +73,7 @@ def ingest_smvu_batch(
                 [event.model_dump() for event in body.events],
                 body.batch_id,
                 settings.timezone,
+                settings,
             )
         except RegistryError as error:
             raise HTTPException(409, str(error)) from None

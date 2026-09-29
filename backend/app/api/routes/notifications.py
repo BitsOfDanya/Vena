@@ -1,6 +1,6 @@
 from typing import Annotated
 
-from fastapi import APIRouter, BackgroundTasks, Depends, HTTPException, Query, status
+from fastapi import APIRouter, Depends, HTTPException, Query, status
 from sqlalchemy.orm import Session
 
 from app.core.config import Settings, get_settings
@@ -47,7 +47,6 @@ def create_notification(
     payload: NotificationCreate,
     session: SessionDep,
     settings: SettingsDep,
-    background: BackgroundTasks,
     principal: ActorDep,
 ) -> NotificationOut:
     notification = service.create_notification(session, payload)
@@ -56,11 +55,12 @@ def create_notification(
         if payload.severity == "critical"
         else "new_pattern"
         if payload.type == "pattern"
-        else None
+        else "alarm_event"
+        if payload.severity == "attention"
+        else "new_events"
     )
     if trigger:
         provider = build_email_provider(settings)
-        background.add_task(_dispatch, notification.id, trigger)
         service.dispatch(session, settings, provider, notification, trigger)
     audit_service.record(
         session,
@@ -71,10 +71,6 @@ def create_notification(
         resource_id=notification.id,
     )
     return NotificationOut.model_validate(notification)
-
-
-def _dispatch(notification_id: str, trigger: str) -> None:
-    return None
 
 
 @router.get("/{notification_id}", response_model=NotificationOut)
@@ -113,7 +109,9 @@ def patch_notification(
 
 @router.post("/test", response_model=TestEmailResult)
 def send_test_notification(
-    payload: TestEmailRequest, settings: SettingsDep, _: ActorDep
+    payload: TestEmailRequest,
+    settings: SettingsDep,
+    _: Annotated[Principal, Depends(require_min_role("admin"))],
 ) -> TestEmailResult:
     provider = build_email_provider(settings)
     if not provider.configured:
@@ -124,4 +122,4 @@ def send_test_notification(
         )
     except Exception as error:  # noqa: BLE001
         raise HTTPException(status_code=502, detail="Не удалось доставить письмо") from error
-    return TestEmailResult(delivered=True, detail="Отправлено")
+    return TestEmailResult(delivered=True, detail="Письмо принято почтовым сервером")

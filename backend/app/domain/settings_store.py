@@ -23,6 +23,22 @@ DEFAULT_RECIPIENTS = [
 
 DEFAULT_RULES = [
     NotificationRule(
+        id="new_events",
+        trigger="new_events",
+        severity="info",
+        recipients=["dispatcher_team"],
+        channels=["in_app", "email"],
+        cooldown_minutes=0,
+    ),
+    NotificationRule(
+        id="alarm_event",
+        trigger="alarm_event",
+        severity="attention",
+        recipients=["dispatcher_team", "maintenance_team"],
+        channels=["in_app", "email"],
+        cooldown_minutes=15,
+    ),
+    NotificationRule(
         id="critical_risk",
         trigger="critical_risk",
         severity="critical",
@@ -35,7 +51,7 @@ DEFAULT_RULES = [
         trigger="risk_horizon_24h",
         severity="attention",
         recipients=["dispatcher_team", "maintenance_team"],
-        channels=["in_app"],
+        channels=["in_app", "email"],
         cooldown_minutes=360,
     ),
     NotificationRule(
@@ -43,7 +59,7 @@ DEFAULT_RULES = [
         trigger="new_pattern",
         severity="attention",
         recipients=["dispatcher_team"],
-        channels=["in_app"],
+        channels=["in_app", "email"],
         cooldown_minutes=120,
     ),
     NotificationRule(
@@ -124,9 +140,12 @@ def read_settings(session: Session, settings: Settings) -> NotificationSettings:
     )
     return NotificationSettings(
         channels=channel_states(settings),
-        recipients=[RecipientGroup(**item) for item in stored.get("recipients", [])]
-        or DEFAULT_RECIPIENTS,
-        rules=[NotificationRule(**item) for item in stored.get("rules", [])] or DEFAULT_RULES,
+        recipients=[RecipientGroup(**item) for item in stored["recipients"]]
+        if "recipients" in stored
+        else DEFAULT_RECIPIENTS,
+        rules=[NotificationRule(**item) for item in stored["rules"]]
+        if "rules" in stored
+        else DEFAULT_RULES,
         digest=digest,
     )
 
@@ -137,9 +156,13 @@ def write_settings(
     current = read_settings(session, settings)
     payload = {
         "recipients": [
-            item.model_dump(mode="json") for item in (update.recipients or current.recipients)
+            item.model_dump(mode="json")
+            for item in (update.recipients if update.recipients is not None else current.recipients)
         ],
-        "rules": [item.model_dump(mode="json") for item in (update.rules or current.rules)],
+        "rules": [
+            item.model_dump(mode="json")
+            for item in (update.rules if update.rules is not None else current.rules)
+        ],
         "digest": (update.digest or current.digest).model_dump(mode="json"),
     }
     record = session.get(SettingsRecord, SETTINGS_KEY)

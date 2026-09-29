@@ -10,6 +10,7 @@ from zoneinfo import ZoneInfo
 from sqlalchemy import select
 from sqlalchemy.orm import Session
 
+from app.core.config import Settings
 from app.db.models import Equipment, HistoricalEvent, ImportOutbox, SmvuIngestState, utcnow
 from app.domain.equipment import RegistryError, lock_registry
 
@@ -66,7 +67,11 @@ def spool_events(
 
 
 def queue_events(
-    session: Session, events: list[dict], batch_id: str, timezone: str
+    session: Session,
+    events: list[dict],
+    batch_id: str,
+    timezone: str,
+    settings: Settings | None = None,
 ) -> tuple[datetime, int]:
     lock_registry(session)
     known = set(session.scalars(select(Equipment.asset_id)))
@@ -111,6 +116,19 @@ def queue_events(
                     {"kind": "stream", "batch_id": batch_id, "events": added}, ensure_ascii=False
                 ),
             )
+        )
+    if added and settings is not None:
+        from app.domain.notifications import notify_events
+
+        channels = sorted({row["channel_id"] for row in added})
+        notify_events(
+            session,
+            settings,
+            len(added),
+            sum(bool(row["alarm"]) for row in added),
+            f"Пакет {batch_id}. Каналы: {', '.join(channels[:20])}. "
+            f"Последнее событие: {latest.isoformat()}.",
+            channels[0] if len(channels) == 1 else None,
         )
     return latest, len(added)
 

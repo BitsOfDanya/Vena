@@ -7,6 +7,7 @@ from sqlalchemy import (
     DateTime,
     Float,
     ForeignKey,
+    Index,
     Integer,
     String,
     Text,
@@ -129,6 +130,7 @@ class ActionEvent(Base):
 
 class DeliveryLog(Base):
     __tablename__ = "delivery_log"
+    __table_args__ = (Index("ix_delivery_queue", "channel", "status", "next_attempt_at"),)
 
     id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
     notification_id: Mapped[str | None] = mapped_column(String(32), nullable=True)
@@ -139,6 +141,12 @@ class DeliveryLog(Base):
     status: Mapped[str] = mapped_column(String(16), default="pending")
     detail: Mapped[str] = mapped_column(Text, default="")
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=utcnow)
+
+    subject: Mapped[str] = mapped_column(String(240), default="")
+    body: Mapped[str] = mapped_column(Text, default="")
+    attempts: Mapped[int] = mapped_column(Integer, default=0)
+    next_attempt_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=utcnow)
+    sent_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
 
 
 class SettingsRecord(Base):

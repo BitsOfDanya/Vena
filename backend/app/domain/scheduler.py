@@ -8,6 +8,7 @@ from app.domain import equipment, imports
 from app.domain.digest import send_digest
 from app.domain.email import build_email_provider
 from app.domain.ingest import refresh_predictions
+from app.domain.mail_queue import deliver_pending
 from app.domain.predictions import get_prediction_source
 from app.domain.settings_store import read_settings
 
@@ -48,6 +49,11 @@ def _run_publications(settings: Settings) -> None:
             session.rollback()
 
 
+def _run_email(settings: Settings) -> None:
+    with SessionLocal() as session:
+        deliver_pending(session, build_email_provider(settings))
+
+
 def build_scheduler(settings: Settings) -> BackgroundScheduler | None:
     session = SessionLocal()
     try:
@@ -76,6 +82,14 @@ def build_scheduler(settings: Settings) -> BackgroundScheduler | None:
         IntervalTrigger(seconds=10),
         args=[settings],
         id="import_publications",
+        max_instances=1,
+        coalesce=True,
+    )
+    scheduler.add_job(
+        _run_email,
+        IntervalTrigger(seconds=10),
+        args=[settings],
+        id="email_delivery",
         max_instances=1,
         coalesce=True,
     )

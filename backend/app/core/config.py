@@ -80,13 +80,18 @@ class Settings(BaseSettings):
         default=587, validation_alias=AliasChoices("SMTP_PORT", "VENA_SMTP_PORT")
     )
     smtp_username: str = Field(
-        default="", validation_alias=AliasChoices("SMTP_USERNAME", "VENA_SMTP_USERNAME")
+        default="",
+        validation_alias=AliasChoices("SMTP_USER", "SMTP_USERNAME", "VENA_SMTP_USERNAME"),
     )
-    smtp_password: str = Field(
-        default="", validation_alias=AliasChoices("SMTP_PASSWORD", "VENA_SMTP_PASSWORD")
+    smtp_password: SecretStr = Field(
+        default=SecretStr(""), validation_alias=AliasChoices("SMTP_PASSWORD", "VENA_SMTP_PASSWORD")
     )
     smtp_from: str = Field(default="", validation_alias=AliasChoices("SMTP_FROM", "VENA_SMTP_FROM"))
     smtp_tls: bool = Field(default=True, validation_alias=AliasChoices("SMTP_TLS", "VENA_SMTP_TLS"))
+
+    smtp_secure: bool = Field(
+        default=False, validation_alias=AliasChoices("SMTP_SECURE", "VENA_SMTP_SECURE")
+    )
 
     @property
     def smtp_configured(self) -> bool:

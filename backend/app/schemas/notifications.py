@@ -52,6 +52,8 @@ class RecipientGroup(BaseModel):
 class NotificationRule(BaseModel):
     id: str
     trigger: Literal[
+        "new_events",
+        "alarm_event",
         "critical_risk",
         "risk_horizon_24h",
         "new_pattern",
@@ -62,13 +64,13 @@ class NotificationRule(BaseModel):
     severity: NotificationSeverity
     recipients: list[str] = []
     channels: list[Literal["in_app", "email"]] = ["in_app"]
-    cooldown_minutes: int = 240
+    cooldown_minutes: int = Field(default=240, ge=0, le=10080)
     enabled: bool = True
 
 
 class DigestSettings(BaseModel):
     id: str = "morning_brief"
-    name: str = "Morning brief"
+    name: str = "Утренняя сводка"
     enabled: bool = True
     hour: int = 8
     minute: int = 0

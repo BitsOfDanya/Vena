@@ -313,6 +313,16 @@ def apply_import(
         session.add(
             ImportOutbox(id=run.id, payload=json.dumps({"kind": "journal", "run_id": run.id}))
         )
+    if run.kind == "journal" and counts["created"]:
+        from app.domain.notifications import notify_events
+
+        notify_events(
+            session,
+            settings,
+            counts["created"],
+            0,
+            "Загружен исторический журнал. Прошлые тревоги не являются текущими авариями.",
+        )
     run.status = "success"
     run.finished_at = utcnow()
     result = json.loads(run.result)
