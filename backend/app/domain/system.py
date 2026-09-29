@@ -73,8 +73,6 @@ def system_notices(settings: Settings) -> list[SystemNotice]:
         )
     elif status.stale and status.age_seconds is not None:
         days = status.age_seconds // 86_400
-        # Local / seeded stands show a fixed journal snapshot on purpose —
-        # treat that as demo context, not a red failure banner.
         demo_stand = settings.environment in ("local", "test") or settings.seed_demo
         if demo_stand:
             notices.append(
@@ -157,10 +155,7 @@ def situations(session: Session, settings: Settings, limit: int = 6) -> list[Sit
         elif notification is not None and notification.status == "acknowledged":
             status = "acknowledged"
         count = len(incident.asset_ids)
-        if count > 1:
-            scope = f"{count} каналов, ведущий {lead.asset_id}"
-        else:
-            scope = lead.asset_id
+        scope = f"{count} каналов, ведущий {lead.asset_id}" if count > 1 else lead.asset_id
         location_probability = (
             incident_probability.get((incident.scenario, incident.location))
             if incident.location
@@ -219,7 +214,6 @@ def situations(session: Session, settings: Settings, limit: int = 6) -> list[Sit
 
 
 def _diversify_by_scenario(items: list[Situation], limit: int) -> list[Situation]:
-    """Round-robin across scenarios so one type cannot fill the whole queue."""
     if limit <= 0 or not items:
         return []
     buckets: dict[str, list[Situation]] = {}

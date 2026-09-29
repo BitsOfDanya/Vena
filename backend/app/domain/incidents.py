@@ -33,7 +33,6 @@ def score_text(prediction: Prediction) -> str:
 
 
 def reason_text(prediction: Prediction, hints: dict[str, str] | None = None) -> str:
-    """Human-readable cause: catalogue hint first, then labelled driver/factor."""
     if prediction.drivers:
         driver = prediction.drivers[0]
         if hints and driver.feature in hints:
