@@ -60,7 +60,7 @@ export function AppHeader({ onOpenSearch }: { onOpenSearch: () => void }) {
           type="button"
           onClick={onOpenSearch}
           aria-label="Поиск"
-          className="flex h-8 items-center gap-2 px-2 text-[13px] text-muted-foreground outline-none hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring/60"
+          className="flex h-8 cursor-pointer items-center gap-2 px-2 text-[13px] text-muted-foreground outline-none hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring/60"
         >
           <Search className="size-[18px]" aria-hidden />
           <span className="hidden font-mono text-[12px] text-faint md:inline">⌘K</span>
@@ -68,7 +68,7 @@ export function AppHeader({ onOpenSearch }: { onOpenSearch: () => void }) {
         <DropdownMenu>
           <DropdownMenuTrigger
             aria-label="Аккаунт и настройки"
-            className="flex size-8 items-center justify-center text-muted-foreground outline-none hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring/60"
+            className="flex size-8 cursor-pointer items-center justify-center text-muted-foreground outline-none hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring/60"
           >
             <UserRound className="size-[18px]" aria-hidden />
           </DropdownMenuTrigger>

@@ -104,7 +104,7 @@ export function AuthGate({ children }: { children: React.ReactNode }) {
           <p className="mt-3 border-t border-border-soft pt-3 text-[12px] leading-relaxed text-muted-foreground">
             После входа: <span className="text-foreground">Пульс</span> → карточка инцидента →{" "}
             <span className="text-foreground">Создать работу</span>. Для руководства:{" "}
-            <span className="text-foreground">Сводка</span> и <span className="text-foreground">Эффект</span>.
+            <span className="text-foreground">Дашборд</span> и <span className="text-foreground">Эффект</span>.
           </p>
         </div>
       </form>

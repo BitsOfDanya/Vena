@@ -134,7 +134,7 @@ export function EffectPage() {
             Печать / PDF
           </Button>
           <Button asChild variant="outline" size="sm">
-            <Link href="/dashboard">К сводке</Link>
+            <Link href="/dashboard">К дашборду</Link>
           </Button>
         </div>
       </div>

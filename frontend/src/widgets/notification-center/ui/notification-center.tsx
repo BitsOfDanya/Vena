@@ -61,7 +61,7 @@ export function NotificationCenter() {
     <Popover open={open} onOpenChange={openCenter}>
       <PopoverTrigger
         aria-label={unread.length > 0 ? `Уведомления, ${unread.length} непрочитанных` : "Уведомления"}
-        className="relative flex size-8 items-center justify-center text-muted-foreground outline-none hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring/60"
+        className="relative flex size-8 cursor-pointer items-center justify-center text-muted-foreground outline-none hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring/60"
       >
         <Bell className="size-[18px]" aria-hidden />
         {unread.length > 0 ? (

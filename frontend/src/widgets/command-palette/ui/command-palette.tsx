@@ -27,7 +27,7 @@ const NAVIGATION = [
   { href: "/actions", label: "Работы", icon: ListChecks },
   { href: "/alarms", label: "Алармы", icon: BellRing },
   { href: "/journal", label: "Журнал", icon: ListChecks },
-  { href: "/dashboard", label: "Сводка", icon: LayoutDashboard },
+  { href: "/dashboard", label: "Дашборд", icon: LayoutDashboard },
   { href: "/effect", label: "Эффект", icon: LayoutDashboard },
 ] as const
 

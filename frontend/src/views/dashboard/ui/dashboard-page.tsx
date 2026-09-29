@@ -438,7 +438,7 @@ export function DashboardPage() {
     <div className="flex size-full min-h-0 flex-col">
       <div className="flex shrink-0 flex-wrap items-center justify-between gap-4 border-b border-border px-6 py-4">
         <div className="flex items-baseline gap-4">
-          <h1 className="text-[26px] font-semibold tracking-[-0.01em]">Сводка</h1>
+          <h1 className="text-[26px] font-semibold tracking-[-0.01em]">Дашборд</h1>
           <span className="font-mono text-[12px] text-faint">горизонт {horizon}ч</span>
         </div>
         <div className="flex flex-wrap items-center gap-3">
