@@ -36,16 +36,14 @@ function Module({
     <button
       type="button"
       onClick={onAction}
-      className="group flex min-w-0 cursor-pointer flex-col rounded-lg border border-border bg-elevated p-4 text-left shadow-[var(--shadow-card)] outline-none transition-colors hover:border-input focus-visible:ring-2 focus-visible:ring-ring/60"
+      className="group relative flex min-w-0 cursor-pointer flex-col border-r border-b border-border bg-elevated px-4 pt-3.5 pb-3 text-left outline-none transition-colors hover:bg-accent/40 focus-visible:z-10 focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-ring/60"
     >
-      <span className="flex items-center gap-2 text-[13px] font-medium text-muted-foreground">
-        {tone === "critical" || tone === "attention" ? (
-          <span aria-hidden className={cn("size-2 rounded-full", tone === "critical" ? "bg-status-critical" : "bg-status-attention")} />
-        ) : null}
-        {title}
-      </span>
+      {tone === "critical" || tone === "attention" ? (
+        <span aria-hidden className={cn("absolute inset-x-0 top-0 h-[3px]", tone === "critical" ? "bg-status-critical" : "bg-status-attention")} />
+      ) : null}
+      <span className="text-[12.5px] font-medium text-muted-foreground">{title}</span>
       <span className="mt-2 flex items-baseline gap-2">
-        <span className={cn("text-[30px] leading-none font-semibold tabular-nums", TONE_TEXT[tone])}>{value}</span>
+        <span className={cn("font-mono text-[30px] leading-none font-medium tabular-nums", TONE_TEXT[tone])}>{value}</span>
         <span className="text-[14px] text-muted-foreground">{unit}</span>
       </span>
       <span className="mt-2 min-h-[36px] space-y-0.5">
@@ -129,7 +127,7 @@ export function PulseSummaryModules({
 
   if (apiMode) {
     return (
-      <div className="grid grid-cols-2 gap-3 lg:grid-cols-4">
+      <div className="grid grid-cols-2 border-t border-l border-border lg:grid-cols-4">
         <Module
           title="Критично"
           value={predictionsUnavailable ? "—" : formatCount(criticalCount)}

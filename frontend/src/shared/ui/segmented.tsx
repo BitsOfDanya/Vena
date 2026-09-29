@@ -19,7 +19,11 @@ type SegmentedProps<T extends string | number> = {
 
 export function Segmented<T extends string | number>({ value, options, onChange, label, className }: SegmentedProps<T>) {
   return (
-    <div role="radiogroup" aria-label={label} className={cn("inline-flex h-8 items-stretch gap-0.5 rounded-md bg-surface p-0.5", className)}>
+    <div
+      role="radiogroup"
+      aria-label={label}
+      className={cn("inline-flex h-8 items-stretch divide-x divide-border border border-border bg-elevated", className)}
+    >
       {options.map((option) => {
         const active = option.value === value
         return (
@@ -32,12 +36,13 @@ export function Segmented<T extends string | number>({ value, options, onChange,
             title={option.title}
             onClick={() => onChange(option.value)}
             className={cn(
-              "relative cursor-pointer rounded-[5px] px-2.5 text-[13px] whitespace-nowrap outline-none transition-colors focus-visible:z-10 focus-visible:ring-2 focus-visible:ring-ring/60",
-              active ? "bg-elevated font-medium text-foreground shadow-sm" : "text-muted-foreground hover:text-foreground",
-              option.disabled && "cursor-not-allowed opacity-40 hover:text-muted-foreground"
+              "relative cursor-pointer px-3 text-[13px] whitespace-nowrap outline-none transition-colors focus-visible:z-10 focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-ring/60",
+              active ? "bg-accent font-medium text-foreground" : "text-muted-foreground hover:bg-accent/50 hover:text-foreground",
+              option.disabled && "cursor-not-allowed opacity-40 hover:bg-transparent hover:text-muted-foreground"
             )}
           >
             {option.label}
+            {active ? <span aria-hidden className="absolute inset-x-0 -bottom-px h-[2px] bg-vena" /> : null}
           </button>
         )
       })}

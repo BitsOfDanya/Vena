@@ -75,7 +75,7 @@ export function AppHeader({ onOpenSearch, onOpenMenu }: { onOpenSearch: () => vo
         <NotificationCenter />
         <DropdownMenu>
           <DropdownMenuTrigger aria-label="Аккаунт и настройки" className={cn(iconButton, "gap-2 px-1.5 sm:w-auto")}>
-            <span className="flex size-7 items-center justify-center rounded-full bg-accent text-foreground">
+            <span className="flex size-7 items-center justify-center border border-border bg-accent text-foreground">
               <UserRound className="size-4" aria-hidden />
             </span>
           </DropdownMenuTrigger>

@@ -88,7 +88,9 @@ export function ActionsPage() {
           <p className="text-[13px] text-muted-foreground">Что сделать · где · отметить результат на месте</p>
           <Segmented label="Горизонт" value={hours} onChange={setHours} options={HORIZONS} />
         </div>
-        <InspectionPlanPanel className="px-4 pb-3" onCreate={createFromInspection} />
+        <div className="px-4 pb-3">
+          <InspectionPlanPanel onCreate={createFromInspection} />
+        </div>
         {actions.isPending ? (
           <LoadingBar />
         ) : actions.isError ? (
@@ -162,25 +164,23 @@ export function ActionsPage() {
   return (
     <div className="flex size-full min-h-0 flex-col">
       <div className="flex shrink-0 flex-wrap items-center gap-x-8 gap-y-3 px-6 pt-4 pb-4">
-        <h1 className="flex items-baseline gap-3">
-          <span className="text-[26px] font-semibold tracking-[-0.01em]">План работ</span>
-          <span className="font-mono text-[13px] text-faint">след. {hours}ч</span>
-        </h1>
-        <p className="flex items-center gap-6 text-[13px] text-muted-foreground">
-          <span>
-            Предложено <span className="ml-1 font-mono text-[15px] text-foreground tabular-nums">{String(suggested.length).padStart(2, "0")}</span>
-          </span>
-          <span>
-            В плане <span className="ml-1 font-mono text-[15px] text-foreground tabular-nums">{String(count("planned")).padStart(2, "0")}</span>
-          </span>
-          <span>
-            Назначено <span className="ml-1 font-mono text-[15px] text-foreground tabular-nums">{String(count("assigned")).padStart(2, "0")}</span>
-          </span>
-          <span>
-            В работе{" "}
-            <span className="ml-1 font-mono text-[15px] text-foreground tabular-nums">{String(count("in_progress")).padStart(2, "0")}</span>
-          </span>
-        </p>
+        <div>
+          <h1 className="text-[24px] font-semibold tracking-[-0.01em]">План работ</h1>
+          <p className="text-[13px] text-muted-foreground">Работы на ближайшие {hours} ч и предложения моделей</p>
+        </div>
+        <ul className="flex flex-wrap items-center gap-2 text-[13px]">
+          {[
+            ["Предложено", suggested.length],
+            ["В плане", count("planned")],
+            ["Назначено", count("assigned")],
+            ["В работе", count("in_progress")],
+          ].map(([label, value]) => (
+            <li key={label} className="flex items-baseline gap-1.5 rounded-md border border-border bg-elevated px-2.5 py-1">
+              <span className="text-muted-foreground">{label}</span>
+              <span className="font-semibold tabular-nums">{value}</span>
+            </li>
+          ))}
+        </ul>
         <div className="ml-auto flex items-center gap-2.5">
           <Segmented label="Горизонт планирования" value={hours} onChange={setHours} options={HORIZONS} />
           <Button
@@ -197,7 +197,9 @@ export function ActionsPage() {
 
       <div className="flex min-h-0 flex-1">
         <div className="min-w-0 flex-1 overflow-auto">
-          <InspectionPlanPanel className="px-6 pb-4" onCreate={createFromInspection} />
+          <div className="px-6 pb-4">
+            <InspectionPlanPanel onCreate={createFromInspection} />
+          </div>
           {actions.isPending ? (
             <LoadingBar />
           ) : actions.isError ? (

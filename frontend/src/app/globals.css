@@ -99,7 +99,7 @@
   --chart-3: #c7811a;
   --chart-4: #56625e;
   --chart-5: #c8413c;
-  --radius: 0.5rem;
+  --radius: 0.125rem;
   --sidebar: #f5f6f4;
   --sidebar-foreground: #14201d;
   --sidebar-primary: #0f766e;
@@ -108,7 +108,7 @@
   --sidebar-accent-foreground: #14201d;
   --sidebar-border: #d5dad6;
   --sidebar-ring: #0f766e;
-  --shadow-card: 0 1px 2px rgb(20 32 29 / 0.05), 0 1px 1px rgb(20 32 29 / 0.03);
+  --shadow-card: none;
   color-scheme: light;
 }
 
@@ -157,7 +157,7 @@
   --sidebar-accent-foreground: #e3ebe8;
   --sidebar-border: #253230;
   --sidebar-ring: #2bb3a3;
-  --shadow-card: 0 1px 2px rgb(0 0 0 / 0.3);
+  --shadow-card: none;
   color-scheme: dark;
 }
 

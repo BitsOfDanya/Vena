@@ -199,7 +199,7 @@ export function EffectPage() {
   return (
     <div className="flex size-full min-h-0 flex-col overflow-auto print:overflow-visible">
       <div className="flex shrink-0 flex-wrap items-center gap-x-6 gap-y-3 px-6 pt-4 pb-3 print:border-b print:pb-4">
-        <h1 className="text-[26px] font-semibold tracking-[-0.01em]">Эффект</h1>
+        <h1 className="text-[24px] font-semibold tracking-[-0.01em]">Эффект</h1>
         <p className="text-[13px] text-muted-foreground">Предсказано · опережение · прогноз против факта · решения</p>
         <div className="ml-auto flex flex-wrap items-center gap-2 print:hidden">
           <Button variant="outline" size="sm" disabled={downloading !== null} onClick={() => runDownload("xlsx")}>

@@ -37,7 +37,7 @@ export function NavList({ collapsed = false, onNavigate }: { collapsed?: boolean
                     : "text-muted-foreground hover:bg-accent/60 hover:text-foreground"
                 )}
               >
-                {active ? <span aria-hidden className="absolute inset-y-2 left-0 w-[3px] rounded-full bg-vena" /> : null}
+                {active ? <span aria-hidden className="absolute inset-y-0 left-0 w-[3px] bg-vena" /> : null}
                 <Icon className={cn("size-[18px] shrink-0", active ? "text-vena" : "")} aria-hidden />
                 {collapsed ? <span className="sr-only">{item.label}</span> : <span className="truncate">{item.label}</span>}
               </Link>

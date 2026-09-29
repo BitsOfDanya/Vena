@@ -281,7 +281,7 @@ export function PulsePage() {
             <section aria-label="Требуют внимания" className="flex min-w-0 flex-col rounded-lg border border-border bg-elevated shadow-[var(--shadow-card)]">
               <div className="flex flex-wrap items-center gap-x-4 gap-y-2 border-b border-border px-4 py-3">
                 <h2 className="text-[16px] font-semibold">Требуют внимания</h2>
-                <span className="rounded-full bg-surface px-2 py-0.5 text-[12px] font-medium tabular-nums text-muted-foreground">
+                <span className="border border-border px-1.5 font-mono text-[12px] tabular-nums text-muted-foreground">
                   {filtered.length}
                 </span>
                 <div className="w-full overflow-x-auto sm:ml-auto sm:w-auto">

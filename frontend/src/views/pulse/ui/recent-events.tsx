@@ -65,7 +65,7 @@ export function RecentEvents({ hours, onSelect }: { hours: number; onSelect: (id
               >
                 <span
                   aria-hidden
-                  className={cn("mt-1.5 size-2 shrink-0 rounded-full", event.alarm ? "bg-status-critical" : "bg-status-attention")}
+                  className={cn("mt-1.5 size-2 shrink-0", event.alarm ? "bg-status-critical" : "bg-status-attention")}
                 />
                 <span className="min-w-0 flex-1">
                   <span className="flex items-baseline gap-2">

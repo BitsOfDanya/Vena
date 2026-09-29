@@ -12,6 +12,7 @@ import { useDashboardPredictions, useSnapshotStatus, modelLabel } from "@/entiti
 import { CreateActionSheet, type ActionDraft } from "@/features/create-action"
 import { useWorkspace } from "@/features/workspace"
 import { workflowMode } from "@/shared/config/env"
+import { formatCount } from "@/shared/lib/plural"
 import { formatDateTime } from "@/shared/lib/time"
 import { cn } from "@/shared/lib/utils"
 import { Button } from "@/shared/ui/button"
@@ -584,7 +585,7 @@ export function DashboardPage() {
               <div key={item.label} className="border-r border-border-soft px-5 py-5 last:border-0">
                 <p className="text-[12px] font-medium text-muted-foreground">{item.label}</p>
                 <p className={cn("mt-3 font-mono text-[38px] leading-none tabular-nums", item.tone)}>
-                  {sourceUnavailable || item.value === null ? "—" : String(item.value).padStart(2, "0")}
+                  {sourceUnavailable || item.value === null ? "—" : formatCount(item.value)}
                 </p>
                 <p className="mt-3 text-[11px] text-faint">{item.value === null ? "Данные работ недоступны" : item.hint}</p>
               </div>

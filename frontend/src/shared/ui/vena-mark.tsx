@@ -3,7 +3,7 @@ import { cn } from "@/shared/lib/utils"
 export function VenaMark({ className, tile = false }: { className?: string; tile?: boolean }) {
   return (
     <svg aria-hidden viewBox="0 0 32 32" className={cn("size-[26px] shrink-0", className)}>
-      {tile ? <rect width="32" height="32" rx="8" fill="var(--vena)" /> : null}
+      {tile ? <rect width="32" height="32" rx="2" fill="var(--vena)" /> : null}
       <g
         fill="none"
         stroke={tile ? "var(--primary-foreground)" : "currentColor"}

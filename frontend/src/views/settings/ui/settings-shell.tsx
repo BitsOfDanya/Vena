@@ -24,7 +24,7 @@ export function SettingsShell({ title, descriptor, children }: { title: string; 
     <div className="flex size-full min-h-0 flex-col">
       <div className="shrink-0 px-6 pt-4">
         <h1 className="flex items-baseline gap-3">
-          <span className="text-[26px] font-semibold tracking-[-0.01em]">{title}</span>
+          <span className="text-[24px] font-semibold tracking-[-0.01em]">{title}</span>
           <span className="font-mono text-[13px] text-faint">{descriptor}</span>
         </h1>
         <nav aria-label="Настройки" className="mt-3 flex gap-5 border-b border-border">

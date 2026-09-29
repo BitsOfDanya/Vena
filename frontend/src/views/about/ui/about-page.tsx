@@ -134,7 +134,7 @@ export function AboutPage() {
             <ul className="mt-5 grid gap-3 sm:grid-cols-2">
               {TEAM.map((member) => (
                 <li key={member.name} className="flex gap-3 rounded-md border border-border p-3">
-                  <span className="flex size-9 shrink-0 items-center justify-center rounded-full bg-vena text-[14px] font-semibold text-primary-foreground">
+                  <span className="flex size-9 shrink-0 items-center justify-center bg-vena font-mono text-[14px] font-medium text-primary-foreground">
                     {member.name[0]}
                   </span>
                   <span className="min-w-0">

@@ -89,7 +89,7 @@ export function JournalPage() {
     <div className="flex size-full min-h-0 flex-col">
       <div className="flex shrink-0 flex-wrap items-center justify-between gap-4 border-b border-border px-6 py-4">
         <div className="flex items-baseline gap-4">
-          <h1 className="text-[26px] font-semibold tracking-[-0.01em]">Журнал прогнозов</h1>
+          <h1 className="text-[24px] font-semibold tracking-[-0.01em]">Журнал прогнозов</h1>
           <span className="font-mono text-[12px] text-faint">прогноз · решение · результат</span>
         </div>
         <div className="flex items-center gap-3">

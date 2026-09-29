@@ -181,16 +181,17 @@ function SituationCard({
 
   return (
     <li className="relative px-4 py-4">
-      <span aria-hidden className={cn("absolute inset-y-4 left-0 w-[3px] rounded-r-full", critical ? "bg-status-critical" : "bg-status-attention")} />
+      <span aria-hidden className={cn("absolute inset-y-0 left-0 w-[3px]", critical ? "bg-status-critical" : "bg-status-attention")} />
       <div className="flex items-start gap-4">
         <div className="min-w-0 flex-1">
           <div className="flex flex-wrap items-center gap-x-2.5 gap-y-1">
             <span
               className={cn(
-                "rounded-full px-2 py-0.5 text-[11.5px] font-medium",
-                critical ? "bg-status-critical/12 text-status-critical" : "bg-status-attention/14 text-status-attention"
+                "inline-flex items-center gap-1.5 text-[12px] font-semibold",
+                critical ? "text-status-critical" : "text-status-attention"
               )}
             >
+              <span aria-hidden className={cn("size-2", critical ? "bg-status-critical" : "bg-status-attention")} />
               {critical ? "Критично" : "Внимание"}
             </span>
             {scenarioLabel(situation.scenario) ? (
@@ -204,8 +205,8 @@ function SituationCard({
           {whereText(situation) ? <p className="mt-0.5 text-[13px] text-muted-foreground">{whereText(situation)}</p> : null}
         </div>
         {probability !== null ? (
-          <div className="shrink-0 text-right">
-            <p className={cn("text-[26px] leading-none font-semibold tabular-nums", critical ? "text-status-critical" : "text-status-attention")}>
+          <div className="shrink-0 border-l border-border pl-4 text-right">
+            <p className={cn("font-mono text-[26px] leading-none font-medium tabular-nums", critical ? "text-status-critical" : "text-status-attention")}>
               {probability}%
             </p>
             {horizon ? <p className="mt-1 text-[12px] text-muted-foreground">{horizon}</p> : null}
@@ -220,7 +221,7 @@ function SituationCard({
       </dl>
 
       {open ? (
-        <div className="mt-3 space-y-3 rounded-md bg-surface/60 p-3">
+        <div className="mt-3 space-y-3 border-l-2 border-border py-1 pl-3">
           {actions.length > 1 ? (
             <div>
               <p className="text-[12px] font-medium text-faint">Порядок действий</p>
@@ -260,7 +261,10 @@ function SituationCard({
             Создать работу
           </button>
         ) : (
-          <span className="rounded-md bg-status-normal/12 px-2.5 py-1 text-[12.5px] font-medium text-status-normal">Работа создана</span>
+          <span className="inline-flex h-8 items-center gap-1.5 border border-status-normal/40 px-2.5 text-[12.5px] font-medium text-status-normal">
+            <span aria-hidden className="size-2 bg-status-normal" />
+            Работа создана
+          </span>
         )}
         {situation.status === "new" ? (
           <button

@@ -358,7 +358,7 @@ export function AlarmsPage() {
     <div className="flex size-full min-h-0 flex-col">
       <div className="flex shrink-0 flex-wrap items-center justify-between gap-4 border-b border-border px-6 py-4">
         <div className="flex items-baseline gap-4">
-          <h1 className="text-[26px] font-semibold tracking-[-0.01em]">Алармы</h1>
+          <h1 className="text-[24px] font-semibold tracking-[-0.01em]">Алармы</h1>
           <span className="font-mono text-[12px] text-faint">поддержка проверки</span>
           <a href="/pulse" className="text-[13px] text-vena underline-offset-4 hover:underline">
             К пульсу →
