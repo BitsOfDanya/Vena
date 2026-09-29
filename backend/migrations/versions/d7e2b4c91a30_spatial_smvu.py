@@ -1,10 +1,3 @@
-"""Add spatial_layers and smvu_ingest_state.
-
-Revision ID: d7e2b4c91a30
-Revises: c4f8a91e2b10
-Create Date: 2026-09-26
-"""
-
 from collections.abc import Sequence
 
 import sqlalchemy as sa

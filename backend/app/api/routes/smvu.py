@@ -31,8 +31,6 @@ class SmvuStatus(BaseModel):
 
 
 class SmvuEventIn(BaseModel):
-    """One journal record (ТЗ, appendix 1): record id, channel, time, value, alarm flag."""
-
     event_id: str = Field(min_length=1, max_length=40)
     channel_id: str = Field(min_length=1, max_length=32)
     ts: datetime
@@ -60,12 +58,6 @@ def ingest_smvu_batch(
     settings: SettingsDep,
     principal: WriterDep,
 ) -> SmvuStatus:
-    """Accept a SMVU event batch.
-
-    Events are spooled for the ML stream worker, which rescores the affected
-    channels and publishes a new snapshot; a batch without events only records
-    freshness.
-    """
     event_count = body.event_count
     last_event_at = body.last_event_at
     if body.events:

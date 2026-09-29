@@ -84,6 +84,5 @@ def test_smvu_events_are_spooled_for_the_stream(client: TestClient, monkeypatch,
     assert len(files) == 1
     records = [json.loads(line) for line in files[0].read_text(encoding="utf-8").splitlines()]
     assert records[0]["ts"] == "2026-07-01T09:00:00"
-    # An offset is converted to the journal's local time (Europe/Moscow, UTC+3).
     assert records[1]["ts"] == "2026-07-01T09:05:00"
     assert records[1]["alarm"] is False

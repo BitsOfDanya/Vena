@@ -190,8 +190,6 @@ class SpatialLayer(Base):
 
 
 class SmvuIngestState(Base):
-    """Last accepted SMVU event batch metadata (integration hook, not full journal)."""
-
     __tablename__ = "smvu_ingest_state"
 
     id: Mapped[str] = mapped_column(String(32), primary_key=True, default="default")

@@ -1,17 +1,8 @@
-"""Group channel-level predictions into incidents.
-
-Channels at one location often react to one physical cause: a substation outage
-de-energises every phase monitor behind it within seconds. Presenting each channel
-as its own critical situation floods the dispatcher, so predictions that share a
-scenario and a location group become one incident.
-"""
-
 from collections.abc import Iterable
 from dataclasses import dataclass, field
 
 from app.schemas.predictions import Prediction, RiskLevel
 
-# Incident scenario forecast by each device model (ТЗ, section 6).
 SCENARIO_BY_DEVICE = {
     "pump": "flooding",
     "fan": "ventilation",
@@ -30,23 +21,18 @@ SCENARIO_LABELS = {
     "equipment": "Отказ оборудования",
 }
 
-# Tags look like "16-2.1.1.4.22.": object id, then the engineering-system tree.
-# Three levels (object and two sections) keep one collector section together
-# without merging unrelated systems of the same object.
 LOCATION_LEVELS = 3
 
 LEVEL_RANK: dict[RiskLevel, int] = {"critical": 0, "attention": 1, "observe": 2, "normal": 3}
 
 
 def score_text(prediction: Prediction) -> str:
-    """Probability as a percentage for calibrated models, the raw score otherwise."""
     if prediction.score_type == "calibrated_probability":
         return f"{prediction.score:.0%}"
     return f"score {prediction.score:.3f}"
 
 
 def reason_text(prediction: Prediction) -> str:
-    """Strongest driver of the forecast, or the largest raw factor for older snapshots."""
     if prediction.drivers:
         driver = prediction.drivers[0]
         if driver.value is None:
@@ -76,9 +62,25 @@ def location_group(tag: str | None) -> str | None:
     return ".".join(parts[:LOCATION_LEVELS])
 
 
+OBJECTS: dict[str, str] = {}
+
+
+def remember_objects(objects: dict[str, str]) -> None:
+    OBJECTS.clear()
+    OBJECTS.update(objects)
+
+
+def object_of(group: str | None) -> str | None:
+    if not group:
+        return None
+    return OBJECTS.get(group) or group.partition("-")[0]
+
+
 def location_label(group: str | None) -> str | None:
     if not group:
         return None
+    if group in OBJECTS:
+        return f"Объект {OBJECTS[group]} · {group}"
     obj, _, section = group.partition("-")
     return f"Объект {obj} · {section}" if section else f"Объект {obj}"
 
@@ -120,7 +122,6 @@ def group_incidents(predictions: Iterable[Prediction]) -> list[Incident]:
     incidents: dict[str, Incident] = {}
     for prediction in predictions:
         scenario = prediction.scenario
-        # Channels without a location tag cannot be grouped safely.
         group = prediction.location_group or f"asset:{prediction.asset_id}"
         key = f"{scenario}:{group}"
         incident = incidents.get(key)

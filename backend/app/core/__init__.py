@@ -1,1 +1,1 @@
-"""Application configuration and infrastructure."""
+pass

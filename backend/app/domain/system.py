@@ -13,8 +13,6 @@ from app.domain.recommendations import recommend
 from app.schemas.predictions import Prediction
 from app.schemas.system import HealthComponents, LocationHistory, Situation, SystemNotice
 
-# Deterministic product priority: risk level first, then score change, then
-# the shortest forecast horizon, then the newest prediction.
 LEVEL_RANK = {"critical": 0, "attention": 1, "observe": 2, "normal": 3}
 
 
@@ -110,8 +108,6 @@ def situations(session: Session, settings: Settings, limit: int = 6) -> list[Sit
         if recent_notification.asset_id is not None:
             notifications.setdefault(recent_notification.asset_id, recent_notification)
 
-    # One asset keeps only its strongest model before grouping, so a pump with
-    # 24h and 72h forecasts is counted once inside its incident.
     best: dict[str, Prediction] = {}
     for prediction in source.all():
         if prediction.risk_level not in ("critical", "attention"):
@@ -147,8 +143,6 @@ def situations(session: Session, settings: Settings, limit: int = 6) -> list[Sit
             if incident.location
             else None
         )
-        # The location model scores once a day, the channel model at a fresh event;
-        # the chance that any channel fails is never below the lead channel's.
         if location_probability is not None and lead.score_type == "calibrated_probability":
             location_probability = max(location_probability, lead.score)
         location_text = (

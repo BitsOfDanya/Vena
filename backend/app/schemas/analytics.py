@@ -44,7 +44,7 @@ class EffectReport(BaseModel):
     lead_time: list[ModelEffect]
     alarms_30d: int
     alarms_to_verify: int
-    # Share of uncorroborated alarms the verification flag filters on held-out data.
+    alarms_maintenance: int
     alarm_filter_share: float | None
     access_events_30d: int
     forecasts_in_journal: int
@@ -62,7 +62,6 @@ class ForecastDay(BaseModel):
 
 class ForecastTotal(BaseModel):
     expected: float
-    # 80 % interval of the 7-day total.
     low: float
     high: float
 
@@ -74,8 +73,6 @@ class BacktestDay(BaseModel):
 
 
 class EventTypeStats(BaseModel):
-    """Statistics and seasonal forecast of one incident type (ТЗ, section 8)."""
-
     event_type: str
     title: str
     scenario: str
@@ -87,7 +84,6 @@ class EventTypeStats(BaseModel):
     forecast_method: str | None
     forecast: list[ForecastDay]
     next_7_days: ForecastTotal | None
-    # Error of 7-day totals on 2026H1: the selected method and the mean of the last 28 days.
     week_error: float | None
     week_error_baseline: float | None
     backtest: list[BacktestDay]

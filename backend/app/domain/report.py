@@ -1,5 +1,3 @@
-"""Management report as an XLSX workbook (ТЗ, section 8)."""
-
 import csv
 from datetime import datetime
 from io import BytesIO, StringIO
@@ -212,7 +210,6 @@ def _export_value(prediction: Prediction, field: str) -> str:
 
 
 def predictions_csv(predictions: list[Prediction]) -> bytes:
-    """Forecasts as CSV for file exchange (ТЗ, section 7)."""
     buffer = StringIO()
     writer = csv.writer(buffer)
     writer.writerow(EXPORT_FIELDS)
@@ -222,7 +219,6 @@ def predictions_csv(predictions: list[Prediction]) -> bytes:
 
 
 def predictions_xml(predictions: list[Prediction], snapshot: str | None) -> bytes:
-    """Forecasts as XML for systems that exchange XML (ТЗ, section 7)."""
     root = Element("predictions", {"snapshot": snapshot or "", "count": str(len(predictions))})
     for prediction in predictions:
         node = SubElement(root, "prediction")

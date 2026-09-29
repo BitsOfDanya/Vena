@@ -1,10 +1,3 @@
-"""Forecast journal: every forecast that reached the dispatcher and its handling.
-
-The journal is the register required by the ТЗ (section 10): the forecast, the
-dispatcher decision with its catalogue reason, and the crew result. Decided rows
-are the labelled feedback exported for retraining.
-"""
-
 from sqlalchemy import select
 from sqlalchemy.orm import Session
 

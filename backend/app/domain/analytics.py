@@ -1,5 +1,3 @@
-"""Asset tree for the network view and the effect report for management."""
-
 import json
 from pathlib import Path
 from typing import Any
@@ -9,7 +7,7 @@ from sqlalchemy.orm import Session
 from app.core.config import Settings
 from app.domain import journal as journal_service
 from app.domain.health import load_calibration, location_health
-from app.domain.incidents import LEVEL_RANK, group_incidents, location_label
+from app.domain.incidents import LEVEL_RANK, group_incidents, location_label, object_of
 from app.domain.predictions import PredictionSource
 from app.schemas.analytics import (
     BacktestDay,
@@ -40,7 +38,6 @@ def _strongest(predictions: list[Prediction]) -> dict[str, Prediction]:
 
 
 def asset_tree(source: PredictionSource) -> list[ObjectNode]:
-    """Object → section → channel from the SMVU tags, with health and risks."""
     predictions = source.all()
     health = location_health(
         predictions, source.incident_probabilities(), load_calibration(source.settings.ml_dir)
@@ -53,7 +50,7 @@ def asset_tree(source: PredictionSource) -> list[ObjectNode]:
     for group, members in sections.items():
         members.sort(key=lambda item: (LEVEL_RANK[item.risk_level], -item.score))
         state = health.get(group)
-        objects.setdefault(group.split("-", 1)[0], []).append(
+        objects.setdefault(object_of(group) or group, []).append(
             SectionNode(
                 group=group,
                 label=location_label(group),
@@ -143,6 +140,7 @@ def effect(session: Session, settings: Settings, source: PredictionSource) -> Ef
         lead_time=_lead_times(settings),
         alarms_30d=len(alarms),
         alarms_to_verify=sum(1 for item in alarms if item.needs_verification),
+        alarms_maintenance=sum(1 for item in alarms if item.maintenance),
         alarm_filter_share=operating.get("filtered_uncorroborated"),
         access_events_30d=len(source.access_events()) if source.available else 0,
         forecasts_in_journal=summary.total,
@@ -156,8 +154,6 @@ def effect(session: Session, settings: Settings, source: PredictionSource) -> Ef
     )
 
 
-# Incident types of the seasonal analytics: the ML key, title, scenario and the
-# models that forecast the type channel by channel.
 EVENT_TYPES = (
     ("pump_fault", "Отказ насоса", "flooding", ("pump_24h", "pump_72h")),
     ("flooding", "Затопление камеры", "flooding", ("flood_24h",)),
@@ -169,7 +165,6 @@ EVENT_TYPES = (
 
 
 def event_types(settings: Settings, source: PredictionSource) -> list[EventTypeStats]:
-    """Current risk, past volume, seasonal profile and 14-day forecast per incident type."""
     seasonality = _read(settings.ml_dir / "results" / "seasonality.json") or {}
     workload = (_read(settings.ml_dir / "results" / "workload_forecast.json") or {}).get(
         "scenarios", {}

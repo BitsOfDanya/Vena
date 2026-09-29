@@ -446,7 +446,8 @@ def _snapshot_with_sections(ml_root: Path) -> None:
             "horizon_hours": 24,
             "model_id": "phase_24h",
             "score_type": "calibrated_probability",
-            "name": "Фаза ПК12",
+            "name": "ФАНС1 ПК300",
+            "object_id": 5567,
             "drivers": [
                 {
                     "feature": "failures_1d",
@@ -491,6 +492,15 @@ def _snapshot_with_sections(ml_root: Path) -> None:
                     "power_loss": {"title": "Проверить питание", "actions": ["Проверить ввод"]}
                 },
                 "drivers": {"failures_1d": "Сбои повторяются"},
+                "feeders": [
+                    {
+                        "pattern": "ФАНС",
+                        "kind": "Фидер насосной станции",
+                        "scenario": "flooding",
+                        "consequence": "Насосы без питания",
+                        "action": "Проверить уровень в приямке",
+                    }
+                ],
             }
         ),
         encoding="utf-8",
@@ -505,8 +515,11 @@ def test_situation_explains_the_incident(client: TestClient, ml_root: Path) -> N
     assert situation["recommendation"]["title"] == "Проверить питание"
     assert situation["recommendation"]["hint"] == "Сбои повторяются"
     assert situation["history"]["episodes_365d"] == 40
-    # Power 0.83 and smoke 0.10 at one location: 100 * 0.17 * 0.90 = 15.
     assert situation["health_index"] == 15
+    assert situation["recommendation"]["feeder"] == "Фидер насосной станции"
+    assert situation["recommendation"]["consequence"] == "Насосы без питания"
+    assert situation["recommendation"]["actions"][0] == "Проверить уровень в приямке"
+    assert situation["location"] == "Объект 5567 · 16-2.1.1"
 
 
 def test_asset_tree_effect_and_report(client: TestClient, ml_root: Path) -> None:
@@ -516,9 +529,10 @@ def test_asset_tree_effect_and_report(client: TestClient, ml_root: Path) -> None
     effect = client.get("/api/v1/analytics/effect").json()
     report = client.get("/api/v1/reports/management.xlsx")
 
-    assert [item["object_id"] for item in tree] == ["16", "798"]
+    assert [item["object_id"] for item in tree] == ["5567", "798"]
+    assert tree[0]["label"] == "Объект 5567"
     assert tree[0]["health_index"] == 15
-    assert tree[0]["sections"][0]["channels"][0]["name"] == "Фаза ПК12"
+    assert tree[0]["sections"][0]["channels"][0]["name"] == "ФАНС1 ПК300"
     assert tree[1]["health_index"] == 95
     assert effect["channels_at_risk"] == 1
     assert effect["incidents"] == 1

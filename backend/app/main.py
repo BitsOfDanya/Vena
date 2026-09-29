@@ -17,7 +17,6 @@ from app.domain.scheduler import build_scheduler
 
 @asynccontextmanager
 async def lifespan(_: FastAPI) -> AsyncIterator[None]:
-    """Manage application resources."""
     settings = get_settings()
     if settings.auth_enabled and len(settings.jwt_secret.encode()) < 32:
         raise RuntimeError("Set VENA_JWT_SECRET to at least 32 random bytes")
@@ -30,7 +29,6 @@ async def lifespan(_: FastAPI) -> AsyncIterator[None]:
         finally:
             session.close()
     else:
-        # Spatial demo layer is required for map mode on the stand even without action seed.
         from app.domain.spatial import ensure_demo_spatial
 
         session = SessionLocal()

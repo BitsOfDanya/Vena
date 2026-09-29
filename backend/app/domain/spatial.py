@@ -104,7 +104,6 @@ def put_wkt_points(
     points: list[dict[str, str]],
     source: str = "import_wkt",
 ) -> SpatialLayer:
-    """Replace asset points from WKT POINT list; keep corridor from demo if present."""
     existing = get_feature_collection(session) or {"type": "FeatureCollection", "features": []}
     retained = [
         feature

@@ -12,7 +12,6 @@ from app.core.security import Principal, get_principal
 router = APIRouter(prefix="/ml", tags=["ml"])
 
 RESULT_GROUPS = ("tables", "formal_70_50", "new_directions")
-# Analytics reports written by the ML scripts next to directions.json.
 REPORTS = (
     "seasonality",
     "calibration",
@@ -59,7 +58,6 @@ def list_directions(settings: SettingsDep, _: ReaderDep) -> list[dict[str, Any]]
 
 @router.get("/prospective")
 def get_prospective(settings: SettingsDep, _: ReaderDep) -> Any:
-    """Forecasts checked against events that arrived after the training journal."""
     path = settings.ml_dir / "results" / "predictions" / "prospective.json"
     if not path.is_file():
         raise HTTPException(status_code=404, detail="prospective check has not started")
@@ -76,7 +74,6 @@ def get_report(name: str, settings: SettingsDep, _: ReaderDep) -> Any:
 
 @router.get("/models")
 def list_models(settings: SettingsDep, _: ReaderDep) -> list[dict[str, Any]]:
-    """Model cards: target, recipe, training years and quality on 2026H1."""
     registry = settings.ml_dir / "results" / "models.json"
     if registry.is_file():
         cards: list[dict[str, Any]] = _read_json(registry)

@@ -8,6 +8,7 @@ from app.domain.incidents import (
     LEVEL_RANK,
     location_group,
     location_label,
+    remember_objects,
     scenario_for,
 )
 from app.schemas.predictions import (
@@ -32,8 +33,6 @@ FACTOR_LABELS = {
     "time_since_last_failure_days": "Days since last failure",
 }
 
-# Model configs carry thresholds for critical/high/medium; anything below is normal.
-# The mapping is presentation only and never changes the raw model score.
 LEVEL_MAP: dict[str, RiskLevel] = {
     "critical": "critical",
     "high": "attention",
@@ -58,6 +57,21 @@ def _parse_time(value: Any) -> datetime | None:
     except ValueError:
         return None
     return parsed if parsed.tzinfo else parsed.replace(tzinfo=UTC)
+
+
+ALARM_CATEGORY = {
+    "Датчик дыма": "fire",
+    "Газовый датчик": "gas",
+    "Датчик температуры": "temperature",
+}
+
+
+def _object_id(value: Any) -> str | None:
+    try:
+        number = float(value)
+    except (TypeError, ValueError):
+        return None
+    return str(int(number)) if number == number else None
 
 
 def _factors(raw: dict[str, Any]) -> list[RiskFactor]:
@@ -91,8 +105,6 @@ def _drivers(raw: Any) -> list[Driver]:
 
 
 class PredictionSource:
-    """Reads the read-only prediction snapshot produced by the ML pipeline."""
-
     def __init__(self, settings: Settings) -> None:
         self._settings = settings
         self._snapshot_id: str | None = None
@@ -127,6 +139,13 @@ class PredictionSource:
         snapshot_id = str(payload.get("snapshot_id", ""))
         prediction_time = _parse_time(payload.get("prediction_time")) or datetime.now(tz=UTC)
         result: list[Prediction] = []
+        objects: dict[str, str] = {}
+        for row in payload.get("predictions", []):
+            tag = row.get("tag") if isinstance(row.get("tag"), str) else None
+            group, object_id = location_group(tag), _object_id(row.get("object_id"))
+            if group and object_id:
+                objects.setdefault(group, object_id)
+        remember_objects(objects)
         for row in payload.get("predictions", []):
             try:
                 asset_id = str(row["channel_id"])
@@ -140,6 +159,7 @@ class PredictionSource:
             scenario = str(row.get("scenario") or scenario_for(device_type, model_id))
             tag = row.get("tag") if isinstance(row.get("tag"), str) else None
             group = location_group(tag)
+            object_id = _object_id(row.get("object_id"))
             result.append(
                 Prediction(
                     id=f"{snapshot_id}:{model_id}:{asset_id}",
@@ -164,6 +184,7 @@ class PredictionSource:
                     factors=_factors(row.get("factors", {})),
                     drivers=_drivers(row.get("drivers")),
                     name=row.get("name") if isinstance(row.get("name"), str) else None,
+                    object_id=object_id,
                     sensor_type=row.get("sensor_type"),
                     system_type=row.get("system_type"),
                     last_event_at=_parse_time(row.get("last_event_at")),
@@ -241,8 +262,6 @@ class PredictionSource:
         elif sort == "latest":
             items.sort(key=lambda item: item.prediction_time, reverse=True)
         else:
-            # Scores of different models are not on one scale, so the model's own
-            # risk level orders first and the score only breaks ties inside a level.
             items.sort(key=lambda item: (LEVEL_RANK[item.risk_level], -item.score))
         return items[offset : offset + limit]
 
@@ -252,7 +271,6 @@ class PredictionSource:
         return [row for row in rows if isinstance(row, dict)]
 
     def incident_probabilities(self) -> dict[tuple[str, str], float]:
-        """Location-level probability keyed by (scenario, location group)."""
         result = {}
         for row in self._section("incidents"):
             try:
@@ -264,7 +282,6 @@ class PredictionSource:
         return result
 
     def location_history(self) -> dict[str, dict[str, dict[str, Any]]]:
-        """Past episodes per location group and device, from the last full pass."""
         self._read()
         raw = (self._payload or {}).get("location_history")
         return raw if isinstance(raw, dict) else {}
@@ -273,7 +290,8 @@ class PredictionSource:
         result = []
         for row in self._section("alarms"):
             group = location_group(row.get("tag"))
-            result.append(AlarmAssessment(**row, location=location_label(group)))
+            category = ALARM_CATEGORY.get(str(row.get("sensor_type")), "fire")
+            result.append(AlarmAssessment(**row, category=category, location=location_label(group)))
         result.sort(key=lambda item: item.ts, reverse=True)
         return result
 

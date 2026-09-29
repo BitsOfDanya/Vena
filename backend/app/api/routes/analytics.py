@@ -30,7 +30,6 @@ def _source(settings: Settings):
 
 @router.get("/assets/tree", response_model=list[ObjectNode])
 def asset_tree(settings: SettingsDep, _: ReaderDep) -> list[ObjectNode]:
-    """Objects and their sections from the SMVU tags, ordered from the least healthy."""
     return analytics_service.asset_tree(_source(settings))
 
 
@@ -41,7 +40,6 @@ def effect(session: SessionDep, settings: SettingsDep, _: ReaderDep) -> EffectRe
 
 @router.get("/analytics/event-types", response_model=list[EventTypeStats])
 def event_types(settings: SettingsDep, _: ReaderDep) -> list[EventTypeStats]:
-    """Statistics by incident type with the seasonal forecast of daily counts."""
     return analytics_service.event_types(settings, get_prediction_source(settings))
 
 

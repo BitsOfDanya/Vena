@@ -25,7 +25,6 @@ class Driver(BaseModel):
     feature: str
     label: str
     value: float | None
-    # Additive log-odds contribution to the model score (SHAP for trees).
     contribution: float
 
 
@@ -52,6 +51,7 @@ class Prediction(BaseModel):
     factors: list[RiskFactor] = []
     drivers: list[Driver] = []
     name: str | None = None
+    object_id: str | None = None
     sensor_type: str | None = None
     system_type: str | None = None
     last_event_at: datetime | None = None
@@ -71,7 +71,6 @@ class StreamInfo(BaseModel):
     channels_rescored: int
     received_at: datetime
     published_at: datetime
-    # Seconds from the batch reaching the API to the snapshot being published.
     latency_seconds: float
 
 
@@ -92,10 +91,10 @@ class AlarmAssessment(BaseModel):
     channel_id: str
     ts: datetime
     sensor_type: str
-    # Calibrated probability that the alarm is confirmed within 30 minutes by a
-    # repeat, a neighbouring channel or a sustained detection state.
     corroboration_probability: float
     needs_verification: bool
+    category: str = "fire"
+    maintenance: bool = False
     location: str | None = None
     name: str | None = None
 
@@ -105,10 +104,10 @@ class AccessEvent(BaseModel):
     ts: datetime
     sensor_type: str
     object: str
-    # Triage index for verification, not a probability of intrusion.
     access_index: float
     night: bool
     chain: bool
+    category: str = "intrusion"
     location: str | None = None
     name: str | None = None
 

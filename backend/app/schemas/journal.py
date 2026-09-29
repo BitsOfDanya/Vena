@@ -28,8 +28,6 @@ class ScenarioFeedback(BaseModel):
     decided: int
     confirmed: int
     rejected: int
-    # Share of decided forecasts confirmed by the crew; dispatcher feedback,
-    # not a model metric measured on held-out data.
     confirmation_rate: float | None
 
 

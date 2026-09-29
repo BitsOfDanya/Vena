@@ -1,10 +1,3 @@
-"""Add audit_log table for RBAC action journaling.
-
-Revision ID: c4f8a91e2b10
-Revises: a62840b781f7
-Create Date: 2026-09-26
-"""
-
 from collections.abc import Sequence
 
 import sqlalchemy as sa

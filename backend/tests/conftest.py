@@ -15,7 +15,6 @@ os.environ.setdefault(
 
 
 def _ensure_database(url: str) -> None:
-    """Create the target database if it does not exist yet."""
     sa_url = make_url(url)
     if not sa_url.drivername.startswith("postgresql"):
         raise RuntimeError("VENA_DATABASE_URL must use PostgreSQL (postgresql+psycopg://...)")

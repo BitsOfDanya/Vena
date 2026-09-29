@@ -58,8 +58,6 @@ def apply_deltas(
 
 
 def _recently_notified(session: Session, dedup_key: str, minutes: int, now: datetime) -> bool:
-    # Delivery logs are keyed per rule and asset, while an incident can change its
-    # lead channel between snapshots, so the incident key is checked directly.
     if minutes <= 0:
         return False
     statement = (
@@ -104,7 +102,6 @@ def _suggest_action(session: Session, incident: Incident, now: datetime) -> bool
                 f"{score_text(lead)} over {horizon}h{scope}"
             ),
             priority=priority,  # type: ignore[arg-type]
-            # A stale snapshot would otherwise schedule the work in the past.
             recommended_at=max(lead.prediction_time, now) + timedelta(hours=horizon),
             assignee="Дежурный инженер",
             note="Auto-draft from prediction ingest",
@@ -148,7 +145,6 @@ def refresh_predictions(
 
     if existing is None:
         for prediction in predictions:
-            # The stream republishes every channel; history keeps only changed scores.
             if prediction.previous_score is not None and prediction.score_delta == 0:
                 continue
             session.add(
@@ -168,8 +164,6 @@ def refresh_predictions(
     actions_created = 0
     now = datetime.now(tz=UTC)
     significant = [item for item in predictions if item.risk_level in RULE_FOR_LEVEL]
-    # The limit applies per scenario, so a mass power outage cannot crowd out a
-    # flooding or fire forecast from the dispatcher's queue.
     per_scenario: dict[str, int] = {}
     for incident in group_incidents(significant):
         if per_scenario.get(incident.scenario, 0) >= settings.prediction_critical_limit:

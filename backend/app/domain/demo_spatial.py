@@ -1,12 +1,9 @@
-"""Demo GeoJSON for Moscollector-style corridor (stand geometry, not cadastral)."""
-
 from __future__ import annotations
 
 import json
 import math
 from typing import Any
 
-# Approximate corridor east of Moscow Garden Ring — stand spatial, not survey data.
 ORIGIN_LON = 37.635
 ORIGIN_LAT = 55.748
 GROUP_STEP_LON = 0.0042

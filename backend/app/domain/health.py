@@ -1,14 +1,3 @@
-"""Health index of a location: one number 0-100 from all 24-hour forecasts.
-
-For each scenario the location risk is the highest calibrated probability among
-its channels; for power loss the location model's probability is used when it
-is higher. Scenarios are combined as independent: risk = 1 - prod(1 - risk_s). Combining
-many channels overstates the risk of large locations, so the combined risk is
-mapped to the observed frequency with the calibration points in
-ml/configs/health_index.json (daily cuts of 2025, see ml/run_health_index.py).
-The index is 100 * (1 - calibrated risk): 100 means no expected event within 24 h.
-"""
-
 import json
 from bisect import bisect_right
 from dataclasses import dataclass, field
@@ -48,7 +37,6 @@ def load_calibration(ml_dir: Path) -> Points | None:
 
 
 def calibrate(raw: float, points: Points | None) -> float:
-    """Linear interpolation between isotonic points, clipped at the ends."""
     if points is None:
         return raw
     xs, ys = points

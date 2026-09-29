@@ -1,7 +1,7 @@
 from datetime import UTC, datetime
 
 from sqlalchemy import select
-from sqlalchemy.orm import Session
+from sqlalchemy.orm import Session, selectinload
 
 from app.db.models import Action, ActionEvent
 from app.schemas.actions import ActionCreate, ActionPatch
@@ -72,7 +72,7 @@ def record(
 def list_actions(
     session: Session, status: str | None = None, asset_id: str | None = None
 ) -> list[Action]:
-    statement = select(Action).order_by(Action.recommended_at)
+    statement = select(Action).options(selectinload(Action.history)).order_by(Action.recommended_at)
     if status:
         statement = statement.where(Action.status == status)
     if asset_id:
@@ -176,8 +176,6 @@ def complete(session: Session, action: Action, outcome: str, note: str, actor: s
     return action
 
 
-# Dispatcher decision catalogue (ТЗ, section 12, step 5): why a forecast did not
-# lead to a crew dispatch, and which feedback outcome it gives the model.
 DISMISS_REASONS: dict[str, tuple[str, str]] = {
     "false_alarm": ("Ложное срабатывание", "false_or_irrelevant_signal"),
     "planned_works": ("Плановые работы на объекте", "false_or_irrelevant_signal"),

@@ -38,12 +38,6 @@ def get_status(session: Session) -> dict:
 
 
 def spool_events(inbox: Path, batch_id: str, events: list[dict], timezone: str) -> datetime:
-    """Hand a batch to the ML stream worker as one JSON Lines file.
-
-    The journal records local time without an offset, so timestamps that carry
-    an offset are converted to the service timezone first. The file appears
-    under its final name only when complete. Returns the latest local event time.
-    """
     zone = ZoneInfo(timezone)
     inbox.mkdir(parents=True, exist_ok=True)
     name = f"{utcnow():%Y%m%dT%H%M%S%f}-{batch_id}.jsonl"
