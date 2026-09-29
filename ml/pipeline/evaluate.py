@@ -106,3 +106,47 @@ def evaluate_predictions(channel_id, prediction_time, y_true, risk_score, episod
         result.update(alerts_mod.alert_summary(alerted, raw_topk, episodes, horizon_hours, n_days))
 
     return result
+
+
+def morning_lists(scored, episodes, horizon_hours, counts=(5, 10), cooldown_days=1):
+    scored = scored[["channel_id", "ts", "score"]].assign(channel_id=scored["channel_id"].astype(str)).sort_values("ts")
+    starts = episodes[["channel_id", "episode_start"]].assign(channel_id=episodes["channel_id"].astype(str))
+    starts_by_channel = {key: np.sort(group.to_numpy(dtype="datetime64[ns]"))
+                         for key, group in starts.groupby("channel_id")["episode_start"]}
+    horizon = np.timedelta64(int(horizon_hours), "h")
+    first, last = scored["ts"].min().normalize() + pd.Timedelta(days=1), scored["ts"].max().normalize()
+    days = pd.date_range(first, last - pd.Timedelta(hours=horizon_hours), freq="D")
+    lists = []
+    for day in days:
+        window = scored.loc[(scored["ts"] >= day - pd.Timedelta(days=1)) & (scored["ts"] < day)]
+        latest = window.groupby("channel_id").tail(1).sort_values("score", ascending=False)
+        lists.append((day, latest["channel_id"].tolist()))
+    period_start, period_end = days[0], days[-1] + pd.Timedelta(days=1)
+    in_period = starts.loc[(starts["episode_start"] >= period_start) & (starts["episode_start"] < period_end)]
+    result = {}
+    for count in counts:
+        for cooldown in (0, cooldown_days):
+            recent, hits, selected, warned = {}, 0, 0, set()
+            for day, ranked in lists:
+                moment = np.datetime64(day, "ns")
+                chosen = [c for c in ranked
+                          if cooldown == 0 or c not in recent or (day - recent[c]).days > cooldown][:count]
+                for channel in chosen:
+                    recent[channel] = day
+                    times = starts_by_channel.get(channel)
+                    selected += 1
+                    if times is None:
+                        continue
+                    low = np.searchsorted(times, moment, side="left")
+                    high = np.searchsorted(times, moment + horizon, side="right")
+                    if high > low:
+                        hits += 1
+                        warned.update((channel, t) for t in times[low:high])
+            key = f"top{count}" + ("_no_repeat" if cooldown else "")
+            result[key] = {
+                "precision": round(hits / selected, 4) if selected else None,
+                "episodes_warned": len(warned),
+                "episode_share": round(len(warned) / max(len(in_period), 1), 4),
+                "distinct_channels": len(recent),
+            }
+    return result

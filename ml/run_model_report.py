@@ -73,6 +73,9 @@ def study(name, frame, episodes, horizon, recent_mask, fit_mask, reference_mask)
         }
     top = evaluate.evaluate_daily_topk_fixed(scored["ts"].values, recent_target, recent_raw, counts=TOP_COUNTS)
     report["daily_top_k_2026h1"] = {str(k): top.get(f"precision_top{k}_per_day") for k in TOP_COUNTS}
+    report["morning_list_2026h1"] = evaluate.morning_lists(
+        scored.assign(score=recent_raw), episodes, horizon
+    )
 
     if in_sample:
         log(f"{name}: trained on a calibration year, calibrator kept")

@@ -31,6 +31,32 @@
    "5": 0.4156,
    "10": 0.4156,
    "20": 0.3992
+  },
+  "morning_list_2026h1": {
+   "top5": {
+    "precision": 0.3787,
+    "episodes_warned": 414,
+    "episode_share": 0.1415,
+    "distinct_channels": 49
+   },
+   "top5_no_repeat": {
+    "precision": 0.2921,
+    "episodes_warned": 308,
+    "episode_share": 0.1053,
+    "distinct_channels": 87
+   },
+   "top10": {
+    "precision": 0.2933,
+    "episodes_warned": 623,
+    "episode_share": 0.213,
+    "distinct_channels": 105
+   },
+   "top10_no_repeat": {
+    "precision": 0.2343,
+    "episodes_warned": 475,
+    "episode_share": 0.1624,
+    "distinct_channels": 145
+   }
   }
  },
  "pump_72h": {
@@ -65,6 +91,32 @@
    "5": 0.7629,
    "10": 0.7404,
    "20": 0.7152
+  },
+  "morning_list_2026h1": {
+   "top5": {
+    "precision": 0.6437,
+    "episodes_warned": 485,
+    "episode_share": 0.1676,
+    "distinct_channels": 58
+   },
+   "top5_no_repeat": {
+    "precision": 0.5667,
+    "episodes_warned": 662,
+    "episode_share": 0.2288,
+    "distinct_channels": 86
+   },
+   "top10": {
+    "precision": 0.5713,
+    "episodes_warned": 744,
+    "episode_share": 0.2572,
+    "distinct_channels": 98
+   },
+   "top10_no_repeat": {
+    "precision": 0.4598,
+    "episodes_warned": 971,
+    "episode_share": 0.3356,
+    "distinct_channels": 140
+   }
   }
  },
  "pump_baseline_72h": {
@@ -99,6 +151,32 @@
    "5": 0.7393,
    "10": 0.7337,
    "20": 0.7112
+  },
+  "morning_list_2026h1": {
+   "top5": {
+    "precision": 0.6069,
+    "episodes_warned": 453,
+    "episode_share": 0.1566,
+    "distinct_channels": 52
+   },
+   "top5_no_repeat": {
+    "precision": 0.5448,
+    "episodes_warned": 648,
+    "episode_share": 0.224,
+    "distinct_channels": 81
+   },
+   "top10": {
+    "precision": 0.5557,
+    "episodes_warned": 738,
+    "episode_share": 0.2551,
+    "distinct_channels": 104
+   },
+   "top10_no_repeat": {
+    "precision": 0.4586,
+    "episodes_warned": 966,
+    "episode_share": 0.3339,
+    "distinct_channels": 146
+   }
   }
  },
  "fan_24h": {
@@ -133,6 +211,32 @@
    "5": 0.1756,
    "10": 0.1694,
    "20": 0.16
+  },
+  "morning_list_2026h1": {
+   "top5": {
+    "precision": 0.1663,
+    "episodes_warned": 158,
+    "episode_share": 0.0484,
+    "distinct_channels": 106
+   },
+   "top5_no_repeat": {
+    "precision": 0.1573,
+    "episodes_warned": 146,
+    "episode_share": 0.0447,
+    "distinct_channels": 119
+   },
+   "top10": {
+    "precision": 0.1624,
+    "episodes_warned": 308,
+    "episode_share": 0.0943,
+    "distinct_channels": 137
+   },
+   "top10_no_repeat": {
+    "precision": 0.1596,
+    "episodes_warned": 299,
+    "episode_share": 0.0916,
+    "distinct_channels": 158
+   }
   }
  },
  "fan_72h": {
@@ -167,6 +271,32 @@
    "5": 0.4382,
    "10": 0.4326,
    "20": 0.4166
+  },
+  "morning_list_2026h1": {
+   "top5": {
+    "precision": 0.4724,
+    "episodes_warned": 365,
+    "episode_share": 0.1133,
+    "distinct_channels": 72
+   },
+   "top5_no_repeat": {
+    "precision": 0.4736,
+    "episodes_warned": 502,
+    "episode_share": 0.1559,
+    "distinct_channels": 86
+   },
+   "top10": {
+    "precision": 0.4695,
+    "episodes_warned": 663,
+    "episode_share": 0.2058,
+    "distinct_channels": 96
+   },
+   "top10_no_repeat": {
+    "precision": 0.4598,
+    "episodes_warned": 898,
+    "episode_share": 0.2788,
+    "distinct_channels": 117
+   }
   }
  },
  "smoke_24h": {
@@ -201,6 +331,32 @@
    "5": 0.2389,
    "10": 0.2067,
    "20": 0.1742
+  },
+  "morning_list_2026h1": {
+   "top5": {
+    "precision": 0.0775,
+    "episodes_warned": 77,
+    "episode_share": 0.0473,
+    "distinct_channels": 287
+   },
+   "top5_no_repeat": {
+    "precision": 0.064,
+    "episodes_warned": 62,
+    "episode_share": 0.0381,
+    "distinct_channels": 329
+   },
+   "top10": {
+    "precision": 0.0691,
+    "episodes_warned": 132,
+    "episode_share": 0.081,
+    "distinct_channels": 418
+   },
+   "top10_no_repeat": {
+    "precision": 0.0624,
+    "episodes_warned": 117,
+    "episode_share": 0.0718,
+    "distinct_channels": 466
+   }
   }
  },
  "flood_24h": {
@@ -235,6 +391,32 @@
    "5": 0.3289,
    "10": 0.3139,
    "20": 0.3158
+  },
+  "morning_list_2026h1": {
+   "top5": {
+    "precision": 0.218,
+    "episodes_warned": 236,
+    "episode_share": 0.196,
+    "distinct_channels": 69
+   },
+   "top5_no_repeat": {
+    "precision": 0.1551,
+    "episodes_warned": 166,
+    "episode_share": 0.1379,
+    "distinct_channels": 94
+   },
+   "top10": {
+    "precision": 0.1612,
+    "episodes_warned": 337,
+    "episode_share": 0.2799,
+    "distinct_channels": 102
+   },
+   "top10_no_repeat": {
+    "precision": 0.1236,
+    "episodes_warned": 256,
+    "episode_share": 0.2126,
+    "distinct_channels": 111
+   }
   }
  },
  "phase_24h": {
@@ -269,6 +451,32 @@
    "5": 0.9633,
    "10": 0.9567,
    "20": 0.9403
+  },
+  "morning_list_2026h1": {
+   "top5": {
+    "precision": 0.6944,
+    "episodes_warned": 671,
+    "episode_share": 0.0205,
+    "distinct_channels": 166
+   },
+   "top5_no_repeat": {
+    "precision": 0.6674,
+    "episodes_warned": 651,
+    "episode_share": 0.0199,
+    "distinct_channels": 181
+   },
+   "top10": {
+    "precision": 0.6517,
+    "episodes_warned": 1257,
+    "episode_share": 0.0384,
+    "distinct_channels": 244
+   },
+   "top10_no_repeat": {
+    "precision": 0.6298,
+    "episodes_warned": 1224,
+    "episode_share": 0.0374,
+    "distinct_channels": 267
+   }
   }
  },
  "smoke_alarm_24h": {
@@ -303,6 +511,32 @@
    "5": 0.2033,
    "10": 0.1878,
    "20": 0.1664
+  },
+  "morning_list_2026h1": {
+   "top5": {
+    "precision": 0.0966,
+    "episodes_warned": 90,
+    "episode_share": 0.0115,
+    "distinct_channels": 359
+   },
+   "top5_no_repeat": {
+    "precision": 0.091,
+    "episodes_warned": 85,
+    "episode_share": 0.0108,
+    "distinct_channels": 414
+   },
+   "top10": {
+    "precision": 0.0871,
+    "episodes_warned": 161,
+    "episode_share": 0.0205,
+    "distinct_channels": 606
+   },
+   "top10_no_repeat": {
+    "precision": 0.0753,
+    "episodes_warned": 141,
+    "episode_share": 0.018,
+    "distinct_channels": 692
+   }
   }
  }
 }

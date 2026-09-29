@@ -104,7 +104,7 @@ compose.yaml      локальный запуск
 | Статистика по типам инцидентов, прогноз на 14 дней | `/analytics/event-types` по журналу СМВУ |
 | Карточки моделей: цель, обучение, качество на 2026H1 | `/ml/models` |
 | Выгрузка прогнозов CSV и XML | `/reports/predictions.csv`, `/reports/predictions.xml` |
-| Нагрузка тревог по ISA-18.2, маршруты нарушителя, динамика индекса здоровья | `/analytics/alarm-kpis`, `/access-routes`, `/analytics/health-history` |
+| Нагрузка тревог по ISA-18.2, маршруты нарушителя, динамика индекса здоровья, план осмотров на сегодня | `/analytics/alarm-kpis`, `/access-routes`, `/analytics/health-history`, `/analytics/inspection-plan` |
 | Телеметрия на Pulse, схема сети, геослой карты | демонстрационные данные стенда; геослой заменяется через `PUT /api/v1/spatial` |
 | Поток СМВУ | приём событий в API, пересчёт затронутых каналов за секунды в режиме `journal`; на стенде по умолчанию `demo` |
 

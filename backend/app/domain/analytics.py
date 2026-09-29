@@ -1,13 +1,22 @@
 import json
+from datetime import datetime, timedelta
 from pathlib import Path
 from typing import Any
 
+from sqlalchemy import select
 from sqlalchemy.orm import Session
 
 from app.core.config import Settings
+from app.db.models import Action
 from app.domain import journal as journal_service
 from app.domain.health import load_calibration, location_health
-from app.domain.incidents import LEVEL_RANK, group_incidents, location_label, object_of
+from app.domain.incidents import (
+    LEVEL_RANK,
+    group_incidents,
+    location_label,
+    object_of,
+    reason_text,
+)
 from app.domain.predictions import PredictionSource
 from app.schemas.analytics import (
     BacktestDay,
@@ -16,8 +25,10 @@ from app.schemas.analytics import (
     EventTypeStats,
     ForecastDay,
     ForecastTotal,
+    InspectionPlan,
     ModelEffect,
     ObjectNode,
+    PlanItem,
     SectionNode,
 )
 from app.schemas.predictions import Prediction
@@ -213,3 +224,42 @@ def event_types(settings: Settings, source: PredictionSource) -> list[EventTypeS
             )
         )
     return result
+
+
+PLAN_MODELS = ("pump_72h", "fan_72h", "phase_24h", "flood_24h", "pump_24h", "fan_24h")
+PLAN_SKIP_REPEATS = {"fan_72h", "fan_24h"}
+
+
+def inspection_plan(
+    session: Session, source: PredictionSource, model_id: str, count: int, now: datetime
+) -> InspectionPlan:
+    """Channels to inspect today: highest risk first; for fans, channels with a work
+    created in the last 24 hours give way to the next ones."""
+    candidates = sorted(
+        (item for item in source.all() if item.model_id == model_id),
+        key=lambda item: item.score,
+        reverse=True,
+    )
+    recent: set[str] = set()
+    if model_id in PLAN_SKIP_REPEATS:
+        statement = select(Action.asset_id).where(Action.created_at >= now - timedelta(hours=24))
+        recent = set(session.scalars(statement))
+    items, skipped = [], []
+    for item in candidates:
+        if item.asset_id in recent:
+            skipped.append(item.asset_id)
+            continue
+        items.append(
+            PlanItem(
+                asset_id=item.asset_id,
+                name=item.name,
+                location=item.location,
+                model_id=item.model_id,
+                probability=item.score,
+                risk_level=item.risk_level,
+                reason=reason_text(item) if (item.drivers or item.factors) else None,
+            )
+        )
+        if len(items) == count:
+            break
+    return InspectionPlan(model_id=model_id, count=count, skipped_recent=skipped, items=items)

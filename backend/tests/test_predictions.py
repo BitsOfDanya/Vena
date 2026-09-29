@@ -658,3 +658,30 @@ def test_health_history_by_object_and_section(client: TestClient, ml_root: Path)
     assert objects["objects"]["5218"][-1] == ["2026-06-30", 55]
     assert section == [["2026-06-30", 55]]
     assert client.get("/api/v1/analytics/health-history/0-0").status_code == 404
+
+
+def test_inspection_plan_skips_fans_with_recent_work(client: TestClient, ml_root: Path) -> None:
+    fans = [
+        {**row(channel, score, "high"), "device_type": "fan", "model_id": "fan_72h"}
+        for channel, score in (("f1", 0.9), ("f2", 0.8), ("f3", 0.7))
+    ]
+    write_snapshot(ml_root, datetime.now(tz=UTC), [*fans, row("p1", 0.95, "critical")])
+    url = "/api/v1/analytics/inspection-plan"
+    before = client.get(url, params={"model_id": "fan_72h", "count": 2})
+    assert [item["asset_id"] for item in before.json()["items"]] == ["f1", "f2"]
+
+    work = {
+        "asset_id": "f1",
+        "kind": "inspect",
+        "reason": "осмотр",
+        "priority": "high",
+        "recommended_at": datetime.now(tz=UTC).isoformat(),
+        "assignee": "Дежурный инженер",
+    }
+    assert client.post("/api/v1/actions", json=work).status_code == 201
+    after = client.get(url, params={"model_id": "fan_72h", "count": 2}).json()
+    assert [item["asset_id"] for item in after["items"]] == ["f2", "f3"]
+    assert after["skipped_recent"] == ["f1"]
+    pumps = client.get(url, params={"model_id": "pump_72h"}).json()
+    assert pumps["items"][0]["asset_id"] == "p1"
+    assert client.get(url, params={"model_id": "x_1"}).status_code == 404

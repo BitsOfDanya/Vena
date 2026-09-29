@@ -1,0 +1,101 @@
+{
+ "rows": 194706,
+ "objects": 18,
+ "base_rate": 0.095,
+ "2025": {
+  "rule_station_7d": {
+   "base_rate": 0.1037,
+   "avg_precision": 0.175,
+   "roc_auc": 0.6699,
+   "recall_at_precision_0.7": 0.0,
+   "top3_per_day": 0.2009
+  },
+  "rule_phase_1d": {
+   "base_rate": 0.1037,
+   "avg_precision": 0.1684,
+   "roc_auc": 0.6337,
+   "recall_at_precision_0.7": 0.0011,
+   "top3_per_day": 0.1991
+  },
+  "catboost": {
+   "base_rate": 0.1037,
+   "avg_precision": 0.2412,
+   "roc_auc": 0.744,
+   "recall_at_precision_0.7": 0.0055,
+   "top3_per_day": 0.2612
+  },
+  "lightgbm": {
+   "base_rate": 0.1037,
+   "avg_precision": 0.2403,
+   "roc_auc": 0.7402,
+   "recall_at_precision_0.7": 0.0026,
+   "top3_per_day": 0.2484
+  },
+  "logistic_regression": {
+   "base_rate": 0.1037,
+   "avg_precision": 0.2261,
+   "roc_auc": 0.73,
+   "recall_at_precision_0.7": 0.0,
+   "top3_per_day": 0.2438
+  },
+  "blend_lr_lightgbm": {
+   "base_rate": 0.1037,
+   "avg_precision": 0.249,
+   "roc_auc": 0.7492,
+   "recall_at_precision_0.7": 0.0004,
+   "top3_per_day": 0.2612
+  }
+ },
+ "2026H1": {
+  "rule_station_7d": {
+   "base_rate": 0.1471,
+   "avg_precision": 0.2405,
+   "roc_auc": 0.6629,
+   "recall_at_precision_0.7": 0.0079,
+   "top3_per_day": 0.2796
+  },
+  "rule_phase_1d": {
+   "base_rate": 0.1471,
+   "avg_precision": 0.1989,
+   "roc_auc": 0.5895,
+   "recall_at_precision_0.7": 0.0005,
+   "top3_per_day": 0.2463
+  },
+  "catboost": {
+   "base_rate": 0.1471,
+   "avg_precision": 0.28,
+   "roc_auc": 0.6946,
+   "recall_at_precision_0.7": 0.0063,
+   "top3_per_day": 0.337
+  },
+  "lightgbm": {
+   "base_rate": 0.1471,
+   "avg_precision": 0.2765,
+   "roc_auc": 0.6989,
+   "recall_at_precision_0.7": 0.0016,
+   "top3_per_day": 0.337
+  },
+  "logistic_regression": {
+   "base_rate": 0.1471,
+   "avg_precision": 0.2504,
+   "roc_auc": 0.684,
+   "recall_at_precision_0.7": 0.0,
+   "top3_per_day": 0.2574
+  },
+  "blend_lr_lightgbm": {
+   "base_rate": 0.1471,
+   "avg_precision": 0.2768,
+   "roc_auc": 0.705,
+   "recall_at_precision_0.7": 0.0,
+   "top3_per_day": 0.3056
+  }
+ },
+ "selected_on_2025": "blend_lr_lightgbm",
+ "selected_2026H1": {
+  "base_rate": 0.1471,
+  "avg_precision": 0.2768,
+  "roc_auc": 0.705,
+  "recall_at_precision_0.7": 0.0,
+  "top3_per_day": 0.3056
+ }
+}

@@ -88,3 +88,20 @@ class EventTypeStats(BaseModel):
     week_error: float | None
     week_error_baseline: float | None
     backtest: list[BacktestDay]
+
+
+class PlanItem(BaseModel):
+    asset_id: str
+    name: str | None
+    location: str | None
+    model_id: str
+    probability: float
+    risk_level: str
+    reason: str | None
+
+
+class InspectionPlan(BaseModel):
+    model_id: str
+    count: int
+    skipped_recent: list[str]
+    items: list[PlanItem]

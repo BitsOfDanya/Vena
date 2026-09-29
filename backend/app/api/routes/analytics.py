@@ -1,6 +1,7 @@
+from datetime import UTC, datetime
 from typing import Annotated, Any
 
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends, HTTPException, Query
 from fastapi.responses import Response
 from sqlalchemy.orm import Session
 
@@ -10,7 +11,7 @@ from app.db.session import get_session
 from app.domain import analytics as analytics_service
 from app.domain import report as report_service
 from app.domain.predictions import get_prediction_source
-from app.schemas.analytics import EffectReport, EventTypeStats, ObjectNode
+from app.schemas.analytics import EffectReport, EventTypeStats, InspectionPlan, ObjectNode
 
 router = APIRouter(tags=["analytics"])
 
@@ -41,6 +42,21 @@ def effect(session: SessionDep, settings: SettingsDep, _: ReaderDep) -> EffectRe
 @router.get("/analytics/event-types", response_model=list[EventTypeStats])
 def event_types(settings: SettingsDep, _: ReaderDep) -> list[EventTypeStats]:
     return analytics_service.event_types(settings, get_prediction_source(settings))
+
+
+@router.get("/analytics/inspection-plan", response_model=InspectionPlan)
+def inspection_plan(
+    session: SessionDep,
+    settings: SettingsDep,
+    _: ReaderDep,
+    model_id: Annotated[str, Query(pattern="^[a-z0-9_]+$")] = "pump_72h",
+    count: Annotated[int, Query(ge=1, le=50)] = 5,
+) -> InspectionPlan:
+    """Today's inspection list for one model; fans skip channels worked on in the last day."""
+    if model_id not in analytics_service.PLAN_MODELS:
+        raise HTTPException(status_code=404, detail="no inspection plan for this model")
+    now = datetime.now(tz=UTC)
+    return analytics_service.inspection_plan(session, _source(settings), model_id, count, now)
 
 
 @router.get("/analytics/alarm-kpis")

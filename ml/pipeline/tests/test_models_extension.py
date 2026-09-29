@@ -203,3 +203,18 @@ def test_access_routes_follow_pickets_of_one_object():
     assert route["direction"] == "increasing"
     assert route["distance_m"] == 260
     assert route["max_index"] == 0.35
+
+
+def test_morning_list_skips_yesterdays_channels_when_asked():
+    from pipeline import evaluate
+
+    times = pd.to_datetime(["2026-01-01 10:00", "2026-01-01 11:00", "2026-01-02 10:00", "2026-01-02 11:00",
+                            "2026-01-03 10:00", "2026-01-03 11:00", "2026-01-04 10:00", "2026-01-05 10:00"])
+    scored = pd.DataFrame({"channel_id": ["a", "b", "a", "b", "a", "b", "a", "a"], "ts": times,
+                           "score": [0.9, 0.5, 0.9, 0.5, 0.9, 0.5, 0.9, 0.9]})
+    episodes = pd.DataFrame({"channel_id": ["b"], "episode_start": [pd.Timestamp("2026-01-03 05:00")]})
+    lists = evaluate.morning_lists(scored, episodes, 24, counts=(1,))
+    assert lists["top1"]["episodes_warned"] == 0
+    assert lists["top1"]["distinct_channels"] == 1
+    assert lists["top1_no_repeat"]["episodes_warned"] == 1
+    assert lists["top1_no_repeat"]["distinct_channels"] == 2
