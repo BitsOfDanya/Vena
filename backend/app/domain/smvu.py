@@ -22,7 +22,7 @@ def get_status(session: Session) -> dict:
             "received_at": None,
             "age_seconds": None,
             "fresh": False,
-            "detail": "No SMVU batches received yet",
+            "detail": "Пакеты событий СМВУ ещё не поступали",
         }
     age = int((utcnow() - state.received_at).total_seconds())
     return {

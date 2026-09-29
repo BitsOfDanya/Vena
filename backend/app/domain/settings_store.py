@@ -16,9 +16,9 @@ from app.schemas.notifications import (
 SETTINGS_KEY = "notifications"
 
 DEFAULT_RECIPIENTS = [
-    RecipientGroup(id="dispatcher_team", name="Dispatcher team", emails=[], enabled=True),
-    RecipientGroup(id="maintenance_team", name="Maintenance team", emails=[], enabled=True),
-    RecipientGroup(id="management", name="Management", emails=[], enabled=True),
+    RecipientGroup(id="dispatcher_team", name="Диспетчеры", emails=[], enabled=True),
+    RecipientGroup(id="maintenance_team", name="Эксплуатация", emails=[], enabled=True),
+    RecipientGroup(id="management", name="Руководство", emails=[], enabled=True),
 ]
 
 DEFAULT_RULES = [
@@ -81,7 +81,7 @@ def channel_states(settings: Settings) -> list[ChannelState]:
             name="In-app",
             state="configured",
             available=True,
-            detail="Notification centre in VENA",
+            detail="Центр уведомлений VENA",
         ),
         ChannelState(
             id="email",
@@ -90,7 +90,7 @@ def channel_states(settings: Settings) -> list[ChannelState]:
             available=True,
             detail="SMTP relay configured on the server"
             if settings.smtp_configured
-            else "SMTP is not configured",
+            else "SMTP не настроен",
         ),
         ChannelState(
             id="webhook", name="Webhook", state="disabled", available=False, detail="Planned"

@@ -177,12 +177,12 @@ def dispatch(
                             settings.public_url,
                             notification.asset_id or "—",
                             notification.severity,
-                            "24h" if trigger == "risk_horizon_24h" else "72h",
+                            "24 ч" if trigger == "risk_horizon_24h" else "72 ч",
                             notification.description,
                         ),
                     )
                     log.status = "sent"
-                except Exception as error:  # noqa: BLE001 - delivery failures are recorded, not raised
+                except Exception as error:  # noqa: BLE001
                     log.status = "failed"
                     log.detail = str(error)[:500]
                 logs.append(log)

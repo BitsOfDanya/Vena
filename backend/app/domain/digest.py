@@ -29,12 +29,12 @@ def build_sections(session: Session) -> list[tuple[str, list[str]]]:
         select(Action).where(Action.completed_at.is_not(None), Action.completed_at >= since)
     ).all()
     return [
-        ("Critical", [f"{item.title}" for item in critical]),
-        ("Patterns", [f"{item.title}" for item in patterns]),
-        ("Actions due", [f"{item.id} · {item.asset_id}" for item in open_actions]),
-        ("Overdue", [f"{item.id} · {item.asset_id}" for item in overdue]),
+        ("Критичные", [f"{item.title}" for item in critical]),
+        ("Повторяющиеся", [f"{item.title}" for item in patterns]),
+        ("Работы к сроку", [f"{item.id} · {item.asset_id}" for item in open_actions]),
+        ("Просрочено", [f"{item.id} · {item.asset_id}" for item in overdue]),
         (
-            "Completed since previous digest",
+            "Завершено с прошлой сводки",
             [f"{item.id} · {item.result_outcome}" for item in completed],
         ),
     ]
@@ -51,8 +51,8 @@ def send_digest(session: Session, settings: Settings, provider: EmailProvider) -
     sent = 0
     for recipient in recipients:
         try:
-            provider.send(recipient, "VENA · Morning brief", body)
+            provider.send(recipient, "VENA · Утренняя сводка", body)
             sent += 1
-        except Exception:  # noqa: BLE001 - digest delivery failures must not crash the scheduler
+        except Exception:  # noqa: BLE001
             continue
     return sent

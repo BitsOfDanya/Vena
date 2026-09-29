@@ -52,14 +52,14 @@ def alert_body(public_url: str, asset_id: str, severity: str, horizon: str, reas
     return "\n".join(
         [
             "VENA",
-            "Critical infrastructure alert",
+            "Критический риск на объекте",
             "",
-            f"Asset: {asset_id}",
-            f"Risk: {severity}",
-            f"Forecast: {horizon}",
-            f"Reason: {reason}",
+            f"Канал: {asset_id}",
+            f"Уровень: {severity}",
+            f"Горизонт прогноза: {horizon}",
+            f"Причина: {reason}",
             "",
-            f"Open in VENA: {public_url}/network",
+            f"Открыть в VENA: {public_url}/network",
         ]
     )
 
@@ -70,24 +70,24 @@ def assignment_body(
     return "\n".join(
         [
             "VENA",
-            "Maintenance action assigned",
+            "Назначена работа",
             "",
-            f"Asset: {asset_id}",
-            f"Task: {task}",
-            f"Priority: {priority}",
-            f"Due: {due}",
-            f"Reason: {reason}",
+            f"Канал: {asset_id}",
+            f"Работа: {task}",
+            f"Приоритет: {priority}",
+            f"Срок: {due}",
+            f"Причина: {reason}",
             "",
-            f"Open in VENA: {public_url}/actions",
+            f"Открыть в VENA: {public_url}/actions",
         ]
     )
 
 
 def digest_body(public_url: str, sections: list[tuple[str, list[str]]]) -> str:
-    lines = ["VENA", "Morning brief", ""]
+    lines = ["VENA", "Утренняя сводка", ""]
     for title, items in sections:
         lines.append(title)
         lines.extend(f"  {item}" for item in items or ["—"])
         lines.append("")
-    lines.append(f"Open in VENA: {public_url}/pulse")
+    lines.append(f"Открыть в VENA: {public_url}/pulse")
     return "\n".join(lines)

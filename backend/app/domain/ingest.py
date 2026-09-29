@@ -29,6 +29,14 @@ class IngestResult:
     detail: str = ""
 
 
+LEVEL_RU = {
+    "critical": "критично",
+    "attention": "внимание",
+    "observe": "наблюдение",
+    "normal": "норма",
+}
+
+
 def previous_scores(session: Session, snapshot_id: str) -> dict[tuple[str, str], float]:
     statement = (
         select(PredictionPoint)
@@ -91,20 +99,21 @@ def _suggest_action(session: Session, incident: Incident, now: datetime) -> bool
     horizon = lead.horizon_hours or 24
     priority = PRIORITY_FOR_LEVEL.get(lead.risk_level, "medium")
     count = len(incident.asset_ids)
-    scope = f"; {count} channels at this location" if count > 1 else ""
+    scope = f"; каналов на локации: {count}" if count > 1 else ""
     action_service.create_action(
         session,
         ActionCreate(
             asset_id=lead.asset_id,
             kind="inspect",
             reason=(
-                f"{incident.title}: ML {lead.model_id} {lead.risk_level} risk "
-                f"{score_text(lead)} over {horizon}h{scope}"
+                f"{incident.title}: модель {lead.model_id}, уровень "
+                f"{LEVEL_RU.get(lead.risk_level, lead.risk_level)}, вероятность "
+                f"{score_text(lead)} за {horizon} ч{scope}"
             ),
             priority=priority,  # type: ignore[arg-type]
             recommended_at=max(lead.prediction_time, now) + timedelta(hours=horizon),
             assignee="Дежурный инженер",
-            note="Auto-draft from prediction ingest",
+            note="Черновик создан по прогнозу модели",
             source="vena_forecast",
             source_detail=lead.model_id,
             status="suggested",
@@ -174,12 +183,12 @@ def refresh_predictions(
         dedup_key = f"{trigger}:{incident.key}"
         if not _recently_notified(session, dedup_key, settings.prediction_cooldown_minutes, now):
             change = (
-                f", {lead.score_delta:+.3f} since the previous snapshot"
+                f", изменение {lead.score_delta:+.3f} с прошлого снимка"
                 if lead.score_delta is not None
                 else ""
             )
             count = len(incident.asset_ids)
-            scope = f" {count} channels at this location share the risk." if count > 1 else ""
+            scope = f" Риск разделяют каналов на локации: {count}." if count > 1 else ""
             notification = notification_service.create_notification(
                 session,
                 NotificationCreate(
@@ -187,9 +196,10 @@ def refresh_predictions(
                     severity="critical" if lead.risk_level == "critical" else "attention",
                     title=f"{incident.title} · {lead.model_id} {score_text(lead)}",
                     description=(
-                        f"Model {lead.model_id} reports {lead.risk_level} risk "
-                        f"for the next {lead.horizon_hours}h{change}.{scope} "
-                        f"Main reason: {reason_text(lead)}."
+                        f"Модель {lead.model_id}: уровень "
+                        f"{LEVEL_RU.get(lead.risk_level, lead.risk_level)} на "
+                        f"{lead.horizon_hours} ч{change}.{scope} "
+                        f"Главная причина: {reason_text(lead)}."
                     ),
                     asset_id=lead.asset_id,
                     dedup_key=dedup_key,

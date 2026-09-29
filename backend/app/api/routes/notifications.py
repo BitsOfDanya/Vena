@@ -119,7 +119,9 @@ def send_test_notification(
     if not provider.configured:
         raise HTTPException(status_code=409, detail="email provider is not configured")
     try:
-        provider.send(str(payload.recipient), "VENA · Test notification", "VENA test notification.")
-    except Exception as error:  # noqa: BLE001 - reported to the caller
+        provider.send(
+            str(payload.recipient), "VENA · Проверка уведомлений", "Проверочное письмо VENA."
+        )
+    except Exception as error:  # noqa: BLE001
         raise HTTPException(status_code=502, detail=f"delivery failed: {error}") from error
     return TestEmailResult(delivered=True, detail="sent")

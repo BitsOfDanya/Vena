@@ -55,7 +55,7 @@ def build_demo_feature_collection(asset_count: int = 128, group_count: int = 16)
                 "geometry": {"type": "LineString", "coordinates": corridor_coords},
                 "properties": {
                     "kind": "corridor",
-                    "name": "Demo collector corridor",
+                    "name": "Демонстрационный коридор коллектора",
                     "source": "demo_spatial",
                 },
             },
@@ -95,7 +95,7 @@ def build_demo_feature_collection(asset_count: int = 128, group_count: int = 16)
         "properties": {
             "source": "demo_spatial",
             "crs": "EPSG:4326",
-            "note": "Stand geometry for map mode; replace via PUT /spatial.",
+            "note": "Геометрия стенда для карты; заменяется через PUT /spatial.",
         },
     }
 
