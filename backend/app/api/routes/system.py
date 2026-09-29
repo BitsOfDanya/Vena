@@ -22,8 +22,8 @@ def system_notices(settings: SettingsDep, _: ReaderDep) -> list[SystemNotice]:
 
 
 @router.get("/system/components", response_model=HealthComponents)
-def system_components(settings: SettingsDep, _: ReaderDep) -> HealthComponents:
-    return service.health_components(settings)
+def system_components(settings: SettingsDep, session: SessionDep, _: ReaderDep) -> HealthComponents:
+    return service.health_components(settings, session)
 
 
 @router.get("/situations", response_model=list[Situation])

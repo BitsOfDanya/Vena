@@ -3,6 +3,7 @@ from typing import Annotated
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
 
+from app.core.config import Settings, get_settings
 from app.core.security import Principal, get_principal, require_min_role
 from app.db.session import get_session
 from app.domain import audit as audit_service
@@ -100,7 +101,13 @@ def put_spatial_wkt(
 
 
 @router.post("/demo", response_model=SpatialCollectionOut)
-def reset_demo_spatial(session: SessionDep, principal: WriterDep) -> SpatialCollectionOut:
+def reset_demo_spatial(
+    session: SessionDep,
+    principal: WriterDep,
+    settings: Annotated[Settings, Depends(get_settings)],
+) -> SpatialCollectionOut:
+    if settings.environment == "production" and not settings.seed_demo:
+        raise HTTPException(409, "На боевом сервере загрузите реальные координаты объектов")
     existing = spatial_service.get_layer(session)
     if existing is not None:
         session.delete(existing)

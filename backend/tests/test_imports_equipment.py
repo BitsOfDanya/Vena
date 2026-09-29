@@ -100,6 +100,10 @@ def test_journal_csv_deduplication_and_publication(client, auth_users, monkeypat
     files = list((tmp_path / "uploads").glob("*.csv"))
     assert len(files) == 1
     assert "2026-01-01,12:00:00,t,Неисправен" in files[0].read_text()
+    feed = client.get("/api/v1/events/recent", headers=auth_users["viewer"]).json()
+    assert feed["items"][0]["object_id"] == "12"
+    assert feed["items"][0]["name"] == "Насос ПК1"
+    assert feed["items"][0]["event_id"] == "101"
     bad = content.replace(b"001", b"unknown")
     assert (
         upload(client, auth_users["admin"], bad, "journal", "events.csv").json()["status"]

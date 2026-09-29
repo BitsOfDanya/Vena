@@ -13,7 +13,7 @@
 
 ## Production-стенд
 
-Развёрнут на http://5.129.225.86. Установка на сервер, HTTPS, автодеплой из `main`, откат и резервные копии — [infra/README.md](../infra/README.md).
+Развёрнут на https://5bit.online. Установка на сервер, HTTPS, автодеплой из `main`, откат и резервные копии — [infra/README.md](../infra/README.md).
 
 ## Запуск в Docker
 

@@ -31,7 +31,7 @@ import {
 } from "@/entities/prediction"
 import { CreateActionSheet, type ActionDraft } from "@/features/create-action"
 import { useWorkspace } from "@/features/workspace"
-import { dataMode, workflowMode } from "@/shared/config/env"
+import { workflowMode } from "@/shared/config/env"
 import { formatClock } from "@/shared/lib/time"
 import { cn } from "@/shared/lib/utils"
 import { Button } from "@/shared/ui/button"
@@ -43,6 +43,8 @@ import { ReplayEntry } from "@/widgets/replay-controller"
 import { PulseSummaryModules, ShiftSummary, SnapshotLine } from "@/widgets/pulse-summary"
 import { SituationRail } from "@/widgets/situation-rail"
 import { InspectionPlanPanel } from "@/widgets/inspection-plan"
+
+import { RecentEvents } from "./recent-events"
 
 const WINDOWS = [
   { value: 1, label: "1ч" },
@@ -81,13 +83,12 @@ export function PulsePage() {
   const [scenarioFilter, setScenarioFilter] = React.useState<"all" | PredictionScenario>("all")
   const [selection, setSelection] = React.useState<PulseSelection | null>(null)
   const [tapeOpen, setTapeOpen] = React.useState(false)
-  const [demoTelemetryOpen, setDemoTelemetryOpen] = React.useState(true)
   const [acknowledged, setAcknowledged] = React.useState<string[]>([])
   const [sheetOpen, setSheetOpen] = React.useState(false)
   const [draft, setDraft] = React.useState<ActionDraft>({})
 
   const apiMode = workflowMode === "api"
-  const hideDemoTelemetry = apiMode ? !demoTelemetryOpen : false
+  const hideDemoTelemetry = apiMode
   const pulse = usePulse(now, windowHours, { enabled: !hideDemoTelemetry })
   const demoSummary = usePulseSummary(now, horizon, { enabled: !apiMode })
   const snapshot = useSnapshotStatus()
@@ -103,7 +104,7 @@ export function PulsePage() {
   const cluster = selection?.kind === "cluster" ? (data?.clusters.find((item) => item.id === selection.id) ?? null) : null
   const pattern = selection?.kind === "pattern" ? (data?.patterns.find((item) => item.id === selection.id) ?? null) : null
   const patternClusters = pattern && data ? data.clusters.filter((item) => pattern.clusterIds.includes(item.id)) : []
-  const descriptor = data
+  const descriptor = apiMode ? "ЖУРНАЛ И ПРОГНОЗЫ" : data
     ? `${mode === "replay" ? "ПОВТОР" : "ЖИВОЙ"} · ${formatClock(data.from)}–${formatClock(data.now)}`
     : mode === "replay"
       ? "ПОВТОР"
@@ -241,7 +242,7 @@ export function PulsePage() {
         </h1>
         <div className="ml-auto flex flex-wrap items-center gap-2.5">
           <Segmented label="Окно пульса" value={windowHours} onChange={setWindowHours} options={WINDOWS} />
-          <ReplayEntry />
+          {!apiMode && <ReplayEntry />}
         </div>
       </div>
 
@@ -339,23 +340,12 @@ export function PulsePage() {
             )}
           </section>
 
+          {apiMode ? <RecentEvents hours={windowHours} onSelect={(id) => { selectAsset(id); router.push("/network") }} /> : (
           <section aria-label="Активность" className="flex min-h-[120px] flex-1 flex-col border-t border-border-soft px-6 pt-2.5">
             <div className="mb-2 flex items-baseline gap-4">
               <h2 className="flex items-baseline gap-2.5 text-[13px] font-medium tracking-[0.1em] text-muted-foreground uppercase">
                 Активность · последние {windowHours} ч
-                {apiMode && demoTelemetryOpen ? (
-                  <span className="text-[11px] tracking-[0.06em] text-status-attention normal-case">демо-телеметрия</span>
-                ) : null}
               </h2>
-              {apiMode ? (
-                <button
-                  type="button"
-                  onClick={() => setDemoTelemetryOpen((open) => !open)}
-                  className="text-[12px] text-vena underline-offset-4 outline-none hover:underline focus-visible:ring-2 focus-visible:ring-ring/60"
-                >
-                  {demoTelemetryOpen ? "Скрыть демо" : "Показать демо"}
-                </button>
-              ) : null}
               {!hideDemoTelemetry ? (
                 <ul aria-label="Легенда" className="ml-auto hidden items-center gap-3 text-[11px] text-faint lg:flex">
                   {LEGEND.map((item) => (
@@ -367,18 +357,6 @@ export function PulsePage() {
                 </ul>
               ) : null}
             </div>
-            {hideDemoTelemetry ? (
-              <p className="mb-4 text-[13px] text-muted-foreground">
-                Лента событий стенда отключена в API-режиме: риски и очередь — только из снимка моделей.{" "}
-                <button
-                  type="button"
-                  onClick={() => setDemoTelemetryOpen(true)}
-                  className="text-vena underline-offset-4 hover:underline"
-                >
-                  Показать демо-телеметрию
-                </button>
-              </p>
-            ) : (
             <div className="min-h-0 flex-1 px-1">
               {pulse.isPending ? (
                 <LoadingBar />
@@ -398,17 +376,14 @@ export function PulsePage() {
                 <PulseSurface data={data} selection={selection} onSelect={setSelection} />
               ) : null}
             </div>
-            )}
           </section>
+          )}
 
           {hideDemoTelemetry ? null : (
           <section aria-label="Недавние события" className="mt-3 shrink-0 border-t border-border bg-surface">
             <div className="flex items-center gap-3 px-6 py-2">
               <h2 className="flex items-baseline gap-2.5 text-[13px] font-medium tracking-[0.1em] text-muted-foreground uppercase">
                 Недавние события
-                {apiMode && dataMode === "demo" ? (
-                  <span className="text-[11px] tracking-[0.06em] text-faint normal-case">демо-телеметрия</span>
-                ) : null}
               </h2>
               <span className="font-mono text-[12px] text-faint tabular-nums">{data?.recent.length ?? 0}</span>
               <button

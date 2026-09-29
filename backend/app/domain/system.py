@@ -4,7 +4,7 @@ from sqlalchemy import select
 from sqlalchemy.orm import Session
 
 from app.core.config import Settings
-from app.db.models import Action, Notification
+from app.db.models import Action, Notification, SmvuIngestState, SpatialLayer
 from app.domain.actions import OPEN_STATUSES
 from app.domain.health import load_calibration, location_health
 from app.domain.incidents import (
@@ -31,7 +31,7 @@ def _results_available(settings: Settings) -> bool:
     return (settings.ml_dir / "results" / "directions.json").is_file()
 
 
-def health_components(settings: Settings) -> HealthComponents:
+def health_components(settings: Settings, session: Session) -> HealthComponents:
     status = get_prediction_source(settings).status()
     if not status.available:
         ml_state = "unavailable"
@@ -39,14 +39,16 @@ def health_components(settings: Settings) -> HealthComponents:
         ml_state = "stale"
     else:
         ml_state = "ok"
+    spatial = session.get(SpatialLayer, "default")
+    stream = session.get(SmvuIngestState, "default")
     return HealthComponents(
         api="ok",
         ml=ml_state if _models_available(settings) else "unavailable",
         data="ok" if _results_available(settings) else "unavailable",
-        spatial="not_configured",
+        spatial="configured" if spatial else "not_configured",
         notification_service="configured" if settings.smtp_configured else "not_configured",
         last_prediction_at=status.prediction_time,
-        last_event_at=None,
+        last_event_at=stream.last_event_at if stream else None,
     )
 
 

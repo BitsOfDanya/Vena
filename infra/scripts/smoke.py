@@ -53,7 +53,10 @@ try:
     request('/users', admin)
     request('/users', viewer, expected=403)
     request('/equipment', viewer)
-    for path in ['/actions', '/notifications', '/journal', '/spatial', '/system/components']:
+    request('/events/recent', viewer)
+    spatial = request('/spatial/status', admin)
+    request('/spatial', admin, expected=200 if spatial['configured'] else 404)
+    for path in ['/actions', '/notifications', '/journal', '/system/components']:
         request(path, admin)
     request('/predictions/refresh', admin, method='POST')
     request('/predictions/refresh', viewer, method='POST', expected=403)

@@ -10,6 +10,7 @@ from app.core.security import Principal, get_principal, require_min_role
 from app.db.session import get_session
 from app.domain import audit as audit_service
 from app.domain import smvu as smvu_service
+from app.domain.equipment import RegistryError
 
 router = APIRouter(prefix="/smvu", tags=["smvu"])
 
@@ -66,14 +67,16 @@ def ingest_smvu_batch(
                 status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
                 detail="Приём потока событий не настроен",
             )
-        latest = smvu_service.spool_events(
-            settings.inbox_dir,
-            body.batch_id,
-            [event.model_dump() for event in body.events],
-            settings.timezone,
-        )
-        event_count = len(body.events)
-        last_event_at = last_event_at or latest
+        try:
+            latest, event_count = smvu_service.queue_events(
+                session,
+                [event.model_dump() for event in body.events],
+                body.batch_id,
+                settings.timezone,
+            )
+        except RegistryError as error:
+            raise HTTPException(409, str(error)) from None
+        last_event_at = latest
     result = smvu_service.accept_batch(
         session,
         batch_id=body.batch_id,

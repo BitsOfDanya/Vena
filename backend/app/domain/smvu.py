@@ -4,11 +4,14 @@ import json
 import os
 from datetime import UTC, datetime
 from pathlib import Path
+from uuid import uuid4
 from zoneinfo import ZoneInfo
 
+from sqlalchemy import select
 from sqlalchemy.orm import Session
 
-from app.db.models import SmvuIngestState, utcnow
+from app.db.models import Equipment, HistoricalEvent, ImportOutbox, SmvuIngestState, utcnow
+from app.domain.equipment import RegistryError, lock_registry
 
 
 def get_status(session: Session) -> dict:
@@ -37,15 +40,21 @@ def get_status(session: Session) -> dict:
     }
 
 
-def spool_events(inbox: Path, batch_id: str, events: list[dict], timezone: str) -> datetime:
+def spool_events(
+    inbox: Path, batch_id: str, events: list[dict], timezone: str, delivery_id: str | None = None
+) -> datetime:
     zone = ZoneInfo(timezone)
     inbox.mkdir(parents=True, exist_ok=True)
     name = f"{utcnow():%Y%m%dT%H%M%S%f}-{batch_id}.jsonl"
+    if delivery_id:
+        name = f"stream-{delivery_id}.jsonl"
     temporary = inbox / f".{name}.tmp"
     latest: datetime | None = None
     with temporary.open("w", encoding="utf-8") as handle:
         for event in events:
-            ts: datetime = event["ts"]
+            ts = event["ts"]
+            if isinstance(ts, str):
+                ts = datetime.fromisoformat(ts)
             if ts.tzinfo is not None:
                 ts = ts.astimezone(zone).replace(tzinfo=None)
             latest = ts if latest is None else max(latest, ts)
@@ -54,6 +63,56 @@ def spool_events(inbox: Path, batch_id: str, events: list[dict], timezone: str) 
     os.replace(temporary, inbox / name)
     assert latest is not None
     return latest
+
+
+def queue_events(
+    session: Session, events: list[dict], batch_id: str, timezone: str
+) -> tuple[datetime, int]:
+    lock_registry(session)
+    known = set(session.scalars(select(Equipment.asset_id)))
+    seen: dict[str, dict] = {}
+    for event in events:
+        values = dict(event)
+        if values["ts"].tzinfo is None:
+            values["ts"] = values["ts"].replace(tzinfo=ZoneInfo(timezone))
+        if known and values["channel_id"] not in known:
+            raise RegistryError("Канал отсутствует в реестре: сначала обновите справочник")
+        key = values["event_id"]
+        if key in seen and seen[key] != values:
+            raise RegistryError("Повторный идентификатор события с другими значениями")
+        seen[key] = values
+    latest = max(row["ts"] for row in seen.values())
+    rows = list(seen.values())
+    added = []
+    for offset in range(0, len(rows), 1000):
+        batch = rows[offset : offset + 1000]
+        existing = {
+            row.event_id: row
+            for row in session.scalars(
+                select(HistoricalEvent).where(
+                    HistoricalEvent.event_id.in_([row["event_id"] for row in batch])
+                )
+            )
+        }
+        for row in batch:
+            current = existing.get(row["event_id"])
+            if current:
+                if any(getattr(current, key) != value for key, value in row.items()):
+                    raise RegistryError("Событие уже записано с другими значениями")
+                continue
+            session.add(HistoricalEvent(**row))
+            added.append({**row, "ts": row["ts"].isoformat()})
+        session.flush()
+    if added:
+        session.add(
+            ImportOutbox(
+                id=uuid4().hex,
+                payload=json.dumps(
+                    {"kind": "stream", "batch_id": batch_id, "events": added}, ensure_ascii=False
+                ),
+            )
+        )
+    return latest, len(added)
 
 
 def accept_batch(

@@ -1,6 +1,7 @@
 "use client"
 
 import * as React from "react"
+import { workflowMode } from "@/shared/config/env"
 
 import { DEMO_NOW, type ForecastHorizon, type ReplayEpisode } from "@/entities/infrastructure"
 
@@ -104,7 +105,7 @@ export function reduce(state: State, action: Action): State {
 
 type Workspace = {
   now: number
-  mode: "demo" | "replay"
+  mode: "demo" | "replay" | "live"
   selectedAssetId: string | null
   compareIds: string[]
   horizon: ForecastHorizon
@@ -125,6 +126,16 @@ const WorkspaceContext = React.createContext<Workspace | null>(null)
 export function WorkspaceProvider({ children }: { children: React.ReactNode }) {
   const [state, dispatch] = React.useReducer(reduce, INITIAL)
   const playing = state.replay?.playing ?? false
+  const [clock, setClock] = React.useState(DEMO_NOW)
+  React.useEffect(() => {
+    if (workflowMode !== "api") return
+    const initialTick = window.setTimeout(() => setClock(Date.now()), 0)
+    const timer = window.setInterval(() => setClock(Date.now()), 30_000)
+    return () => {
+      window.clearTimeout(initialTick)
+      window.clearInterval(timer)
+    }
+  }, [])
 
   React.useEffect(() => {
     if (!playing) return
@@ -134,8 +145,8 @@ export function WorkspaceProvider({ children }: { children: React.ReactNode }) {
 
   const value = React.useMemo<Workspace>(
     () => ({
-      now: state.replay ? state.replay.time : DEMO_NOW,
-      mode: state.replay ? "replay" : "demo",
+      now: state.replay ? state.replay.time : workflowMode === "api" ? clock : DEMO_NOW,
+      mode: state.replay ? "replay" : workflowMode === "api" ? "live" : "demo",
       selectedAssetId: state.selectedAssetId,
       compareIds: state.compareIds,
       horizon: state.horizon,
@@ -150,7 +161,7 @@ export function WorkspaceProvider({ children }: { children: React.ReactNode }) {
       toggleReplay: () => dispatch({ type: "replay-toggle" }),
       setReplaySpeed: (speed) => dispatch({ type: "replay-speed", speed }),
     }),
-    [state]
+    [state, clock]
   )
 
   return <WorkspaceContext.Provider value={value}>{children}</WorkspaceContext.Provider>

@@ -28,15 +28,6 @@ async def lifespan(_: FastAPI) -> AsyncIterator[None]:
             session.commit()
         finally:
             session.close()
-    else:
-        from app.domain.spatial import ensure_demo_spatial
-
-        session = SessionLocal()
-        try:
-            ensure_demo_spatial(session)
-            session.commit()
-        finally:
-            session.close()
     if settings.ingest_on_startup:
         session = SessionLocal()
         try:

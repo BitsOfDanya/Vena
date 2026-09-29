@@ -1,4 +1,5 @@
 import json
+from datetime import timedelta
 from io import BytesIO
 from typing import Annotated, Literal
 
@@ -182,3 +183,48 @@ def template(kind: Literal["channels", "journal"], _: Admin) -> Response:
         media_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
         headers={"Content-Disposition": f'attachment; filename="{kind}.xlsx"'},
     )
+
+
+@router.get("/events/recent")
+def recent_events(
+    db: DB,
+    _: Reader,
+    hours: int = Query(6, ge=1, le=168),
+    limit: int = Query(100, ge=1, le=500),
+    channel_id: str | None = None,
+) -> dict:
+    query = select(HistoricalEvent, Equipment.name, Equipment.object_id).outerjoin(
+        Equipment, Equipment.asset_id == HistoricalEvent.channel_id
+    )
+    latest_query = select(func.max(HistoricalEvent.ts))
+    if channel_id:
+        latest_query = latest_query.where(HistoricalEvent.channel_id == channel_id)
+        query = query.where(HistoricalEvent.channel_id == channel_id)
+    latest = db.scalar(latest_query)
+    if latest is None:
+        return {"latest_at": None, "from": None, "items": [], "has_more": False}
+    start = latest - timedelta(hours=hours)
+    rows = list(
+        db.execute(
+            query.where(HistoricalEvent.ts >= start)
+            .order_by(HistoricalEvent.ts.desc(), HistoricalEvent.event_id.desc())
+            .limit(limit + 1)
+        )
+    )
+    return {
+        "latest_at": latest,
+        "from": start,
+        "has_more": len(rows) > limit,
+        "items": [
+            {
+                "event_id": event.event_id,
+                "channel_id": event.channel_id,
+                "ts": event.ts,
+                "value": event.value,
+                "alarm": event.alarm,
+                "name": name or event.channel_id,
+                "object_id": object_id,
+            }
+            for event, name, object_id in rows[:limit]
+        ],
+    }

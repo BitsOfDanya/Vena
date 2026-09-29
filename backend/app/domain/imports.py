@@ -17,7 +17,7 @@ from sqlalchemy.orm import Session
 from app.api.routes.smvu import SmvuEventIn
 from app.core.config import Settings
 from app.db.models import Equipment, HistoricalEvent, ImportOutbox, IntegrationRun, utcnow
-from app.domain import audit, equipment
+from app.domain import audit, equipment, smvu
 from app.schemas.equipment import EquipmentIn
 
 ALIASES = {
@@ -332,14 +332,35 @@ def apply_import(
 
 
 def publish_pending(session: Session, settings: Settings) -> None:
-    if settings.dataset_dir is None:
+    if settings.dataset_dir is None and settings.inbox_dir is None:
         return
     equipment.lock_registry(session)
     rows = list(session.scalars(select(ImportOutbox).where(ImportOutbox.delivered_at.is_(None))))
     if not rows:
         return
+    dataset_changed = False
     for row in rows:
         payload = json.loads(row.payload)
+        if payload["kind"] == "stream":
+            if settings.inbox_dir is None:
+                continue
+            name = f"stream-{row.id}.jsonl"
+            if (
+                not (settings.inbox_dir / name).exists()
+                and not (settings.inbox_dir / "processed" / name).exists()
+            ):
+                smvu.spool_events(
+                    settings.inbox_dir,
+                    payload["batch_id"],
+                    payload["events"],
+                    settings.timezone,
+                    delivery_id=row.id,
+                )
+            row.delivered_at = utcnow()
+            continue
+        if settings.dataset_dir is None:
+            continue
+        dataset_changed = True
         if payload["kind"] == "channels":
             equipment.publish_registry(session, settings)
         else:
@@ -351,8 +372,9 @@ def publish_pending(session: Session, settings: Settings) -> None:
             elif not target.exists():
                 raise OSError("Файл журнала не найден")
         row.delivered_at = utcnow()
-    marker = settings.dataset_dir / ".revision"
-    temporary = marker.with_suffix(".tmp")
-    temporary.write_text(uuid4().hex, encoding="utf-8")
-    temporary.replace(marker)
+    if dataset_changed and settings.dataset_dir is not None:
+        marker = settings.dataset_dir / ".revision"
+        temporary = marker.with_suffix(".tmp")
+        temporary.write_text(uuid4().hex, encoding="utf-8")
+        temporary.replace(marker)
     session.commit()

@@ -60,7 +60,7 @@ export function SnapshotLine({ snapshot }: { snapshot: SnapshotStatus | undefine
   if (!snapshot) return null
   if (!snapshot.available) {
     return (
-      <p className="text-[12px] text-status-critical">Снимок прогнозов недоступен · {snapshot.detail}</p>
+      <p className="text-[12px] text-status-critical">{snapshot.detail || "Снимок прогнозов недоступен"}</p>
     )
   }
   const days = snapshot.ageSeconds === null ? null : Math.floor(snapshot.ageSeconds / 86_400)
