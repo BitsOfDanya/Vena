@@ -1,0 +1,210 @@
+{
+ "pump_24h": {
+  "recipe": "blend_lr_lightgbm",
+  "window": "all",
+  "2025_base": {
+   "base_rate": 0.0808,
+   "avg_precision": 0.2995,
+   "roc_auc": 0.7613,
+   "top5_per_day": 0.2301
+  },
+  "2025_base_on_coincident": {
+   "base_rate": 0.0549,
+   "avg_precision": 0.1125,
+   "roc_auc": 0.702,
+   "top5_per_day": 0.08
+  },
+  "2025_cascade": {
+   "base_rate": 0.0808,
+   "avg_precision": 0.2914,
+   "roc_auc": 0.7591,
+   "top5_per_day": 0.2389
+  },
+  "2025_cascade_on_coincident": {
+   "base_rate": 0.0549,
+   "avg_precision": 0.1102,
+   "roc_auc": 0.7003,
+   "top5_per_day": 0.0795
+  },
+  "2026H1_base": {
+   "base_rate": 0.1174,
+   "avg_precision": 0.3288,
+   "roc_auc": 0.6894,
+   "top5_per_day": 0.4156
+  },
+  "2026H1_base_on_coincident": {
+   "base_rate": 0.0625,
+   "avg_precision": 0.0964,
+   "roc_auc": 0.6266,
+   "top5_per_day": 0.1178
+  },
+  "2026H1_cascade": {
+   "base_rate": 0.1174,
+   "avg_precision": 0.3099,
+   "roc_auc": 0.6853,
+   "top5_per_day": 0.4278
+  },
+  "2026H1_cascade_on_coincident": {
+   "base_rate": 0.0625,
+   "avg_precision": 0.09,
+   "roc_auc": 0.6139,
+   "top5_per_day": 0.1311
+  }
+ },
+ "pump_72h": {
+  "recipe": "blend_lr_lightgbm",
+  "window": "3y",
+  "2025_base": {
+   "base_rate": 0.189,
+   "avg_precision": 0.496,
+   "roc_auc": 0.7484,
+   "top5_per_day": 0.5173
+  },
+  "2025_base_on_coincident": {
+   "base_rate": 0.1477,
+   "avg_precision": 0.2928,
+   "roc_auc": 0.7046,
+   "top5_per_day": 0.2921
+  },
+  "2025_cascade": {
+   "base_rate": 0.189,
+   "avg_precision": 0.4986,
+   "roc_auc": 0.7495,
+   "top5_per_day": 0.5238
+  },
+  "2025_cascade_on_coincident": {
+   "base_rate": 0.1477,
+   "avg_precision": 0.2877,
+   "roc_auc": 0.7034,
+   "top5_per_day": 0.2959
+  },
+  "2026H1_base": {
+   "base_rate": 0.2588,
+   "avg_precision": 0.4999,
+   "roc_auc": 0.6271,
+   "top5_per_day": 0.7764
+  },
+  "2026H1_base_on_coincident": {
+   "base_rate": 0.1662,
+   "avg_precision": 0.226,
+   "roc_auc": 0.5752,
+   "top5_per_day": 0.3517
+  },
+  "2026H1_cascade": {
+   "base_rate": 0.2588,
+   "avg_precision": 0.5045,
+   "roc_auc": 0.641,
+   "top5_per_day": 0.7854
+  },
+  "2026H1_cascade_on_coincident": {
+   "base_rate": 0.1662,
+   "avg_precision": 0.2377,
+   "roc_auc": 0.5985,
+   "top5_per_day": 0.3708
+  }
+ },
+ "fan_24h": {
+  "recipe": "catboost",
+  "window": "all",
+  "2025_base": {
+   "base_rate": 0.0609,
+   "avg_precision": 0.1636,
+   "roc_auc": 0.7524,
+   "top5_per_day": 0.1244
+  },
+  "2025_base_on_coincident": {
+   "base_rate": 0.0558,
+   "avg_precision": 0.1491,
+   "roc_auc": 0.751,
+   "top5_per_day": 0.1151
+  },
+  "2025_cascade": {
+   "base_rate": 0.0609,
+   "avg_precision": 0.1531,
+   "roc_auc": 0.7356,
+   "top5_per_day": 0.1282
+  },
+  "2025_cascade_on_coincident": {
+   "base_rate": 0.0558,
+   "avg_precision": 0.1392,
+   "roc_auc": 0.7325,
+   "top5_per_day": 0.1167
+  },
+  "2026H1_base": {
+   "base_rate": 0.0421,
+   "avg_precision": 0.2396,
+   "roc_auc": 0.8788,
+   "top5_per_day": 0.1756
+  },
+  "2026H1_base_on_coincident": {
+   "base_rate": 0.0393,
+   "avg_precision": 0.2151,
+   "roc_auc": 0.8754,
+   "top5_per_day": 0.1333
+  },
+  "2026H1_cascade": {
+   "base_rate": 0.0421,
+   "avg_precision": 0.1752,
+   "roc_auc": 0.8703,
+   "top5_per_day": 0.17
+  },
+  "2026H1_cascade_on_coincident": {
+   "base_rate": 0.0393,
+   "avg_precision": 0.1617,
+   "roc_auc": 0.8677,
+   "top5_per_day": 0.1244
+  }
+ },
+ "fan_72h": {
+  "recipe": "catboost",
+  "window": "all",
+  "2025_base": {
+   "base_rate": 0.1402,
+   "avg_precision": 0.3958,
+   "roc_auc": 0.8023,
+   "top5_per_day": 0.3249
+  },
+  "2025_base_on_coincident": {
+   "base_rate": 0.1315,
+   "avg_precision": 0.3868,
+   "roc_auc": 0.808,
+   "top5_per_day": 0.3101
+  },
+  "2025_cascade": {
+   "base_rate": 0.1402,
+   "avg_precision": 0.3678,
+   "roc_auc": 0.7932,
+   "top5_per_day": 0.3326
+  },
+  "2025_cascade_on_coincident": {
+   "base_rate": 0.1315,
+   "avg_precision": 0.3563,
+   "roc_auc": 0.7966,
+   "top5_per_day": 0.3162
+  },
+  "2026H1_base": {
+   "base_rate": 0.0919,
+   "avg_precision": 0.5398,
+   "roc_auc": 0.9219,
+   "top5_per_day": 0.4382
+  },
+  "2026H1_base_on_coincident": {
+   "base_rate": 0.0863,
+   "avg_precision": 0.5254,
+   "roc_auc": 0.9222,
+   "top5_per_day": 0.3798
+  },
+  "2026H1_cascade": {
+   "base_rate": 0.0919,
+   "avg_precision": 0.5169,
+   "roc_auc": 0.9185,
+   "top5_per_day": 0.4315
+  },
+  "2026H1_cascade_on_coincident": {
+   "base_rate": 0.0863,
+   "avg_precision": 0.4971,
+   "roc_auc": 0.918,
+   "top5_per_day": 0.3618
+  }
+ }
+}

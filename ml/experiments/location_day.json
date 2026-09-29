@@ -1,0 +1,147 @@
+{
+ "pump_72h": {
+  "channel": {
+   "units_per_day": 138.5,
+   "base_rate": 0.2443,
+   "avg_precision": 0.404,
+   "roc_auc": 0.6371,
+   "top3_per_day": 0.6836,
+   "top5_per_day": 0.6429,
+   "top10_per_day": 0.5684
+  },
+  "section": {
+   "units_per_day": 69.3,
+   "base_rate": 0.264,
+   "avg_precision": 0.4512,
+   "roc_auc": 0.6519,
+   "top3_per_day": 0.7024,
+   "top5_per_day": 0.6508,
+   "top10_per_day": 0.5056
+  },
+  "object": {
+   "units_per_day": 17.4,
+   "base_rate": 0.4204,
+   "avg_precision": 0.6239,
+   "roc_auc": 0.6865,
+   "top3_per_day": 0.725,
+   "top5_per_day": 0.6328,
+   "top10_per_day": 0.522
+  }
+ },
+ "fan_72h": {
+  "channel": {
+   "units_per_day": 272.9,
+   "base_rate": 0.1527,
+   "avg_precision": 0.3779,
+   "roc_auc": 0.7707,
+   "top3_per_day": 0.4708,
+   "top5_per_day": 0.4689,
+   "top10_per_day": 0.4644
+  },
+  "section": {
+   "units_per_day": 183.4,
+   "base_rate": 0.2059,
+   "avg_precision": 0.3853,
+   "roc_auc": 0.6861,
+   "top3_per_day": 0.4708,
+   "top5_per_day": 0.4667,
+   "top10_per_day": 0.4633
+  },
+  "object": {
+   "units_per_day": 15.7,
+   "base_rate": 0.3362,
+   "avg_precision": 0.6472,
+   "roc_auc": 0.8221,
+   "top3_per_day": 0.7024,
+   "top5_per_day": 0.6045,
+   "top10_per_day": 0.4989
+  }
+ },
+ "smoke_24h": {
+  "channel": {
+   "units_per_day": 1936.8,
+   "base_rate": 0.0029,
+   "avg_precision": 0.0507,
+   "roc_auc": 0.9449,
+   "top3_per_day": 0.0968,
+   "top5_per_day": 0.0804,
+   "top10_per_day": 0.0709
+  },
+  "section": {
+   "units_per_day": 151.6,
+   "base_rate": 0.0188,
+   "avg_precision": 0.056,
+   "roc_auc": 0.7667,
+   "top3_per_day": 0.1434,
+   "top5_per_day": 0.1061,
+   "top10_per_day": 0.081
+  },
+  "object": {
+   "units_per_day": 18.2,
+   "base_rate": 0.0695,
+   "avg_precision": 0.2303,
+   "roc_auc": 0.7903,
+   "top3_per_day": 0.2272,
+   "top5_per_day": 0.1747,
+   "top10_per_day": 0.1106
+  }
+ },
+ "flood_24h": {
+  "channel": {
+   "units_per_day": 137.8,
+   "base_rate": 0.04,
+   "avg_precision": 0.1743,
+   "roc_auc": 0.8086,
+   "top3_per_day": 0.2588,
+   "top5_per_day": 0.2179,
+   "top10_per_day": 0.1609
+  },
+  "section": {
+   "units_per_day": 69.0,
+   "base_rate": 0.0382,
+   "avg_precision": 0.2426,
+   "roc_auc": 0.8689,
+   "top3_per_day": 0.2663,
+   "top5_per_day": 0.2168,
+   "top10_per_day": 0.1615
+  },
+  "object": {
+   "units_per_day": 17.3,
+   "base_rate": 0.1159,
+   "avg_precision": 0.3981,
+   "roc_auc": 0.8149,
+   "top3_per_day": 0.3799,
+   "top5_per_day": 0.2872,
+   "top10_per_day": 0.1838
+  }
+ },
+ "phase_24h": {
+  "channel": {
+   "units_per_day": 682.8,
+   "base_rate": 0.2491,
+   "avg_precision": 0.5131,
+   "roc_auc": 0.7889,
+   "top3_per_day": 0.6946,
+   "top5_per_day": 0.6916,
+   "top10_per_day": 0.6508
+  },
+  "section": {
+   "units_per_day": 321.0,
+   "base_rate": 0.2923,
+   "avg_precision": 0.5456,
+   "roc_auc": 0.7734,
+   "top3_per_day": 0.6946,
+   "top5_per_day": 0.6682,
+   "top10_per_day": 0.6514
+  },
+  "object": {
+   "units_per_day": 18.9,
+   "base_rate": 0.5851,
+   "avg_precision": 0.7835,
+   "roc_auc": 0.7307,
+   "top3_per_day": 0.7784,
+   "top5_per_day": 0.752,
+   "top10_per_day": 0.6933
+  }
+ }
+}

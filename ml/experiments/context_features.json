@@ -1,0 +1,240 @@
+{
+ "pump_24h": {
+  "recipe": "blend_lr_lightgbm",
+  "window": "all",
+  "2025_base": {
+   "avg_precision": 0.2995,
+   "roc_auc": 0.7613,
+   "top5_per_day": 0.2301
+  },
+  "2025_context": {
+   "avg_precision": 0.2781,
+   "roc_auc": 0.7451,
+   "top5_per_day": 0.2449
+  },
+  "2026H1_base": {
+   "avg_precision": 0.3288,
+   "roc_auc": 0.6894,
+   "top5_per_day": 0.4156
+  },
+  "2026H1_context": {
+   "avg_precision": 0.3352,
+   "roc_auc": 0.6994,
+   "top5_per_day": 0.4211
+  }
+ },
+ "pump_72h": {
+  "recipe": "blend_lr_lightgbm",
+  "window": "3y",
+  "2025_base": {
+   "avg_precision": 0.496,
+   "roc_auc": 0.7484,
+   "top5_per_day": 0.5173
+  },
+  "2025_context": {
+   "avg_precision": 0.4912,
+   "roc_auc": 0.7348,
+   "top5_per_day": 0.5173
+  },
+  "2026H1_base": {
+   "avg_precision": 0.4999,
+   "roc_auc": 0.6271,
+   "top5_per_day": 0.7764
+  },
+  "2026H1_context": {
+   "avg_precision": 0.5029,
+   "roc_auc": 0.6322,
+   "top5_per_day": 0.7742
+  }
+ },
+ "fan_24h": {
+  "recipe": "catboost",
+  "window": "all",
+  "2025_base": {
+   "avg_precision": 0.1636,
+   "roc_auc": 0.7524,
+   "top5_per_day": 0.1244
+  },
+  "2025_context": {
+   "avg_precision": 0.1514,
+   "roc_auc": 0.7346,
+   "top5_per_day": 0.1216
+  },
+  "2026H1_base": {
+   "avg_precision": 0.2396,
+   "roc_auc": 0.8788,
+   "top5_per_day": 0.1756
+  },
+  "2026H1_context": {
+   "avg_precision": 0.2418,
+   "roc_auc": 0.8801,
+   "top5_per_day": 0.1944
+  },
+  "top_features_2026H1": {
+   "channel_failure_prior": 10.14,
+   "time_since_last_failure_days": 10.08,
+   "historical_failure_rate": 8.29,
+   "ctx_power_object_168h": 4.57,
+   "channel_alarm_prior": 4.37,
+   "ewma_event_rate_7d": 4.36,
+   "ewma_alarm_rate_1d": 3.71,
+   "events_30d": 3.51,
+   "ewma_failure_rate_30d": 3.38,
+   "weekday_sin": 3.23,
+   "days_since_last_3rd_failure": 2.91,
+   "events_6h": 2.7
+  }
+ },
+ "fan_72h": {
+  "recipe": "catboost",
+  "window": "all",
+  "2025_base": {
+   "avg_precision": 0.3958,
+   "roc_auc": 0.8023,
+   "top5_per_day": 0.3249
+  },
+  "2025_context": {
+   "avg_precision": 0.3784,
+   "roc_auc": 0.7897,
+   "top5_per_day": 0.3079
+  },
+  "2026H1_base": {
+   "avg_precision": 0.5398,
+   "roc_auc": 0.9219,
+   "top5_per_day": 0.4382
+  },
+  "2026H1_context": {
+   "avg_precision": 0.4463,
+   "roc_auc": 0.9141,
+   "top5_per_day": 0.4169
+  },
+  "top_features_2026H1": {
+   "ewma_event_rate_7d": 10.28,
+   "time_since_last_failure_days": 9.6,
+   "ctx_power_object_168h": 8.82,
+   "channel_failure_prior": 7.73,
+   "ctx_power_section_168h": 7.6,
+   "weekday_cos": 3.71,
+   "days_since_last_3rd_failure": 3.08,
+   "ewma_failure_rate_30d": 2.88,
+   "failures_90d": 2.72,
+   "historical_failure_rate": 2.43,
+   "month": 2.31,
+   "channel_event_prior": 2.19
+  }
+ },
+ "smoke_24h": {
+  "recipe": "catboost",
+  "window": "all",
+  "2025_base": {
+   "avg_precision": 0.3153,
+   "roc_auc": 0.9288,
+   "top5_per_day": 0.1797
+  },
+  "2025_context": {
+   "avg_precision": 0.3763,
+   "roc_auc": 0.9381,
+   "top5_per_day": 0.1956
+  },
+  "2026H1_base": {
+   "avg_precision": 0.2712,
+   "roc_auc": 0.9304,
+   "top5_per_day": 0.2389
+  },
+  "2026H1_context": {
+   "avg_precision": 0.233,
+   "roc_auc": 0.9277,
+   "top5_per_day": 0.2122
+  },
+  "top_features_2026H1": {
+   "ewma_failure_rate_7d": 10.8,
+   "ctx_smoke_object_hours_since": 10.47,
+   "ctx_smoke_section_hours_since": 9.37,
+   "time_since_last_failure_days": 5.63,
+   "alarms_24h": 3.5,
+   "interarrival_min": 2.93,
+   "channel_alarm_prior": 2.67,
+   "channel_failure_prior": 2.6,
+   "events_24h": 2.57,
+   "ewma_failure_rate_30d": 2.52,
+   "month": 2.2,
+   "time_since_last_event_hours": 1.84
+  }
+ },
+ "flood_24h": {
+  "recipe": "lightgbm",
+  "window": "all",
+  "2025_base": {
+   "avg_precision": 0.2867,
+   "roc_auc": 0.7638,
+   "top5_per_day": 0.2301
+  },
+  "2025_context": {
+   "avg_precision": 0.2776,
+   "roc_auc": 0.7667,
+   "top5_per_day": 0.2334
+  },
+  "2026H1_base": {
+   "avg_precision": 0.2536,
+   "roc_auc": 0.7014,
+   "top5_per_day": 0.3289
+  },
+  "2026H1_context": {
+   "avg_precision": 0.2734,
+   "roc_auc": 0.7417,
+   "top5_per_day": 0.3367
+  },
+  "top_features_2026H1": {
+   "ctx_power_object_168h": 415.0,
+   "time_since_last_failure_days": 353.0,
+   "days_since_last_3rd_failure": 311.0,
+   "ctx_power_section_168h": 307.0,
+   "last_inter_failure_interval_days": 271.0,
+   "ewma_failure_rate_30d": 246.0,
+   "days_since_last_2nd_failure": 242.0,
+   "channel_failure_prior": 240.0,
+   "month": 230.0,
+   "ewma_failure_rate_7d": 225.0,
+   "events_30d": 224.0,
+   "ratio_last_interval_to_historical_median": 218.0
+  }
+ },
+ "phase_24h": {
+  "recipe": "catboost",
+  "window": "3y",
+  "2025_base": {
+   "avg_precision": 0.8772,
+   "roc_auc": 0.9254,
+   "top5_per_day": 0.9852
+  },
+  "2025_context": {
+   "avg_precision": 0.8696,
+   "roc_auc": 0.9166,
+   "top5_per_day": 0.983
+  },
+  "2026H1_base": {
+   "avg_precision": 0.7512,
+   "roc_auc": 0.8743,
+   "top5_per_day": 0.9633
+  },
+  "2026H1_context": {
+   "avg_precision": 0.7643,
+   "roc_auc": 0.8808,
+   "top5_per_day": 0.9622
+  },
+  "top_features_2026H1": {
+   "events_6h": 12.88,
+   "events_24h": 9.24,
+   "events_10m": 8.76,
+   "events_1h": 8.19,
+   "time_since_last_failure_days": 5.06,
+   "rate_acceleration": 4.71,
+   "ewma_failure_rate_30d": 3.94,
+   "failures_30d": 3.57,
+   "event_rate_delta": 3.45,
+   "historical_failure_rate": 3.17,
+   "weekday_sin": 3.03,
+   "weekday": 2.56
+  }
+ }
+}

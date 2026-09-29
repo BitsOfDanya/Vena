@@ -1,0 +1,61 @@
+{
+ "rows": 6149651,
+ "detections": 10089,
+ "maintenance_share": 0.6416,
+ "2025": {
+  "n": 1016721,
+  "base_rate": 0.00037,
+  "rule_max_24h": {
+   "avg_precision": 0.0115,
+   "roc_auc": 0.6197,
+   "recall_at_precision_0.7": 0.0,
+   "top5_per_day": 0.0225
+  },
+  "rule_detections_7d": {
+   "avg_precision": 0.0085,
+   "roc_auc": 0.6137,
+   "recall_at_precision_0.7": 0.0,
+   "top5_per_day": 0.0077
+  },
+  "lightgbm": {
+   "avg_precision": 0.0049,
+   "roc_auc": 0.8409,
+   "recall_at_precision_0.7": 0.0,
+   "top5_per_day": 0.0126
+  },
+  "catboost": {
+   "avg_precision": 0.0046,
+   "roc_auc": 0.8148,
+   "recall_at_precision_0.7": 0.0,
+   "top5_per_day": 0.0071
+  }
+ },
+ "2026H1": {
+  "n": 511034,
+  "base_rate": 0.00131,
+  "rule_max_24h": {
+   "avg_precision": 0.0078,
+   "roc_auc": 0.4557,
+   "recall_at_precision_0.7": 0.0,
+   "top5_per_day": 0.0223
+  },
+  "rule_detections_7d": {
+   "avg_precision": 0.0359,
+   "roc_auc": 0.7627,
+   "recall_at_precision_0.7": 0.0,
+   "top5_per_day": 0.0369
+  },
+  "lightgbm": {
+   "avg_precision": 0.0584,
+   "roc_auc": 0.8605,
+   "recall_at_precision_0.7": 0.003,
+   "top5_per_day": 0.0525
+  },
+  "catboost": {
+   "avg_precision": 0.0597,
+   "roc_auc": 0.825,
+   "recall_at_precision_0.7": 0.0,
+   "top5_per_day": 0.0503
+  }
+ }
+}
