@@ -12,7 +12,7 @@ CATEGORY_COLUMNS = ["channel_id", "tag", "system_type", "raw_value"]
 def _connect():
     con = duckdb.connect()
     con.execute("PRAGMA threads=6")
-    con.execute("SET memory_limit='9GB'")
+    con.execute("SET memory_limit='3GB'")
     con.execute("PRAGMA enable_progress_bar=false")
     return con
 
@@ -65,7 +65,7 @@ def _extract_and_cache(sensor_type, path, batch_rows):
     try:
         for batch in reader:
             chunk = batch.to_pandas()
-            chunk["alarm_flag"] = (chunk["alarm_flag"] == "t").astype("int8")
+            chunk["alarm_flag"] = (chunk["alarm_flag"].astype(str).str.lower().isin(["t", "true", "1"])).astype("int8")
             table = pa.Table.from_pandas(chunk, preserve_index=False)
             if writer is None:
                 writer = pq.ParquetWriter(tmp_path, table.schema, use_dictionary=CATEGORY_COLUMNS)

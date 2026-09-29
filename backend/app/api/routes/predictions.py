@@ -114,7 +114,7 @@ def get_prediction(
     source = get_prediction_source(settings)
     prediction = source.get(prediction_id)
     if prediction is None:
-        raise HTTPException(status_code=404, detail="prediction not found")
+        raise HTTPException(status_code=404, detail="Прогноз не найден")
     action = session.scalars(
         select(Action)
         .where(Action.asset_id == prediction.asset_id, Action.status.in_(OPEN_STATUSES))
@@ -145,7 +145,7 @@ def asset_prediction(asset_id: str, settings: SettingsDep, _: ReaderDep) -> Pred
     _require_snapshot(settings)
     prediction = get_prediction_source(settings).latest_for_asset(asset_id)
     if prediction is None:
-        raise HTTPException(status_code=404, detail="prediction not found for asset")
+        raise HTTPException(status_code=404, detail="Прогноз для канала не найден")
     return prediction
 
 

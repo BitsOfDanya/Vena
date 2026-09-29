@@ -18,7 +18,7 @@ class NullEmailProvider:
         return False
 
     def send(self, recipient: str, subject: str, body: str) -> None:
-        raise RuntimeError("email provider is not configured")
+        raise RuntimeError("Отправка электронной почты не настроена")
 
 
 class SmtpEmailProvider:

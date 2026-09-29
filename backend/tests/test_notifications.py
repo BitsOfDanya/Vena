@@ -69,4 +69,4 @@ def test_test_email_requires_configuration(client: TestClient) -> None:
     )
 
     assert response.status_code == 409
-    assert "not configured" in response.json()["detail"]
+    assert "не настроена" in response.json()["detail"]

@@ -1,6 +1,17 @@
-from datetime import UTC, datetime
+from datetime import UTC, date, datetime
 
-from sqlalchemy import Boolean, CheckConstraint, DateTime, Float, ForeignKey, Integer, String, Text
+from sqlalchemy import (
+    Boolean,
+    CheckConstraint,
+    Date,
+    DateTime,
+    Float,
+    ForeignKey,
+    Integer,
+    String,
+    Text,
+    UniqueConstraint,
+)
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, relationship
 
 
@@ -23,6 +34,8 @@ class User(Base):
     role: Mapped[str] = mapped_column(String(16), default="dispatcher")
     is_active: Mapped[bool] = mapped_column(Boolean, default=True)
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=utcnow)
+    auth_provider: Mapped[str] = mapped_column(String(16), default="local", server_default="local")
+    directory_id: Mapped[str | None] = mapped_column(String(64), unique=True, nullable=True)
 
 
 class AuthSession(Base):
@@ -198,3 +211,58 @@ class SmvuIngestState(Base):
     last_event_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
     received_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
     detail: Mapped[str] = mapped_column(Text, default="")
+
+
+class Equipment(Base):
+    __tablename__ = "equipment"
+    __table_args__ = (
+        UniqueConstraint("source", "external_id", name="uq_equipment_source_external"),
+    )
+
+    asset_id: Mapped[str] = mapped_column(String(32), primary_key=True)
+    external_id: Mapped[str] = mapped_column(String(128))
+    source: Mapped[str] = mapped_column(String(64))
+    name: Mapped[str] = mapped_column(String(200))
+    object_id: Mapped[str] = mapped_column(String(80), index=True)
+    section: Mapped[str] = mapped_column(String(120), default="")
+    equipment_type: Mapped[str] = mapped_column(String(80), default="")
+    tag: Mapped[str] = mapped_column(String(200), default="")
+    system_type: Mapped[str] = mapped_column(String(120), default="")
+    manufacturer: Mapped[str] = mapped_column(String(120), default="")
+    model: Mapped[str] = mapped_column(String(120), default="")
+    serial_number: Mapped[str] = mapped_column(String(120), default="")
+    installed_on: Mapped[date | None] = mapped_column(Date, nullable=True)
+    status: Mapped[str] = mapped_column(String(16), default="active")
+    updated_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=utcnow)
+
+
+class IntegrationRun(Base):
+    __tablename__ = "integration_runs"
+
+    id: Mapped[str] = mapped_column(String(32), primary_key=True)
+    kind: Mapped[str] = mapped_column(String(32), index=True)
+    source: Mapped[str] = mapped_column(String(64))
+    status: Mapped[str] = mapped_column(String(16))
+    started_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=utcnow)
+    finished_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
+    detail: Mapped[str] = mapped_column(Text, default="")
+    result: Mapped[str] = mapped_column(Text, default="{}")
+
+
+class HistoricalEvent(Base):
+    __tablename__ = "historical_events"
+
+    event_id: Mapped[str] = mapped_column(String(40), primary_key=True)
+    channel_id: Mapped[str] = mapped_column(String(32), index=True)
+    ts: Mapped[datetime] = mapped_column(DateTime(timezone=True), index=True)
+    value: Mapped[str] = mapped_column(String(120))
+    alarm: Mapped[bool] = mapped_column(Boolean, default=False)
+
+
+class ImportOutbox(Base):
+    __tablename__ = "import_outbox"
+
+    id: Mapped[str] = mapped_column(String(64), primary_key=True)
+    payload: Mapped[str] = mapped_column(Text)
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=utcnow)
+    delivered_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)

@@ -15,6 +15,10 @@ dependencies = [
     "openpyxl>=3.1",
     "pyjwt>=2.10,<3",
     "pwdlib[argon2]>=0.3,<1",
+    "ldap3>=2.9.1,<3",
+    "httpx>=0.28,<1",
+    "defusedxml>=0.7,<1",
+    "python-multipart>=0.0.20",
 ]
 
 [dependency-groups]
@@ -52,5 +56,5 @@ build-backend = "hatchling.build"
 packages = ["app"]
 
 [[tool.mypy.overrides]]
-module = ["apscheduler.*", "openpyxl.*"]
+module = ["apscheduler.*", "openpyxl.*", "ldap3.*", "defusedxml.*"]
 ignore_missing_imports = true

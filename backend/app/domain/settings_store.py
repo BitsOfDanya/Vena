@@ -78,7 +78,7 @@ def channel_states(settings: Settings) -> list[ChannelState]:
     return [
         ChannelState(
             id="in_app",
-            name="In-app",
+            name="В приложении",
             state="configured",
             available=True,
             detail="Центр уведомлений VENA",
@@ -88,18 +88,20 @@ def channel_states(settings: Settings) -> list[ChannelState]:
             name="Email",
             state="configured" if settings.smtp_configured else "not_configured",
             available=True,
-            detail="SMTP relay configured on the server"
-            if settings.smtp_configured
-            else "SMTP не настроен",
+            detail="SMTP настроен на сервере" if settings.smtp_configured else "SMTP не настроен",
         ),
         ChannelState(
-            id="webhook", name="Webhook", state="disabled", available=False, detail="Planned"
+            id="webhook", name="Webhook", state="disabled", available=False, detail="Планируется"
         ),
         ChannelState(
-            id="telegram", name="Telegram", state="disabled", available=False, detail="Planned"
+            id="telegram", name="Telegram", state="disabled", available=False, detail="Планируется"
         ),
         ChannelState(
-            id="teams", name="Microsoft Teams", state="disabled", available=False, detail="Planned"
+            id="teams",
+            name="Microsoft Teams",
+            state="disabled",
+            available=False,
+            detail="Планируется",
         ),
     ]
 

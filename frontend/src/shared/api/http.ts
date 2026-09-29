@@ -17,7 +17,7 @@ export async function apiFetch<T>(path: string, init?: RequestInit): Promise<T> 
     credentials: "include",
     headers: {
       Accept: "application/json",
-      ...(init?.body ? { "Content-Type": "application/json" } : {}),
+      ...(init?.body && !(init.body instanceof FormData) ? { "Content-Type": "application/json" } : {}),
       ...init?.headers,
     },
   })
@@ -28,8 +28,9 @@ export async function apiFetch<T>(path: string, init?: RequestInit): Promise<T> 
     }
     let detail = response.statusText
     try {
-      const body = (await response.json()) as { detail?: string }
-      if (body.detail) detail = body.detail
+      const body = (await response.json()) as { detail?: unknown }
+      if (typeof body.detail === "string") detail = body.detail
+      else if (Array.isArray(body.detail)) detail = "Проверьте заполнение полей формы."
     } catch {
       detail = response.statusText
     }

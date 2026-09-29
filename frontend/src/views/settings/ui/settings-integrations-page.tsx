@@ -6,8 +6,10 @@ import { getSpatialStatus } from "@/entities/infrastructure/api/spatial-client"
 import { getHealth } from "@/entities/system"
 import { useNotificationSettings } from "@/entities/notification"
 import { apiFetch } from "@/shared/api/http"
-import { dataMode, environmentLabel } from "@/shared/config/env"
+import { environmentLabel } from "@/shared/config/env"
 import { z } from "zod"
+
+import { DataImportPanel } from "./data-import-panel"
 
 import { SettingsSection, SettingsShell, StateTag } from "./settings-shell"
 
@@ -38,17 +40,9 @@ export function SettingsIntegrationsPage() {
 
   return (
     <SettingsShell title="Интеграции" descriptor={`среда ${environmentLabel}`}>
+      <DataImportPanel />
       <SettingsSection title="Источники данных">
         <ul className="border border-border bg-elevated">
-          <li className="flex items-center gap-4 border-b border-border-soft px-5 py-3">
-            <span className="w-48 text-[14px]">Журнал событий</span>
-            <span className="text-[13px] text-muted-foreground">
-              {dataMode === "live" ? "Подключён источник событий" : "Демонстрационный снимок данных"}
-            </span>
-            <span className="ml-auto">
-              <StateTag state={dataMode === "live" ? "configured" : "not_configured"} />
-            </span>
-          </li>
           <li className="flex items-center gap-4 border-b border-border-soft px-5 py-3">
             <span className="w-48 text-[14px]">Поток SMVU</span>
             <span className="text-[13px] text-muted-foreground">

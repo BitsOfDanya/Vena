@@ -33,7 +33,7 @@ class Principal:
 
 def signing_key(settings: Settings) -> str:
     if len(settings.jwt_secret.encode()) < 32:
-        raise HTTPException(503, "Authentication is not configured")
+        raise HTTPException(503, "Авторизация не настроена")
     return settings.jwt_secret
 
 
@@ -44,7 +44,7 @@ def check_origin(request: Request, settings: Settings, *, required: bool = False
         *(str(o).rstrip("/") for o in settings.cors_origins),
     }
     if (required and not origin) or (origin and origin not in allowed):
-        raise HTTPException(403, "Request origin is not allowed")
+        raise HTTPException(403, "Источник запроса не разрешён")
 
 
 def issue_token(user: User, session: Session, settings: Settings) -> tuple[str, int]:
@@ -70,7 +70,7 @@ def issue_token(user: User, session: Session, settings: Settings) -> tuple[str, 
 
 
 def unauthorized() -> HTTPException:
-    return HTTPException(401, "Authentication required", headers={"WWW-Authenticate": "Bearer"})
+    return HTTPException(401, "Требуется вход в систему", headers={"WWW-Authenticate": "Bearer"})
 
 
 def get_principal(
@@ -119,7 +119,7 @@ def get_principal(
     return Principal(
         subject=user.username,
         role=cast(Role, user.role),
-        auth_method="jwt",
+        auth_method="ldap" if user.auth_provider == "ldap" else "jwt",
         user_id=user.id,
         email=user.email,
         session_id=auth_session.id,
@@ -129,7 +129,7 @@ def get_principal(
 def require_min_role(minimum: Role):
     def dependency(principal: Annotated[Principal, Depends(get_principal)]) -> Principal:
         if ROLE_RANK[principal.role] < ROLE_RANK[minimum]:
-            raise HTTPException(403, "Insufficient role")
+            raise HTTPException(403, "Недостаточно прав")
         return principal
 
     return dependency

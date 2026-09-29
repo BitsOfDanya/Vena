@@ -1,4 +1,5 @@
 import os
+import glob
 
 ROOT = os.environ.get("LCT_PROJECT_ROOT", os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 DATASET_DIR = os.path.join(ROOT, "dataset")
@@ -10,7 +11,7 @@ PLOTS_DIR = os.path.join(ANALYSIS_DIR, "plots")
 os.makedirs(CACHE_DIR, exist_ok=True)
 
 YEARS = [2019, 2020, 2021, 2022, 2023, 2024, 2025, 2026]
-JOURNAL_FILES = [os.path.join(DATASET_DIR, f"ext-journal-{y}.csv") for y in YEARS]
+JOURNAL_FILES = sorted(glob.glob(os.path.join(DATASET_DIR, "ext-journal-*.csv")) + glob.glob(os.path.join(DATASET_DIR, "uploads", "ext-journal-*.csv")))
 CHANNELS_FILE = os.path.join(DATASET_DIR, "справочник_каналов_датчиков.csv")
 
 TRAIN_YEARS = (2019, 2023)

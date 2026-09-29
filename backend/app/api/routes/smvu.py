@@ -64,7 +64,7 @@ def ingest_smvu_batch(
         if settings.inbox_dir is None:
             raise HTTPException(
                 status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
-                detail="event stream intake is not configured",
+                detail="Приём потока событий не настроен",
             )
         latest = smvu_service.spool_events(
             settings.inbox_dir,

@@ -32,7 +32,7 @@ services:
       context: ..
       dockerfile: infra/docker/ml.Dockerfile
     environment:
-      VENA_ML_MODE: ${VENA_ML_MODE:-demo}
+      VENA_ML_MODE: ${VENA_ML_MODE:-auto}
       VENA_ML_REFRESH_SECONDS: ${VENA_ML_REFRESH_SECONDS:-3600}
       VENA_INBOX_DIR: /srv/ml/inbox
       VENA_STREAM_POLL_SECONDS: ${VENA_STREAM_POLL_SECONDS:-30}
@@ -66,9 +66,12 @@ services:
       VENA_SEED_DEMO: "false"
       VENA_ML_DIR: /srv/ml
       VENA_INBOX_DIR: /srv/ml/inbox
+      VENA_DATASET_DIR: /srv/ml/dataset
     volumes:
       - predictions:/srv/ml/results/predictions:ro
       - inbox:/srv/ml/inbox
+      - ${VENA_DATASET_DIR:-/opt/vena/shared/dataset}:/srv/ml/dataset
+      - ${VENA_CERTS_DIR:-/opt/vena/shared/certs}:/srv/certs:ro
     depends_on:
       db:
         condition: service_healthy

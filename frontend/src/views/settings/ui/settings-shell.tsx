@@ -3,6 +3,8 @@
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 
+import { useAuthSession } from "@/features/auth"
+
 import { cn } from "@/shared/lib/utils"
 
 const TABS = [
@@ -10,11 +12,13 @@ const TABS = [
   { href: "/settings/notifications", label: "Уведомления" },
   { href: "/settings/integrations", label: "Интеграции" },
   { href: "/settings/security", label: "Безопасность" },
+  { href: "/settings/users", label: "Пользователи" },
   { href: "/settings/audit", label: "Аудит" },
 ]
 
 export function SettingsShell({ title, descriptor, children }: { title: string; descriptor: string; children: React.ReactNode }) {
   const pathname = usePathname()
+  const { me } = useAuthSession()
 
   return (
     <div className="flex size-full min-h-0 flex-col">
@@ -24,7 +28,7 @@ export function SettingsShell({ title, descriptor, children }: { title: string; 
           <span className="font-mono text-[13px] text-faint">{descriptor}</span>
         </h1>
         <nav aria-label="Настройки" className="mt-3 flex gap-5 border-b border-border">
-          {TABS.map((tab) => {
+          {TABS.filter(tab => tab.href !== "/settings/users" || me?.role === "admin").map((tab) => {
             const active = pathname === tab.href
             return (
               <Link

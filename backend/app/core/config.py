@@ -2,7 +2,7 @@ from functools import lru_cache
 from pathlib import Path
 from typing import Literal
 
-from pydantic import AliasChoices, AnyHttpUrl, Field
+from pydantic import AliasChoices, AnyHttpUrl, Field, SecretStr
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
@@ -39,6 +39,42 @@ class Settings(BaseSettings):
     jwt_ttl_minutes: int = Field(default=60, ge=1, le=1440)
     auth_login_limit: int = Field(default=10, ge=1)
     auth_login_window_seconds: int = Field(default=300, ge=1)
+    ldap_enabled: bool = False
+    ldap_url: str = ""
+    ldap_bind_dn: str = ""
+    ldap_bind_password: SecretStr = SecretStr("")
+    ldap_base_dn: str = ""
+    ldap_user_filter: str = (
+        "(|(uid={login})(mail={login})(sAMAccountName={login})(userPrincipalName={login}))"
+    )
+    ldap_username_attribute: str = "sAMAccountName"
+    ldap_id_attribute: str = "objectGUID"
+    ldap_group_roles: dict[str, Literal["viewer", "dispatcher", "admin"]] = {}
+    ldap_default_role: Literal["viewer", "dispatcher", "none"] = "viewer"
+    ldap_ca_file: str | None = None
+    ldap_timeout_seconds: int = Field(default=5, ge=1, le=30)
+    dataset_dir: Path | None = None
+    upload_max_bytes: int = 268435456
+    upload_max_rows: int = 1000000
+    equipment_sync_enabled: bool = False
+    equipment_sync_url: str = ""
+    equipment_sync_token: SecretStr = SecretStr("")
+    equipment_sync_source: str = Field(default="customer", min_length=1, max_length=64)
+    equipment_sync_interval_seconds: int = Field(default=900, ge=60, le=86400)
+    equipment_sync_field_map: dict[str, str] = {}
+    equipment_sync_ca_file: str | None = None
+    equipment_sync_allow_http: bool = False
+
+    @property
+    def ldap_configured(self) -> bool:
+        return bool(
+            self.ldap_enabled
+            and self.ldap_url
+            and self.ldap_base_dn
+            and self.ldap_bind_dn
+            and self.ldap_bind_password.get_secret_value()
+        )
+
     smtp_host: str = Field(default="", validation_alias=AliasChoices("SMTP_HOST", "VENA_SMTP_HOST"))
     smtp_port: int = Field(
         default=587, validation_alias=AliasChoices("SMTP_PORT", "VENA_SMTP_PORT")

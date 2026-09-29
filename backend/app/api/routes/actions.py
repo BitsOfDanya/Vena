@@ -26,7 +26,7 @@ ReaderDep = Annotated[Principal, Depends(get_principal)]
 def _get(session: Session, action_id: str):
     action = service.get_action(session, action_id)
     if action is None:
-        raise HTTPException(status_code=404, detail="action not found")
+        raise HTTPException(status_code=404, detail="Работа не найдена")
     return action
 
 

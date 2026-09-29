@@ -81,7 +81,7 @@ def _dispatch(notification_id: str, trigger: str) -> None:
 def get_notification(notification_id: str, session: SessionDep, _: ReaderDep) -> NotificationOut:
     notification = service.get_notification(session, notification_id)
     if notification is None:
-        raise HTTPException(status_code=404, detail="notification not found")
+        raise HTTPException(status_code=404, detail="Уведомление не найдено")
     return NotificationOut.model_validate(notification)
 
 
@@ -94,7 +94,7 @@ def patch_notification(
 ) -> NotificationOut:
     notification = service.get_notification(session, notification_id)
     if notification is None:
-        raise HTTPException(status_code=404, detail="notification not found")
+        raise HTTPException(status_code=404, detail="Уведомление не найдено")
     try:
         updated = service.patch_notification(session, notification, payload)
     except service.InvalidTransition as error:
@@ -117,11 +117,11 @@ def send_test_notification(
 ) -> TestEmailResult:
     provider = build_email_provider(settings)
     if not provider.configured:
-        raise HTTPException(status_code=409, detail="email provider is not configured")
+        raise HTTPException(status_code=409, detail="Отправка электронной почты не настроена")
     try:
         provider.send(
             str(payload.recipient), "VENA · Проверка уведомлений", "Проверочное письмо VENA."
         )
     except Exception as error:  # noqa: BLE001
-        raise HTTPException(status_code=502, detail=f"delivery failed: {error}") from error
-    return TestEmailResult(delivered=True, detail="sent")
+        raise HTTPException(status_code=502, detail="Не удалось доставить письмо") from error
+    return TestEmailResult(delivered=True, detail="Отправлено")

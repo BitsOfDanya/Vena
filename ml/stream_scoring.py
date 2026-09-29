@@ -32,7 +32,10 @@ class StreamScorer:
         self.sensor_of_channel = {
             channel: info.get("sensor_type") for channel, info in reference.items() if info.get("sensor_type") in self.sensors
         }
-        self.history_end = max(frame["ts"].max() for frame in self.events.values())
+        times = [frame["ts"].max() for frame in self.events.values() if len(frame)]
+        if not times:
+            raise ValueError("В журнале нет событий поддерживаемых моделей")
+        self.history_end = max(times)
         self.now = self.history_end
         self.predictions = {}
         self.monitor = ProspectiveMonitor(self.history_end)
@@ -153,6 +156,9 @@ def run(output, inbox, poll_seconds=30, full_refresh_hours=24, history_until=Non
     heartbeat(os.path.join(os.path.dirname(output), "heartbeat"))
     reference = score_snapshot.channel_reference()
     scorer = StreamScorer(reference, history_until)
+    restored, _ = read_inbox(processed)
+    if len(restored):
+        scorer.ingest(restored)
     carried = full_sections(reference, scorer.history_end, output)
     scorer.refresh_history()
     scorer.score()
@@ -174,10 +180,6 @@ def run(output, inbox, poll_seconds=30, full_refresh_hours=24, history_until=Non
             })
             for name in files:
                 os.replace(os.path.join(inbox, name), os.path.join(processed, name))
-            cutoff = time.time() - PROCESSED_RETENTION_DAYS * 86400
-            for name in os.listdir(processed):
-                if os.path.getmtime(os.path.join(processed, name)) < cutoff:
-                    os.remove(os.path.join(processed, name))
             log(f"{len(batch)} events -> {len(rows)} forecasts rescored, data time {scorer.now}")
         if time.monotonic() - last_full >= full_refresh_hours * 3600:
             carried = full_sections(reference, scorer.now, output)

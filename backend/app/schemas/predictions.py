@@ -75,6 +75,7 @@ class StreamInfo(BaseModel):
 
 
 class SnapshotStatus(BaseModel):
+    data_source: str = "unknown"
     available: bool
     snapshot_id: str | None = None
     prediction_time: datetime | None = None

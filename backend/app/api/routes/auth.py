@@ -2,13 +2,16 @@ import hashlib
 import hmac
 from datetime import UTC, datetime, timedelta
 from typing import Annotated
+from uuid import uuid4
 
 from fastapi import APIRouter, Depends, HTTPException, Request, Response
 from pydantic import AliasChoices, BaseModel, Field
-from sqlalchemy import delete, or_, select, update
+from sqlalchemy import delete, or_, select, text, update
 from sqlalchemy.dialects.postgresql import insert
+from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Session
 
+from app.core import ldap as directory
 from app.core.config import Settings, get_settings
 from app.core.security import (
     COOKIE_NAME,
@@ -22,6 +25,7 @@ from app.core.security import (
 )
 from app.db.models import AuthSession, LoginBucket, User
 from app.db.session import get_session
+from app.domain import audit
 
 router = APIRouter(prefix="/auth", tags=["auth"])
 SettingsDep = Annotated[Settings, Depends(get_settings)]
@@ -102,9 +106,11 @@ def set_session_cookie(response: Response, token: str, ttl: int, settings: Setti
 def auth_status(settings: SettingsDep) -> dict:
     return {
         "auth_enabled": settings.auth_enabled,
-        "methods": ["password"] if settings.auth_enabled else [],
+        "methods": (["password"] + (["ldap"] if settings.ldap_configured else []))
+        if settings.auth_enabled
+        else [],
         "configured": len(settings.jwt_secret.encode()) >= 32,
-        "ldap_available": False,
+        "ldap_available": settings.ldap_configured,
     }
 
 
@@ -134,11 +140,13 @@ def login(
     user = session.scalar(
         select(User).where(or_(User.email == identity, User.username == identity)).with_for_update()
     )
-    valid = PASSWORDS.verify(body.password, user.password_hash if user else DUMMY_HASH)
-    if not valid or not user or not user.is_active:
+    valid = PASSWORDS.verify(
+        body.password, user.password_hash if user and user.auth_provider == "local" else DUMMY_HASH
+    )
+    if not valid or not user or not user.is_active or user.auth_provider != "local":
         session.commit()
         raise HTTPException(
-            401, "Invalid email or password", headers={"WWW-Authenticate": "Bearer"}
+            401, "Неверный email, логин или пароль", headers={"WWW-Authenticate": "Bearer"}
         )
     session.execute(delete(AuthSession).where(AuthSession.expires_at < datetime.now(UTC)))
     token, ttl = issue_token(user, session, settings)
@@ -148,6 +156,73 @@ def login(
         access_token=token,
         expires_in=ttl,
         user=AuthMe(subject=user.username, email=user.email, role=user.role, auth_method="jwt"),
+    )
+
+
+@router.post("/ldap", response_model=TokenResponse)
+def ldap_login(
+    body: LoginRequest,
+    request: Request,
+    response: Response,
+    settings: SettingsDep,
+    session: SessionDep,
+) -> TokenResponse:
+    signing_key(settings)
+    check_origin(request, settings)
+    throttle(
+        session,
+        settings,
+        "ldap:" + body.login.strip().lower(),
+        request.client.host if request.client else "unknown",
+    )
+    session.commit()
+    try:
+        identity = directory.authenticate(settings, body.login, body.password)
+    except directory.DirectoryDenied:
+        raise HTTPException(401, "Неверный email, логин или пароль") from None
+    except directory.DirectoryUnavailable:
+        raise HTTPException(503, "Корпоративный каталог недоступен или не настроен") from None
+    session.execute(
+        text("SELECT pg_advisory_xact_lock(hashtextextended(:key, 0))"),
+        {"key": identity.directory_id},
+    )
+    user = session.scalar(select(User).where(User.directory_id == identity.directory_id))
+    if user and (not user.is_active or user.auth_provider != "ldap"):
+        raise HTTPException(401, "Неверный email, логин или пароль")
+    if user is None:
+        user = User(
+            id=uuid4().hex,
+            username=identity.username,
+            email=identity.email,
+            password_hash="!ldap",
+            role=identity.role,
+            auth_provider="ldap",
+            directory_id=identity.directory_id,
+        )
+        session.add(user)
+    user.username, user.email, user.role = identity.username, identity.email, identity.role
+    try:
+        session.flush()
+    except IntegrityError:
+        session.rollback()
+        raise HTTPException(
+            409, "Учётная запись каталога конфликтует с существующей записью"
+        ) from None
+    token, ttl = issue_token(user, session, settings)
+    audit.record(
+        session,
+        actor=user.username,
+        role=user.role,
+        action="auth.ldap_login",
+        resource_type="user",
+        resource_id=user.id,
+    )
+    session.commit()
+    set_session_cookie(response, token, ttl, settings)
+    return TokenResponse(
+        access_token=token,
+        expires_in=ttl,
+        user=AuthMe(subject=user.username, email=user.email, role=user.role, auth_method="ldap"),
     )
 
 
@@ -172,8 +247,8 @@ def change_password(
     response: Response,
 ) -> dict:
     user = session.get(User, principal.user_id) if principal.user_id else None
-    if not user:
-        raise HTTPException(400, "Password authentication is not enabled")
+    if not user or user.auth_provider != "local":
+        raise HTTPException(400, "Измените пароль в корпоративном каталоге")
     throttle(session, settings, f"password:{user.id}", f"user:{user.id}")
     user = session.execute(
         select(User)
@@ -183,7 +258,7 @@ def change_password(
     ).scalar_one()
     if not PASSWORDS.verify(body.current_password, user.password_hash):
         session.commit()
-        raise HTTPException(400, "Current password is incorrect")
+        raise HTTPException(400, "Текущий пароль неверен")
     user.password_hash = PASSWORDS.hash(body.new_password)
     session.execute(update(AuthSession).where(AuthSession.user_id == user.id).values(revoked=True))
     session.commit()

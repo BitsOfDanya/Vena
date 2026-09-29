@@ -9,7 +9,7 @@ class ChannelNode(BaseModel):
     sensor_type: str | None
     scenario: str
     model_id: str
-    probability: float
+    probability: float | None
     risk_level: str
     picket_m: float | None = None
 

@@ -232,7 +232,7 @@ function Schema({
   const bins = Array.from({ length: PROFILE_BINS }, () => 0)
   for (const item of located) {
     const bin = Math.min(PROFILE_BINS - 1, Math.floor((((item.channel.picketM as number) - low) / span) * PROFILE_BINS))
-    bins[bin] = Math.max(bins[bin], item.channel.probability)
+    bins[bin] = Math.max(bins[bin], item.channel.probability ?? 0)
   }
   const binWidth = plotWidth / PROFILE_BINS
 
@@ -273,7 +273,7 @@ function Schema({
           ) : null
         )}
         {bands.map((band, index) => {
-          const worst = Math.max(...band.positioned.map((item) => item.channel.probability))
+          const worst = Math.max(...band.positioned.map((item) => item.channel.probability ?? 0))
           return (
             <g key={band.scenario}>
               {index % 2 === 0 ? <rect x={0} y={band.top} width={width} height={band.height} fill="var(--surface)" fillOpacity={0.6} /> : null}
@@ -288,14 +288,14 @@ function Schema({
           )
         })}
         {placed.map((item) => {
-          const r = 3.5 + Math.min(item.channel.probability, 1) * 3.5
+          const r = 3.5 + Math.min(item.channel.probability ?? 0, 1) * 3.5
           const active = item.channel.assetId === selectedId
           return (
             <g
               key={item.channel.assetId}
               role="button"
               tabIndex={0}
-              aria-label={`${item.channel.name ?? item.channel.assetId}: ${Math.round(item.channel.probability * 100)}%`}
+              aria-label={`${item.channel.name ?? item.channel.assetId}: ${item.channel.probability === null ? "нет прогноза" : `${Math.round(item.channel.probability * 100)}%`}`}
               className="cursor-pointer outline-none"
               onClick={() => onSelect(item.channel.assetId)}
               onKeyDown={(event) => {
@@ -318,7 +318,7 @@ function Schema({
         >
           <p className="font-medium">{hover.channel.name ?? hover.channel.assetId}</p>
           <p className="text-muted-foreground">
-            {scenarioText(hover.channel.scenario)} · {Math.round(hover.channel.probability * 100)}% за{" "}
+            {scenarioText(hover.channel.scenario)} · {hover.channel.probability === null ? "Нет прогноза" : `${Math.round(hover.channel.probability * 100)}%`} за{" "}
             {hover.channel.modelId.includes("72") ? "72" : "24"} ч
           </p>
           <p className="font-mono text-[11px] text-faint">

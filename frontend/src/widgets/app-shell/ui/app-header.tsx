@@ -23,7 +23,7 @@ export function AppHeader({ onOpenSearch }: { onOpenSearch: () => void }) {
   const router = useRouter()
   const { me, authEnabled, signOut } = useAuthSession()
   const title = me?.subject ?? "Дежурный инженер"
-  const subtitle = me?.role ?? "…"
+  const subtitle = ({ admin: "Администратор", dispatcher: "Диспетчер", viewer: "Наблюдатель" })[me?.role ?? "viewer"]
 
   return (
     <header className="flex h-14 shrink-0 items-center gap-8 border-b border-border px-6">

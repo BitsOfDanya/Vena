@@ -42,7 +42,17 @@ try:
     viewer = request('/auth/login', method='POST', body={
         'login': usernames[1], 'password': password})['access_token']
     assert request('/auth/me', admin)['role'] == 'admin'
-    assert request('/predictions?limit=5', admin), 'ML snapshot has no predictions'
+    snapshot = request('/predictions/snapshot', admin)
+    integration = request('/integrations/status', admin)
+    if snapshot['available']:
+        assert request('/predictions?limit=5', admin), 'ML snapshot has no predictions'
+    else:
+        assert integration['worker'].get('state') in {'waiting', 'processing'}, integration['worker']
+        request('/predictions?limit=5', admin, expected=503)
+        print('ML explicitly waiting for data or initial processing; no demo fallback')
+    request('/users', admin)
+    request('/users', viewer, expected=403)
+    request('/equipment', viewer)
     for path in ['/actions', '/notifications', '/journal', '/spatial', '/system/components']:
         request(path, admin)
     request('/predictions/refresh', admin, method='POST')

@@ -40,11 +40,11 @@ def _read_json(path: Path) -> Any:
 
 def _result_file(settings: Settings, group: str, name: str) -> Path:
     if group not in RESULT_GROUPS or not FILE_NAME.match(name):
-        raise HTTPException(status_code=404, detail="result not found")
+        raise HTTPException(status_code=404, detail="Результат не найден")
     base = (settings.ml_dir / "results" / group).resolve()
     path = (base / name).resolve()
     if base not in path.parents or not path.is_file():
-        raise HTTPException(status_code=404, detail="result not found")
+        raise HTTPException(status_code=404, detail="Результат не найден")
     return path
 
 
@@ -52,7 +52,7 @@ def _result_file(settings: Settings, group: str, name: str) -> Path:
 def list_directions(settings: SettingsDep, _: ReaderDep) -> list[dict[str, Any]]:
     path = settings.ml_dir / "results" / "directions.json"
     if not path.is_file():
-        raise HTTPException(status_code=404, detail="directions not available")
+        raise HTTPException(status_code=404, detail="Рекомендации недоступны")
     directions: list[dict[str, Any]] = _read_json(path)
     return directions
 
@@ -61,7 +61,7 @@ def list_directions(settings: SettingsDep, _: ReaderDep) -> list[dict[str, Any]]
 def get_prospective(settings: SettingsDep, _: ReaderDep) -> Any:
     path = settings.ml_dir / "results" / "predictions" / "prospective.json"
     if not path.is_file():
-        raise HTTPException(status_code=404, detail="prospective check has not started")
+        raise HTTPException(status_code=404, detail="Перспективная проверка ещё не началась")
     return _read_json(path)
 
 
@@ -69,7 +69,7 @@ def get_prospective(settings: SettingsDep, _: ReaderDep) -> Any:
 def get_report(name: str, settings: SettingsDep, _: ReaderDep) -> Any:
     path = settings.ml_dir / "results" / f"{name}.json"
     if name not in REPORTS or not path.is_file():
-        raise HTTPException(status_code=404, detail="report not found")
+        raise HTTPException(status_code=404, detail="Отчёт не найден")
     return _read_json(path)
 
 

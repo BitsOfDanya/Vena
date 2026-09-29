@@ -135,7 +135,7 @@ export function AssetTreePanel({
                             <span className="font-mono tabular-nums">{channel.assetId}</span>
                             <span className="truncate text-muted-foreground">{channel.name ?? channel.sensorType ?? "—"}</span>
                             <span className="truncate text-[12px] text-muted-foreground">{scenarioText(channel.scenario)}</span>
-                            <span className="font-mono text-[12px] tabular-nums">{Math.round(channel.probability * 100)}%</span>
+                            <span className="font-mono text-[12px] tabular-nums">{channel.probability === null ? "Нет прогноза" : `${Math.round(channel.probability * 100)}%`}</span>
                             <span
                               className={cn(
                                 "text-[11px] tracking-[0.04em] uppercase",

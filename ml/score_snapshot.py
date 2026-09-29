@@ -427,7 +427,7 @@ def assess_routes(reference, until):
 
 def write_snapshot(
     predictions, prediction_time, output, alarms=None, access_events=None, incidents=None, stream=None, history=None,
-    access_routes=None, weather_forecast=None,
+    access_routes=None, weather_forecast=None, data_source="journal",
 ):
     model_info = {}
     for _, names, _ in DEVICES:
@@ -439,6 +439,7 @@ def write_snapshot(
                 "calibrated": meta["model_config"].get("calibrated", False),
             }
     payload = {
+        "data_source": data_source,
         "generated_at": datetime.now(tz=timezone.utc).isoformat(),
         "prediction_time": pd.Timestamp(prediction_time).isoformat(),
         "models": model_info,
@@ -489,7 +490,7 @@ def main() -> None:
             device_ids = {channel_id for channel_id, _ in DEMO_CHANNELS[device]}
             events = demo_events[demo_events["channel_id"].isin(device_ids)]
             predictions.extend(score_rows(device, model_names, target_state, events, {}))
-        write_snapshot(predictions, prediction_time, arguments.output, weather_forecast=forecast_weather())
+        write_snapshot(predictions, prediction_time, arguments.output, weather_forecast=forecast_weather(), data_source="demo")
         return
 
     from pipeline import extract

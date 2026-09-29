@@ -25,13 +25,13 @@ XLSX = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
 def _source(settings: Settings):
     source = get_prediction_source(settings)
     if not source.available:
-        raise HTTPException(status_code=503, detail="prediction snapshot is not available")
+        raise HTTPException(status_code=503, detail="Снимок прогнозов недоступен")
     return source
 
 
 @router.get("/assets/tree", response_model=list[ObjectNode])
-def asset_tree(settings: SettingsDep, _: ReaderDep) -> list[ObjectNode]:
-    return analytics_service.asset_tree(_source(settings))
+def asset_tree(settings: SettingsDep, session: SessionDep, _: ReaderDep) -> list[ObjectNode]:
+    return analytics_service.asset_tree(get_prediction_source(settings), session)
 
 
 @router.get("/analytics/effect", response_model=EffectReport)
@@ -53,7 +53,7 @@ def inspection_plan(
     count: Annotated[int, Query(ge=1, le=50)] = 5,
 ) -> InspectionPlan:
     if model_id not in analytics_service.PLAN_MODELS:
-        raise HTTPException(status_code=404, detail="no inspection plan for this model")
+        raise HTTPException(status_code=404, detail="Для этой модели нет плана проверки")
     now = datetime.now(tz=UTC)
     return analytics_service.inspection_plan(session, _source(settings), model_id, count, now)
 
@@ -73,7 +73,7 @@ def weather(settings: SettingsDep, _: ReaderDep) -> dict[str, Any]:
 def alarm_kpis(settings: SettingsDep, _: ReaderDep) -> dict[str, Any]:
     report = analytics_service.read_report(settings, "alarm_kpis")
     if report is None:
-        raise HTTPException(status_code=404, detail="alarm KPIs have not been computed")
+        raise HTTPException(status_code=404, detail="Показатели тревог ещё не рассчитаны")
     return report
 
 
@@ -81,7 +81,7 @@ def alarm_kpis(settings: SettingsDep, _: ReaderDep) -> dict[str, Any]:
 def health_history(settings: SettingsDep, _: ReaderDep) -> dict[str, Any]:
     report = analytics_service.read_report(settings, "health_history")
     if report is None:
-        raise HTTPException(status_code=404, detail="health history has not been computed")
+        raise HTTPException(status_code=404, detail="История состояния ещё не рассчитана")
     return {"period": report.get("period"), "objects": report.get("objects", {})}
 
 
@@ -90,7 +90,7 @@ def section_health_history(group: str, settings: SettingsDep, _: ReaderDep) -> l
     report = analytics_service.read_report(settings, "health_history") or {}
     series = report.get("sections", {}).get(group)
     if series is None:
-        raise HTTPException(status_code=404, detail="no history for this section")
+        raise HTTPException(status_code=404, detail="Для этой секции ещё нет истории")
     return list(series)
 
 

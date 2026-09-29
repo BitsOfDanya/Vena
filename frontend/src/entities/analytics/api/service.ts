@@ -144,7 +144,7 @@ export async function getAssetTree(): Promise<ObjectNode[]> {
           sensor_type: string | null
           scenario: string
           model_id: string
-          probability: number
+          probability: number | null
           risk_level: string
           picket_m?: number | null
         }[]

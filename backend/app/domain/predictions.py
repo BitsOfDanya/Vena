@@ -121,17 +121,17 @@ class PredictionSource:
         if not path.is_file():
             self._payload = None
             self._predictions = []
-            self._error = "prediction snapshot is not available"
+            self._error = "Снимок прогнозов недоступен"
             return
         mtime = path.stat().st_mtime
         if self._loaded_mtime == mtime and self._payload is not None:
             return
         try:
             payload = json.loads(path.read_text(encoding="utf-8"))
-        except (OSError, json.JSONDecodeError) as error:
+        except (OSError, json.JSONDecodeError):
             self._payload = None
             self._predictions = []
-            self._error = f"prediction snapshot is unreadable: {error}"
+            self._error = "Не удалось прочитать снимок прогнозов"
             return
         self._payload = payload
         self._loaded_mtime = mtime
@@ -224,6 +224,7 @@ class PredictionSource:
         ]
         return SnapshotStatus(
             available=True,
+            data_source=str(self._payload.get("data_source", "unknown")),
             snapshot_id=str(self._payload.get("snapshot_id", "")),
             prediction_time=prediction_time,
             generated_at=generated_at,

@@ -87,3 +87,6 @@ uv run python -m app.db.seed_users --username admin --email admin@example.com --
 
 Реализация использует [PyJWT](https://pyjwt.readthedocs.io/en/stable/usage.html)
 и [pwdlib/Argon2, описанные в документации FastAPI](https://fastapi.tiangolo.com/tutorial/security/oauth2-jwt/).
+
+Управление пользователями доступно администратору в `/settings/users`. LDAP/AD и
+параметры корпоративного каталога описаны в [интеграциях](data-integrations.md).

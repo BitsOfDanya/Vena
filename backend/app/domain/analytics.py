@@ -8,12 +8,13 @@ from sqlalchemy import select
 from sqlalchemy.orm import Session
 
 from app.core.config import Settings
-from app.db.models import Action
+from app.db.models import Action, Equipment
 from app.domain import journal as journal_service
 from app.domain.health import load_calibration, location_health
 from app.domain.incidents import (
     LEVEL_RANK,
     group_incidents,
+    location_group,
     location_label,
     object_of,
     reason_text,
@@ -68,8 +69,67 @@ def _health_order(node: SectionNode) -> tuple[int, float]:
     return (node.health_index, -(node.raw_risk or 0.0))
 
 
-def asset_tree(source: PredictionSource) -> list[ObjectNode]:
-    predictions = source.all()
+def asset_tree(source: PredictionSource, session: Session | None = None) -> list[ObjectNode]:
+    predictions = source.all() if source.available else []
+    registry = list(session.scalars(select(Equipment))) if session else []
+    if registry:
+        best = _strongest(predictions)
+        health = location_health(
+            predictions,
+            source.incident_probabilities() if source.available else {},
+            load_calibration(source.settings.ml_dir),
+        )
+        registry_objects: dict[str, ObjectNode] = {}
+        groups: dict[tuple[str, str], SectionNode] = {}
+        for row in registry:
+            if row.status == "retired":
+                continue
+            group = row.section or location_group(row.tag) or "Без секции"
+            obj = registry_objects.setdefault(
+                row.object_id,
+                ObjectNode(
+                    object_id=row.object_id,
+                    label=f"Объект {row.object_id}",
+                    health_index=None,
+                    sections=[],
+                ),
+            )
+            key = (row.object_id, group)
+            if key not in groups:
+                state = health.get(location_group(row.tag) or group)
+                groups[key] = SectionNode(
+                    group=group,
+                    label=location_label(group) or group,
+                    health_index=state.index if state else None,
+                    raw_risk=state.raw_risk if state else None,
+                    main_scenario=state.main_scenario if state else None,
+                    risk_by_scenario=state.risk_by_scenario if state else {},
+                    channels=[],
+                )
+                obj.sections.append(groups[key])
+            prediction = best.get(row.asset_id)
+            groups[key].channels.append(
+                ChannelNode(
+                    asset_id=row.asset_id,
+                    name=row.name,
+                    sensor_type=row.equipment_type,
+                    scenario=prediction.scenario if prediction else "equipment",
+                    model_id=prediction.model_id if prediction else "",
+                    probability=prediction.score if prediction else None,
+                    risk_level=prediction.risk_level if prediction else "unknown",
+                    picket_m=picket_meters(row.name),
+                )
+            )
+        for obj in registry_objects.values():
+            indexes = [
+                section.health_index for section in obj.sections if section.health_index is not None
+            ]
+            obj.health_index = min(indexes) if indexes else None
+            obj.sections.sort(key=_health_order)
+        return sorted(
+            registry_objects.values(),
+            key=lambda obj: (obj.health_index is None, obj.health_index or 0, obj.object_id),
+        )
     health = location_health(
         predictions, source.incident_probabilities(), load_calibration(source.settings.ml_dir)
     )

@@ -27,7 +27,7 @@ export function SettingsSecurityPage() {
           try { await signOut() } catch { setError("Не удалось выйти. Попробуйте ещё раз.") }
         }}>Выйти</Button>
       </SettingsSection>
-      <SettingsSection title="Сменить пароль" description="После смены пароля нужно войти заново на всех устройствах.">
+      {me?.auth_method === "ldap" ? <p>Пароль корпоративной учётной записи меняется в LDAP / AD.</p> : <SettingsSection title="Сменить пароль" description="После смены пароля нужно войти заново на всех устройствах.">
         <form className="space-y-4 border border-border bg-elevated p-5" onSubmit={async (event) => {
           event.preventDefault()
           if (pending) return
@@ -50,7 +50,7 @@ export function SettingsSecurityPage() {
           {error && <p role="alert" className="text-sm text-status-critical">{error}</p>}
           <Button type="submit" disabled={!authEnabled || pending}>{pending ? "Сохранение…" : "Сменить пароль"}</Button>
         </form>
-      </SettingsSection>
+      </SettingsSection>}
     </SettingsShell>
   )
 }

@@ -4,6 +4,7 @@ from apscheduler.triggers.interval import IntervalTrigger
 
 from app.core.config import Settings
 from app.db.session import SessionLocal
+from app.domain import equipment, imports
 from app.domain.digest import send_digest
 from app.domain.email import build_email_provider
 from app.domain.ingest import refresh_predictions
@@ -31,6 +32,22 @@ def _run_refresh(settings: Settings) -> None:
         session.close()
 
 
+def _run_equipment(settings: Settings) -> None:
+    with SessionLocal() as session:
+        try:
+            equipment.synchronize(session, settings)
+        except equipment.RegistryError:
+            session.rollback()
+
+
+def _run_publications(settings: Settings) -> None:
+    with SessionLocal() as session:
+        try:
+            imports.publish_pending(session, settings)
+        except equipment.RegistryError:
+            session.rollback()
+
+
 def build_scheduler(settings: Settings) -> BackgroundScheduler | None:
     session = SessionLocal()
     try:
@@ -54,4 +71,21 @@ def build_scheduler(settings: Settings) -> BackgroundScheduler | None:
         id="morning_brief",
         replace_existing=True,
     )
+    scheduler.add_job(
+        _run_publications,
+        IntervalTrigger(seconds=10),
+        args=[settings],
+        id="import_publications",
+        max_instances=1,
+        coalesce=True,
+    )
+    if settings.equipment_sync_enabled and settings.equipment_sync_url:
+        scheduler.add_job(
+            _run_equipment,
+            IntervalTrigger(seconds=settings.equipment_sync_interval_seconds),
+            args=[settings],
+            id="equipment_sync",
+            max_instances=1,
+            coalesce=True,
+        )
     return scheduler

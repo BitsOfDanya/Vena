@@ -55,7 +55,7 @@ export type ChannelNode = {
   sensorType: string | null
   scenario: string
   modelId: string
-  probability: number
+  probability: number | null
   riskLevel: string
   picketM: number | null
 }

@@ -25,7 +25,7 @@ def spatial_status(session: SessionDep, _: ReaderDep) -> SpatialStatus:
 def get_spatial(session: SessionDep, _: ReaderDep) -> SpatialCollectionOut:
     layer = spatial_service.get_layer(session)
     if layer is None:
-        raise HTTPException(status_code=404, detail="spatial layer not configured")
+        raise HTTPException(status_code=404, detail="Пространственный слой не настроен")
     collection = spatial_service.get_feature_collection(session)
     assert collection is not None
     return SpatialCollectionOut(

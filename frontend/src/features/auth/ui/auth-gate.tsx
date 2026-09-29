@@ -30,6 +30,7 @@ export function AuthGate({ children }: { children: React.ReactNode }) {
     retry: false, staleTime: 30_000, refetchInterval: 60_000,
   })
   const [login, setLogin] = React.useState("")
+  const [method, setMethod] = React.useState<"password" | "ldap">("password")
   const [password, setPassword] = React.useState("")
   const [error, setError] = React.useState<string | null>(null)
   const [pending, setPending] = React.useState(false)
@@ -67,7 +68,7 @@ export function AuthGate({ children }: { children: React.ReactNode }) {
         setPending(true)
         setError(null)
         try {
-          await loginWithPassword(login.trim(), password)
+          await loginWithPassword(login.trim(), password, method)
           setPassword("")
           await refresh()
         } catch (err) {
@@ -83,6 +84,11 @@ export function AuthGate({ children }: { children: React.ReactNode }) {
           <div><p className="text-[12px] font-medium tracking-[0.14em] text-faint uppercase">VENA</p>
             <h1 className="text-[22px] font-semibold">Вход в систему</h1></div>
         </div>
+        {data.status.ldap_available && <label className="mb-4 block text-sm">Способ входа
+          <select className="mt-2 w-full border border-border bg-background p-2" value={method}
+            onChange={(event) => { setMethod(event.target.value as "password" | "ldap"); setError(null) }}>
+            <option value="password">Локальная учётная запись</option><option value="ldap">Корпоративный LDAP / AD</option>
+          </select></label>}
         <label className="mb-2 block text-sm text-muted-foreground" htmlFor="vena-login">Email или логин</label>
         <Input id="vena-login" autoComplete="username" required maxLength={254} value={login}
           onChange={(e) => { setLogin(e.target.value); setError(null) }} placeholder="user1" />

@@ -5,6 +5,7 @@ from app.api.routes import (
     analytics,
     audit,
     auth,
+    equipment,
     health,
     journal,
     ml,
@@ -14,6 +15,7 @@ from app.api.routes import (
     smvu,
     spatial,
     system,
+    users,
 )
 from app.core.config import get_settings
 
@@ -31,3 +33,6 @@ api_router.include_router(analytics.router)
 api_router.include_router(audit.router)
 api_router.include_router(spatial.router)
 api_router.include_router(smvu.router)
+
+api_router.include_router(equipment.router)
+api_router.include_router(users.router)

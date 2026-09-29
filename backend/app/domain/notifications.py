@@ -156,7 +156,7 @@ def dispatch(
                         recipient=",".join(recipients),
                         dedup_key=dedup_key,
                         status="failed",
-                        detail="email provider is not configured",
+                        detail="Отправка электронной почты не настроена",
                     )
                 )
                 continue

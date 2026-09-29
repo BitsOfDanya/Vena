@@ -65,6 +65,21 @@ def system_notices(settings: Settings) -> list[SystemNotice]:
             )
         )
     status = get_prediction_source(settings).status()
+    if status.data_source == "demo":
+        notices.append(
+            SystemNotice(
+                id="demo-source",
+                kind="data_delayed",
+                severity="attention",
+                title="Демонстрационные данные",
+                description=(
+                    "Реальный журнал ещё не подключён. "
+                    "Прогнозы рассчитаны на синтетических каналах."
+                ),
+                href="/settings/integrations",
+                dismissible=False,
+            )
+        )
     if not status.available:
         notices.append(
             SystemNotice(

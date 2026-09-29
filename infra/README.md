@@ -16,6 +16,9 @@ GitHub Actions в его `~/.ssh/authorized_keys`.
 sudo mkdir -p /opt/vena/{incoming,releases,shared/dataset,shared/backups}
 sudo chown -R vena-deploy:vena-deploy /opt/vena
 sudo chmod 700 /opt/vena/shared
+sudo chown 10001:$(id -g vena-deploy) /opt/vena/shared/dataset
+sudo chmod 2775 /opt/vena/shared/dataset
+sudo mkdir -p /opt/vena/shared/certs
 cp infra/.env.example /opt/vena/shared/.env
 chmod 600 /opt/vena/shared/.env
 ```
@@ -72,8 +75,9 @@ docker compose --env-file "$VENA_ENV_FILE" -f /opt/vena/current/infra/compose.ya
 
 ## Данные и проверки
 
-По умолчанию `VENA_ML_MODE=demo`: синтетические каналы оцениваются настоящими
-сохранёнными моделями. Это демонстрационный стенд, не подключение к СМВУ.
+По умолчанию `VENA_ML_MODE=auto`: сервис ожидает реальный справочник и журнал.
+Загрузка доступна администратору в настройках; [инструкция](../docs/data-integrations.md).
+Режим `demo` включается явно и отмечается в интерфейсе.
 Для журнала поместите исходные CSV в `/opt/vena/shared/dataset`, установите
 `VENA_ML_MODE=journal` и перезапустите ML. Снимок публикуется атомарно, backend
 подхватывает его по расписанию; обработку можно вызвать через

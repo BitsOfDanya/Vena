@@ -40,8 +40,8 @@ export async function getAuthMe(): Promise<AuthMe> {
   return MeSchema.parse(await apiFetch<unknown>("/api/v1/auth/me"))
 }
 
-export async function loginWithPassword(login: string, password: string): Promise<AuthMe> {
-  const result = await apiFetch<{ user: unknown }>("/api/v1/auth/login", {
+export async function loginWithPassword(login: string, password: string, method: "password" | "ldap" = "password"): Promise<AuthMe> {
+  const result = await apiFetch<{ user: unknown }>(method === "ldap" ? "/api/v1/auth/ldap" : "/api/v1/auth/login", {
     method: "POST", body: JSON.stringify({ email: login, password }),
   })
   return MeSchema.parse(result.user)
