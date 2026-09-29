@@ -3,6 +3,8 @@ import re
 import numpy as np
 import pandas as pd
 
+from pipeline import states
+
 ACCESS_SENSORS = ["КД Дверь", "КД Люк", "Стекло"]
 GUARD_SENSOR = "Состояние охраны"
 TRIGGER_STATES = {"Не замкнут"}
@@ -31,7 +33,8 @@ def triggers(events, sensor_type, tag_by_channel):
 
 
 def guard_states(events, tag_by_channel):
-    guard = events.loc[events["raw_value"].isin({ARMED, DISARMED}), ["channel_id", "ts", "raw_value"]].copy()
+    events = events.assign(raw_value=states.normalize(events["raw_value"]).to_numpy())
+    guard = events.loc[events["raw_value"].isin({ARMED, DISARMED, states.FAULT}), ["channel_id", "ts", "raw_value"]].copy()
     guard["object"] = guard["channel_id"].astype(str).map(tag_by_channel).map(object_of)
     guard = guard.dropna(subset=["object"]).rename(columns={"raw_value": "guard_state"})
     return guard[["object", "ts", "guard_state"]].sort_values("ts", kind="stable").reset_index(drop=True)

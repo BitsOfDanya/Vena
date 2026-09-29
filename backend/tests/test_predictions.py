@@ -685,3 +685,14 @@ def test_inspection_plan_skips_fans_with_recent_work(client: TestClient, ml_root
     pumps = client.get(url, params={"model_id": "pump_72h"}).json()
     assert pumps["items"][0]["asset_id"] == "p1"
     assert client.get(url, params={"model_id": "x_1"}).status_code == 404
+
+
+def test_weather_forecast_comes_from_the_snapshot(client: TestClient, ml_root: Path) -> None:
+    write_snapshot(ml_root, datetime.now(tz=UTC), [row("p1", 0.5, "medium")])
+    path = ml_root / "results" / "predictions" / "snapshot.json"
+    payload = json.loads(path.read_text(encoding="utf-8"))
+    payload["weather_forecast"] = [{"day": "2026-09-30", "precipitation_mm": 4.2, "thaw": False}]
+    path.write_text(json.dumps(payload), encoding="utf-8")
+    body = client.get("/api/v1/analytics/weather").json()
+    assert body["source"] == "Open-Meteo"
+    assert body["forecast"][0]["precipitation_mm"] == 4.2

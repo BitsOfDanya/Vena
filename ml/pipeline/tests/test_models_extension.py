@@ -218,3 +218,14 @@ def test_morning_list_skips_yesterdays_channels_when_asked():
     assert lists["top1"]["distinct_channels"] == 1
     assert lists["top1_no_repeat"]["episodes_warned"] == 1
     assert lists["top1_no_repeat"]["distinct_channels"] == 2
+
+
+def test_state_rules_mark_epoch_values_and_invalid_gas_as_faults():
+    from pipeline import states
+
+    assert states.normalize(["01.01.1970 03:00:01", "На охране"]).tolist() == ["Неисправен", "На охране"]
+    reading, invalid, alarm = states.gas_reading(["0,02", "-1.5", "1.2", "327.68", "Норма"])
+    assert invalid.tolist() == [False, True, False, True, False]
+    assert alarm.tolist() == [False, False, True, False, False]
+    assert reading.isna().tolist() == [False, True, False, True, True]
+    assert states.is_timestamp(["22.09.2019 09:11:10", "01.01.1970 03:00:00", "Норма"]).tolist() == [True, False, False]

@@ -43,3 +43,28 @@ def attach_weather(candidates_df, weather_df):
     c["day"] = c["ts"].dt.floor("D")
     merged = c.merge(weather_df, on="day", how="left")
     return merged.drop(columns=["day"])
+
+
+def fetch_forecast(days=7, timeout=20):
+    url = (
+        "https://api.open-meteo.com/v1/forecast"
+        f"?latitude={MOSCOW_LAT}&longitude={MOSCOW_LON}"
+        "&daily=temperature_2m_max,temperature_2m_min,precipitation_sum,snowfall_sum,precipitation_probability_max"
+        f"&forecast_days={days}&timezone=Europe%2FMoscow"
+    )
+    resp = requests.get(url, timeout=timeout)
+    resp.raise_for_status()
+    daily = resp.json()["daily"]
+    rows = []
+    for index, day in enumerate(daily["time"]):
+        low, high = daily["temperature_2m_min"][index], daily["temperature_2m_max"][index]
+        rows.append({
+            "day": day,
+            "temp_min": low,
+            "temp_max": high,
+            "precipitation_mm": daily["precipitation_sum"][index],
+            "snowfall_cm": daily["snowfall_sum"][index],
+            "precipitation_probability": daily["precipitation_probability_max"][index],
+            "thaw": low is not None and high is not None and low < 0 < high,
+        })
+    return rows

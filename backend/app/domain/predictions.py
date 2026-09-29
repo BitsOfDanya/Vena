@@ -304,6 +304,9 @@ class PredictionSource:
         result.sort(key=lambda item: (-item.access_index, item.ts))
         return result
 
+    def weather_forecast(self) -> list[dict[str, Any]]:
+        return self._section("weather_forecast")
+
     def access_routes(self) -> list[AccessRoute]:
         routes = [AccessRoute(**row) for row in self._section("access_routes")]
         routes.sort(key=lambda item: item.start, reverse=True)

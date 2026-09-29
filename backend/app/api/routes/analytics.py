@@ -59,6 +59,18 @@ def inspection_plan(
     return analytics_service.inspection_plan(session, _source(settings), model_id, count, now)
 
 
+@router.get("/analytics/weather")
+def weather(settings: SettingsDep, _: ReaderDep) -> dict[str, Any]:
+    """Moscow weather forecast (Open-Meteo) and how weather relates to chamber flooding."""
+    source = get_prediction_source(settings)
+    seasonality = analytics_service.read_report(settings, "seasonality") or {}
+    return {
+        "source": "Open-Meteo",
+        "forecast": source.weather_forecast() if source.available else [],
+        "flooding_vs_weather": seasonality.get("flooding_vs_weather", {}),
+    }
+
+
 @router.get("/analytics/alarm-kpis")
 def alarm_kpis(settings: SettingsDep, _: ReaderDep) -> dict[str, Any]:
     """Alarm load by ISA-18.2: rate per hour, floods, bad actors, chattering channels."""

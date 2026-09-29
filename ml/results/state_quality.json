@@ -1,0 +1,93 @@
+{
+ "text_records": 79971748,
+ "known_state_share": 0.9984,
+ "epoch_error_records": 80465,
+ "timestamp_value_records": 45822,
+ "alarm_flag_agreement": 0.6362,
+ "largest_disagreements": [
+  {
+   "sensor_type": "Датчик движения",
+   "state": "Обнаружено движение",
+   "alarm_flag": false,
+   "records": 25297913
+  },
+  {
+   "sensor_type": "КД Дверь",
+   "state": "Не замкнут",
+   "alarm_flag": false,
+   "records": 2176692
+  },
+  {
+   "sensor_type": "Состояние фазы",
+   "state": "Обесточен",
+   "alarm_flag": false,
+   "records": 1064438
+  },
+  {
+   "sensor_type": "КД Дверь",
+   "state": "Обнаружено движение",
+   "alarm_flag": false,
+   "records": 124258
+  },
+  {
+   "sensor_type": "Датчик дыма",
+   "state": "Обнаружен дым",
+   "alarm_flag": false,
+   "records": 121855
+  },
+  {
+   "sensor_type": "Датчик движения",
+   "state": "Не замкнут",
+   "alarm_flag": false,
+   "records": 99192
+  },
+  {
+   "sensor_type": "Датчик дыма",
+   "state": "Неисправен",
+   "alarm_flag": false,
+   "records": 44424
+  },
+  {
+   "sensor_type": "Состояние УИР-Р",
+   "state": "Рычаг сдернут",
+   "alarm_flag": false,
+   "records": 36003
+  },
+  {
+   "sensor_type": "Состояние насоса",
+   "state": "Неисправен",
+   "alarm_flag": false,
+   "records": 11303
+  },
+  {
+   "sensor_type": "Состояние насоса",
+   "state": "Обесточен",
+   "alarm_flag": false,
+   "records": 10658
+  }
+ ],
+ "gas": {
+  "readings": 223065444,
+  "invalid_share": 0.007535,
+  "above_alarm_share": 0.00032,
+  "alarm_threshold_percent_methane": 1.0
+ },
+ "door_openings_by_guard_state": {
+  "На охране": {
+   "alarm_share": 0.1487,
+   "openings": 86993
+  },
+  "Неисправен": {
+   "alarm_share": 0.0029,
+   "openings": 631241
+  },
+  "Снято с охраны": {
+   "alarm_share": 0.0117,
+   "openings": 1367005
+  },
+  "нет данных": {
+   "alarm_share": 0.0504,
+   "openings": 128655
+  }
+ }
+}

@@ -82,6 +82,7 @@ class StreamScorer:
             alarms=carried.get("alarms"),
             access_events=carried.get("access_events"),
             access_routes=carried.get("access_routes"),
+            weather_forecast=carried.get("weather_forecast"),
             incidents=score_snapshot.incident_probabilities(predictions),
             stream=stream,
             history=self.history,
@@ -118,6 +119,7 @@ def full_sections(reference, until, output):
             "alarms": score_snapshot.assess_alarms(reference, until),
             "access_events": score_snapshot.assess_access(reference, until),
             "access_routes": score_snapshot.assess_routes(reference, until),
+            "weather_forecast": score_snapshot.forecast_weather(),
         }
     except Exception as error:  # noqa: BLE001
         log(f"alarm and access sections kept from the last snapshot: {error}")
@@ -141,7 +143,7 @@ def carried_sections(path):
         return {}
     with open(path, encoding="utf-8") as handle:
         payload = json.load(handle)
-    return {key: payload.get(key) for key in ("alarms", "access_events", "access_routes")}
+    return {key: payload.get(key) for key in ("alarms", "access_events", "access_routes", "weather_forecast")}
 
 
 def run(output, inbox, poll_seconds=30, full_refresh_hours=24, history_until=None):

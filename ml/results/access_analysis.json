@@ -1,11 +1,11 @@
 {
  "entry_triggers_total": 2220907,
- "armed_triggers": 123058,
- "armed_share": 0.0554,
- "armed_triggers_per_day": 45.0,
+ "armed_triggers": 87555,
+ "armed_share": 0.0394,
+ "armed_triggers_per_day": 32.0,
  "flag_threshold": 0.35,
- "flagged": 15586,
- "flagged_per_day": 5.7,
+ "flagged": 13744,
+ "flagged_per_day": 5.02,
  "weights": {
   "rarity": 0.4,
   "breach_sensor": 0.25,
@@ -20,69 +20,69 @@
   },
   {
    "year": 2020,
-   "armed_triggers": 22247,
-   "flagged": 3725
+   "armed_triggers": 22081,
+   "flagged": 3723
   },
   {
    "year": 2021,
-   "armed_triggers": 14790,
-   "flagged": 1532
+   "armed_triggers": 6948,
+   "flagged": 973
   },
   {
    "year": 2022,
-   "armed_triggers": 14269,
-   "flagged": 2069
+   "armed_triggers": 7120,
+   "flagged": 1708
   },
   {
    "year": 2023,
-   "armed_triggers": 17995,
-   "flagged": 1448
+   "armed_triggers": 9294,
+   "flagged": 1086
   },
   {
    "year": 2024,
-   "armed_triggers": 16400,
-   "flagged": 1520
+   "armed_triggers": 12521,
+   "flagged": 1284
   },
   {
    "year": 2025,
-   "armed_triggers": 16329,
-   "flagged": 1529
+   "armed_triggers": 10250,
+   "flagged": 1250
   },
   {
    "year": 2026,
-   "armed_triggers": 5653,
-   "flagged": 677
+   "armed_triggers": 3966,
+   "flagged": 634
   }
  ],
  "by_sensor": [
   {
    "sensor_type": "КД Дверь",
-   "armed_triggers": 121814,
-   "flagged": 14597
+   "armed_triggers": 86635,
+   "flagged": 12948
   },
   {
    "sensor_type": "КД Люк",
-   "armed_triggers": 153,
-   "flagged": 153
+   "armed_triggers": 136,
+   "flagged": 136
   },
   {
    "sensor_type": "Стекло",
-   "armed_triggers": 1091,
-   "flagged": 836
+   "armed_triggers": 784,
+   "flagged": 660
   }
  ],
  "flagged_profile": {
   "night_share": {
-   "flagged": 0.1422,
-   "all_armed": 0.0279
+   "flagged": 0.1396,
+   "all_armed": 0.0353
   },
   "breach_sensor_share": {
-   "flagged": 0.0635,
-   "all_armed": 0.0101
+   "flagged": 0.0579,
+   "all_armed": 0.0105
   },
   "chain_share": {
-   "flagged": 0.7418,
-   "all_armed": 0.2149
+   "flagged": 0.7553,
+   "all_armed": 0.2586
   },
   "objects_with_flags": 23
  }

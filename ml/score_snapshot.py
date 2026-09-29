@@ -403,6 +403,16 @@ def assess_access(reference, until):
     ]
 
 
+def forecast_weather():
+    from pipeline import weather
+
+    try:
+        return weather.fetch_forecast()
+    except Exception as error:  # noqa: BLE001
+        print(f"weather forecast unavailable: {error}")
+        return None
+
+
 def assess_routes(reference, until):
     scored = _armed_triggers(reference)
     recent = scored.loc[scored["ts"] > until - pd.Timedelta(days=RECENT_DAYS)]
@@ -417,7 +427,7 @@ def assess_routes(reference, until):
 
 def write_snapshot(
     predictions, prediction_time, output, alarms=None, access_events=None, incidents=None, stream=None, history=None,
-    access_routes=None,
+    access_routes=None, weather_forecast=None,
 ):
     model_info = {}
     for _, names, _ in DEVICES:
@@ -446,6 +456,8 @@ def write_snapshot(
         payload["access_events"] = access_events
     if access_routes is not None:
         payload["access_routes"] = access_routes
+    if weather_forecast is not None:
+        payload["weather_forecast"] = weather_forecast
     payload["snapshot_id"] = hashlib.sha256(
         json.dumps(payload["predictions"], sort_keys=True).encode()
     ).hexdigest()[:16]
@@ -503,6 +515,7 @@ def main() -> None:
         alarms=assess_alarms(reference, until),
         access_events=assess_access(reference, until),
         access_routes=assess_routes(reference, until),
+        weather_forecast=forecast_weather(),
         incidents=incident_probabilities(predictions),
         history=location_history(
             {sensor_of(device): extract.extract_events(sensor_of(device)) for device, _, _ in DEVICES}, reference, until
