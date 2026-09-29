@@ -1,11 +1,11 @@
 {
  "entry_triggers_total": 2220907,
- "armed_triggers": 87555,
- "armed_share": 0.0394,
- "armed_triggers_per_day": 32.0,
- "flag_threshold": 0.35,
- "flagged": 13744,
- "flagged_per_day": 5.02,
+ "armed_triggers": 77589,
+ "armed_share": 0.0349,
+ "armed_triggers_per_day": 28.4,
+ "flag_threshold": 0.2986,
+ "flagged": 13680,
+ "flagged_per_day": 5.0,
  "weights": {
   "rarity": 0.4,
   "breach_sensor": 0.25,
@@ -15,74 +15,74 @@
  "by_year": [
   {
    "year": 2019,
-   "armed_triggers": 15375,
-   "flagged": 3086
+   "armed_triggers": 15379,
+   "flagged": 3213
   },
   {
    "year": 2020,
-   "armed_triggers": 22081,
-   "flagged": 3723
+   "armed_triggers": 22247,
+   "flagged": 4004
   },
   {
    "year": 2021,
-   "armed_triggers": 6948,
-   "flagged": 973
+   "armed_triggers": 14783,
+   "flagged": 1665
   },
   {
    "year": 2022,
-   "armed_triggers": 7120,
-   "flagged": 1708
+   "armed_triggers": 10660,
+   "flagged": 1909
   },
   {
    "year": 2023,
-   "armed_triggers": 9294,
-   "flagged": 1086
+   "armed_triggers": 5023,
+   "flagged": 807
   },
   {
    "year": 2024,
-   "armed_triggers": 12521,
-   "flagged": 1284
+   "armed_triggers": 3844,
+   "flagged": 604
   },
   {
    "year": 2025,
-   "armed_triggers": 10250,
-   "flagged": 1250
+   "armed_triggers": 3895,
+   "flagged": 908
   },
   {
    "year": 2026,
-   "armed_triggers": 3966,
-   "flagged": 634
+   "armed_triggers": 1758,
+   "flagged": 570
   }
  ],
  "by_sensor": [
   {
    "sensor_type": "КД Дверь",
-   "armed_triggers": 86635,
-   "flagged": 12948
+   "armed_triggers": 76823,
+   "flagged": 12990
   },
   {
    "sensor_type": "КД Люк",
-   "armed_triggers": 136,
-   "flagged": 136
+   "armed_triggers": 110,
+   "flagged": 110
   },
   {
    "sensor_type": "Стекло",
-   "armed_triggers": 784,
-   "flagged": 660
+   "armed_triggers": 656,
+   "flagged": 580
   }
  ],
  "flagged_profile": {
   "night_share": {
-   "flagged": 0.1396,
-   "all_armed": 0.0353
+   "flagged": 0.1276,
+   "all_armed": 0.0364
   },
   "breach_sensor_share": {
-   "flagged": 0.0579,
-   "all_armed": 0.0105
+   "flagged": 0.0504,
+   "all_armed": 0.0099
   },
   "chain_share": {
-   "flagged": 0.7553,
-   "all_armed": 0.2586
+   "flagged": 0.7349,
+   "all_armed": 0.2737
   },
   "objects_with_flags": 23
  }

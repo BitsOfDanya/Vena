@@ -14,18 +14,18 @@
     },
     "calibrated": true,
     "risk_level_thresholds": {
-      "critical": 0.9468563088856343,
-      "high": 0.9129475119250258,
-      "medium": 0.8534658984720865
+      "critical": 0.962288172686396,
+      "high": 0.9201862638946011,
+      "medium": 0.8600066977454602
     },
     "calibration": {
       "method": "isotonic",
-      "fit_period": "2025, model trained through 2024",
+      "fit_period": "2025, same recipe trained through 2024",
       "evaluated_on": "2026H1",
-      "ece_calibrated": 0.0042,
-      "predicted": 0.0378,
-      "observed": 0.0421
-    }
+      "ece_calibrated": 0.0042
+    },
+    "recipe": "catboost",
+    "risk_level_basis": "alert volume of the previous model on 2026H1"
   },
   "feature_columns": [
     "events_10m",

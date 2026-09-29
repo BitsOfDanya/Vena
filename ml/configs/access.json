@@ -1,5 +1,5 @@
 {
-  "flag_threshold": 0.35,
+  "flag_threshold": 0.2986,
   "weights": {
     "rarity": 0.4,
     "breach_sensor": 0.25,

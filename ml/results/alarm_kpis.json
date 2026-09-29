@@ -74,8 +74,8 @@
   ],
   "chattering_top": [
    {
-    "channel_id": "179211",
-    "name": "АНС1 Н3 ПК300",
+    "channel_id": "179209",
+    "name": "АНС1 Н1 ПК300 ",
     "activations": 162
    },
    {
@@ -84,8 +84,8 @@
     "activations": 162
    },
    {
-    "channel_id": "179209",
-    "name": "АНС1 Н1 ПК300 ",
+    "channel_id": "179211",
+    "name": "АНС1 Н3 ПК300",
     "activations": 162
    },
    {
@@ -94,14 +94,19 @@
     "activations": 154
    },
    {
+    "channel_id": "179213",
+    "name": "АНС2 Н2 ПК366",
+    "activations": 153
+   },
+   {
     "channel_id": "179214",
     "name": "АНС2 Н3 ПК366",
     "activations": 153
    },
    {
-    "channel_id": "179213",
-    "name": "АНС2 Н2 ПК366",
-    "activations": 153
+    "channel_id": "179222",
+    "name": "АНС4 Н3 ПК424",
+    "activations": 114
    },
    {
     "channel_id": "179218",
@@ -114,9 +119,9 @@
     "activations": 114
    },
    {
-    "channel_id": "179222",
-    "name": "АНС4 Н3 ПК424",
-    "activations": 114
+    "channel_id": "236794",
+    "name": "Н2 ПК177",
+    "activations": 108
    },
    {
     "channel_id": "236789",
@@ -124,9 +129,9 @@
     "activations": 108
    },
    {
-    "channel_id": "236794",
-    "name": "Н2 ПК177",
-    "activations": 108
+    "channel_id": "179215",
+    "name": "АНС3 Н1 ПК64",
+    "activations": 93
    },
    {
     "channel_id": "179216",
@@ -136,11 +141,6 @@
    {
     "channel_id": "179217",
     "name": "АНС3 Н3 ПК64",
-    "activations": 93
-   },
-   {
-    "channel_id": "179215",
-    "name": "АНС3 Н1 ПК64",
     "activations": 93
    },
    {
@@ -286,12 +286,12 @@
      "activations": 63
     },
     {
-     "channel_id": "215823",
+     "channel_id": "215822",
      "name": null,
      "activations": 59
     },
     {
-     "channel_id": "215822",
+     "channel_id": "215823",
      "name": null,
      "activations": 59
     },
@@ -326,22 +326,7 @@
      "activations": 34
     },
     {
-     "channel_id": "287987",
-     "name": null,
-     "activations": 32
-    },
-    {
-     "channel_id": "288116",
-     "name": null,
-     "activations": 32
-    },
-    {
      "channel_id": "159012",
-     "name": null,
-     "activations": 32
-    },
-    {
-     "channel_id": "287982",
      "name": null,
      "activations": 32
     },
@@ -351,7 +336,22 @@
      "activations": 32
     },
     {
-     "channel_id": "215806",
+     "channel_id": "287987",
+     "name": null,
+     "activations": 32
+    },
+    {
+     "channel_id": "287982",
+     "name": null,
+     "activations": 32
+    },
+    {
+     "channel_id": "288116",
+     "name": null,
+     "activations": 32
+    },
+    {
+     "channel_id": "215819",
      "name": null,
      "activations": 30
     }
@@ -462,7 +462,7 @@
      "activations": 139
     },
     {
-     "channel_id": "267083",
+     "channel_id": "267091",
      "name": null,
      "activations": 100
     },
@@ -472,7 +472,7 @@
      "activations": 100
     },
     {
-     "channel_id": "267091",
+     "channel_id": "267083",
      "name": null,
      "activations": 100
     },
@@ -502,12 +502,7 @@
      "activations": 72
     },
     {
-     "channel_id": "266965",
-     "name": null,
-     "activations": 72
-    },
-    {
-     "channel_id": "266960",
+     "channel_id": "266978",
      "name": null,
      "activations": 72
     },
@@ -517,7 +512,12 @@
      "activations": 72
     },
     {
-     "channel_id": "266978",
+     "channel_id": "266960",
+     "name": null,
+     "activations": 72
+    },
+    {
+     "channel_id": "266965",
      "name": null,
      "activations": 72
     },
@@ -628,21 +628,6 @@
      "activations": 376
     },
     {
-     "channel_id": "95476",
-     "name": null,
-     "activations": 207
-    },
-    {
-     "channel_id": "95478",
-     "name": null,
-     "activations": 207
-    },
-    {
-     "channel_id": "95473",
-     "name": null,
-     "activations": 207
-    },
-    {
      "channel_id": "95475",
      "name": null,
      "activations": 207
@@ -653,27 +638,27 @@
      "activations": 207
     },
     {
+     "channel_id": "95478",
+     "name": null,
+     "activations": 207
+    },
+    {
+     "channel_id": "95476",
+     "name": null,
+     "activations": 207
+    },
+    {
+     "channel_id": "95473",
+     "name": null,
+     "activations": 207
+    },
+    {
      "channel_id": "95474",
      "name": null,
      "activations": 206
     },
     {
-     "channel_id": "95376",
-     "name": null,
-     "activations": 201
-    },
-    {
-     "channel_id": "95379",
-     "name": null,
-     "activations": 201
-    },
-    {
      "channel_id": "95375",
-     "name": null,
-     "activations": 201
-    },
-    {
-     "channel_id": "95377",
      "name": null,
      "activations": 201
     },
@@ -683,7 +668,22 @@
      "activations": 201
     },
     {
+     "channel_id": "95379",
+     "name": null,
+     "activations": 201
+    },
+    {
+     "channel_id": "95377",
+     "name": null,
+     "activations": 201
+    },
+    {
      "channel_id": "95378",
+     "name": null,
+     "activations": 201
+    },
+    {
+     "channel_id": "95376",
      "name": null,
      "activations": 201
     },
@@ -698,12 +698,12 @@
      "activations": 117
     },
     {
-     "channel_id": "95386",
+     "channel_id": "95387",
      "name": null,
      "activations": 117
     },
     {
-     "channel_id": "95387",
+     "channel_id": "95386",
      "name": null,
      "activations": 117
     },
@@ -713,7 +713,7 @@
      "activations": 106
     },
     {
-     "channel_id": "96411",
+     "channel_id": "96413",
      "name": null,
      "activations": 81
     }
@@ -814,12 +814,12 @@
      "activations": 259
     },
     {
-     "channel_id": "215838",
+     "channel_id": "215839",
      "name": null,
      "activations": 149
     },
     {
-     "channel_id": "215839",
+     "channel_id": "215838",
      "name": null,
      "activations": 149
     },
@@ -834,7 +834,27 @@
      "activations": 129
     },
     {
+     "channel_id": "215906",
+     "name": null,
+     "activations": 128
+    },
+    {
      "channel_id": "215892",
+     "name": null,
+     "activations": 128
+    },
+    {
+     "channel_id": "227510",
+     "name": null,
+     "activations": 128
+    },
+    {
+     "channel_id": "215914",
+     "name": null,
+     "activations": 128
+    },
+    {
+     "channel_id": "215918",
      "name": null,
      "activations": 128
     },
@@ -849,37 +869,17 @@
      "activations": 128
     },
     {
-     "channel_id": "215906",
-     "name": null,
-     "activations": 128
-    },
-    {
-     "channel_id": "215918",
-     "name": null,
-     "activations": 128
-    },
-    {
-     "channel_id": "215914",
-     "name": null,
-     "activations": 128
-    },
-    {
-     "channel_id": "227510",
-     "name": null,
-     "activations": 128
-    },
-    {
      "channel_id": "215841",
      "name": null,
      "activations": 109
     },
     {
-     "channel_id": "147810",
+     "channel_id": "147809",
      "name": null,
      "activations": 72
     },
     {
-     "channel_id": "147809",
+     "channel_id": "147810",
      "name": null,
      "activations": 72
     },
@@ -889,12 +889,12 @@
      "activations": 53
     },
     {
-     "channel_id": "215823",
+     "channel_id": "215822",
      "name": null,
      "activations": 52
     },
     {
-     "channel_id": "215822",
+     "channel_id": "215823",
      "name": null,
      "activations": 52
     }
@@ -1030,12 +1030,12 @@
      "activations": 88
     },
     {
-     "channel_id": "229624",
+     "channel_id": "229629",
      "name": null,
      "activations": 88
     },
     {
-     "channel_id": "229629",
+     "channel_id": "229624",
      "name": null,
      "activations": 88
     },
@@ -1050,7 +1050,7 @@
      "activations": 61
     },
     {
-     "channel_id": "229647",
+     "channel_id": "229587",
      "name": null,
      "activations": 50
     },
@@ -1060,7 +1060,7 @@
      "activations": 50
     },
     {
-     "channel_id": "229587",
+     "channel_id": "229647",
      "name": null,
      "activations": 50
     },
@@ -1070,12 +1070,12 @@
      "activations": 50
     },
     {
-     "channel_id": "229639",
+     "channel_id": "229642",
      "name": null,
      "activations": 48
     },
     {
-     "channel_id": "229697",
+     "channel_id": "229639",
      "name": null,
      "activations": 48
     }
@@ -1221,12 +1221,12 @@
      "activations": 31
     },
     {
-     "channel_id": "288117",
+     "channel_id": "236794",
      "name": null,
      "activations": 30
     },
     {
-     "channel_id": "236794",
+     "channel_id": "288117",
      "name": null,
      "activations": 30
     },
@@ -1236,17 +1236,17 @@
      "activations": 28
     },
     {
-     "channel_id": "267088",
-     "name": null,
-     "activations": 26
-    },
-    {
      "channel_id": "287972",
      "name": null,
      "activations": 26
     },
     {
-     "channel_id": "287977",
+     "channel_id": "287991",
+     "name": null,
+     "activations": 26
+    },
+    {
+     "channel_id": "267087",
      "name": null,
      "activations": 26
     },
@@ -1256,7 +1256,7 @@
      "activations": 26
     },
     {
-     "channel_id": "267087",
+     "channel_id": "267088",
      "name": null,
      "activations": 26
     }
@@ -1392,12 +1392,12 @@
      "activations": 62
     },
     {
-     "channel_id": "215838",
+     "channel_id": "288126",
      "name": null,
      "activations": 61
     },
     {
-     "channel_id": "288126",
+     "channel_id": "215838",
      "name": null,
      "activations": 61
     },
@@ -1417,12 +1417,7 @@
      "activations": 56
     },
     {
-     "channel_id": "215858",
-     "name": null,
-     "activations": 54
-    },
-    {
-     "channel_id": "288120",
+     "channel_id": "215820",
      "name": null,
      "activations": 54
     },
@@ -1432,12 +1427,17 @@
      "activations": 54
     },
     {
+     "channel_id": "215858",
+     "name": null,
+     "activations": 54
+    },
+    {
      "channel_id": "215833",
      "name": null,
      "activations": 54
     },
     {
-     "channel_id": "215820",
+     "channel_id": "288120",
      "name": null,
      "activations": 54
     }
@@ -1548,12 +1548,12 @@
      "activations": 309
     },
     {
-     "channel_id": "179210",
+     "channel_id": "179209",
      "name": null,
      "activations": 308
     },
     {
-     "channel_id": "179209",
+     "channel_id": "179210",
      "name": null,
      "activations": 308
     },
@@ -1578,12 +1578,12 @@
      "activations": 243
     },
     {
-     "channel_id": "236789",
+     "channel_id": "236794",
      "name": null,
      "activations": 228
     },
     {
-     "channel_id": "236794",
+     "channel_id": "236789",
      "name": null,
      "activations": 228
     },
@@ -1591,16 +1591,6 @@
      "channel_id": "196672",
      "name": null,
      "activations": 218
-    },
-    {
-     "channel_id": "213422",
-     "name": null,
-     "activations": 74
-    },
-    {
-     "channel_id": "215778",
-     "name": null,
-     "activations": 74
     },
     {
      "channel_id": "213420",
@@ -1619,6 +1609,16 @@
     },
     {
      "channel_id": "213424",
+     "name": null,
+     "activations": 74
+    },
+    {
+     "channel_id": "212886",
+     "name": null,
+     "activations": 74
+    },
+    {
+     "channel_id": "213422",
      "name": null,
      "activations": 74
     }
@@ -1739,7 +1739,7 @@
      "activations": 41
     },
     {
-     "channel_id": "215838",
+     "channel_id": "197147",
      "name": null,
      "activations": 36
     },
@@ -1749,7 +1749,12 @@
      "activations": 36
     },
     {
-     "channel_id": "197147",
+     "channel_id": "215839",
+     "name": null,
+     "activations": 36
+    },
+    {
+     "channel_id": "215838",
      "name": null,
      "activations": 36
     },
@@ -1760,11 +1765,6 @@
     },
     {
      "channel_id": "268025",
-     "name": null,
-     "activations": 36
-    },
-    {
-     "channel_id": "215839",
      "name": null,
      "activations": 36
     },
@@ -1784,7 +1784,7 @@
      "activations": 30
     },
     {
-     "channel_id": "212856",
+     "channel_id": "268109",
      "name": null,
      "activations": 28
     },
@@ -1794,7 +1794,7 @@
      "activations": 28
     },
     {
-     "channel_id": "268109",
+     "channel_id": "212856",
      "name": null,
      "activations": 28
     },
@@ -1915,12 +1915,12 @@
      "activations": 74
     },
     {
-     "channel_id": "268105",
+     "channel_id": "268106",
      "name": null,
      "activations": 68
     },
     {
-     "channel_id": "268106",
+     "channel_id": "268105",
      "name": null,
      "activations": 68
     },
@@ -1930,12 +1930,12 @@
      "activations": 62
     },
     {
-     "channel_id": "215917",
+     "channel_id": "215918",
      "name": null,
      "activations": 52
     },
     {
-     "channel_id": "215918",
+     "channel_id": "215917",
      "name": null,
      "activations": 52
     },
@@ -1945,12 +1945,12 @@
      "activations": 44
     },
     {
-     "channel_id": "267984",
+     "channel_id": "267983",
      "name": null,
      "activations": 42
     },
     {
-     "channel_id": "267983",
+     "channel_id": "267984",
      "name": null,
      "activations": 42
     },
@@ -1975,12 +1975,12 @@
      "activations": 28
     },
     {
-     "channel_id": "229657",
+     "channel_id": "230901",
      "name": null,
      "activations": 26
     },
     {
-     "channel_id": "230901",
+     "channel_id": "229657",
      "name": null,
      "activations": 26
     }
@@ -2106,16 +2106,6 @@
      "activations": 47
     },
     {
-     "channel_id": "268105",
-     "name": null,
-     "activations": 42
-    },
-    {
-     "channel_id": "196669",
-     "name": null,
-     "activations": 42
-    },
-    {
      "channel_id": "268106",
      "name": null,
      "activations": 42
@@ -2126,9 +2116,14 @@
      "activations": 42
     },
     {
-     "channel_id": "267984",
+     "channel_id": "268105",
      "name": null,
-     "activations": 40
+     "activations": 42
+    },
+    {
+     "channel_id": "196669",
+     "name": null,
+     "activations": 42
     },
     {
      "channel_id": "268035",
@@ -2137,6 +2132,11 @@
     },
     {
      "channel_id": "267983",
+     "name": null,
+     "activations": 40
+    },
+    {
+     "channel_id": "267984",
      "name": null,
      "activations": 40
     },
@@ -2151,17 +2151,17 @@
      "activations": 39
     },
     {
-     "channel_id": "229697",
-     "name": null,
-     "activations": 38
-    },
-    {
      "channel_id": "230946",
      "name": null,
      "activations": 38
     },
     {
-     "channel_id": "268038",
+     "channel_id": "229697",
+     "name": null,
+     "activations": 38
+    },
+    {
+     "channel_id": "268109",
      "name": null,
      "activations": 36
     }
@@ -2257,12 +2257,12 @@
      "activations": 116
     },
     {
-     "channel_id": "333436",
+     "channel_id": "229629",
      "name": null,
      "activations": 114
     },
     {
-     "channel_id": "229629",
+     "channel_id": "333436",
      "name": null,
      "activations": 114
     },
@@ -2292,12 +2292,12 @@
      "activations": 82
     },
     {
-     "channel_id": "333612",
+     "channel_id": "286860",
      "name": null,
      "activations": 80
     },
     {
-     "channel_id": "286860",
+     "channel_id": "333612",
      "name": null,
      "activations": 80
     },
@@ -2322,12 +2322,12 @@
      "activations": 70
     },
     {
-     "channel_id": "333641",
+     "channel_id": "229660",
      "name": null,
      "activations": 67
     },
     {
-     "channel_id": "229660",
+     "channel_id": "333641",
      "name": null,
      "activations": 67
     },
@@ -2337,7 +2337,7 @@
      "activations": 67
     },
     {
-     "channel_id": "229657",
+     "channel_id": "333451",
      "name": null,
      "activations": 66
     },
@@ -2458,12 +2458,12 @@
      "activations": 124
     },
     {
-     "channel_id": "229624",
+     "channel_id": "229629",
      "name": null,
      "activations": 124
     },
     {
-     "channel_id": "229629",
+     "channel_id": "229624",
      "name": null,
      "activations": 124
     },
@@ -2478,12 +2478,7 @@
      "activations": 90
     },
     {
-     "channel_id": "288129",
-     "name": null,
-     "activations": 86
-    },
-    {
-     "channel_id": "288120",
+     "channel_id": "288126",
      "name": null,
      "activations": 86
     },
@@ -2493,17 +2488,22 @@
      "activations": 86
     },
     {
+     "channel_id": "288117",
+     "name": null,
+     "activations": 86
+    },
+    {
      "channel_id": "288111",
      "name": null,
      "activations": 86
     },
     {
-     "channel_id": "288125",
+     "channel_id": "288130",
      "name": null,
      "activations": 86
     },
     {
-     "channel_id": "288117",
+     "channel_id": "288120",
      "name": null,
      "activations": 86
     },
@@ -2513,12 +2513,12 @@
      "activations": 86
     },
     {
-     "channel_id": "288126",
+     "channel_id": "288125",
      "name": null,
      "activations": 86
     },
     {
-     "channel_id": "288130",
+     "channel_id": "288129",
      "name": null,
      "activations": 86
     },
@@ -2639,12 +2639,12 @@
      "activations": 114
     },
     {
-     "channel_id": "229624",
+     "channel_id": "229629",
      "name": null,
      "activations": 114
     },
     {
-     "channel_id": "229629",
+     "channel_id": "229624",
      "name": null,
      "activations": 114
     },
@@ -2654,32 +2654,7 @@
      "activations": 96
     },
     {
-     "channel_id": "288002",
-     "name": null,
-     "activations": 90
-    },
-    {
-     "channel_id": "288093",
-     "name": null,
-     "activations": 90
-    },
-    {
-     "channel_id": "288102",
-     "name": null,
-     "activations": 90
-    },
-    {
      "channel_id": "288001",
-     "name": null,
-     "activations": 90
-    },
-    {
-     "channel_id": "288098",
-     "name": null,
-     "activations": 90
-    },
-    {
-     "channel_id": "288089",
      "name": null,
      "activations": 90
     },
@@ -2689,7 +2664,32 @@
      "activations": 90
     },
     {
+     "channel_id": "288093",
+     "name": null,
+     "activations": 90
+    },
+    {
+     "channel_id": "288089",
+     "name": null,
+     "activations": 90
+    },
+    {
+     "channel_id": "288102",
+     "name": null,
+     "activations": 90
+    },
+    {
      "channel_id": "288107",
+     "name": null,
+     "activations": 90
+    },
+    {
+     "channel_id": "288002",
+     "name": null,
+     "activations": 90
+    },
+    {
+     "channel_id": "288098",
      "name": null,
      "activations": 90
     },
@@ -2699,12 +2699,12 @@
      "activations": 88
     },
     {
-     "channel_id": "288008",
+     "channel_id": "288012",
      "name": null,
      "activations": 88
     },
     {
-     "channel_id": "288012",
+     "channel_id": "288025",
      "name": null,
      "activations": 88
     }
@@ -2790,24 +2790,14 @@
    ],
    "chattering_top": [
     {
-     "channel_id": "95478",
-     "name": null,
-     "activations": 232
-    },
-    {
      "channel_id": "95475",
      "name": null,
      "activations": 232
     },
     {
-     "channel_id": "95476",
+     "channel_id": "95478",
      "name": null,
-     "activations": 231
-    },
-    {
-     "channel_id": "95473",
-     "name": null,
-     "activations": 231
+     "activations": 232
     },
     {
      "channel_id": "95477",
@@ -2815,7 +2805,17 @@
      "activations": 231
     },
     {
+     "channel_id": "95476",
+     "name": null,
+     "activations": 231
+    },
+    {
      "channel_id": "95474",
+     "name": null,
+     "activations": 231
+    },
+    {
+     "channel_id": "95473",
      "name": null,
      "activations": 231
     },
@@ -2835,11 +2835,6 @@
      "activations": 205
     },
     {
-     "channel_id": "95376",
-     "name": null,
-     "activations": 201
-    },
-    {
      "channel_id": "95375",
      "name": null,
      "activations": 201
@@ -2850,12 +2845,12 @@
      "activations": 201
     },
     {
-     "channel_id": "95385",
+     "channel_id": "95376",
      "name": null,
-     "activations": 117
+     "activations": 201
     },
     {
-     "channel_id": "95386",
+     "channel_id": "95385",
      "name": null,
      "activations": 117
     },
@@ -2865,12 +2860,17 @@
      "activations": 117
     },
     {
-     "channel_id": "96462",
+     "channel_id": "95386",
+     "name": null,
+     "activations": 117
+    },
+    {
+     "channel_id": "96463",
      "name": null,
      "activations": 89
     },
     {
-     "channel_id": "96463",
+     "channel_id": "96462",
      "name": null,
      "activations": 89
     },
@@ -2971,12 +2971,12 @@
    ],
    "chattering_top": [
     {
-     "channel_id": "215894",
+     "channel_id": "215906",
      "name": null,
      "activations": 150
     },
     {
-     "channel_id": "215906",
+     "channel_id": "215894",
      "name": null,
      "activations": 150
     },
@@ -2996,19 +2996,14 @@
      "activations": 146
     },
     {
-     "channel_id": "215891",
-     "name": null,
-     "activations": 146
-    },
-    {
      "channel_id": "227510",
      "name": null,
      "activations": 146
     },
     {
-     "channel_id": "215917",
+     "channel_id": "215891",
      "name": null,
-     "activations": 145
+     "activations": 146
     },
     {
      "channel_id": "215918",
@@ -3016,9 +3011,19 @@
      "activations": 145
     },
     {
+     "channel_id": "215917",
+     "name": null,
+     "activations": 145
+    },
+    {
      "channel_id": "196672",
      "name": null,
      "activations": 117
+    },
+    {
+     "channel_id": "215839",
+     "name": null,
+     "activations": 106
     },
     {
      "channel_id": "215841",
@@ -3031,17 +3036,12 @@
      "activations": 106
     },
     {
-     "channel_id": "215839",
-     "name": null,
-     "activations": 106
-    },
-    {
-     "channel_id": "147810",
+     "channel_id": "147809",
      "name": null,
      "activations": 95
     },
     {
-     "channel_id": "147809",
+     "channel_id": "147810",
      "name": null,
      "activations": 95
     },
@@ -3167,12 +3167,12 @@
      "activations": 177
     },
     {
-     "channel_id": "288125",
+     "channel_id": "288117",
      "name": null,
      "activations": 172
     },
     {
-     "channel_id": "288117",
+     "channel_id": "288125",
      "name": null,
      "activations": 172
     },
@@ -3192,22 +3192,7 @@
      "activations": 92
     },
     {
-     "channel_id": "287956",
-     "name": null,
-     "activations": 92
-    },
-    {
-     "channel_id": "287948",
-     "name": null,
-     "activations": 92
-    },
-    {
-     "channel_id": "287938",
-     "name": null,
-     "activations": 92
-    },
-    {
-     "channel_id": "288012",
+     "channel_id": "288016",
      "name": null,
      "activations": 92
     },
@@ -3217,12 +3202,17 @@
      "activations": 92
     },
     {
-     "channel_id": "287960",
+     "channel_id": "287948",
      "name": null,
      "activations": 92
     },
     {
-     "channel_id": "288016",
+     "channel_id": "288012",
+     "name": null,
+     "activations": 92
+    },
+    {
+     "channel_id": "287960",
      "name": null,
      "activations": 92
     },
@@ -3232,7 +3222,17 @@
      "activations": 92
     },
     {
-     "channel_id": "288002",
+     "channel_id": "287938",
+     "name": null,
+     "activations": 92
+    },
+    {
+     "channel_id": "287956",
+     "name": null,
+     "activations": 92
+    },
+    {
+     "channel_id": "288001",
      "name": null,
      "activations": 90
     },
@@ -3242,12 +3242,12 @@
      "activations": 90
     },
     {
-     "channel_id": "288102",
+     "channel_id": "288089",
      "name": null,
      "activations": 90
     },
     {
-     "channel_id": "288001",
+     "channel_id": "288102",
      "name": null,
      "activations": 90
     }
@@ -3333,7 +3333,7 @@
    ],
    "chattering_top": [
     {
-     "channel_id": "179211",
+     "channel_id": "179209",
      "name": null,
      "activations": 162
     },
@@ -3343,7 +3343,7 @@
      "activations": 162
     },
     {
-     "channel_id": "179209",
+     "channel_id": "179211",
      "name": null,
      "activations": 162
     },
@@ -3353,14 +3353,19 @@
      "activations": 154
     },
     {
+     "channel_id": "179213",
+     "name": null,
+     "activations": 153
+    },
+    {
      "channel_id": "179214",
      "name": null,
      "activations": 153
     },
     {
-     "channel_id": "179213",
+     "channel_id": "179222",
      "name": null,
-     "activations": 153
+     "activations": 114
     },
     {
      "channel_id": "179218",
@@ -3373,9 +3378,9 @@
      "activations": 114
     },
     {
-     "channel_id": "179222",
+     "channel_id": "236794",
      "name": null,
-     "activations": 114
+     "activations": 108
     },
     {
      "channel_id": "236789",
@@ -3383,9 +3388,9 @@
      "activations": 108
     },
     {
-     "channel_id": "236794",
+     "channel_id": "179215",
      "name": null,
-     "activations": 108
+     "activations": 93
     },
     {
      "channel_id": "179216",
@@ -3394,11 +3399,6 @@
     },
     {
      "channel_id": "179217",
-     "name": null,
-     "activations": 93
-    },
-    {
-     "channel_id": "179215",
      "name": null,
      "activations": 93
     },

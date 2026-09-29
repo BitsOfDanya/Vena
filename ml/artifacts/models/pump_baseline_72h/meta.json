@@ -131,13 +131,13 @@
           "observed": 0.8611
         }
       ],
-      "ece_2024_fit": 0.0364
+      "ece_2024_fit": 0.032
     }
   },
   "training_period": {
     "train_years": "2019-2023"
   },
-  "version": "2026-09-28",
+  "version": "2026-09-29",
   "metrics_snapshot": {
     "valid": {
       "n": 242006,

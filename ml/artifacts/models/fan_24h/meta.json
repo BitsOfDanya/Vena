@@ -65,18 +65,18 @@
     },
     "calibrated": true,
     "risk_level_thresholds": {
-      "critical": 0.9468563088856343,
-      "high": 0.9129475119250258,
-      "medium": 0.8534658984720865
+      "critical": 0.962288172686396,
+      "high": 0.9201862638946011,
+      "medium": 0.8600066977454602
     },
     "calibration": {
       "method": "isotonic",
-      "fit_period": "2025, model trained through 2024",
+      "fit_period": "2025, same recipe trained through 2024",
       "evaluated_on": "2026H1",
-      "ece_calibrated": 0.0042,
-      "predicted": 0.0378,
-      "observed": 0.0421
-    }
+      "ece_calibrated": 0.0042
+    },
+    "recipe": "catboost",
+    "risk_level_basis": "alert volume of the previous model on 2026H1"
   },
   "training_period": {
     "train_years": "2019-2025"
@@ -85,14 +85,35 @@
   "metrics_snapshot": {
     "test": {
       "period": "2026H1",
-      "n": 221061,
-      "n_positive": 9297,
-      "avg_precision": 0.23956263782578094,
-      "roc_auc": 0.8788498279911743,
-      "recall_at_precision_0.7": 0.03441970528127353,
-      "precision_at_recall_0.5": 0.19639320776977204
+      "role": "current recipe",
+      "recipe": "catboost",
+      "window": "all",
+      "train_rows": 1879395,
+      "train_years": "through 2025",
+      "before_2025": {
+        "avg_precision": 0.2105,
+        "roc_auc": 0.8777,
+        "recall_at_precision_0.7": 0.0003,
+        "precision_at_recall_0.5": 0.1852,
+        "precision_top5_per_day": 0.1878,
+        "ece": null
+      },
+      "avg_precision": 0.2396,
+      "roc_auc": 0.8788,
+      "recall_at_precision_0.7": 0.0344,
+      "precision_at_recall_0.5": 0.1964,
+      "precision_top5_per_day": 0.1756,
+      "ece": 0.0042
     },
-    "previous_test_avg_precision": 0.1736,
-    "reason": "score drift between 2024 and 2026H1, PSI about 1.0"
+    "previous": {
+      "recipe": "catboost",
+      "train_years": "2019-2023",
+      "avg_precision": 0.2059,
+      "roc_auc": 0.8723,
+      "recall_at_precision_0.7": 0.0063,
+      "precision_at_recall_0.5": 0.1581,
+      "precision_top5_per_day": 0.18,
+      "ece": 0.0134
+    }
   }
 }

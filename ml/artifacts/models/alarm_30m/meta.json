@@ -93,8 +93,8 @@
       "test": 0.7069
     },
     "previous_model_test": {
-      "pr_auc": 0.8946340250057669,
-      "roc_auc": 0.7043035475355947
+      "pr_auc": 0.9087536978660228,
+      "roc_auc": 0.7392577945286702
     },
     "operating_valid": {
       "threshold": 0.309,
