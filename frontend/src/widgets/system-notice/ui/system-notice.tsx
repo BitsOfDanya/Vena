@@ -33,7 +33,7 @@ export function SystemNoticeBar() {
   if (visible.length === 0) return null
 
   return (
-    <div className="shrink-0">
+    <div className="shrink-0 print:hidden">
       {visible.map((notice) => (
         <div key={notice.id} role="status" className={cn("flex items-center gap-3 border-b px-4 py-2 sm:px-6", TONE[notice.severity])}>
           <p className="flex min-w-0 flex-col gap-0.5 sm:flex-row sm:items-baseline sm:gap-2">

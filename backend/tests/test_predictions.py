@@ -776,3 +776,27 @@ def test_weather_forecast_comes_from_the_snapshot(client: TestClient, ml_root: P
     body = client.get("/api/v1/analytics/weather").json()
     assert body["source"] == "Open-Meteo"
     assert body["forecast"][0]["precipitation_mm"] == 4.2
+
+
+def test_shift_report_summarises_forecasts_events_and_work(
+    client: TestClient, ml_root: Path
+) -> None:
+    _snapshot_with_sections(ml_root)
+    created = client.post(
+        "/api/v1/actions",
+        json={
+            "asset_id": "11",
+            "reason": "Осмотр фидера",
+            "recommended_at": datetime.now(tz=UTC).isoformat(),
+        },
+    )
+    assert created.status_code == 201
+
+    report = client.get("/api/v1/reports/shift", params={"hours": 12}).json()
+
+    assert report["hours"] == 12
+    assert report["predicted"]["available"] is True
+    assert report["predicted"]["levels"]["critical"] >= 1
+    assert report["predicted"]["top"][0]["risk_level"] == "critical"
+    assert report["done"]["created"] >= 1
+    assert "happened" in report

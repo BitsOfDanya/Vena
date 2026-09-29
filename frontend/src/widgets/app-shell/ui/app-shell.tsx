@@ -36,7 +36,7 @@ function MobileTabs({ onMore }: { onMore: () => void }) {
   return (
     <nav
       aria-label="Быстрая навигация"
-      className="grid shrink-0 grid-cols-5 border-t border-border bg-background pb-[env(safe-area-inset-bottom)] lg:hidden"
+      className="grid shrink-0 grid-cols-5 border-t border-border bg-background pb-[env(safe-area-inset-bottom)] lg:hidden print:hidden"
     >
       {items.map((item) => {
         const Icon = item.icon
@@ -88,12 +88,12 @@ export function AppShell({ children }: { children: React.ReactNode }) {
   return (
     <AuthGate>
       <WorkspaceProvider>
-        <div className="flex h-svh min-h-0 w-full overflow-hidden bg-background">
+        <div className="flex h-svh min-h-0 w-full overflow-hidden bg-background print:h-auto print:overflow-visible">
           <AppSidebar collapsed={collapsed} onToggle={toggle} />
           <div className="flex min-w-0 flex-1 flex-col">
             <AppHeader onOpenSearch={() => setSearchOpen(true)} onOpenMenu={() => setMenuOpen(true)} />
             <SystemNoticeBar />
-            <main className="relative flex min-h-0 flex-1 flex-col overflow-hidden">{children}</main>
+            <main className="relative flex min-h-0 flex-1 flex-col overflow-hidden print:overflow-visible">{children}</main>
             <MobileTabs onMore={() => setMenuOpen(true)} />
           </div>
         </div>

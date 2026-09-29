@@ -1,5 +1,7 @@
 "use client"
 
+import { FileText } from "lucide-react"
+import Link from "next/link"
 import { useRouter } from "next/navigation"
 import * as React from "react"
 
@@ -274,7 +276,14 @@ export function PulsePage() {
                 <SnapshotLine snapshot={snapshot.data} />
               </div>
             </div>
-            <Segmented label="Окно пульса" value={windowHours} onChange={setWindowHours} options={WINDOWS} />
+            <div className="flex items-center gap-2">
+              <Segmented label="Окно пульса" value={windowHours} onChange={setWindowHours} options={WINDOWS} />
+              <Button asChild variant="outline" size="sm">
+                <Link href="/report/shift">
+                  <FileText className="size-3.5" /> Отчёт смены
+                </Link>
+              </Button>
+            </div>
           </div>
           {summaryModules}
           <div className="grid gap-5 xl:grid-cols-[minmax(0,1fr)_420px]">

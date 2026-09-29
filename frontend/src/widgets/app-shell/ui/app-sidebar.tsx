@@ -64,7 +64,7 @@ export function AppSidebar({ collapsed, onToggle }: { collapsed: boolean; onTogg
   return (
     <aside
       className={cn(
-        "hidden shrink-0 flex-col border-r border-border bg-sidebar transition-[width] duration-200 lg:flex",
+        "hidden shrink-0 flex-col border-r border-border bg-sidebar transition-[width] duration-200 lg:flex print:hidden",
         collapsed ? "w-[68px]" : "w-[232px]"
       )}
     >

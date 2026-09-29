@@ -70,9 +70,7 @@ def _what_from_feeder(feeder: dict[str, str], scenario: str) -> str:
 
 def _feeder(catalogue: dict[str, Any], lead: Prediction, scenario: str) -> dict[str, str] | None:
     haystack = " ".join(
-        part
-        for part in (lead.name, lead.location_tag, lead.location, lead.asset_id)
-        if part
+        part for part in (lead.name, lead.location_tag, lead.location, lead.asset_id) if part
     )
     exact: dict[str, str] | None = None
     fallback: dict[str, str] | None = None

@@ -41,8 +41,7 @@ def layer_status(session: Session) -> dict[str, Any]:
     asset_count = sum(
         1
         for feature in features
-        if isinstance(feature, dict)
-        and (feature.get("properties") or {}).get("kind") == "asset"
+        if isinstance(feature, dict) and (feature.get("properties") or {}).get("kind") == "asset"
     )
     return {
         "configured": True,

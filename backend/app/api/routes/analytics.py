@@ -10,6 +10,7 @@ from app.core.security import Principal, get_principal
 from app.db.session import get_session
 from app.domain import analytics as analytics_service
 from app.domain import report as report_service
+from app.domain import shift_report as shift_service
 from app.domain.predictions import get_prediction_source
 from app.schemas.analytics import EffectReport, EventTypeStats, InspectionPlan, ObjectNode
 
@@ -92,6 +93,19 @@ def section_health_history(group: str, settings: SettingsDep, _: ReaderDep) -> l
     if series is None:
         raise HTTPException(status_code=404, detail="Для этой секции ещё нет истории")
     return list(series)
+
+
+@router.get("/reports/shift")
+def shift_report(
+    session: SessionDep,
+    settings: SettingsDep,
+    _: ReaderDep,
+    hours: Annotated[int, Query(ge=1, le=72)] = 12,
+) -> dict[str, Any]:
+    now = datetime.now(tz=UTC)
+    return shift_service.shift_report(
+        session, settings, get_prediction_source(settings), hours, now
+    )
 
 
 @router.get("/reports/management.xlsx")
