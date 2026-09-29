@@ -37,7 +37,7 @@ function levelColor(level: string) {
   return LEVEL_COLOR[level] ?? "var(--status-normal)"
 }
 
-function hiTone(index: number | null) {
+export function hiTone(index: number | null) {
   if (index === null) return "text-faint"
   if (index < 40) return "text-status-critical"
   if (index < 70) return "text-status-attention"
@@ -106,7 +106,7 @@ function Legend() {
   )
 }
 
-function ObjectList({
+export function ObjectList({
   objects,
   selected,
   onSelect,

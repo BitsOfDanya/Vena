@@ -8,12 +8,13 @@ import { Segmented } from "@/shared/ui/segmented"
 
 export type SystemFilter = "all" | AssetType
 export type RiskFilter = "all" | "attention" | "critical"
-export type NetworkMode = "network" | "picket" | "tree" | "assets" | "map"
+export type NetworkMode = "network" | "picket" | "power" | "tree" | "assets" | "map"
 
 const SYSTEMS: SystemFilter[] = ["all", "pump", "fan", "smoke", "power"]
 
 const MODES: { value: NetworkMode; label: string }[] = [
   { value: "picket", label: "Схема" },
+  { value: "power", label: "Питание" },
   { value: "network", label: "Схема" },
   { value: "tree", label: "Дерево" },
   { value: "assets", label: "Объекты" },
@@ -57,8 +58,8 @@ export function NetworkToolbar({
 }) {
   const modes = MODES.filter((item) =>
     showPicket
-      ? item.value === "picket" || item.value === "tree" || item.value === "assets"
-      : (item.value !== "tree" || showTree) && item.value !== "picket" && (item.value !== "map" || !realGeometryOnly)
+      ? item.value === "picket" || item.value === "power" || item.value === "tree" || item.value === "assets"
+      : (item.value !== "tree" || showTree) && item.value !== "picket" && item.value !== "power" && (item.value !== "map" || !realGeometryOnly)
   )
   return (
     <div className="flex shrink-0 flex-wrap items-center gap-x-5 gap-y-3 px-6 pt-1 pb-3">

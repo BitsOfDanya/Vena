@@ -16,6 +16,7 @@ import { AssetTreePanel } from "@/widgets/asset-tree"
 import { NetworkCanvas } from "@/widgets/network-canvas"
 import { NetworkInspector } from "@/widgets/network-inspector"
 import { NetworkMap } from "@/widgets/network-map"
+import { ObjectPower } from "@/widgets/object-power"
 import { ObjectSchema } from "@/widgets/object-schema"
 import { NetworkToolbar, type NetworkMode, type RiskFilter, type SystemFilter } from "@/widgets/network-toolbar"
 
@@ -122,6 +123,8 @@ export function NetworkPage() {
             ? "Объекты, шкафы и каналы с индексом здоровья"
             : mode === "picket"
               ? "Датчики на трассе объекта по пикетам, цвет — риск модели"
+              : mode === "power"
+                ? "Однолинейная схема: вводы, шина, фидеры и потребители"
               : network.data
                 ? `${network.data.groups.length} групп · ${network.data.nodes.length} объектов`
                 : ""
@@ -153,6 +156,14 @@ export function NetworkPage() {
               selectedId={selectedAssetId}
               system={system}
               risk={risk}
+              onSelect={(id) => {
+                selectAsset(id)
+                setFocusId(null)
+              }}
+            />
+          ) : mode === "power" ? (
+            <ObjectPower
+              selectedId={selectedAssetId}
               onSelect={(id) => {
                 selectAsset(id)
                 setFocusId(null)
