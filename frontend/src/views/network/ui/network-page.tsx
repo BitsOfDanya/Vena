@@ -71,10 +71,30 @@ export function NetworkPage() {
 
   if (isMobile) {
     return (
-      <StateMessage
-        title="Нужен экран пошире"
-        description="Схема сети рассчитана на настольные и диспетчерские экраны. На этом устройстве используйте «Пульс» для текущей активности и «Работы» для планирования."
-      />
+      <div className="relative flex size-full min-h-0 flex-col">
+        <div className="shrink-0 space-y-3 px-4 pt-4 pb-3">
+          <h1 className="text-[22px] font-semibold">Инфраструктурная сеть</h1>
+          <input
+            value={query}
+            onChange={(event) => setQuery(event.target.value)}
+            placeholder="Объект, шкаф или канал"
+            aria-label="Поиск"
+            className="h-10 w-full rounded-md border border-input bg-elevated px-3 text-[14px] outline-none focus-visible:ring-2 focus-visible:ring-ring/60"
+          />
+        </div>
+        <div className="min-h-0 flex-1">
+          <AssetTreePanel query={query} selectedId={selectedAssetId} system={system} risk={risk} onSelect={(id) => selectAsset(id)} />
+        </div>
+        {selectedAssetId ? (
+          <NetworkInspector
+            assetId={selectedAssetId}
+            onClose={() => selectAsset(null)}
+            onInspect={() => setDiagnostic(true)}
+            onCreateAction={(next) => openAction(next)}
+          />
+        ) : null}
+        <CreateActionSheet open={sheetOpen} onOpenChange={setSheetOpen} draft={draft} />
+      </div>
     )
   }
 

@@ -92,7 +92,7 @@ export function AssetTreePanel({
   }
 
   return (
-    <div className="h-full overflow-auto px-6 py-3">
+    <div className="h-full overflow-auto px-3 py-3 sm:px-6">
       <p className="mb-3 text-[12px] text-muted-foreground">
         Здоровье: &lt;40 критично · &lt;70 внимание · иначе норма
       </p>
@@ -128,13 +128,13 @@ export function AssetTreePanel({
                             type="button"
                             onClick={() => onSelect(channel.assetId)}
                             className={cn(
-                              "grid w-full grid-cols-[7rem_1fr_6rem_4rem_3.5rem] items-center gap-3 px-4 py-1.5 text-left text-[13px] outline-none hover:bg-surface focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-ring/60",
+                              "grid w-full grid-cols-[minmax(0,1fr)_3rem_3.5rem] items-center gap-3 px-4 py-1.5 text-left text-[13px] sm:grid-cols-[7rem_minmax(0,1fr)_7rem_3rem_3.5rem] outline-none hover:bg-surface focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-ring/60",
                               selectedId === channel.assetId && "bg-surface"
                             )}
                           >
-                            <span className="font-mono tabular-nums">{channel.assetId}</span>
-                            <span className="truncate text-muted-foreground">{channel.name ?? channel.sensorType ?? "—"}</span>
-                            <span className="truncate text-[12px] text-muted-foreground">{scenarioText(channel.scenario)}</span>
+                            <span className="hidden font-mono tabular-nums sm:block">{channel.assetId}</span>
+                            <span className="truncate text-foreground sm:text-muted-foreground">{channel.name ?? channel.sensorType ?? "—"}</span>
+                            <span className="hidden truncate text-[12px] text-muted-foreground sm:block">{scenarioText(channel.scenario)}</span>
                             <span className="font-mono text-[12px] tabular-nums">{channel.probability === null ? "Нет прогноза" : `${Math.round(channel.probability * 100)}%`}</span>
                             <span
                               className={cn(
