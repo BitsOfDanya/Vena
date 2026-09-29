@@ -1,6 +1,5 @@
 import { apiFetch } from "@/shared/api/http"
 
-/** Shared in-flight + short TTL cache so Pulse/Dashboard/Network do not triple-scan 10k rows. */
 const PAGE = 500
 const CACHE_MS = 15_000
 

@@ -42,7 +42,6 @@ export function useRiskRising(horizon: 24 | 72, limit = 20) {
   })
 }
 
-/** Lightweight Pulse summary — one API call, no full 10k pagination. */
 export function useCriticalPredictions(horizon: 24 | 72) {
   const summary = useQuery({
     queryKey: ["prediction-summary", horizon],

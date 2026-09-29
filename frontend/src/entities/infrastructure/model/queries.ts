@@ -107,7 +107,6 @@ export function useAssetSearch(query: string, now: number, horizon: ForecastHori
           .slice(0, 12)
           .map((item) => assetFromPrediction(item, horizon))
       }
-      // Shared horizon cache (same as Dashboard/Network) — no second full walk when warm.
       const all = await getDashboardPredictions(horizon)
       return all
         .filter(

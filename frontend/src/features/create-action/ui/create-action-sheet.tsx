@@ -57,7 +57,6 @@ export function CreateActionSheet({
   const { now, horizon } = useWorkspace()
   const hasDraftAsset = Boolean(draft.assetId)
   const apiMode = workflowMode === "api"
-  // Avoid full 10k scan when the draft already names the asset (Pulse / plan / Network).
   const assets = useAssets(now, horizon, { enabled: open && !hasDraftAsset && !apiMode })
   const create = useCreateAction(now)
   const [notify, setNotify] = React.useState(false)

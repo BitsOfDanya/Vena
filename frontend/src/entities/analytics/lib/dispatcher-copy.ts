@@ -71,7 +71,6 @@ export function leadTimeLine(medianHours: number | null | undefined, alertPrecis
   return parts.length ? parts.join(", ") : null
 }
 
-/** Human-readable lead horizon for Effect / model cards. */
 export function leadHorizonPhrase(medianHours: number | null | undefined, prefix = "предупреждение в среднем за") {
   if (medianHours == null || medianHours <= 0) return null
   if (medianHours < 1) {

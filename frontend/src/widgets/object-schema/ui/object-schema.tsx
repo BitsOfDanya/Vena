@@ -56,7 +56,7 @@ function sectionTitle(label: string | null, group: string) {
 
 function keep(channel: ChannelNode, system: SystemFilter, risk: RiskFilter, needle: string) {
   if (system !== "all" && !SYSTEM_SCENARIO[system].includes(channel.scenario)) return false
-  if (risk === "attention" && channel.riskLevel === "normal") return false
+  if (risk === "attention" && channel.riskLevel !== "attention" && channel.riskLevel !== "critical") return false
   if (risk === "critical" && channel.riskLevel !== "critical") return false
   if (needle && !channel.assetId.includes(needle) && !(channel.name?.toLowerCase().includes(needle) ?? false)) return false
   return true
@@ -303,7 +303,7 @@ function Schema({
               }}
               onMouseEnter={() => setHover(item)}
               onMouseLeave={() => setHover(null)}
-              opacity={item.channel.riskLevel === "normal" ? 0.5 : 1}
+              opacity={item.channel.riskLevel === "critical" || item.channel.riskLevel === "attention" ? 1 : item.channel.probability === null ? 0.3 : 0.5}
             >
               {active ? <circle cx={item.x} cy={item.y} r={r + 4} fill="none" stroke="var(--vena)" strokeWidth={2} /> : null}
               <Glyph scenario={item.channel.scenario} x={item.x} y={item.y} r={r} fill={levelColor(item.channel.riskLevel)} />
@@ -318,8 +318,9 @@ function Schema({
         >
           <p className="font-medium">{hover.channel.name ?? hover.channel.assetId}</p>
           <p className="text-muted-foreground">
-            {scenarioText(hover.channel.scenario)} · {hover.channel.probability === null ? "Нет прогноза" : `${Math.round(hover.channel.probability * 100)}%`} за{" "}
-            {hover.channel.modelId.includes("72") ? "72" : "24"} ч
+            {hover.channel.probability === null
+              ? "Нет прогноза модели"
+              : `${scenarioText(hover.channel.scenario)} · ${Math.round(hover.channel.probability * 100)}% за ${hover.channel.modelId.includes("72") ? "72" : "24"} ч`}
           </p>
           <p className="font-mono text-[11px] text-faint">
             канал {hover.channel.assetId} · шкаф {hover.section}
