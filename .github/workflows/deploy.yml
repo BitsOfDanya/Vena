@@ -36,7 +36,7 @@ jobs:
           ssh -o BatchMode=yes "vena-deploy@$DEPLOY_HOST" "bash /opt/vena/deploy.sh '$GITHUB_SHA'"
       - name: Check public entrypoint
         env:
-          PUBLIC_URL: ${{ vars.VENA_PUBLIC_URL || 'http://5.129.225.86' }}
+          PUBLIC_URL: ${{ vars.VENA_PUBLIC_URL || 'https://5bit.online' }}
         run: |
           curl --fail --retry 5 --retry-all-errors --retry-delay 3 "$PUBLIC_URL/api/v1/health"
           curl --fail --retry 5 --retry-all-errors --retry-delay 3 --output /dev/null "$PUBLIC_URL/pulse"

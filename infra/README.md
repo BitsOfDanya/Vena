@@ -22,9 +22,12 @@ chmod 600 /opt/vena/shared/.env
 
 Замените пароль PostgreSQL и `VENA_JWT_SECRET` разными случайными hex-значениями.
 Создание пользователей и роли описаны в [docs/authentication.md](../docs/authentication.md). Не коммитьте `.env` и закрытый
-SSH-ключ. `VENA_SITE_ADDRESS=http://5.129.225.86` включает HTTP по IP.
-Для HTTPS укажите домен в `VENA_SITE_ADDRESS`, `https://домен` в `VENA_PUBLIC_URL`
-и направьте A/AAAA на сервер: Caddy получит и продлит сертификат автоматически.
+SSH-ключ. Рабочий адрес сервиса — `https://5bit.online`.
+В серверном `.env` заданы `VENA_SITE_ADDRESS=5bit.online` и
+`VENA_PUBLIC_URL=https://5bit.online`; A-запись домена указывает на `5.129.225.86`.
+Caddy автоматически получает и продлевает сертификат, перенаправляет HTTP на HTTPS.
+При смене домена обновите DNS, обе переменные и переменную репозитория
+`VENA_PUBLIC_URL`, затем пересоздайте Caddy и backend.
 
 ```sh
 export VENA_ENV_FILE=/opt/vena/shared/.env
@@ -40,7 +43,7 @@ Actions → Deploy Vena → Run workflow. Секреты репозитория:
 - `VENA_KNOWN_HOSTS`: проверенная запись SSH host key сервера.
 
 Переменные: `VENA_DEPLOY_HOST` (по умолчанию `5.129.225.86`), `VENA_PUBLIC_URL`
-(по умолчанию `http://5.129.225.86`; измените вместе с серверным `.env`).
+(по умолчанию `https://5bit.online`; измените вместе с серверным `.env`).
 
 Workflow передаёт архив точного Git commit по SSH. `infra/scripts/deploy.sh`
 блокирует параллельные деплои, собирает образы с тегом SHA, проверяет Caddy,
@@ -92,7 +95,7 @@ infra/scripts/upload-dataset.sh --enable vena-deploy@5.129.225.86
 - По мере поступления событий прогнозы, выданные после конца журнала, сверяются с фактом: `GET /api/v1/ml/prospective`.
 - Раз в сутки выполняется полный пересчёт, включая разделы тревог и доступа.
 
-Для демонстрации потока на уже загруженном журнале задайте `VENA_STREAM_HISTORY_UNTIL=2026-06-01` и воспроизведите последующий период: `python ml/replay_journal.py --url http://5.129.225.86 --start 2026-06-01 --end 2026-06-08` с ключом в `VENA_API_KEY`.
+Для демонстрации потока на уже загруженном журнале задайте `VENA_STREAM_HISTORY_UNTIL=2026-06-01` и воспроизведите последующий период: `python ml/replay_journal.py --url https://5bit.online --start 2026-06-01 --end 2026-06-08` с ключом в `VENA_API_KEY`.
 
 SMTP включается переменными `SMTP_HOST`, `SMTP_PORT`, `SMTP_USERNAME`,
 `SMTP_PASSWORD`, `SMTP_FROM`, `SMTP_TLS` в серверном `.env`. Без SMTP почта

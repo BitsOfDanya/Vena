@@ -16,8 +16,9 @@
 Браузер хранит JWT в cookie `vena_session` с `HttpOnly`, `SameSite=Lax` и
 `Path=/api/v1`. При `VENA_PUBLIC_URL=https://…` добавляется `Secure`.
 JWT не сохраняется в localStorage; старый API-ключ удаляется браузером.
-Пока сервер доступен по HTTP, транспорт не шифруется. Для HTTPS укажите домен
-в Caddy и `VENA_PUBLIC_URL`; код управления cookie менять не требуется.
+Production доступен по `https://5bit.online`; cookie сессии передаётся только
+по HTTPS. При смене домена обновите адрес Caddy и `VENA_PUBLIC_URL`,
+чтобы защищённые cookie и проверка Origin использовали новый адрес.
 
 Проверяются HS256-подпись, `exp`, `nbf`, `iat`, issuer, audience, тип токена,
 существование сессии и активность пользователя. Роль берётся из БД.
