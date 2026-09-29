@@ -10,7 +10,7 @@ import { Input } from "@/shared/ui/input"
 import { LoadingBar, StateMessage } from "@/shared/ui/state-message"
 import { VenaMark } from "@/shared/ui/vena-mark"
 
-import { LoginBackdrop } from "./login-backdrop"
+import { LoginShowcase } from "./login-showcase"
 
 const AuthContext = React.createContext<{
   me: AuthMe | null
@@ -63,51 +63,20 @@ export function AuthGate({ children }: { children: React.ReactNode }) {
   )
   const data = session.data
   if (data.needsLogin) return (
-    <div className="grid min-h-svh bg-background lg:grid-cols-[minmax(0,1.1fr)_minmax(420px,0.9fr)]">
-      <aside className="relative hidden overflow-hidden bg-[#0d2b28] text-[#d9ece8] lg:flex lg:flex-col lg:p-12">
-        <LoginBackdrop />
-        <div className="relative flex items-center gap-3">
-          <VenaMark tile className="size-10" />
-          <div className="leading-tight">
-            <p className="text-[20px] font-semibold tracking-[0.16em] text-white">VENA</p>
-            <p className="text-[13px] text-[#9cc5bd]">мониторинг инженерных коллекторов</p>
-          </div>
-        </div>
-        <div className="relative mt-auto max-w-[520px] pb-14">
-          <h2 className="text-[34px] leading-[1.15] font-semibold text-white">
-            Прогноз отказов раньше, чем сработает авария
-          </h2>
-          <p className="mt-4 text-[15px] leading-relaxed text-[#b5d3cd]">
-            Модели по журналу СМВУ оценивают риск для насосов, вентиляции, питания и пожарной системы на 24 и 72 часа,
-            показывают причину и превращают риск в работу для бригады.
-          </p>
-          <dl className="mt-8 grid grid-cols-3 gap-6 border-t border-white/15 pt-6">
-            <div>
-              <dt className="text-[12px] text-[#9cc5bd]">моделей прогноза</dt>
-              <dd className="mt-1 font-mono text-[24px] text-white">8</dd>
-            </div>
-            <div>
-              <dt className="text-[12px] text-[#9cc5bd]">каналов под прогнозом</dt>
-              <dd className="mt-1 font-mono text-[24px] text-white">5 700+</dd>
-            </div>
-            <div>
-              <dt className="text-[12px] text-[#9cc5bd]">лет журнала в обучении</dt>
-              <dd className="mt-1 font-mono text-[24px] text-white">7,5</dd>
-            </div>
-          </dl>
-        </div>
-        <p className="relative text-[12px] text-[#86b1a8]">Команда 5bit · Лидеры цифровой трансформации 2026 · кейс «Москоллектор»</p>
+    <div className="grid min-h-svh bg-background lg:grid-cols-[minmax(0,1.45fr)_minmax(420px,0.8fr)]">
+      <aside className="relative hidden overflow-hidden bg-[#0f1d1b] lg:block">
+        <LoginShowcase />
       </aside>
       <main className="flex flex-col items-center justify-center px-5 py-10 sm:px-10">
         <div className="mb-8 flex items-center gap-3 lg:hidden">
           <VenaMark tile className="size-10" />
           <div className="leading-tight">
-            <p className="text-[19px] font-semibold tracking-[0.16em]">VENA</p>
-            <p className="text-[12px] text-muted-foreground">мониторинг инженерных коллекторов</p>
+            <p className="font-mono text-[19px] font-medium tracking-[0.3em]">VENA</p>
+            <p className="text-[12px] text-muted-foreground">прогноз аварий инженерных коллекторов</p>
           </div>
         </div>
         <form
-          className="w-full max-w-[400px] rounded-xl border border-border bg-elevated p-7 shadow-[var(--shadow-card)] sm:p-8"
+          className="w-full max-w-[400px] border border-border bg-elevated p-7 sm:p-8"
           onSubmit={async (event) => {
             event.preventDefault()
             if (pending || !login.trim() || !password) return
@@ -152,7 +121,7 @@ export function AuthGate({ children }: { children: React.ReactNode }) {
             {pending ? "Вход…" : "Войти"}
           </Button>
         </form>
-        <div className="mt-5 w-full max-w-[400px] rounded-xl border border-dashed border-border px-5 py-4 text-[13px] text-muted-foreground">
+        <div className="mt-4 w-full max-w-[400px] border-l-2 border-brass bg-elevated px-5 py-4 text-[13px] text-muted-foreground">
           <p className="font-medium text-foreground">Доступ для жюри</p>
           <p className="mt-1">
             Логин <span className="font-mono text-foreground">user1</span> · пароль{" "}
@@ -160,6 +129,20 @@ export function AuthGate({ children }: { children: React.ReactNode }) {
           </p>
           <p className="mt-0.5 text-[12px] text-faint">user2–user20 с тем же паролем — диспетчеры</p>
         </div>
+        <ul className="mt-6 w-full max-w-[400px] border-t border-l border-border text-[13px] lg:hidden">
+          {[
+            "Риск отказа насосов, вентиляции, питания и дымовых датчиков за 13–48 часов",
+            "5 каналов на день, которые действительно стоит проверить",
+            "Причина, последствие и первый шаг в каждой карточке",
+            "Все модели проверены на январе–июне 2026",
+          ].map((item) => (
+            <li key={item} className="flex gap-2.5 border-r border-b border-border bg-elevated px-4 py-2.5">
+              <span aria-hidden className="mt-1.5 size-1.5 shrink-0 bg-vena" />
+              {item}
+            </li>
+          ))}
+        </ul>
+        <p className="mt-4 font-mono text-[11px] text-faint lg:hidden">КОМАНДА 5BIT · ЛЦТ 2026</p>
       </main>
     </div>
   )

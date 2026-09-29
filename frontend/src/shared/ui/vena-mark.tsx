@@ -1,19 +1,15 @@
 import { cn } from "@/shared/lib/utils"
 
 export function VenaMark({ className, tile = false }: { className?: string; tile?: boolean }) {
+  const ink = tile ? "var(--primary-foreground)" : "currentColor"
   return (
     <svg aria-hidden viewBox="0 0 32 32" className={cn("size-[26px] shrink-0", className)}>
       {tile ? <rect width="32" height="32" rx="2" fill="var(--vena)" /> : null}
-      <g
-        fill="none"
-        stroke={tile ? "var(--primary-foreground)" : "currentColor"}
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      >
-        <path d="M7.5 24V15.5a8.5 8.5 0 0 1 17 0V24" strokeWidth="2.2" />
-        <path d="M5 24h22" strokeWidth="2.2" />
-        <path d="M9.5 18.5h3l1.6-3.6 2.4 6 1.8-4.2 1.1 1.8h3.1" strokeWidth="1.9" />
+      <g fill="none" stroke={ink} strokeWidth="2.2" strokeLinecap="square" strokeLinejoin="miter">
+        <path d="M6.5 7.5 16 25.5 25.5 7.5" />
+        <path d="M11.5 7.5 16 16 20.5 7.5" />
       </g>
+      <rect x="14.2" y="23.8" width="3.6" height="3.6" fill={tile ? "var(--brass)" : "currentColor"} />
     </svg>
   )
 }
@@ -24,10 +20,8 @@ export function VenaLogo({ className, compact = false }: { className?: string; c
       <VenaMark tile className="size-8" />
       {compact ? null : (
         <span className="flex flex-col leading-none">
-          <span className="text-[16px] font-semibold tracking-[0.14em] text-foreground">VENA</span>
-          <span className="mt-1 text-[10.5px] font-medium tracking-[0.02em] text-muted-foreground">
-            мониторинг коллекторов
-          </span>
+          <span className="font-mono text-[16px] font-medium tracking-[0.28em] text-foreground">VENA</span>
+          <span className="mt-1 text-[10.5px] tracking-[0.02em] text-muted-foreground">мониторинг коллекторов</span>
         </span>
       )}
     </span>
