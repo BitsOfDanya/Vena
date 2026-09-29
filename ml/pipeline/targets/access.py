@@ -1,3 +1,5 @@
+import re
+
 import numpy as np
 import pandas as pd
 
@@ -8,6 +10,9 @@ ARMED, DISARMED = "На охране", "Снято с охраны"
 CHAIN_WINDOW = pd.Timedelta(minutes=10)
 MIN_HISTORY = 50
 WEIGHTS = {"rarity": 0.4, "breach_sensor": 0.25, "night": 0.2, "chain": 0.15}
+ROUTE_GAP = pd.Timedelta(minutes=30)
+PICKET_METERS = 10
+PICKET = re.compile(r"ПК\s?(\d+)")
 
 
 def object_of(tag):
@@ -56,3 +61,38 @@ def assess(access_events, guard):
     armed["night"] = (armed["ts"].dt.hour >= 22) | (armed["ts"].dt.hour < 6)
     armed["index"] = sum(weight * armed[name].astype(float) for name, weight in WEIGHTS.items())
     return armed
+
+
+def picket(name):
+    match = PICKET.search(name) if isinstance(name, str) else None
+    return int(match.group(1)) if match else None
+
+
+def routes(armed, name_by_channel):
+    frame = armed.assign(name=armed["channel_id"].map(name_by_channel))
+    frame = frame.assign(picket=frame["name"].map(picket)).dropna(subset=["picket", "object"]).sort_values("ts", kind="stable")
+    gap = frame.groupby("object", observed=True)["ts"].diff()
+    frame["route"] = (gap.isna() | (gap > ROUTE_GAP)).cumsum()
+    result = []
+    for _, steps in frame.groupby("route", sort=False):
+        pickets = steps["picket"].astype(int).tolist()
+        if len(set(pickets)) < 2:
+            continue
+        moves = np.sign(np.diff(pickets))
+        moves = moves[moves != 0]
+        direction = "increasing" if (moves > 0).all() else "decreasing" if (moves < 0).all() else "mixed"
+        minutes = (steps["ts"].iloc[-1] - steps["ts"].iloc[0]).total_seconds() / 60
+        distance = (max(pickets) - min(pickets)) * PICKET_METERS
+        result.append({
+            "object": steps["object"].iloc[0],
+            "start": steps["ts"].iloc[0],
+            "end": steps["ts"].iloc[-1],
+            "direction": direction,
+            "distance_m": distance,
+            "speed_m_per_min": round(distance / minutes, 1) if minutes > 0 else None,
+            "max_index": round(float(steps["index"].max()), 4),
+            "night": bool(steps["night"].any()),
+            "steps": [{"ts": row.ts, "channel_id": row.channel_id, "name": row.name, "picket": int(row.picket),
+                       "sensor_type": row.sensor_type} for row in steps.itertuples()],
+        })
+    return result

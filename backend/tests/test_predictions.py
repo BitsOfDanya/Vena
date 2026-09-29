@@ -588,3 +588,43 @@ def test_health_calibration_interpolates_between_points() -> None:
     assert calibrate(0.25, points) == pytest.approx(0.11)
     assert calibrate(2.0, points) == 0.5
     assert calibrate(0.3, None) == 0.3
+
+
+def test_access_routes_and_alarm_categories(client: TestClient, ml_root: Path) -> None:
+    _snapshot_with_sections(ml_root)
+    path = ml_root / "results" / "predictions" / "snapshot.json"
+    payload = json.loads(path.read_text(encoding="utf-8"))
+    step = {"channel_id": "5", "name": "КД дверь ПК284", "picket": 284, "sensor_type": "КД Дверь"}
+    payload["access_routes"] = [
+        {
+            "object": "914",
+            "start": f"2026-06-{day}T20:25:00",
+            "end": f"2026-06-{day}T20:50:00",
+            "direction": "increasing",
+            "distance_m": 550,
+            "speed_m_per_min": 22.0,
+            "max_index": 0.35,
+            "night": False,
+            "steps": [{**step, "ts": f"2026-06-{day}T20:25:00"}],
+        }
+        for day in ("10", "30")
+    ]
+    payload["alarms"] = [
+        {
+            "channel_id": "7",
+            "ts": "2026-06-30T10:00:00",
+            "sensor_type": "Газовый датчик",
+            "corroboration_probability": 0.9,
+            "needs_verification": False,
+            "maintenance": True,
+        }
+    ]
+    path.write_text(json.dumps(payload), encoding="utf-8")
+
+    routes = client.get("/api/v1/access-routes").json()
+    alarms = client.get("/api/v1/alarms").json()
+
+    assert [route["start"][:10] for route in routes] == ["2026-06-30", "2026-06-10"]
+    assert routes[0]["steps"][0]["picket"] == 284
+    assert alarms[0]["category"] == "gas"
+    assert alarms[0]["maintenance"] is True

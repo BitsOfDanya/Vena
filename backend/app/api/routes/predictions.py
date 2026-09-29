@@ -16,6 +16,7 @@ from app.domain.email import build_email_provider
 from app.domain.predictions import get_prediction_source
 from app.schemas.predictions import (
     AccessEvent,
+    AccessRoute,
     AlarmAssessment,
     FeedbackRow,
     ModelInfo,
@@ -181,6 +182,12 @@ def list_access_events(
 ) -> list[AccessEvent]:
     _require_snapshot(settings)
     return get_prediction_source(settings).access_events()[:limit]
+
+
+@router.get("/access-routes", response_model=list[AccessRoute])
+def list_access_routes(settings: SettingsDep, _: ReaderDep) -> list[AccessRoute]:
+    _require_snapshot(settings)
+    return get_prediction_source(settings).access_routes()
 
 
 @router.get("/ml/feedback", response_model=list[FeedbackRow])

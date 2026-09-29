@@ -370,18 +370,22 @@ def assess_alarms(reference, until):
     return rows
 
 
-def assess_access(reference, until):
+def _armed_triggers(reference):
     from pipeline import extract
 
-    with open(ACCESS_CONFIG, encoding="utf-8") as handle:
-        threshold = json.load(handle)["flag_threshold"]
     tag_by_channel = {key: value.get("tag") for key, value in reference.items()}
     guard = access.guard_states(extract.extract_events(access.GUARD_SENSOR), tag_by_channel)
     triggers = pd.concat(
         [access.triggers(extract.extract_events(sensor), sensor, tag_by_channel) for sensor in access.ACCESS_SENSORS],
         ignore_index=True,
     )
-    scored = access.assess(triggers, guard)
+    return access.assess(triggers, guard)
+
+
+def assess_access(reference, until):
+    with open(ACCESS_CONFIG, encoding="utf-8") as handle:
+        threshold = json.load(handle)["flag_threshold"]
+    scored = _armed_triggers(reference)
     recent = scored.loc[(scored["ts"] > until - pd.Timedelta(days=RECENT_DAYS)) & (scored["index"] >= threshold)]
     return [
         {
@@ -399,8 +403,21 @@ def assess_access(reference, until):
     ]
 
 
+def assess_routes(reference, until):
+    scored = _armed_triggers(reference)
+    recent = scored.loc[scored["ts"] > until - pd.Timedelta(days=RECENT_DAYS)]
+    names = {key: value.get("name") for key, value in reference.items()}
+    result = access.routes(recent, names)
+    for route in result:
+        route["start"], route["end"] = route["start"].isoformat(), route["end"].isoformat()
+        for step in route["steps"]:
+            step["ts"] = step["ts"].isoformat()
+    return result
+
+
 def write_snapshot(
-    predictions, prediction_time, output, alarms=None, access_events=None, incidents=None, stream=None, history=None
+    predictions, prediction_time, output, alarms=None, access_events=None, incidents=None, stream=None, history=None,
+    access_routes=None,
 ):
     model_info = {}
     for _, names, _ in DEVICES:
@@ -427,6 +444,8 @@ def write_snapshot(
         payload["alarms"] = alarms
     if access_events is not None:
         payload["access_events"] = access_events
+    if access_routes is not None:
+        payload["access_routes"] = access_routes
     payload["snapshot_id"] = hashlib.sha256(
         json.dumps(payload["predictions"], sort_keys=True).encode()
     ).hexdigest()[:16]
@@ -483,6 +502,7 @@ def main() -> None:
         arguments.output,
         alarms=assess_alarms(reference, until),
         access_events=assess_access(reference, until),
+        access_routes=assess_routes(reference, until),
         incidents=incident_probabilities(predictions),
         history=location_history(
             {sensor_of(device): extract.extract_events(sensor_of(device)) for device, _, _ in DEVICES}, reference, until

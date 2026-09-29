@@ -187,3 +187,19 @@ def test_workload_rows_only_use_counts_before_the_forecast_day():
     pd.testing.assert_frame_equal(before[features], after[features])
     assert (after["target"] - before["target"] == 100).all()
     assert before["lead"].tolist() == list(workload.LEADS)
+
+
+def test_access_routes_follow_pickets_of_one_object():
+    times = pd.to_datetime(["2026-06-30 20:25", "2026-06-30 20:30", "2026-06-30 20:40", "2026-06-30 23:00"])
+    armed = pd.DataFrame({
+        "channel_id": ["a", "b", "c", "d"], "ts": times, "object": "914", "sensor_type": "КД Дверь",
+        "index": [0.2, 0.35, 0.3, 0.1], "night": [False, False, False, True],
+    })
+    names = {"a": "КД дверь ПК284", "b": "КД отс.дверь ПК298", "c": "КД отс.дверь ПК310+5", "d": "КД дверь ПК12"}
+    routes = access.routes(armed, names)
+    assert len(routes) == 1
+    route = routes[0]
+    assert [step["picket"] for step in route["steps"]] == [284, 298, 310]
+    assert route["direction"] == "increasing"
+    assert route["distance_m"] == 260
+    assert route["max_index"] == 0.35

@@ -13,6 +13,7 @@ from app.domain.incidents import (
 )
 from app.schemas.predictions import (
     AccessEvent,
+    AccessRoute,
     AlarmAssessment,
     Driver,
     ModelInfo,
@@ -302,6 +303,11 @@ class PredictionSource:
             result.append(AccessEvent(**row, location=location_label(group)))
         result.sort(key=lambda item: (-item.access_index, item.ts))
         return result
+
+    def access_routes(self) -> list[AccessRoute]:
+        routes = [AccessRoute(**row) for row in self._section("access_routes")]
+        routes.sort(key=lambda item: item.start, reverse=True)
+        return routes
 
     def get(self, prediction_id: str) -> Prediction | None:
         return next((item for item in self.all() if item.id == prediction_id), None)

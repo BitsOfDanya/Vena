@@ -112,6 +112,26 @@ class AccessEvent(BaseModel):
     name: str | None = None
 
 
+class RouteStep(BaseModel):
+    ts: datetime
+    channel_id: str
+    name: str | None = None
+    picket: int
+    sensor_type: str
+
+
+class AccessRoute(BaseModel):
+    object: str
+    start: datetime
+    end: datetime
+    direction: str
+    distance_m: int
+    speed_m_per_min: float | None = None
+    max_index: float
+    night: bool
+    steps: list[RouteStep]
+
+
 class FeedbackRow(BaseModel):
     prediction_id: str | None
     asset_id: str
