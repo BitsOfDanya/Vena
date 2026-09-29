@@ -20,17 +20,26 @@ def status(state, detail):
     temporary.replace(path)
 
 
+refresh_seconds = int(os.environ.get("VENA_ML_REFRESH_SECONDS", "3600"))
+
+
+def score_demo():
+    temporary = output.with_suffix(".tmp.json")
+    subprocess.run(["python", "score_snapshot.py", "--demo", "--output", str(temporary)], check=True)
+    temporary.replace(output)
+    heartbeat.write_text(str(time.time()), encoding="utf-8")
+
+
 if mode == "demo":
     while True:
-        temporary = output.with_suffix(".tmp.json")
-        subprocess.run(["python", "score_snapshot.py", "--demo", "--output", str(temporary)], check=True)
-        temporary.replace(output)
-        heartbeat.write_text(str(time.time()), encoding="utf-8")
+        score_demo()
         status("demo", "Демонстрационные данные")
-        time.sleep(int(os.environ.get("VENA_ML_REFRESH_SECONDS", "3600")))
+        time.sleep(refresh_seconds)
 
 process = None
 previous = None
+demo_at = 0.0
+started = 0.0
 while True:
     heartbeat.write_text(str(time.time()), encoding="utf-8")
     files = sorted([*dataset.glob("ext-journal-*.csv"), *dataset.glob("uploads/ext-journal-*.csv")])
@@ -50,16 +59,23 @@ while True:
         previous = revision
         process = None
         if ready:
-            output.unlink(missing_ok=True)
             for file in Path("/srv/ml/analysis/ml_ready/cache").glob("events_*.parquet"):
                 file.unlink()
             status("processing", "Обрабатывается реальный журнал")
+            started = time.time()
             process = subprocess.Popen(["python", "stream_scoring.py"], env={**os.environ, "VENA_ML_MODE": "journal", "VENA_SNAPSHOT_PATH": str(output)})
         else:
+            demo_at = 0.0
+    if not ready and time.time() - demo_at > refresh_seconds:
+        try:
+            score_demo()
+            status("waiting", "Реального журнала нет: показаны демонстрационные данные. Загрузите справочник каналов и журнал")
+        except subprocess.CalledProcessError:
             output.unlink(missing_ok=True)
             status("waiting", "Загрузите справочник каналов и реальный журнал")
+        demo_at = time.time()
     elif process and process.poll() is not None:
         status("error", "Обработка журнала завершилась с ошибкой. Проверьте журнал ML-контейнера.")
-    elif ready and output.exists():
+    elif ready and output.exists() and output.stat().st_mtime >= started:
         status("journal", "Прогнозы по реальным каналам")
     time.sleep(5)

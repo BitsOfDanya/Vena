@@ -463,9 +463,11 @@ def write_snapshot(
         json.dumps(payload["predictions"], sort_keys=True).encode()
     ).hexdigest()[:16]
 
-    os.makedirs(os.path.dirname(output), exist_ok=True)
-    with open(output, "w", encoding="utf-8") as handle:
+    os.makedirs(os.path.dirname(output) or ".", exist_ok=True)
+    temporary = f"{output}.partial"
+    with open(temporary, "w", encoding="utf-8") as handle:
         json.dump(payload, handle, ensure_ascii=False)
+    os.replace(temporary, output)
     print(f"{len(predictions)} predictions -> {output} ({payload['snapshot_id']})")
 
 
