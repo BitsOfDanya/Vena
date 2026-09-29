@@ -22,7 +22,7 @@ import numpy as np
 import pandas as pd
 
 from pipeline import artifacts, calibration, config, evaluate, experiments, extract, weather as weather_mod
-from pipeline.targets import evaluation, flood
+from pipeline.targets import evaluation, flood, modules, state_target
 
 OUTPUT = os.path.join(config.ROOT, "results", "model_report.json")
 DEVICE_MODELS = {"pump": ["pump_24h", "pump_72h", "pump_baseline_72h"], "fan": ["fan_24h", "fan_72h"], "smoke": ["smoke_24h"]}
@@ -56,7 +56,7 @@ def study(name, frame, episodes, horizon, recent_mask, fit_mask, reference_mask)
 
     pooled = fit_mask | reference_mask
     new = calibration.fit_isotonic(raw[pooled], target[pooled])
-    # A model trained through 2025 has seen the calibration years; keep its own calibrator.
+    # A model trained on a calibration year keeps its own calibrator.
     in_sample = int(meta["training_period"]["train_years"].split("-")[-1]) >= 2024
     if in_sample:
         new = old
@@ -92,7 +92,7 @@ def study(name, frame, episodes, horizon, recent_mask, fit_mask, reference_mask)
     report["daily_top_k_2026h1"] = {str(k): top.get(f"precision_top{k}_per_day") for k in TOP_COUNTS}
 
     if in_sample:
-        log(f"{name}: trained through 2025, calibrator kept")
+        log(f"{name}: trained on a calibration year, calibrator kept")
         return report
     joblib.dump(new, os.path.join(artifacts.artifact_dir(name), "calibrator.joblib"))
     meta_path = os.path.join(artifacts.artifact_dir(name), "meta.json")
@@ -133,6 +133,19 @@ def main() -> None:
     frame = frame.reset_index(drop=True)
     recent, fit, reference = (mask.values for mask in periods(frame, 24))
     report["flood_24h"] = study("flood_24h", frame, episodes, 24, recent, fit, reference)
+
+    events = extract.extract_events(modules.PHASE_SENSOR)
+    frame, episodes, _ = modules.build_phase_frame(events, horizons=(24,), include_lockbox=True)
+    frame = frame.rename(columns={"any_y24": "target"}).reset_index(drop=True)
+    recent, fit, reference = (mask.values for mask in periods(frame, 24))
+    report["phase_24h"] = study("phase_24h", frame, episodes, 24, recent, fit, reference)
+
+    if os.path.exists(os.path.join(artifacts.artifact_dir("smoke_alarm_24h"), "meta.json")):
+        events = extract.extract_events(config.SENSOR_ALIASES["smoke"])
+        frame, episodes = state_target.build_frame(events, "Обнаружен дым", horizons=(24,), include_lockbox=True)
+        frame = frame.rename(columns={"y24": "target"}).reset_index(drop=True)
+        recent, fit, reference = (mask.values for mask in periods(frame, 24))
+        report["smoke_alarm_24h"] = study("smoke_alarm_24h", frame, episodes, 24, recent, fit, reference)
 
     with open(OUTPUT, "w", encoding="utf-8") as handle:
         json.dump(report, handle, indent=1, ensure_ascii=False)

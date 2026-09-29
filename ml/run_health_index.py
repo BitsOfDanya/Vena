@@ -5,7 +5,7 @@ scenario the highest calibrated probability among the location's channels,
 combined as 100 * prod(1 - risk). At every midnight of 2025 this script takes
 each channel's latest forecast from the previous 24 hours, computes the index
 per location and checks whether any modelled event (fault, power loss,
-flooding) started at the location within the next 24 hours. The report gives
+flooding, smoke detection) started at the location within the next 24 hours. The report gives
 the event rate by index band and the ranking quality of the index.
 
 Combining channel probabilities overstates the risk of large, busy locations,
@@ -23,15 +23,15 @@ import numpy as np
 import pandas as pd
 from sklearn.metrics import average_precision_score, roc_auc_score
 
-from pipeline import artifacts, calibration, config, experiments, extract, weather as weather_mod
+from pipeline import artifacts, calibration, config, experiments, extract, recipes, weather as weather_mod
 from pipeline.locations import location_group
-from pipeline.models import CatBoostModel
-from pipeline.targets import flood, modules
+from pipeline.targets import flood, modules, state_target
 
 YEAR = 2025
 HORIZON = pd.Timedelta(hours=24)
 BANDS = [(0, 25), (25, 50), (50, 75), (75, 90), (90, 101)]
-SCENARIO = {"pump_24h": "flooding", "fan_24h": "ventilation", "smoke_24h": "fire", "phase_24h": "power_loss", "flood_24h": "flooding"}
+SCENARIO = {"pump_24h": "flooding", "fan_24h": "ventilation", "smoke_24h": "fire", "phase_24h": "power_loss",
+            "flood_24h": "flooding", "smoke_alarm_24h": "fire"}
 OUTPUT = os.path.join(config.ROOT, "results", "health_index.json")
 CALIBRATION = os.path.join(config.ROOT, "configs", "health_index.json")
 
@@ -40,26 +40,9 @@ def log(message):
     print(f"[{time.strftime('%H:%M:%S')}] {message}", flush=True)
 
 
-def out_of_sample(name, frame, meta):
-    """Model and calibrator that have not seen YEAR: the frozen ones, or a refit of the recipe."""
-    model, calibrator = artifacts.load_artifact(name)[0], artifacts.load_calibrator(name)
-    if int(meta["training_period"]["train_years"].split("-")[-1]) < YEAR:
-        return model, calibrator
-    # Models refitted through YEAR are replaced by the same recipe trained two years
-    # earlier and calibrated on the following year.
-    columns = meta["feature_columns"]
-    train = frame["ts"] < pd.Timestamp(f"{YEAR - 1}-01-01") - pd.Timedelta(hours=168)
-    staging = CatBoostModel().fit(frame.loc[train, columns], frame.loc[train, "target"])
-    calibrate = frame["ts"].dt.year == YEAR - 1
-    calibrator = calibration.fit_isotonic(
-        staging.predict_proba(frame.loc[calibrate, columns]), frame.loc[calibrate, "target"].values
-    )
-    return staging, calibrator
-
-
 def scored(name, frame, episodes):
     meta = artifacts.load_artifact(name)[1]
-    model, calibrator = out_of_sample(name, frame, meta)
+    model, calibrator = recipes.out_of_sample(name, frame, YEAR)
     part = frame.loc[frame["ts"].dt.year == YEAR].reset_index(drop=True)
     raw = model.predict_proba(part[meta["feature_columns"]])
     probability = np.clip(calibration.apply_isotonic(calibrator, raw), 0, 1)
@@ -82,6 +65,12 @@ def main() -> None:
     f, s = scored("phase_24h", frame.rename(columns={"any_y24": "target"}), episodes)
     forecasts.append(f)
     starts.append(s)
+    if os.path.exists(os.path.join(artifacts.artifact_dir("smoke_alarm_24h"), "meta.json")):
+        smoke_events = extract.extract_events(config.SENSOR_ALIASES["smoke"])
+        frame, episodes = state_target.build_frame(smoke_events, "Обнаружен дым", horizons=(24,))
+        f, s = scored("smoke_alarm_24h", frame.rename(columns={"y24": "target"}), episodes)
+        forecasts.append(f)
+        starts.append(s)
     pump_events = extract.extract_events(config.SENSOR_ALIASES["pump"])
     frame, episodes, _ = flood.build_frame(pump_events, weather_mod.fetch_weather(), 24)
     f, s = scored("flood_24h", frame, episodes)

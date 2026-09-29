@@ -80,6 +80,11 @@ def test_retraining_keeps_the_better_champion(tmp_path, monkeypatch):
     assert json.loads((tmp_path / "artifacts" / "models" / "m" / "meta.json").read_text())["version"] == "0.4"
     refresh.challenge(["m"], lambda: freeze(0.45))
     assert json.loads((tmp_path / "artifacts" / "models" / "m" / "meta.json").read_text())["version"] == "0.45"
+    # A model promoted by the refit study is measured on another period, so the new
+    # reference replaces it and the refit study decides again.
+    artifacts.save_artifact("m", {"ap": 0.9}, [], {}, {"train_years": "2019-2025"}, {"test": {"avg_precision": 0.9}}, version="refit")
+    refresh.challenge(["m"], lambda: freeze(0.41))
+    assert json.loads((tmp_path / "artifacts" / "models" / "m" / "meta.json").read_text())["version"] == "0.41"
 
 
 def test_contributions_add_up_to_the_model_logit():
@@ -155,3 +160,36 @@ def test_population_stability_flags_a_shifted_score():
     reference = rng.normal(size=5000)
     assert run_model_report.psi(reference, rng.normal(size=5000)) < 0.05
     assert run_model_report.psi(reference, rng.normal(loc=1.5, size=5000)) > 0.25
+
+
+def test_every_recipe_fits_and_scores(monkeypatch):
+    from pipeline import recipes
+
+    # A multi-threaded LightGBM before torch hangs the later sequence tests on macOS.
+    monkeypatch.setattr(recipes, "LIGHTGBM_PARAMS", {**recipes.LIGHTGBM_PARAMS, "n_jobs": 1})
+    monkeypatch.setattr(recipes, "BLEND_TREE_PARAMS", {**recipes.BLEND_TREE_PARAMS, "n_jobs": 1})
+    rng = np.random.default_rng(3)
+    features = pd.DataFrame(rng.normal(size=(600, 4)), columns=list("abcd"))
+    target = (features["a"] + rng.normal(scale=0.5, size=600) > 0.8).astype(int)
+    for recipe in recipes.RECIPES:
+        score = recipes.fit(recipe, features, target).predict_proba(features)
+        assert score.shape == (600,)
+        assert np.all((score >= 0) & (score <= 1))
+        assert np.corrcoef(score, features["a"])[0, 1] > 0.5
+
+
+def test_workload_rows_only_use_counts_before_the_forecast_day():
+    import run_workload_forecast as workload
+
+    days = pd.date_range("2024-01-01", "2025-03-31", freq="D")
+    series = pd.Series(np.arange(len(days), dtype=float) % 9, index=days)
+    weather = _weather().set_index("day")
+    origin = pd.Timestamp("2025-02-01")
+    before = workload.rows(series, weather, [origin])
+    changed = series.copy()
+    changed[changed.index >= origin] += 100
+    after = workload.rows(changed, weather, [origin])
+    features = [column for column in before.columns if column != "target"]
+    pd.testing.assert_frame_equal(before[features], after[features])
+    assert (after["target"] - before["target"] == 100).all()
+    assert before["lead"].tolist() == list(workload.LEADS)

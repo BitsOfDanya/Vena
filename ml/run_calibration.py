@@ -5,9 +5,10 @@ on the validation period and is checked on the held-out test period, so the API
 can report "probability of the event within the horizon" instead of a rank.
 Risk levels keep using the raw score: isotonic steps can tie neighbouring scores.
 
-Power Health is trained through 2024 and 2026 is closed, so its calibrator is
-fitted on 2025 and evaluated by two-fold cross-fitting over alternate months.
-Fan models are trained through 2025 and calibrated in run_fan_refresh.py.
+Power Health is trained through 2024, so its calibrator is fitted on 2025 and
+evaluated by two-fold cross-fitting over alternate months. Models refitted on
+data that includes the calibration year keep the calibrator run_refit_study.py
+gave them.
 """
 
 import json
@@ -19,12 +20,13 @@ import numpy as np
 import pandas as pd
 from sklearn.metrics import brier_score_loss
 
-from pipeline import artifacts, calibration, config, experiments, extract, training
+from pipeline import artifacts, calibration, config, experiments, extract, recipes
 from pipeline.targets import modules
 
 HORIZON_FULL_WINDOW = pd.Timedelta(hours=72)
 DEVICE_MODELS = {
     "pump": ["pump_24h", "pump_72h", "pump_baseline_72h"],
+    "fan": ["fan_24h", "fan_72h"],
     "smoke": ["smoke_24h"],
 }
 OUTPUT = os.path.join(config.ROOT, "results", "calibration.json")
@@ -71,10 +73,24 @@ def attach(name, calibrator, summary):
             json.dump(model_config, handle, indent=2, ensure_ascii=False)
 
 
+def seen(name, meta, fit_year, report):
+    """A model trained through the calibration year keeps its own calibrator."""
+    if recipes.train_end_year(meta) < fit_year:
+        return False
+    report[name] = {"skipped": f"trained through {recipes.train_end_year(meta)}",
+                    **meta["model_config"].get("calibration", {})}
+    log(f"{name}: trained on {fit_year}, calibrator kept")
+    return True
+
+
 def calibrate_device(device, report):
+    names = [name for name in DEVICE_MODELS[device]
+             if not seen(name, artifacts.load_artifact(name)[1], config.VALID_YEAR, report)]
+    if not names:
+        return
     ctx = experiments.DeviceContext(config.SENSOR_ALIASES[device])
     frames = {}
-    for name in DEVICE_MODELS[device]:
+    for name in names:
         model, meta = artifacts.load_artifact(name)
         horizon = meta["model_config"]["horizon_hours"]
         if horizon not in frames:
@@ -104,6 +120,8 @@ def calibrate_device(device, report):
 def calibrate_phase(report):
     name = "phase_24h"
     model, meta = artifacts.load_artifact(name)
+    if seen(name, meta, 2025, report):
+        return
     events = extract.extract_events(modules.PHASE_SENSOR)
     frame, _, _ = modules.build_phase_frame(events, horizons=(24,))
     valid = frame.loc[frame["ts"].dt.year == 2025]

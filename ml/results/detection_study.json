@@ -1,0 +1,71 @@
+{
+ "target": "start of a 'Обнаружен дым' episode within 24 h",
+ "channels": 4337,
+ "episodes": 101310,
+ "recent": {
+  "period": "2026H1",
+  "n": 618307,
+  "base_rate": 0.0178
+ },
+ "channel_prior": {
+  "avg_precision": 0.0215,
+  "roc_auc": 0.4791,
+  "recall_at_precision_0.7": 0.0,
+  "precision_at_recall_0.5": 0.0178,
+  "precision_top5_per_day": 0.0222,
+  "ece": null
+ },
+ "refit": {
+  "recipe": "catboost",
+  "window": "3y",
+  "train_years": "through 2025",
+  "avg_precision": 0.2184,
+  "roc_auc": 0.8577,
+  "recall_at_precision_0.7": 0.0442,
+  "precision_at_recall_0.5": 0.1135,
+  "precision_top5_per_day": 0.2033,
+  "ece": 0.0081
+ },
+ "candidates_2025": [
+  {
+   "recipe": "catboost",
+   "window": "all",
+   "avg_precision_2025": 0.1084
+  },
+  {
+   "recipe": "lightgbm",
+   "window": "all",
+   "avg_precision_2025": 0.0816
+  },
+  {
+   "recipe": "logistic_regression",
+   "window": "all",
+   "avg_precision_2025": 0.0703
+  },
+  {
+   "recipe": "blend_lr_lightgbm",
+   "window": "all",
+   "avg_precision_2025": 0.0784
+  },
+  {
+   "recipe": "catboost",
+   "window": "3y",
+   "avg_precision_2025": 0.117
+  },
+  {
+   "recipe": "lightgbm",
+   "window": "3y",
+   "avg_precision_2025": 0.1111
+  },
+  {
+   "recipe": "logistic_regression",
+   "window": "3y",
+   "avg_precision_2025": 0.0987
+  },
+  {
+   "recipe": "blend_lr_lightgbm",
+   "window": "3y",
+   "avg_precision_2025": 0.1033
+  }
+ ]
+}

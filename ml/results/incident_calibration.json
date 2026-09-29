@@ -5,62 +5,62 @@
  "locations": 379,
  "base_rate": 0.2974,
  "channels_per_location_median": 1.0,
- "pr_auc": 0.5136,
- "roc_auc": 0.7485,
- "ece_raw": 0.1607,
- "ece_calibrated": 0.0042,
- "brier_raw": 0.2402,
- "brier_calibrated": 0.1737,
+ "pr_auc": 0.5302,
+ "roc_auc": 0.7491,
+ "ece_raw": 0.1622,
+ "ece_calibrated": 0.0031,
+ "brier_raw": 0.2371,
+ "brier_calibrated": 0.1732,
  "reliability": [
   {
-   "n": 25657,
-   "predicted": 0.0555,
-   "observed": 0.0561
+   "n": 27485,
+   "predicted": 0.0574,
+   "observed": 0.0589
   },
   {
-   "n": 13558,
-   "predicted": 0.1401,
-   "observed": 0.1404
+   "n": 12193,
+   "predicted": 0.1679,
+   "observed": 0.1653
   },
   {
-   "n": 10564,
-   "predicted": 0.255,
-   "observed": 0.2561
+   "n": 9907,
+   "predicted": 0.2579,
+   "observed": 0.2599
   },
   {
-   "n": 9321,
-   "predicted": 0.356,
-   "observed": 0.372
+   "n": 8881,
+   "predicted": 0.339,
+   "observed": 0.3478
   },
   {
-   "n": 35964,
-   "predicted": 0.4586,
-   "observed": 0.4551
+   "n": 35384,
+   "predicted": 0.4446,
+   "observed": 0.4426
   },
   {
-   "n": 3670,
-   "predicted": 0.5678,
-   "observed": 0.5766
+   "n": 2607,
+   "predicted": 0.5419,
+   "observed": 0.5386
   },
   {
-   "n": 2409,
-   "predicted": 0.6403,
-   "observed": 0.6189
+   "n": 3918,
+   "predicted": 0.6408,
+   "observed": 0.6345
   },
   {
-   "n": 625,
-   "predicted": 0.7376,
-   "observed": 0.7568
+   "n": 1191,
+   "predicted": 0.7384,
+   "observed": 0.7523
   },
   {
-   "n": 625,
-   "predicted": 0.8318,
-   "observed": 0.7936
+   "n": 554,
+   "predicted": 0.8531,
+   "observed": 0.8357
   },
   {
-   "n": 1,
-   "predicted": 1.0,
-   "observed": 0.0
+   "n": 274,
+   "predicted": 0.9586,
+   "observed": 0.9088
   }
  ]
 }

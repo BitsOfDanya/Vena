@@ -53,67 +53,55 @@
     "weekday_cos"
   ],
   "model_config": {
-    "model_name": "blend_lr_lightgbm",
+    "model_name": "catboost",
+    "recipe": "catboost",
     "horizon_hours": 24,
+    "target_state": "Обнаружен дым",
     "numeric_mode": false,
     "duty_cycle_mode": false,
     "with_neighbors": false,
     "global_rates": {
-      "event": 3.8710772143801213,
-      "alarm": 0.6561627307771795,
-      "failure": 0.21625595637455772
+      "event": 0.45440486464973706,
+      "alarm": 0.15734195621892177,
+      "failure": 0.01312536899073184
     },
     "calibrated": true,
     "risk_level_thresholds": {
-      "critical": 0.9699377390929222,
-      "high": 0.9532175022480122,
-      "medium": 0.8886337669761263
+      "critical": 0.9864171484477303,
+      "high": 0.9671681782137287,
+      "medium": 0.8737340063289816
     },
     "calibration": {
       "method": "isotonic",
       "fit_period": "2025, same recipe trained through 2024",
       "evaluated_on": "2026H1",
-      "ece_calibrated": 0.0314
-    },
-    "recipe": "blend_lr_lightgbm",
-    "risk_level_basis": "alert volume of the previous model on 2026H1"
+      "ece_calibrated": 0.0081
+    }
   },
   "training_period": {
-    "train_years": "2019-2025"
+    "train_years": "2023-2025"
   },
   "version": "2026-09-29",
   "metrics_snapshot": {
     "test": {
       "period": "2026H1",
-      "role": "best on 2025",
-      "recipe": "blend_lr_lightgbm",
-      "window": "all",
-      "train_rows": 1609019,
-      "train_years": "through 2025",
-      "before_2025": {
-        "avg_precision": 0.3184,
-        "roc_auc": 0.6796,
-        "recall_at_precision_0.7": 0.0018,
-        "precision_at_recall_0.5": 0.2538,
-        "precision_top5_per_day": 0.4156,
-        "ece": null
-      },
-      "avg_precision": 0.3288,
-      "roc_auc": 0.6894,
-      "recall_at_precision_0.7": 0.0611,
-      "precision_at_recall_0.5": 0.2608,
-      "precision_top5_per_day": 0.4156,
-      "ece": 0.0314
-    },
-    "previous": {
       "recipe": "catboost",
-      "train_years": "2019-2023",
-      "avg_precision": 0.2924,
-      "roc_auc": 0.6569,
-      "recall_at_precision_0.7": 0.0144,
-      "precision_at_recall_0.5": 0.2002,
-      "precision_top5_per_day": 0.43,
-      "ece": 0.0265
+      "window": "3y",
+      "train_years": "through 2025",
+      "avg_precision": 0.2184,
+      "roc_auc": 0.8577,
+      "recall_at_precision_0.7": 0.0442,
+      "precision_at_recall_0.5": 0.1135,
+      "precision_top5_per_day": 0.2033,
+      "ece": 0.0081
+    },
+    "channel_prior": {
+      "avg_precision": 0.0215,
+      "roc_auc": 0.4791,
+      "recall_at_precision_0.7": 0.0,
+      "precision_at_recall_0.5": 0.0178,
+      "precision_top5_per_day": 0.0222,
+      "ece": null
     }
   }
 }

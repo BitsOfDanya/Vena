@@ -1,0 +1,5705 @@
+{
+ "journal_end": "2026-06-30",
+ "scenarios": {
+  "flooding": {
+   "selection_2025": {
+    "calendar+level": {
+     "day": 0.9492,
+     "week": 0.4476
+    },
+    "calendar+level+weather": {
+     "day": 0.9459,
+     "week": 0.446
+    },
+    "last_28_days": {
+     "day": 0.9686,
+     "week": 0.459
+    }
+   },
+   "method": "calendar+level+weather",
+   "recent": {
+    "period": "2026H1",
+    "calendar+level": {
+     "day": 0.7376,
+     "week": 0.3809
+    },
+    "calendar+level+weather": {
+     "day": 0.7386,
+     "week": 0.3831
+    },
+    "last_28_days": {
+     "day": 0.791,
+     "week": 0.4736
+    },
+    "same_weekday_4_weeks": {
+     "day": 0.8115,
+     "week": 0.4736
+    },
+    "mean_per_day": 6.84
+   },
+   "week_interval_80": [
+    0.412,
+    1.689
+   ],
+   "history": {
+    "last_30_days": 243,
+    "last_365_days": 2000
+   },
+   "backtest": [
+    {
+     "day": "2026-01-01",
+     "actual": 2,
+     "forecast": 1.9
+    },
+    {
+     "day": "2026-01-02",
+     "actual": 0,
+     "forecast": 3.1
+    },
+    {
+     "day": "2026-01-03",
+     "actual": 0,
+     "forecast": 1.3
+    },
+    {
+     "day": "2026-01-04",
+     "actual": 7,
+     "forecast": 2.7
+    },
+    {
+     "day": "2026-01-05",
+     "actual": 3,
+     "forecast": 3.3
+    },
+    {
+     "day": "2026-01-06",
+     "actual": 9,
+     "forecast": 1.7
+    },
+    {
+     "day": "2026-01-07",
+     "actual": 3,
+     "forecast": 3.0
+    },
+    {
+     "day": "2026-01-08",
+     "actual": 1,
+     "forecast": 2.7
+    },
+    {
+     "day": "2026-01-09",
+     "actual": 2,
+     "forecast": 3.0
+    },
+    {
+     "day": "2026-01-10",
+     "actual": 1,
+     "forecast": 2.0
+    },
+    {
+     "day": "2026-01-11",
+     "actual": 1,
+     "forecast": 1.6
+    },
+    {
+     "day": "2026-01-12",
+     "actual": 1,
+     "forecast": 4.9
+    },
+    {
+     "day": "2026-01-13",
+     "actual": 2,
+     "forecast": 3.9
+    },
+    {
+     "day": "2026-01-14",
+     "actual": 0,
+     "forecast": 3.8
+    },
+    {
+     "day": "2026-01-15",
+     "actual": 1,
+     "forecast": 5.1
+    },
+    {
+     "day": "2026-01-16",
+     "actual": 6,
+     "forecast": 2.9
+    },
+    {
+     "day": "2026-01-17",
+     "actual": 2,
+     "forecast": 1.3
+    },
+    {
+     "day": "2026-01-18",
+     "actual": 0,
+     "forecast": 1.6
+    },
+    {
+     "day": "2026-01-19",
+     "actual": 2,
+     "forecast": 3.5
+    },
+    {
+     "day": "2026-01-20",
+     "actual": 7,
+     "forecast": 4.6
+    },
+    {
+     "day": "2026-01-21",
+     "actual": 11,
+     "forecast": 4.3
+    },
+    {
+     "day": "2026-01-22",
+     "actual": 5,
+     "forecast": 4.1
+    },
+    {
+     "day": "2026-01-23",
+     "actual": 2,
+     "forecast": 4.4
+    },
+    {
+     "day": "2026-01-24",
+     "actual": 1,
+     "forecast": 1.7
+    },
+    {
+     "day": "2026-01-25",
+     "actual": 2,
+     "forecast": 1.7
+    },
+    {
+     "day": "2026-01-26",
+     "actual": 11,
+     "forecast": 4.3
+    },
+    {
+     "day": "2026-01-27",
+     "actual": 17,
+     "forecast": 4.9
+    },
+    {
+     "day": "2026-01-28",
+     "actual": 16,
+     "forecast": 4.5
+    },
+    {
+     "day": "2026-01-29",
+     "actual": 4,
+     "forecast": 4.7
+    },
+    {
+     "day": "2026-01-30",
+     "actual": 4,
+     "forecast": 4.2
+    },
+    {
+     "day": "2026-01-31",
+     "actual": 6,
+     "forecast": 1.8
+    },
+    {
+     "day": "2026-02-01",
+     "actual": 5,
+     "forecast": 1.9
+    },
+    {
+     "day": "2026-02-02",
+     "actual": 4,
+     "forecast": 7.1
+    },
+    {
+     "day": "2026-02-03",
+     "actual": 9,
+     "forecast": 6.7
+    },
+    {
+     "day": "2026-02-04",
+     "actual": 20,
+     "forecast": 5.8
+    },
+    {
+     "day": "2026-02-05",
+     "actual": 12,
+     "forecast": 4.6
+    },
+    {
+     "day": "2026-02-06",
+     "actual": 6,
+     "forecast": 8.0
+    },
+    {
+     "day": "2026-02-07",
+     "actual": 2,
+     "forecast": 1.5
+    },
+    {
+     "day": "2026-02-08",
+     "actual": 2,
+     "forecast": 1.4
+    },
+    {
+     "day": "2026-02-09",
+     "actual": 5,
+     "forecast": 5.4
+    },
+    {
+     "day": "2026-02-10",
+     "actual": 0,
+     "forecast": 4.4
+    },
+    {
+     "day": "2026-02-11",
+     "actual": 4,
+     "forecast": 2.7
+    },
+    {
+     "day": "2026-02-12",
+     "actual": 5,
+     "forecast": 3.3
+    },
+    {
+     "day": "2026-02-13",
+     "actual": 1,
+     "forecast": 1.5
+    },
+    {
+     "day": "2026-02-14",
+     "actual": 2,
+     "forecast": 0.7
+    },
+    {
+     "day": "2026-02-15",
+     "actual": 0,
+     "forecast": 0.6
+    },
+    {
+     "day": "2026-02-16",
+     "actual": 21,
+     "forecast": 3.7
+    },
+    {
+     "day": "2026-02-17",
+     "actual": 2,
+     "forecast": 2.5
+    },
+    {
+     "day": "2026-02-18",
+     "actual": 10,
+     "forecast": 1.6
+    },
+    {
+     "day": "2026-02-19",
+     "actual": 0,
+     "forecast": 1.8
+    },
+    {
+     "day": "2026-02-20",
+     "actual": 0,
+     "forecast": 4.8
+    },
+    {
+     "day": "2026-02-21",
+     "actual": 7,
+     "forecast": 1.6
+    },
+    {
+     "day": "2026-02-22",
+     "actual": 0,
+     "forecast": 1.7
+    },
+    {
+     "day": "2026-02-23",
+     "actual": 2,
+     "forecast": 2.6
+    },
+    {
+     "day": "2026-02-24",
+     "actual": 3,
+     "forecast": 3.2
+    },
+    {
+     "day": "2026-02-25",
+     "actual": 7,
+     "forecast": 3.0
+    },
+    {
+     "day": "2026-02-26",
+     "actual": 1,
+     "forecast": 3.1
+    },
+    {
+     "day": "2026-02-27",
+     "actual": 0,
+     "forecast": 4.1
+    },
+    {
+     "day": "2026-02-28",
+     "actual": 1,
+     "forecast": 2.0
+    },
+    {
+     "day": "2026-03-01",
+     "actual": 6,
+     "forecast": 2.2
+    },
+    {
+     "day": "2026-03-02",
+     "actual": 6,
+     "forecast": 9.4
+    },
+    {
+     "day": "2026-03-03",
+     "actual": 0,
+     "forecast": 8.2
+    },
+    {
+     "day": "2026-03-04",
+     "actual": 0,
+     "forecast": 9.9
+    },
+    {
+     "day": "2026-03-05",
+     "actual": 1,
+     "forecast": 8.1
+    },
+    {
+     "day": "2026-03-06",
+     "actual": 1,
+     "forecast": 5.4
+    },
+    {
+     "day": "2026-03-07",
+     "actual": 1,
+     "forecast": 2.4
+    },
+    {
+     "day": "2026-03-08",
+     "actual": 0,
+     "forecast": 1.2
+    },
+    {
+     "day": "2026-03-09",
+     "actual": 12,
+     "forecast": 11.9
+    },
+    {
+     "day": "2026-03-10",
+     "actual": 6,
+     "forecast": 7.8
+    },
+    {
+     "day": "2026-03-11",
+     "actual": 8,
+     "forecast": 8.8
+    },
+    {
+     "day": "2026-03-12",
+     "actual": 28,
+     "forecast": 11.5
+    },
+    {
+     "day": "2026-03-13",
+     "actual": 31,
+     "forecast": 6.8
+    },
+    {
+     "day": "2026-03-14",
+     "actual": 6,
+     "forecast": 2.5
+    },
+    {
+     "day": "2026-03-15",
+     "actual": 6,
+     "forecast": 2.5
+    },
+    {
+     "day": "2026-03-16",
+     "actual": 9,
+     "forecast": 18.5
+    },
+    {
+     "day": "2026-03-17",
+     "actual": 18,
+     "forecast": 14.5
+    },
+    {
+     "day": "2026-03-18",
+     "actual": 8,
+     "forecast": 16.0
+    },
+    {
+     "day": "2026-03-19",
+     "actual": 45,
+     "forecast": 15.2
+    },
+    {
+     "day": "2026-03-20",
+     "actual": 6,
+     "forecast": 12.6
+    },
+    {
+     "day": "2026-03-21",
+     "actual": 5,
+     "forecast": 3.1
+    },
+    {
+     "day": "2026-03-22",
+     "actual": 1,
+     "forecast": 4.4
+    },
+    {
+     "day": "2026-03-23",
+     "actual": 6,
+     "forecast": 7.8
+    },
+    {
+     "day": "2026-03-24",
+     "actual": 7,
+     "forecast": 8.5
+    },
+    {
+     "day": "2026-03-25",
+     "actual": 7,
+     "forecast": 7.8
+    },
+    {
+     "day": "2026-03-26",
+     "actual": 14,
+     "forecast": 4.5
+    },
+    {
+     "day": "2026-03-27",
+     "actual": 2,
+     "forecast": 6.3
+    },
+    {
+     "day": "2026-03-28",
+     "actual": 15,
+     "forecast": 3.3
+    },
+    {
+     "day": "2026-03-29",
+     "actual": 13,
+     "forecast": 3.4
+    },
+    {
+     "day": "2026-03-30",
+     "actual": 11,
+     "forecast": 9.6
+    },
+    {
+     "day": "2026-03-31",
+     "actual": 3,
+     "forecast": 9.8
+    },
+    {
+     "day": "2026-04-01",
+     "actual": 3,
+     "forecast": 9.4
+    },
+    {
+     "day": "2026-04-02",
+     "actual": 4,
+     "forecast": 6.8
+    },
+    {
+     "day": "2026-04-03",
+     "actual": 2,
+     "forecast": 6.7
+    },
+    {
+     "day": "2026-04-04",
+     "actual": 2,
+     "forecast": 2.1
+    },
+    {
+     "day": "2026-04-05",
+     "actual": 1,
+     "forecast": 2.3
+    },
+    {
+     "day": "2026-04-06",
+     "actual": 3,
+     "forecast": 8.9
+    },
+    {
+     "day": "2026-04-07",
+     "actual": 22,
+     "forecast": 8.5
+    },
+    {
+     "day": "2026-04-08",
+     "actual": 3,
+     "forecast": 7.1
+    },
+    {
+     "day": "2026-04-09",
+     "actual": 11,
+     "forecast": 4.7
+    },
+    {
+     "day": "2026-04-10",
+     "actual": 11,
+     "forecast": 5.7
+    },
+    {
+     "day": "2026-04-11",
+     "actual": 1,
+     "forecast": 3.1
+    },
+    {
+     "day": "2026-04-12",
+     "actual": 2,
+     "forecast": 2.9
+    },
+    {
+     "day": "2026-04-13",
+     "actual": 0,
+     "forecast": 12.0
+    },
+    {
+     "day": "2026-04-14",
+     "actual": 14,
+     "forecast": 9.2
+    },
+    {
+     "day": "2026-04-15",
+     "actual": 7,
+     "forecast": 10.5
+    },
+    {
+     "day": "2026-04-16",
+     "actual": 1,
+     "forecast": 6.8
+    },
+    {
+     "day": "2026-04-17",
+     "actual": 3,
+     "forecast": 12.1
+    },
+    {
+     "day": "2026-04-18",
+     "actual": 5,
+     "forecast": 4.1
+    },
+    {
+     "day": "2026-04-19",
+     "actual": 4,
+     "forecast": 4.8
+    },
+    {
+     "day": "2026-04-20",
+     "actual": 7,
+     "forecast": 17.1
+    },
+    {
+     "day": "2026-04-21",
+     "actual": 11,
+     "forecast": 12.4
+    },
+    {
+     "day": "2026-04-22",
+     "actual": 13,
+     "forecast": 9.4
+    },
+    {
+     "day": "2026-04-23",
+     "actual": 8,
+     "forecast": 9.2
+    },
+    {
+     "day": "2026-04-24",
+     "actual": 10,
+     "forecast": 6.1
+    },
+    {
+     "day": "2026-04-25",
+     "actual": 10,
+     "forecast": 5.1
+    },
+    {
+     "day": "2026-04-26",
+     "actual": 9,
+     "forecast": 4.5
+    },
+    {
+     "day": "2026-04-27",
+     "actual": 6,
+     "forecast": 7.8
+    },
+    {
+     "day": "2026-04-28",
+     "actual": 27,
+     "forecast": 6.6
+    },
+    {
+     "day": "2026-04-29",
+     "actual": 4,
+     "forecast": 8.6
+    },
+    {
+     "day": "2026-04-30",
+     "actual": 15,
+     "forecast": 5.8
+    },
+    {
+     "day": "2026-05-01",
+     "actual": 11,
+     "forecast": 2.0
+    },
+    {
+     "day": "2026-05-02",
+     "actual": 32,
+     "forecast": 3.3
+    },
+    {
+     "day": "2026-05-03",
+     "actual": 6,
+     "forecast": 3.8
+    },
+    {
+     "day": "2026-05-04",
+     "actual": 5,
+     "forecast": 5.5
+    },
+    {
+     "day": "2026-05-05",
+     "actual": 1,
+     "forecast": 5.2
+    },
+    {
+     "day": "2026-05-06",
+     "actual": 10,
+     "forecast": 5.0
+    },
+    {
+     "day": "2026-05-07",
+     "actual": 3,
+     "forecast": 6.2
+    },
+    {
+     "day": "2026-05-08",
+     "actual": 6,
+     "forecast": 5.8
+    },
+    {
+     "day": "2026-05-09",
+     "actual": 8,
+     "forecast": 3.7
+    },
+    {
+     "day": "2026-05-10",
+     "actual": 5,
+     "forecast": 5.9
+    },
+    {
+     "day": "2026-05-11",
+     "actual": 5,
+     "forecast": 4.6
+    },
+    {
+     "day": "2026-05-12",
+     "actual": 5,
+     "forecast": 5.2
+    },
+    {
+     "day": "2026-05-13",
+     "actual": 6,
+     "forecast": 6.2
+    },
+    {
+     "day": "2026-05-14",
+     "actual": 16,
+     "forecast": 6.9
+    },
+    {
+     "day": "2026-05-15",
+     "actual": 6,
+     "forecast": 8.1
+    },
+    {
+     "day": "2026-05-16",
+     "actual": 11,
+     "forecast": 5.8
+    },
+    {
+     "day": "2026-05-17",
+     "actual": 7,
+     "forecast": 5.0
+    },
+    {
+     "day": "2026-05-18",
+     "actual": 21,
+     "forecast": 8.5
+    },
+    {
+     "day": "2026-05-19",
+     "actual": 6,
+     "forecast": 10.5
+    },
+    {
+     "day": "2026-05-20",
+     "actual": 2,
+     "forecast": 10.3
+    },
+    {
+     "day": "2026-05-21",
+     "actual": 6,
+     "forecast": 10.3
+    },
+    {
+     "day": "2026-05-22",
+     "actual": 5,
+     "forecast": 9.7
+    },
+    {
+     "day": "2026-05-23",
+     "actual": 13,
+     "forecast": 7.6
+    },
+    {
+     "day": "2026-05-24",
+     "actual": 1,
+     "forecast": 6.4
+    },
+    {
+     "day": "2026-05-25",
+     "actual": 1,
+     "forecast": 9.0
+    },
+    {
+     "day": "2026-05-26",
+     "actual": 9,
+     "forecast": 9.6
+    },
+    {
+     "day": "2026-05-27",
+     "actual": 4,
+     "forecast": 7.7
+    },
+    {
+     "day": "2026-05-28",
+     "actual": 0,
+     "forecast": 12.3
+    },
+    {
+     "day": "2026-05-29",
+     "actual": 1,
+     "forecast": 10.1
+    },
+    {
+     "day": "2026-05-30",
+     "actual": 2,
+     "forecast": 9.2
+    },
+    {
+     "day": "2026-05-31",
+     "actual": 3,
+     "forecast": 5.5
+    },
+    {
+     "day": "2026-06-01",
+     "actual": 0,
+     "forecast": 9.5
+    },
+    {
+     "day": "2026-06-02",
+     "actual": 19,
+     "forecast": 7.8
+    },
+    {
+     "day": "2026-06-03",
+     "actual": 6,
+     "forecast": 8.3
+    },
+    {
+     "day": "2026-06-04",
+     "actual": 25,
+     "forecast": 8.8
+    },
+    {
+     "day": "2026-06-05",
+     "actual": 12,
+     "forecast": 8.8
+    },
+    {
+     "day": "2026-06-06",
+     "actual": 11,
+     "forecast": 8.1
+    },
+    {
+     "day": "2026-06-07",
+     "actual": 1,
+     "forecast": 4.9
+    },
+    {
+     "day": "2026-06-08",
+     "actual": 1,
+     "forecast": 9.6
+    },
+    {
+     "day": "2026-06-09",
+     "actual": 31,
+     "forecast": 13.5
+    },
+    {
+     "day": "2026-06-10",
+     "actual": 1,
+     "forecast": 10.1
+    },
+    {
+     "day": "2026-06-11",
+     "actual": 2,
+     "forecast": 8.7
+    },
+    {
+     "day": "2026-06-12",
+     "actual": 0,
+     "forecast": 2.0
+    },
+    {
+     "day": "2026-06-13",
+     "actual": 15,
+     "forecast": 5.5
+    },
+    {
+     "day": "2026-06-14",
+     "actual": 2,
+     "forecast": 2.9
+    },
+    {
+     "day": "2026-06-15",
+     "actual": 14,
+     "forecast": 10.3
+    },
+    {
+     "day": "2026-06-16",
+     "actual": 26,
+     "forecast": 9.2
+    },
+    {
+     "day": "2026-06-17",
+     "actual": 5,
+     "forecast": 10.8
+    }
+   ],
+   "forecast": [
+    {
+     "day": "2026-07-01",
+     "expected": 6.6
+    },
+    {
+     "day": "2026-07-02",
+     "expected": 3.7
+    },
+    {
+     "day": "2026-07-03",
+     "expected": 6.3
+    },
+    {
+     "day": "2026-07-04",
+     "expected": 7.7
+    },
+    {
+     "day": "2026-07-05",
+     "expected": 3.6
+    },
+    {
+     "day": "2026-07-06",
+     "expected": 7.0
+    },
+    {
+     "day": "2026-07-07",
+     "expected": 5.1
+    },
+    {
+     "day": "2026-07-08",
+     "expected": 10.6
+    },
+    {
+     "day": "2026-07-09",
+     "expected": 5.3
+    },
+    {
+     "day": "2026-07-10",
+     "expected": 6.8
+    },
+    {
+     "day": "2026-07-11",
+     "expected": 4.2
+    },
+    {
+     "day": "2026-07-12",
+     "expected": 2.4
+    },
+    {
+     "day": "2026-07-13",
+     "expected": 6.7
+    },
+    {
+     "day": "2026-07-14",
+     "expected": 8.0
+    }
+   ],
+   "next_7_days": {
+    "expected": 39.9,
+    "low": 16.4,
+    "high": 67.4
+   }
+  },
+  "pump_fault": {
+   "selection_2025": {
+    "calendar+level": {
+     "day": 0.633,
+     "week": 0.2728
+    },
+    "calendar+level+weather": {
+     "day": 0.633,
+     "week": 0.2749
+    },
+    "last_28_days": {
+     "day": 0.7102,
+     "week": 0.3216
+    }
+   },
+   "method": "calendar+level",
+   "recent": {
+    "period": "2026H1",
+    "calendar+level": {
+     "day": 0.5665,
+     "week": 0.3715
+    },
+    "calendar+level+weather": {
+     "day": 0.5704,
+     "week": 0.3733
+    },
+    "last_28_days": {
+     "day": 0.5744,
+     "week": 0.3032
+    },
+    "same_weekday_4_weeks": {
+     "day": 0.5941,
+     "week": 0.3032
+    },
+    "mean_per_day": 16.65
+   },
+   "week_interval_80": [
+    0.624,
+    1.587
+   ],
+   "history": {
+    "last_30_days": 521,
+    "last_365_days": 4902
+   },
+   "backtest": [
+    {
+     "day": "2026-01-01",
+     "actual": 8,
+     "forecast": 4.2
+    },
+    {
+     "day": "2026-01-02",
+     "actual": 8,
+     "forecast": 3.5
+    },
+    {
+     "day": "2026-01-03",
+     "actual": 16,
+     "forecast": 3.2
+    },
+    {
+     "day": "2026-01-04",
+     "actual": 26,
+     "forecast": 3.2
+    },
+    {
+     "day": "2026-01-05",
+     "actual": 16,
+     "forecast": 3.7
+    },
+    {
+     "day": "2026-01-06",
+     "actual": 20,
+     "forecast": 8.1
+    },
+    {
+     "day": "2026-01-07",
+     "actual": 10,
+     "forecast": 6.0
+    },
+    {
+     "day": "2026-01-08",
+     "actual": 4,
+     "forecast": 5.4
+    },
+    {
+     "day": "2026-01-09",
+     "actual": 12,
+     "forecast": 8.3
+    },
+    {
+     "day": "2026-01-10",
+     "actual": 21,
+     "forecast": 4.2
+    },
+    {
+     "day": "2026-01-11",
+     "actual": 9,
+     "forecast": 3.8
+    },
+    {
+     "day": "2026-01-12",
+     "actual": 7,
+     "forecast": 11.2
+    },
+    {
+     "day": "2026-01-13",
+     "actual": 11,
+     "forecast": 10.2
+    },
+    {
+     "day": "2026-01-14",
+     "actual": 14,
+     "forecast": 12.1
+    },
+    {
+     "day": "2026-01-15",
+     "actual": 10,
+     "forecast": 13.4
+    },
+    {
+     "day": "2026-01-16",
+     "actual": 10,
+     "forecast": 8.5
+    },
+    {
+     "day": "2026-01-17",
+     "actual": 6,
+     "forecast": 4.0
+    },
+    {
+     "day": "2026-01-18",
+     "actual": 17,
+     "forecast": 4.4
+    },
+    {
+     "day": "2026-01-19",
+     "actual": 2,
+     "forecast": 9.4
+    },
+    {
+     "day": "2026-01-20",
+     "actual": 12,
+     "forecast": 9.2
+    },
+    {
+     "day": "2026-01-21",
+     "actual": 14,
+     "forecast": 10.3
+    },
+    {
+     "day": "2026-01-22",
+     "actual": 8,
+     "forecast": 12.5
+    },
+    {
+     "day": "2026-01-23",
+     "actual": 26,
+     "forecast": 13.5
+    },
+    {
+     "day": "2026-01-24",
+     "actual": 6,
+     "forecast": 4.9
+    },
+    {
+     "day": "2026-01-25",
+     "actual": 3,
+     "forecast": 5.6
+    },
+    {
+     "day": "2026-01-26",
+     "actual": 25,
+     "forecast": 12.4
+    },
+    {
+     "day": "2026-01-27",
+     "actual": 42,
+     "forecast": 13.1
+    },
+    {
+     "day": "2026-01-28",
+     "actual": 54,
+     "forecast": 20.5
+    },
+    {
+     "day": "2026-01-29",
+     "actual": 30,
+     "forecast": 19.1
+    },
+    {
+     "day": "2026-01-30",
+     "actual": 13,
+     "forecast": 12.5
+    },
+    {
+     "day": "2026-01-31",
+     "actual": 16,
+     "forecast": 4.7
+    },
+    {
+     "day": "2026-02-01",
+     "actual": 17,
+     "forecast": 5.8
+    },
+    {
+     "day": "2026-02-02",
+     "actual": 17,
+     "forecast": 12.5
+    },
+    {
+     "day": "2026-02-03",
+     "actual": 18,
+     "forecast": 10.8
+    },
+    {
+     "day": "2026-02-04",
+     "actual": 38,
+     "forecast": 12.5
+    },
+    {
+     "day": "2026-02-05",
+     "actual": 16,
+     "forecast": 11.6
+    },
+    {
+     "day": "2026-02-06",
+     "actual": 11,
+     "forecast": 9.4
+    },
+    {
+     "day": "2026-02-07",
+     "actual": 21,
+     "forecast": 4.2
+    },
+    {
+     "day": "2026-02-08",
+     "actual": 2,
+     "forecast": 4.3
+    },
+    {
+     "day": "2026-02-09",
+     "actual": 18,
+     "forecast": 11.8
+    },
+    {
+     "day": "2026-02-10",
+     "actual": 0,
+     "forecast": 13.1
+    },
+    {
+     "day": "2026-02-11",
+     "actual": 9,
+     "forecast": 7.6
+    },
+    {
+     "day": "2026-02-12",
+     "actual": 14,
+     "forecast": 9.4
+    },
+    {
+     "day": "2026-02-13",
+     "actual": 10,
+     "forecast": 12.2
+    },
+    {
+     "day": "2026-02-14",
+     "actual": 16,
+     "forecast": 4.9
+    },
+    {
+     "day": "2026-02-15",
+     "actual": 8,
+     "forecast": 4.6
+    },
+    {
+     "day": "2026-02-16",
+     "actual": 24,
+     "forecast": 13.4
+    },
+    {
+     "day": "2026-02-17",
+     "actual": 8,
+     "forecast": 13.9
+    },
+    {
+     "day": "2026-02-18",
+     "actual": 12,
+     "forecast": 10.9
+    },
+    {
+     "day": "2026-02-19",
+     "actual": 8,
+     "forecast": 10.7
+    },
+    {
+     "day": "2026-02-20",
+     "actual": 5,
+     "forecast": 10.7
+    },
+    {
+     "day": "2026-02-21",
+     "actual": 10,
+     "forecast": 4.9
+    },
+    {
+     "day": "2026-02-22",
+     "actual": 0,
+     "forecast": 4.0
+    },
+    {
+     "day": "2026-02-23",
+     "actual": 5,
+     "forecast": 3.3
+    },
+    {
+     "day": "2026-02-24",
+     "actual": 29,
+     "forecast": 8.8
+    },
+    {
+     "day": "2026-02-25",
+     "actual": 6,
+     "forecast": 7.3
+    },
+    {
+     "day": "2026-02-26",
+     "actual": 8,
+     "forecast": 11.1
+    },
+    {
+     "day": "2026-02-27",
+     "actual": 19,
+     "forecast": 12.5
+    },
+    {
+     "day": "2026-02-28",
+     "actual": 1,
+     "forecast": 5.4
+    },
+    {
+     "day": "2026-03-01",
+     "actual": 10,
+     "forecast": 5.8
+    },
+    {
+     "day": "2026-03-02",
+     "actual": 15,
+     "forecast": 8.8
+    },
+    {
+     "day": "2026-03-03",
+     "actual": 3,
+     "forecast": 10.7
+    },
+    {
+     "day": "2026-03-04",
+     "actual": 1,
+     "forecast": 11.3
+    },
+    {
+     "day": "2026-03-05",
+     "actual": 1,
+     "forecast": 13.7
+    },
+    {
+     "day": "2026-03-06",
+     "actual": 9,
+     "forecast": 15.9
+    },
+    {
+     "day": "2026-03-07",
+     "actual": 1,
+     "forecast": 7.3
+    },
+    {
+     "day": "2026-03-08",
+     "actual": 7,
+     "forecast": 4.4
+    },
+    {
+     "day": "2026-03-09",
+     "actual": 12,
+     "forecast": 14.3
+    },
+    {
+     "day": "2026-03-10",
+     "actual": 10,
+     "forecast": 15.2
+    },
+    {
+     "day": "2026-03-11",
+     "actual": 10,
+     "forecast": 14.6
+    },
+    {
+     "day": "2026-03-12",
+     "actual": 28,
+     "forecast": 20.0
+    },
+    {
+     "day": "2026-03-13",
+     "actual": 34,
+     "forecast": 20.3
+    },
+    {
+     "day": "2026-03-14",
+     "actual": 10,
+     "forecast": 7.8
+    },
+    {
+     "day": "2026-03-15",
+     "actual": 9,
+     "forecast": 7.4
+    },
+    {
+     "day": "2026-03-16",
+     "actual": 19,
+     "forecast": 18.7
+    },
+    {
+     "day": "2026-03-17",
+     "actual": 28,
+     "forecast": 19.4
+    },
+    {
+     "day": "2026-03-18",
+     "actual": 8,
+     "forecast": 22.5
+    },
+    {
+     "day": "2026-03-19",
+     "actual": 53,
+     "forecast": 17.6
+    },
+    {
+     "day": "2026-03-20",
+     "actual": 11,
+     "forecast": 15.8
+    },
+    {
+     "day": "2026-03-21",
+     "actual": 15,
+     "forecast": 7.2
+    },
+    {
+     "day": "2026-03-22",
+     "actual": 1,
+     "forecast": 6.7
+    },
+    {
+     "day": "2026-03-23",
+     "actual": 6,
+     "forecast": 14.9
+    },
+    {
+     "day": "2026-03-24",
+     "actual": 11,
+     "forecast": 14.9
+    },
+    {
+     "day": "2026-03-25",
+     "actual": 11,
+     "forecast": 21.8
+    },
+    {
+     "day": "2026-03-26",
+     "actual": 25,
+     "forecast": 13.7
+    },
+    {
+     "day": "2026-03-27",
+     "actual": 15,
+     "forecast": 15.4
+    },
+    {
+     "day": "2026-03-28",
+     "actual": 22,
+     "forecast": 8.6
+    },
+    {
+     "day": "2026-03-29",
+     "actual": 34,
+     "forecast": 8.5
+    },
+    {
+     "day": "2026-03-30",
+     "actual": 25,
+     "forecast": 19.5
+    },
+    {
+     "day": "2026-03-31",
+     "actual": 3,
+     "forecast": 19.5
+    },
+    {
+     "day": "2026-04-01",
+     "actual": 8,
+     "forecast": 20.3
+    },
+    {
+     "day": "2026-04-02",
+     "actual": 9,
+     "forecast": 14.7
+    },
+    {
+     "day": "2026-04-03",
+     "actual": 22,
+     "forecast": 15.0
+    },
+    {
+     "day": "2026-04-04",
+     "actual": 10,
+     "forecast": 7.0
+    },
+    {
+     "day": "2026-04-05",
+     "actual": 17,
+     "forecast": 7.1
+    },
+    {
+     "day": "2026-04-06",
+     "actual": 7,
+     "forecast": 11.6
+    },
+    {
+     "day": "2026-04-07",
+     "actual": 43,
+     "forecast": 11.8
+    },
+    {
+     "day": "2026-04-08",
+     "actual": 33,
+     "forecast": 13.9
+    },
+    {
+     "day": "2026-04-09",
+     "actual": 47,
+     "forecast": 8.1
+    },
+    {
+     "day": "2026-04-10",
+     "actual": 17,
+     "forecast": 10.4
+    },
+    {
+     "day": "2026-04-11",
+     "actual": 4,
+     "forecast": 7.0
+    },
+    {
+     "day": "2026-04-12",
+     "actual": 2,
+     "forecast": 6.3
+    },
+    {
+     "day": "2026-04-13",
+     "actual": 28,
+     "forecast": 15.2
+    },
+    {
+     "day": "2026-04-14",
+     "actual": 41,
+     "forecast": 12.7
+    },
+    {
+     "day": "2026-04-15",
+     "actual": 10,
+     "forecast": 16.1
+    },
+    {
+     "day": "2026-04-16",
+     "actual": 4,
+     "forecast": 10.1
+    },
+    {
+     "day": "2026-04-17",
+     "actual": 12,
+     "forecast": 21.6
+    },
+    {
+     "day": "2026-04-18",
+     "actual": 8,
+     "forecast": 6.4
+    },
+    {
+     "day": "2026-04-19",
+     "actual": 9,
+     "forecast": 6.5
+    },
+    {
+     "day": "2026-04-20",
+     "actual": 40,
+     "forecast": 32.0
+    },
+    {
+     "day": "2026-04-21",
+     "actual": 24,
+     "forecast": 18.4
+    },
+    {
+     "day": "2026-04-22",
+     "actual": 48,
+     "forecast": 16.7
+    },
+    {
+     "day": "2026-04-23",
+     "actual": 28,
+     "forecast": 11.5
+    },
+    {
+     "day": "2026-04-24",
+     "actual": 32,
+     "forecast": 11.6
+    },
+    {
+     "day": "2026-04-25",
+     "actual": 15,
+     "forecast": 7.4
+    },
+    {
+     "day": "2026-04-26",
+     "actual": 33,
+     "forecast": 6.6
+    },
+    {
+     "day": "2026-04-27",
+     "actual": 26,
+     "forecast": 11.6
+    },
+    {
+     "day": "2026-04-28",
+     "actual": 42,
+     "forecast": 12.2
+    },
+    {
+     "day": "2026-04-29",
+     "actual": 11,
+     "forecast": 11.1
+    },
+    {
+     "day": "2026-04-30",
+     "actual": 22,
+     "forecast": 10.9
+    },
+    {
+     "day": "2026-05-01",
+     "actual": 22,
+     "forecast": 5.0
+    },
+    {
+     "day": "2026-05-02",
+     "actual": 45,
+     "forecast": 5.8
+    },
+    {
+     "day": "2026-05-03",
+     "actual": 9,
+     "forecast": 4.7
+    },
+    {
+     "day": "2026-05-04",
+     "actual": 13,
+     "forecast": 6.1
+    },
+    {
+     "day": "2026-05-05",
+     "actual": 2,
+     "forecast": 5.0
+    },
+    {
+     "day": "2026-05-06",
+     "actual": 20,
+     "forecast": 7.7
+    },
+    {
+     "day": "2026-05-07",
+     "actual": 18,
+     "forecast": 9.5
+    },
+    {
+     "day": "2026-05-08",
+     "actual": 6,
+     "forecast": 7.8
+    },
+    {
+     "day": "2026-05-09",
+     "actual": 16,
+     "forecast": 5.3
+    },
+    {
+     "day": "2026-05-10",
+     "actual": 11,
+     "forecast": 7.5
+    },
+    {
+     "day": "2026-05-11",
+     "actual": 11,
+     "forecast": 9.5
+    },
+    {
+     "day": "2026-05-12",
+     "actual": 13,
+     "forecast": 11.5
+    },
+    {
+     "day": "2026-05-13",
+     "actual": 19,
+     "forecast": 11.1
+    },
+    {
+     "day": "2026-05-14",
+     "actual": 26,
+     "forecast": 11.9
+    },
+    {
+     "day": "2026-05-15",
+     "actual": 21,
+     "forecast": 11.1
+    },
+    {
+     "day": "2026-05-16",
+     "actual": 17,
+     "forecast": 6.8
+    },
+    {
+     "day": "2026-05-17",
+     "actual": 12,
+     "forecast": 7.0
+    },
+    {
+     "day": "2026-05-18",
+     "actual": 24,
+     "forecast": 11.5
+    },
+    {
+     "day": "2026-05-19",
+     "actual": 36,
+     "forecast": 11.2
+    },
+    {
+     "day": "2026-05-20",
+     "actual": 8,
+     "forecast": 12.0
+    },
+    {
+     "day": "2026-05-21",
+     "actual": 11,
+     "forecast": 15.0
+    },
+    {
+     "day": "2026-05-22",
+     "actual": 16,
+     "forecast": 14.9
+    },
+    {
+     "day": "2026-05-23",
+     "actual": 27,
+     "forecast": 7.5
+    },
+    {
+     "day": "2026-05-24",
+     "actual": 10,
+     "forecast": 7.5
+    },
+    {
+     "day": "2026-05-25",
+     "actual": 3,
+     "forecast": 12.0
+    },
+    {
+     "day": "2026-05-26",
+     "actual": 19,
+     "forecast": 12.8
+    },
+    {
+     "day": "2026-05-27",
+     "actual": 15,
+     "forecast": 13.3
+    },
+    {
+     "day": "2026-05-28",
+     "actual": 34,
+     "forecast": 18.8
+    },
+    {
+     "day": "2026-05-29",
+     "actual": 5,
+     "forecast": 14.7
+    },
+    {
+     "day": "2026-05-30",
+     "actual": 28,
+     "forecast": 9.0
+    },
+    {
+     "day": "2026-05-31",
+     "actual": 12,
+     "forecast": 7.7
+    },
+    {
+     "day": "2026-06-01",
+     "actual": 0,
+     "forecast": 14.9
+    },
+    {
+     "day": "2026-06-02",
+     "actual": 23,
+     "forecast": 17.3
+    },
+    {
+     "day": "2026-06-03",
+     "actual": 25,
+     "forecast": 15.8
+    },
+    {
+     "day": "2026-06-04",
+     "actual": 36,
+     "forecast": 15.9
+    },
+    {
+     "day": "2026-06-05",
+     "actual": 18,
+     "forecast": 13.3
+    },
+    {
+     "day": "2026-06-06",
+     "actual": 23,
+     "forecast": 8.9
+    },
+    {
+     "day": "2026-06-07",
+     "actual": 7,
+     "forecast": 6.9
+    },
+    {
+     "day": "2026-06-08",
+     "actual": 14,
+     "forecast": 12.3
+    },
+    {
+     "day": "2026-06-09",
+     "actual": 42,
+     "forecast": 11.9
+    },
+    {
+     "day": "2026-06-10",
+     "actual": 4,
+     "forecast": 16.3
+    },
+    {
+     "day": "2026-06-11",
+     "actual": 25,
+     "forecast": 13.9
+    },
+    {
+     "day": "2026-06-12",
+     "actual": 9,
+     "forecast": 6.6
+    },
+    {
+     "day": "2026-06-13",
+     "actual": 31,
+     "forecast": 7.9
+    },
+    {
+     "day": "2026-06-14",
+     "actual": 4,
+     "forecast": 8.9
+    },
+    {
+     "day": "2026-06-15",
+     "actual": 22,
+     "forecast": 13.5
+    },
+    {
+     "day": "2026-06-16",
+     "actual": 40,
+     "forecast": 10.3
+    },
+    {
+     "day": "2026-06-17",
+     "actual": 20,
+     "forecast": 16.1
+    }
+   ],
+   "forecast": [
+    {
+     "day": "2026-07-01",
+     "expected": 15.7
+    },
+    {
+     "day": "2026-07-02",
+     "expected": 15.2
+    },
+    {
+     "day": "2026-07-03",
+     "expected": 16.3
+    },
+    {
+     "day": "2026-07-04",
+     "expected": 19.7
+    },
+    {
+     "day": "2026-07-05",
+     "expected": 23.4
+    },
+    {
+     "day": "2026-07-06",
+     "expected": 13.9
+    },
+    {
+     "day": "2026-07-07",
+     "expected": 9.5
+    },
+    {
+     "day": "2026-07-08",
+     "expected": 15.5
+    },
+    {
+     "day": "2026-07-09",
+     "expected": 12.0
+    },
+    {
+     "day": "2026-07-10",
+     "expected": 13.6
+    },
+    {
+     "day": "2026-07-11",
+     "expected": 13.6
+    },
+    {
+     "day": "2026-07-12",
+     "expected": 12.3
+    },
+    {
+     "day": "2026-07-13",
+     "expected": 13.2
+    },
+    {
+     "day": "2026-07-14",
+     "expected": 15.4
+    }
+   ],
+   "next_7_days": {
+    "expected": 113.7,
+    "low": 71.0,
+    "high": 180.5
+   }
+  },
+  "ventilation_fault": {
+   "selection_2025": {
+    "calendar+level": {
+     "day": 0.7495,
+     "week": 0.4142
+    },
+    "calendar+level+weather": {
+     "day": 0.7472,
+     "week": 0.4142
+    },
+    "last_28_days": {
+     "day": 0.8186,
+     "week": 0.3986
+    }
+   },
+   "method": "last_28_days",
+   "recent": {
+    "period": "2026H1",
+    "calendar+level": {
+     "day": 0.7079,
+     "week": 0.3669
+    },
+    "calendar+level+weather": {
+     "day": 0.6963,
+     "week": 0.3677
+    },
+    "last_28_days": {
+     "day": 0.6994,
+     "week": 0.3219
+    },
+    "same_weekday_4_weeks": {
+     "day": 0.7469,
+     "week": 0.3219
+    },
+    "mean_per_day": 18.96
+   },
+   "week_interval_80": [
+    0.434,
+    1.75
+   ],
+   "history": {
+    "last_30_days": 365,
+    "last_365_days": 5805
+   },
+   "backtest": [
+    {
+     "day": "2026-01-01",
+     "actual": 42,
+     "forecast": 18.9
+    },
+    {
+     "day": "2026-01-02",
+     "actual": 16,
+     "forecast": 18.5
+    },
+    {
+     "day": "2026-01-03",
+     "actual": 5,
+     "forecast": 17.5
+    },
+    {
+     "day": "2026-01-04",
+     "actual": 11,
+     "forecast": 17.1
+    },
+    {
+     "day": "2026-01-05",
+     "actual": 18,
+     "forecast": 17.3
+    },
+    {
+     "day": "2026-01-06",
+     "actual": 10,
+     "forecast": 17.0
+    },
+    {
+     "day": "2026-01-07",
+     "actual": 3,
+     "forecast": 16.0
+    },
+    {
+     "day": "2026-01-08",
+     "actual": 7,
+     "forecast": 14.8
+    },
+    {
+     "day": "2026-01-09",
+     "actual": 6,
+     "forecast": 12.4
+    },
+    {
+     "day": "2026-01-10",
+     "actual": 36,
+     "forecast": 12.0
+    },
+    {
+     "day": "2026-01-11",
+     "actual": 17,
+     "forecast": 12.5
+    },
+    {
+     "day": "2026-01-12",
+     "actual": 12,
+     "forecast": 13.1
+    },
+    {
+     "day": "2026-01-13",
+     "actual": 26,
+     "forecast": 13.2
+    },
+    {
+     "day": "2026-01-14",
+     "actual": 15,
+     "forecast": 13.2
+    },
+    {
+     "day": "2026-01-15",
+     "actual": 11,
+     "forecast": 13.2
+    },
+    {
+     "day": "2026-01-16",
+     "actual": 12,
+     "forecast": 13.2
+    },
+    {
+     "day": "2026-01-17",
+     "actual": 2,
+     "forecast": 13.6
+    },
+    {
+     "day": "2026-01-18",
+     "actual": 67,
+     "forecast": 12.3
+    },
+    {
+     "day": "2026-01-19",
+     "actual": 0,
+     "forecast": 14.2
+    },
+    {
+     "day": "2026-01-20",
+     "actual": 9,
+     "forecast": 13.9
+    },
+    {
+     "day": "2026-01-21",
+     "actual": 32,
+     "forecast": 13.8
+    },
+    {
+     "day": "2026-01-22",
+     "actual": 2,
+     "forecast": 14.9
+    },
+    {
+     "day": "2026-01-23",
+     "actual": 11,
+     "forecast": 14.8
+    },
+    {
+     "day": "2026-01-24",
+     "actual": 13,
+     "forecast": 15.1
+    },
+    {
+     "day": "2026-01-25",
+     "actual": 3,
+     "forecast": 15.6
+    },
+    {
+     "day": "2026-01-26",
+     "actual": 30,
+     "forecast": 15.6
+    },
+    {
+     "day": "2026-01-27",
+     "actual": 27,
+     "forecast": 14.9
+    },
+    {
+     "day": "2026-01-28",
+     "actual": 53,
+     "forecast": 15.8
+    },
+    {
+     "day": "2026-01-29",
+     "actual": 20,
+     "forecast": 17.7
+    },
+    {
+     "day": "2026-01-30",
+     "actual": 39,
+     "forecast": 16.9
+    },
+    {
+     "day": "2026-01-31",
+     "actual": 26,
+     "forecast": 17.8
+    },
+    {
+     "day": "2026-02-01",
+     "actual": 30,
+     "forecast": 18.5
+    },
+    {
+     "day": "2026-02-02",
+     "actual": 2,
+     "forecast": 19.2
+    },
+    {
+     "day": "2026-02-03",
+     "actual": 16,
+     "forecast": 18.6
+    },
+    {
+     "day": "2026-02-04",
+     "actual": 3,
+     "forecast": 18.8
+    },
+    {
+     "day": "2026-02-05",
+     "actual": 3,
+     "forecast": 18.8
+    },
+    {
+     "day": "2026-02-06",
+     "actual": 6,
+     "forecast": 18.7
+    },
+    {
+     "day": "2026-02-07",
+     "actual": 36,
+     "forecast": 18.7
+    },
+    {
+     "day": "2026-02-08",
+     "actual": 13,
+     "forecast": 18.7
+    },
+    {
+     "day": "2026-02-09",
+     "actual": 18,
+     "forecast": 18.5
+    },
+    {
+     "day": "2026-02-10",
+     "actual": 21,
+     "forecast": 18.8
+    },
+    {
+     "day": "2026-02-11",
+     "actual": 8,
+     "forecast": 18.6
+    },
+    {
+     "day": "2026-02-12",
+     "actual": 9,
+     "forecast": 18.3
+    },
+    {
+     "day": "2026-02-13",
+     "actual": 49,
+     "forecast": 18.2
+    },
+    {
+     "day": "2026-02-14",
+     "actual": 58,
+     "forecast": 19.6
+    },
+    {
+     "day": "2026-02-15",
+     "actual": 26,
+     "forecast": 21.6
+    },
+    {
+     "day": "2026-02-16",
+     "actual": 46,
+     "forecast": 20.1
+    },
+    {
+     "day": "2026-02-17",
+     "actual": 26,
+     "forecast": 21.8
+    },
+    {
+     "day": "2026-02-18",
+     "actual": 19,
+     "forecast": 22.4
+    },
+    {
+     "day": "2026-02-19",
+     "actual": 27,
+     "forecast": 21.9
+    },
+    {
+     "day": "2026-02-20",
+     "actual": 9,
+     "forecast": 22.8
+    },
+    {
+     "day": "2026-02-21",
+     "actual": 10,
+     "forecast": 22.7
+    },
+    {
+     "day": "2026-02-22",
+     "actual": 6,
+     "forecast": 22.6
+    },
+    {
+     "day": "2026-02-23",
+     "actual": 6,
+     "forecast": 22.7
+    },
+    {
+     "day": "2026-02-24",
+     "actual": 31,
+     "forecast": 21.9
+    },
+    {
+     "day": "2026-02-25",
+     "actual": 5,
+     "forecast": 22.0
+    },
+    {
+     "day": "2026-02-26",
+     "actual": 32,
+     "forecast": 20.3
+    },
+    {
+     "day": "2026-02-27",
+     "actual": 60,
+     "forecast": 20.7
+    },
+    {
+     "day": "2026-02-28",
+     "actual": 0,
+     "forecast": 21.5
+    },
+    {
+     "day": "2026-03-01",
+     "actual": 6,
+     "forecast": 20.5
+    },
+    {
+     "day": "2026-03-02",
+     "actual": 3,
+     "forecast": 19.7
+    },
+    {
+     "day": "2026-03-03",
+     "actual": 2,
+     "forecast": 19.7
+    },
+    {
+     "day": "2026-03-04",
+     "actual": 7,
+     "forecast": 19.2
+    },
+    {
+     "day": "2026-03-05",
+     "actual": 8,
+     "forecast": 19.4
+    },
+    {
+     "day": "2026-03-06",
+     "actual": 10,
+     "forecast": 19.5
+    },
+    {
+     "day": "2026-03-07",
+     "actual": 0,
+     "forecast": 19.7
+    },
+    {
+     "day": "2026-03-08",
+     "actual": 10,
+     "forecast": 18.4
+    },
+    {
+     "day": "2026-03-09",
+     "actual": 7,
+     "forecast": 18.3
+    },
+    {
+     "day": "2026-03-10",
+     "actual": 10,
+     "forecast": 17.9
+    },
+    {
+     "day": "2026-03-11",
+     "actual": 23,
+     "forecast": 17.5
+    },
+    {
+     "day": "2026-03-12",
+     "actual": 5,
+     "forecast": 18.0
+    },
+    {
+     "day": "2026-03-13",
+     "actual": 15,
+     "forecast": 17.9
+    },
+    {
+     "day": "2026-03-14",
+     "actual": 8,
+     "forecast": 16.7
+    },
+    {
+     "day": "2026-03-15",
+     "actual": 9,
+     "forecast": 14.9
+    },
+    {
+     "day": "2026-03-16",
+     "actual": 2,
+     "forecast": 14.3
+    },
+    {
+     "day": "2026-03-17",
+     "actual": 18,
+     "forecast": 12.7
+    },
+    {
+     "day": "2026-03-18",
+     "actual": 4,
+     "forecast": 12.4
+    },
+    {
+     "day": "2026-03-19",
+     "actual": 41,
+     "forecast": 11.9
+    },
+    {
+     "day": "2026-03-20",
+     "actual": 29,
+     "forecast": 12.4
+    },
+    {
+     "day": "2026-03-21",
+     "actual": 7,
+     "forecast": 13.1
+    },
+    {
+     "day": "2026-03-22",
+     "actual": 4,
+     "forecast": 13.0
+    },
+    {
+     "day": "2026-03-23",
+     "actual": 2,
+     "forecast": 12.9
+    },
+    {
+     "day": "2026-03-24",
+     "actual": 19,
+     "forecast": 12.8
+    },
+    {
+     "day": "2026-03-25",
+     "actual": 24,
+     "forecast": 12.4
+    },
+    {
+     "day": "2026-03-26",
+     "actual": 17,
+     "forecast": 13.0
+    },
+    {
+     "day": "2026-03-27",
+     "actual": 17,
+     "forecast": 12.5
+    },
+    {
+     "day": "2026-03-28",
+     "actual": 14,
+     "forecast": 11.0
+    },
+    {
+     "day": "2026-03-29",
+     "actual": 22,
+     "forecast": 11.5
+    },
+    {
+     "day": "2026-03-30",
+     "actual": 17,
+     "forecast": 12.0
+    },
+    {
+     "day": "2026-03-31",
+     "actual": 1,
+     "forecast": 12.5
+    },
+    {
+     "day": "2026-04-01",
+     "actual": 5,
+     "forecast": 12.5
+    },
+    {
+     "day": "2026-04-02",
+     "actual": 11,
+     "forecast": 12.4
+    },
+    {
+     "day": "2026-04-03",
+     "actual": 44,
+     "forecast": 12.5
+    },
+    {
+     "day": "2026-04-04",
+     "actual": 12,
+     "forecast": 13.8
+    },
+    {
+     "day": "2026-04-05",
+     "actual": 42,
+     "forecast": 14.2
+    },
+    {
+     "day": "2026-04-06",
+     "actual": 12,
+     "forecast": 15.3
+    },
+    {
+     "day": "2026-04-07",
+     "actual": 50,
+     "forecast": 15.5
+    },
+    {
+     "day": "2026-04-08",
+     "actual": 17,
+     "forecast": 16.9
+    },
+    {
+     "day": "2026-04-09",
+     "actual": 49,
+     "forecast": 16.7
+    },
+    {
+     "day": "2026-04-10",
+     "actual": 38,
+     "forecast": 18.3
+    },
+    {
+     "day": "2026-04-11",
+     "actual": 3,
+     "forecast": 19.1
+    },
+    {
+     "day": "2026-04-12",
+     "actual": 10,
+     "forecast": 18.9
+    },
+    {
+     "day": "2026-04-13",
+     "actual": 51,
+     "forecast": 19.0
+    },
+    {
+     "day": "2026-04-14",
+     "actual": 37,
+     "forecast": 20.7
+    },
+    {
+     "day": "2026-04-15",
+     "actual": 13,
+     "forecast": 21.4
+    },
+    {
+     "day": "2026-04-16",
+     "actual": 13,
+     "forecast": 21.7
+    },
+    {
+     "day": "2026-04-17",
+     "actual": 0,
+     "forecast": 20.7
+    },
+    {
+     "day": "2026-04-18",
+     "actual": 10,
+     "forecast": 19.7
+    },
+    {
+     "day": "2026-04-19",
+     "actual": 10,
+     "forecast": 19.8
+    },
+    {
+     "day": "2026-04-20",
+     "actual": 30,
+     "forecast": 20.0
+    },
+    {
+     "day": "2026-04-21",
+     "actual": 43,
+     "forecast": 21.0
+    },
+    {
+     "day": "2026-04-22",
+     "actual": 21,
+     "forecast": 21.9
+    },
+    {
+     "day": "2026-04-23",
+     "actual": 40,
+     "forecast": 21.8
+    },
+    {
+     "day": "2026-04-24",
+     "actual": 42,
+     "forecast": 22.6
+    },
+    {
+     "day": "2026-04-25",
+     "actual": 21,
+     "forecast": 23.5
+    },
+    {
+     "day": "2026-04-26",
+     "actual": 29,
+     "forecast": 23.7
+    },
+    {
+     "day": "2026-04-27",
+     "actual": 30,
+     "forecast": 24.0
+    },
+    {
+     "day": "2026-04-28",
+     "actual": 32,
+     "forecast": 24.4
+    },
+    {
+     "day": "2026-04-29",
+     "actual": 26,
+     "forecast": 25.5
+    },
+    {
+     "day": "2026-04-30",
+     "actual": 0,
+     "forecast": 26.3
+    },
+    {
+     "day": "2026-05-01",
+     "actual": 40,
+     "forecast": 25.9
+    },
+    {
+     "day": "2026-05-02",
+     "actual": 73,
+     "forecast": 25.8
+    },
+    {
+     "day": "2026-05-03",
+     "actual": 0,
+     "forecast": 27.9
+    },
+    {
+     "day": "2026-05-04",
+     "actual": 4,
+     "forecast": 26.4
+    },
+    {
+     "day": "2026-05-05",
+     "actual": 13,
+     "forecast": 26.1
+    },
+    {
+     "day": "2026-05-06",
+     "actual": 39,
+     "forecast": 24.8
+    },
+    {
+     "day": "2026-05-07",
+     "actual": 20,
+     "forecast": 25.6
+    },
+    {
+     "day": "2026-05-08",
+     "actual": 24,
+     "forecast": 24.6
+    },
+    {
+     "day": "2026-05-09",
+     "actual": 26,
+     "forecast": 24.1
+    },
+    {
+     "day": "2026-05-10",
+     "actual": 31,
+     "forecast": 24.9
+    },
+    {
+     "day": "2026-05-11",
+     "actual": 22,
+     "forecast": 25.6
+    },
+    {
+     "day": "2026-05-12",
+     "actual": 8,
+     "forecast": 24.6
+    },
+    {
+     "day": "2026-05-13",
+     "actual": 22,
+     "forecast": 23.6
+    },
+    {
+     "day": "2026-05-14",
+     "actual": 26,
+     "forecast": 23.9
+    },
+    {
+     "day": "2026-05-15",
+     "actual": 5,
+     "forecast": 24.4
+    },
+    {
+     "day": "2026-05-16",
+     "actual": 21,
+     "forecast": 24.5
+    },
+    {
+     "day": "2026-05-17",
+     "actual": 4,
+     "forecast": 24.9
+    },
+    {
+     "day": "2026-05-18",
+     "actual": 13,
+     "forecast": 24.7
+    },
+    {
+     "day": "2026-05-19",
+     "actual": 31,
+     "forecast": 24.1
+    },
+    {
+     "day": "2026-05-20",
+     "actual": 9,
+     "forecast": 23.7
+    },
+    {
+     "day": "2026-05-21",
+     "actual": 39,
+     "forecast": 23.2
+    },
+    {
+     "day": "2026-05-22",
+     "actual": 39,
+     "forecast": 23.2
+    },
+    {
+     "day": "2026-05-23",
+     "actual": 48,
+     "forecast": 23.1
+    },
+    {
+     "day": "2026-05-24",
+     "actual": 0,
+     "forecast": 24.1
+    },
+    {
+     "day": "2026-05-25",
+     "actual": 9,
+     "forecast": 23.0
+    },
+    {
+     "day": "2026-05-26",
+     "actual": 6,
+     "forecast": 22.3
+    },
+    {
+     "day": "2026-05-27",
+     "actual": 10,
+     "forecast": 21.4
+    },
+    {
+     "day": "2026-05-28",
+     "actual": 75,
+     "forecast": 20.8
+    },
+    {
+     "day": "2026-05-29",
+     "actual": 7,
+     "forecast": 23.5
+    },
+    {
+     "day": "2026-05-30",
+     "actual": 35,
+     "forecast": 22.3
+    },
+    {
+     "day": "2026-05-31",
+     "actual": 16,
+     "forecast": 20.9
+    },
+    {
+     "day": "2026-06-01",
+     "actual": 0,
+     "forecast": 21.5
+    },
+    {
+     "day": "2026-06-02",
+     "actual": 3,
+     "forecast": 21.4
+    },
+    {
+     "day": "2026-06-03",
+     "actual": 35,
+     "forecast": 21.0
+    },
+    {
+     "day": "2026-06-04",
+     "actual": 0,
+     "forecast": 20.9
+    },
+    {
+     "day": "2026-06-05",
+     "actual": 12,
+     "forecast": 20.1
+    },
+    {
+     "day": "2026-06-06",
+     "actual": 1,
+     "forecast": 19.7
+    },
+    {
+     "day": "2026-06-07",
+     "actual": 4,
+     "forecast": 18.8
+    },
+    {
+     "day": "2026-06-08",
+     "actual": 6,
+     "forecast": 17.9
+    },
+    {
+     "day": "2026-06-09",
+     "actual": 13,
+     "forecast": 17.3
+    },
+    {
+     "day": "2026-06-10",
+     "actual": 5,
+     "forecast": 17.5
+    },
+    {
+     "day": "2026-06-11",
+     "actual": 45,
+     "forecast": 16.9
+    },
+    {
+     "day": "2026-06-12",
+     "actual": 18,
+     "forecast": 17.5
+    },
+    {
+     "day": "2026-06-13",
+     "actual": 24,
+     "forecast": 18.0
+    },
+    {
+     "day": "2026-06-14",
+     "actual": 2,
+     "forecast": 18.1
+    },
+    {
+     "day": "2026-06-15",
+     "actual": 12,
+     "forecast": 18.0
+    },
+    {
+     "day": "2026-06-16",
+     "actual": 18,
+     "forecast": 18.0
+    },
+    {
+     "day": "2026-06-17",
+     "actual": 15,
+     "forecast": 17.5
+    }
+   ],
+   "forecast": [
+    {
+     "day": "2026-07-01",
+     "expected": 12.9
+    },
+    {
+     "day": "2026-07-02",
+     "expected": 12.9
+    },
+    {
+     "day": "2026-07-03",
+     "expected": 12.9
+    },
+    {
+     "day": "2026-07-04",
+     "expected": 12.9
+    },
+    {
+     "day": "2026-07-05",
+     "expected": 12.9
+    },
+    {
+     "day": "2026-07-06",
+     "expected": 12.9
+    },
+    {
+     "day": "2026-07-07",
+     "expected": 12.9
+    },
+    {
+     "day": "2026-07-08",
+     "expected": 12.9
+    },
+    {
+     "day": "2026-07-09",
+     "expected": 12.9
+    },
+    {
+     "day": "2026-07-10",
+     "expected": 12.9
+    },
+    {
+     "day": "2026-07-11",
+     "expected": 12.9
+    },
+    {
+     "day": "2026-07-12",
+     "expected": 12.9
+    },
+    {
+     "day": "2026-07-13",
+     "expected": 12.9
+    },
+    {
+     "day": "2026-07-14",
+     "expected": 12.9
+    }
+   ],
+   "next_7_days": {
+    "expected": 90.5,
+    "low": 39.3,
+    "high": 158.4
+   }
+  },
+  "smoke_sensor_fault": {
+   "selection_2025": {
+    "calendar+level": {
+     "day": 1.1696,
+     "week": 0.8654
+    },
+    "calendar+level+weather": {
+     "day": 1.1843,
+     "week": 0.8841
+    },
+    "last_28_days": {
+     "day": 1.4549,
+     "week": 1.0738
+    }
+   },
+   "method": "calendar+level",
+   "recent": {
+    "period": "2026H1",
+    "calendar+level": {
+     "day": 1.0418,
+     "week": 0.7732
+    },
+    "calendar+level+weather": {
+     "day": 0.9927,
+     "week": 0.7516
+    },
+    "last_28_days": {
+     "day": 1.2945,
+     "week": 0.9149
+    },
+    "same_weekday_4_weeks": {
+     "day": 1.3928,
+     "week": 0.9149
+    },
+    "mean_per_day": 9.42
+   },
+   "week_interval_80": [
+    0.153,
+    6.371
+   ],
+   "history": {
+    "last_30_days": 261,
+    "last_365_days": 2962
+   },
+   "backtest": [
+    {
+     "day": "2026-01-01",
+     "actual": 0,
+     "forecast": 0.6
+    },
+    {
+     "day": "2026-01-02",
+     "actual": 0,
+     "forecast": 0.5
+    },
+    {
+     "day": "2026-01-03",
+     "actual": 0,
+     "forecast": 0.4
+    },
+    {
+     "day": "2026-01-04",
+     "actual": 1,
+     "forecast": 0.5
+    },
+    {
+     "day": "2026-01-05",
+     "actual": 1,
+     "forecast": 0.6
+    },
+    {
+     "day": "2026-01-06",
+     "actual": 1,
+     "forecast": 0.6
+    },
+    {
+     "day": "2026-01-07",
+     "actual": 0,
+     "forecast": 0.5
+    },
+    {
+     "day": "2026-01-08",
+     "actual": 2,
+     "forecast": 0.5
+    },
+    {
+     "day": "2026-01-09",
+     "actual": 1,
+     "forecast": 1.7
+    },
+    {
+     "day": "2026-01-10",
+     "actual": 1,
+     "forecast": 0.7
+    },
+    {
+     "day": "2026-01-11",
+     "actual": 3,
+     "forecast": 1.6
+    },
+    {
+     "day": "2026-01-12",
+     "actual": 2,
+     "forecast": 4.0
+    },
+    {
+     "day": "2026-01-13",
+     "actual": 1,
+     "forecast": 7.2
+    },
+    {
+     "day": "2026-01-14",
+     "actual": 4,
+     "forecast": 50.6
+    },
+    {
+     "day": "2026-01-15",
+     "actual": 11,
+     "forecast": 6.9
+    },
+    {
+     "day": "2026-01-16",
+     "actual": 12,
+     "forecast": 6.7
+    },
+    {
+     "day": "2026-01-17",
+     "actual": 1,
+     "forecast": 0.4
+    },
+    {
+     "day": "2026-01-18",
+     "actual": 2,
+     "forecast": 0.7
+    },
+    {
+     "day": "2026-01-19",
+     "actual": 23,
+     "forecast": 9.4
+    },
+    {
+     "day": "2026-01-20",
+     "actual": 2,
+     "forecast": 9.4
+    },
+    {
+     "day": "2026-01-21",
+     "actual": 1,
+     "forecast": 10.5
+    },
+    {
+     "day": "2026-01-22",
+     "actual": 2,
+     "forecast": 5.4
+    },
+    {
+     "day": "2026-01-23",
+     "actual": 2,
+     "forecast": 7.2
+    },
+    {
+     "day": "2026-01-24",
+     "actual": 0,
+     "forecast": 7.8
+    },
+    {
+     "day": "2026-01-25",
+     "actual": 0,
+     "forecast": 7.3
+    },
+    {
+     "day": "2026-01-26",
+     "actual": 2,
+     "forecast": 5.8
+    },
+    {
+     "day": "2026-01-27",
+     "actual": 3,
+     "forecast": 11.5
+    },
+    {
+     "day": "2026-01-28",
+     "actual": 2,
+     "forecast": 8.1
+    },
+    {
+     "day": "2026-01-29",
+     "actual": 9,
+     "forecast": 9.0
+    },
+    {
+     "day": "2026-01-30",
+     "actual": 0,
+     "forecast": 7.9
+    },
+    {
+     "day": "2026-01-31",
+     "actual": 0,
+     "forecast": 3.9
+    },
+    {
+     "day": "2026-02-01",
+     "actual": 1,
+     "forecast": 3.1
+    },
+    {
+     "day": "2026-02-02",
+     "actual": 36,
+     "forecast": 6.9
+    },
+    {
+     "day": "2026-02-03",
+     "actual": 57,
+     "forecast": 6.3
+    },
+    {
+     "day": "2026-02-04",
+     "actual": 18,
+     "forecast": 8.4
+    },
+    {
+     "day": "2026-02-05",
+     "actual": 4,
+     "forecast": 9.0
+    },
+    {
+     "day": "2026-02-06",
+     "actual": 1,
+     "forecast": 9.7
+    },
+    {
+     "day": "2026-02-07",
+     "actual": 1,
+     "forecast": 1.9
+    },
+    {
+     "day": "2026-02-08",
+     "actual": 0,
+     "forecast": 1.9
+    },
+    {
+     "day": "2026-02-09",
+     "actual": 0,
+     "forecast": 5.1
+    },
+    {
+     "day": "2026-02-10",
+     "actual": 67,
+     "forecast": 6.2
+    },
+    {
+     "day": "2026-02-11",
+     "actual": 0,
+     "forecast": 10.7
+    },
+    {
+     "day": "2026-02-12",
+     "actual": 0,
+     "forecast": 14.6
+    },
+    {
+     "day": "2026-02-13",
+     "actual": 3,
+     "forecast": 11.6
+    },
+    {
+     "day": "2026-02-14",
+     "actual": 1,
+     "forecast": 2.4
+    },
+    {
+     "day": "2026-02-15",
+     "actual": 0,
+     "forecast": 1.7
+    },
+    {
+     "day": "2026-02-16",
+     "actual": 4,
+     "forecast": 4.1
+    },
+    {
+     "day": "2026-02-17",
+     "actual": 2,
+     "forecast": 5.4
+    },
+    {
+     "day": "2026-02-18",
+     "actual": 0,
+     "forecast": 8.3
+    },
+    {
+     "day": "2026-02-19",
+     "actual": 2,
+     "forecast": 11.1
+    },
+    {
+     "day": "2026-02-20",
+     "actual": 0,
+     "forecast": 12.3
+    },
+    {
+     "day": "2026-02-21",
+     "actual": 0,
+     "forecast": 1.6
+    },
+    {
+     "day": "2026-02-22",
+     "actual": 0,
+     "forecast": 0.3
+    },
+    {
+     "day": "2026-02-23",
+     "actual": 0,
+     "forecast": 1.4
+    },
+    {
+     "day": "2026-02-24",
+     "actual": 2,
+     "forecast": 2.5
+    },
+    {
+     "day": "2026-02-25",
+     "actual": 0,
+     "forecast": 6.0
+    },
+    {
+     "day": "2026-02-26",
+     "actual": 7,
+     "forecast": 7.0
+    },
+    {
+     "day": "2026-02-27",
+     "actual": 2,
+     "forecast": 3.5
+    },
+    {
+     "day": "2026-02-28",
+     "actual": 0,
+     "forecast": 0.5
+    },
+    {
+     "day": "2026-03-01",
+     "actual": 0,
+     "forecast": 0.3
+    },
+    {
+     "day": "2026-03-02",
+     "actual": 3,
+     "forecast": 2.7
+    },
+    {
+     "day": "2026-03-03",
+     "actual": 0,
+     "forecast": 2.0
+    },
+    {
+     "day": "2026-03-04",
+     "actual": 10,
+     "forecast": 4.2
+    },
+    {
+     "day": "2026-03-05",
+     "actual": 83,
+     "forecast": 4.5
+    },
+    {
+     "day": "2026-03-06",
+     "actual": 3,
+     "forecast": 5.6
+    },
+    {
+     "day": "2026-03-07",
+     "actual": 1,
+     "forecast": 0.7
+    },
+    {
+     "day": "2026-03-08",
+     "actual": 0,
+     "forecast": 0.4
+    },
+    {
+     "day": "2026-03-09",
+     "actual": 2,
+     "forecast": 4.7
+    },
+    {
+     "day": "2026-03-10",
+     "actual": 21,
+     "forecast": 1.9
+    },
+    {
+     "day": "2026-03-11",
+     "actual": 11,
+     "forecast": 4.4
+    },
+    {
+     "day": "2026-03-12",
+     "actual": 40,
+     "forecast": 2.8
+    },
+    {
+     "day": "2026-03-13",
+     "actual": 2,
+     "forecast": 11.6
+    },
+    {
+     "day": "2026-03-14",
+     "actual": 1,
+     "forecast": 0.6
+    },
+    {
+     "day": "2026-03-15",
+     "actual": 2,
+     "forecast": 1.4
+    },
+    {
+     "day": "2026-03-16",
+     "actual": 22,
+     "forecast": 36.7
+    },
+    {
+     "day": "2026-03-17",
+     "actual": 3,
+     "forecast": 21.0
+    },
+    {
+     "day": "2026-03-18",
+     "actual": 3,
+     "forecast": 21.6
+    },
+    {
+     "day": "2026-03-19",
+     "actual": 6,
+     "forecast": 11.8
+    },
+    {
+     "day": "2026-03-20",
+     "actual": 2,
+     "forecast": 19.4
+    },
+    {
+     "day": "2026-03-21",
+     "actual": 5,
+     "forecast": 0.1
+    },
+    {
+     "day": "2026-03-22",
+     "actual": 3,
+     "forecast": 0.1
+    },
+    {
+     "day": "2026-03-23",
+     "actual": 5,
+     "forecast": 1.6
+    },
+    {
+     "day": "2026-03-24",
+     "actual": 2,
+     "forecast": 1.8
+    },
+    {
+     "day": "2026-03-25",
+     "actual": 3,
+     "forecast": 3.4
+    },
+    {
+     "day": "2026-03-26",
+     "actual": 7,
+     "forecast": 0.8
+    },
+    {
+     "day": "2026-03-27",
+     "actual": 3,
+     "forecast": 1.1
+    },
+    {
+     "day": "2026-03-28",
+     "actual": 3,
+     "forecast": 0.4
+    },
+    {
+     "day": "2026-03-29",
+     "actual": 4,
+     "forecast": 0.5
+    },
+    {
+     "day": "2026-03-30",
+     "actual": 1,
+     "forecast": 3.1
+    },
+    {
+     "day": "2026-03-31",
+     "actual": 1,
+     "forecast": 5.6
+    },
+    {
+     "day": "2026-04-01",
+     "actual": 81,
+     "forecast": 3.6
+    },
+    {
+     "day": "2026-04-02",
+     "actual": 8,
+     "forecast": 2.4
+    },
+    {
+     "day": "2026-04-03",
+     "actual": 7,
+     "forecast": 3.9
+    },
+    {
+     "day": "2026-04-04",
+     "actual": 1,
+     "forecast": 0.6
+    },
+    {
+     "day": "2026-04-05",
+     "actual": 2,
+     "forecast": 0.7
+    },
+    {
+     "day": "2026-04-06",
+     "actual": 6,
+     "forecast": 1.7
+    },
+    {
+     "day": "2026-04-07",
+     "actual": 59,
+     "forecast": 4.4
+    },
+    {
+     "day": "2026-04-08",
+     "actual": 64,
+     "forecast": 3.0
+    },
+    {
+     "day": "2026-04-09",
+     "actual": 4,
+     "forecast": 2.5
+    },
+    {
+     "day": "2026-04-10",
+     "actual": 23,
+     "forecast": 5.4
+    },
+    {
+     "day": "2026-04-11",
+     "actual": 0,
+     "forecast": 0.8
+    },
+    {
+     "day": "2026-04-12",
+     "actual": 4,
+     "forecast": 0.7
+    },
+    {
+     "day": "2026-04-13",
+     "actual": 25,
+     "forecast": 1.9
+    },
+    {
+     "day": "2026-04-14",
+     "actual": 145,
+     "forecast": 2.2
+    },
+    {
+     "day": "2026-04-15",
+     "actual": 2,
+     "forecast": 2.9
+    },
+    {
+     "day": "2026-04-16",
+     "actual": 0,
+     "forecast": 5.1
+    },
+    {
+     "day": "2026-04-17",
+     "actual": 14,
+     "forecast": 2.6
+    },
+    {
+     "day": "2026-04-18",
+     "actual": 6,
+     "forecast": 1.1
+    },
+    {
+     "day": "2026-04-19",
+     "actual": 74,
+     "forecast": 1.3
+    },
+    {
+     "day": "2026-04-20",
+     "actual": 122,
+     "forecast": 2.5
+    },
+    {
+     "day": "2026-04-21",
+     "actual": 10,
+     "forecast": 12.8
+    },
+    {
+     "day": "2026-04-22",
+     "actual": 5,
+     "forecast": 4.8
+    },
+    {
+     "day": "2026-04-23",
+     "actual": 6,
+     "forecast": 8.8
+    },
+    {
+     "day": "2026-04-24",
+     "actual": 28,
+     "forecast": 3.0
+    },
+    {
+     "day": "2026-04-25",
+     "actual": 3,
+     "forecast": 0.9
+    },
+    {
+     "day": "2026-04-26",
+     "actual": 3,
+     "forecast": 0.9
+    },
+    {
+     "day": "2026-04-27",
+     "actual": 9,
+     "forecast": 1.7
+    },
+    {
+     "day": "2026-04-28",
+     "actual": 2,
+     "forecast": 1.7
+    },
+    {
+     "day": "2026-04-29",
+     "actual": 1,
+     "forecast": 1.6
+    },
+    {
+     "day": "2026-04-30",
+     "actual": 0,
+     "forecast": 2.9
+    },
+    {
+     "day": "2026-05-01",
+     "actual": 1,
+     "forecast": 1.4
+    },
+    {
+     "day": "2026-05-02",
+     "actual": 0,
+     "forecast": 0.4
+    },
+    {
+     "day": "2026-05-03",
+     "actual": 1,
+     "forecast": 0.4
+    },
+    {
+     "day": "2026-05-04",
+     "actual": 1,
+     "forecast": 1.7
+    },
+    {
+     "day": "2026-05-05",
+     "actual": 0,
+     "forecast": 1.3
+    },
+    {
+     "day": "2026-05-06",
+     "actual": 3,
+     "forecast": 1.1
+    },
+    {
+     "day": "2026-05-07",
+     "actual": 11,
+     "forecast": 2.1
+    },
+    {
+     "day": "2026-05-08",
+     "actual": 1,
+     "forecast": 1.4
+    },
+    {
+     "day": "2026-05-09",
+     "actual": 0,
+     "forecast": 0.4
+    },
+    {
+     "day": "2026-05-10",
+     "actual": 0,
+     "forecast": 1.2
+    },
+    {
+     "day": "2026-05-11",
+     "actual": 0,
+     "forecast": 7.2
+    },
+    {
+     "day": "2026-05-12",
+     "actual": 1,
+     "forecast": 4.4
+    },
+    {
+     "day": "2026-05-13",
+     "actual": 11,
+     "forecast": 7.3
+    },
+    {
+     "day": "2026-05-14",
+     "actual": 1,
+     "forecast": 8.1
+    },
+    {
+     "day": "2026-05-15",
+     "actual": 0,
+     "forecast": 3.4
+    },
+    {
+     "day": "2026-05-16",
+     "actual": 0,
+     "forecast": 1.8
+    },
+    {
+     "day": "2026-05-17",
+     "actual": 1,
+     "forecast": 5.9
+    },
+    {
+     "day": "2026-05-18",
+     "actual": 25,
+     "forecast": 6.2
+    },
+    {
+     "day": "2026-05-19",
+     "actual": 1,
+     "forecast": 4.6
+    },
+    {
+     "day": "2026-05-20",
+     "actual": 7,
+     "forecast": 4.7
+    },
+    {
+     "day": "2026-05-21",
+     "actual": 3,
+     "forecast": 5.0
+    },
+    {
+     "day": "2026-05-22",
+     "actual": 2,
+     "forecast": 3.7
+    },
+    {
+     "day": "2026-05-23",
+     "actual": 3,
+     "forecast": 1.8
+    },
+    {
+     "day": "2026-05-24",
+     "actual": 5,
+     "forecast": 4.3
+    },
+    {
+     "day": "2026-05-25",
+     "actual": 3,
+     "forecast": 3.4
+    },
+    {
+     "day": "2026-05-26",
+     "actual": 5,
+     "forecast": 5.6
+    },
+    {
+     "day": "2026-05-27",
+     "actual": 3,
+     "forecast": 5.8
+    },
+    {
+     "day": "2026-05-28",
+     "actual": 5,
+     "forecast": 6.3
+    },
+    {
+     "day": "2026-05-29",
+     "actual": 22,
+     "forecast": 6.2
+    },
+    {
+     "day": "2026-05-30",
+     "actual": 0,
+     "forecast": 7.4
+    },
+    {
+     "day": "2026-05-31",
+     "actual": 1,
+     "forecast": 6.7
+    },
+    {
+     "day": "2026-06-01",
+     "actual": 0,
+     "forecast": 6.3
+    },
+    {
+     "day": "2026-06-02",
+     "actual": 5,
+     "forecast": 14.7
+    },
+    {
+     "day": "2026-06-03",
+     "actual": 1,
+     "forecast": 11.5
+    },
+    {
+     "day": "2026-06-04",
+     "actual": 101,
+     "forecast": 6.4
+    },
+    {
+     "day": "2026-06-05",
+     "actual": 13,
+     "forecast": 7.8
+    },
+    {
+     "day": "2026-06-06",
+     "actual": 1,
+     "forecast": 3.7
+    },
+    {
+     "day": "2026-06-07",
+     "actual": 2,
+     "forecast": 6.5
+    },
+    {
+     "day": "2026-06-08",
+     "actual": 0,
+     "forecast": 5.3
+    },
+    {
+     "day": "2026-06-09",
+     "actual": 2,
+     "forecast": 8.1
+    },
+    {
+     "day": "2026-06-10",
+     "actual": 10,
+     "forecast": 8.1
+    },
+    {
+     "day": "2026-06-11",
+     "actual": 1,
+     "forecast": 20.3
+    },
+    {
+     "day": "2026-06-12",
+     "actual": 2,
+     "forecast": 4.7
+    },
+    {
+     "day": "2026-06-13",
+     "actual": 54,
+     "forecast": 0.7
+    },
+    {
+     "day": "2026-06-14",
+     "actual": 0,
+     "forecast": 0.4
+    },
+    {
+     "day": "2026-06-15",
+     "actual": 5,
+     "forecast": 1.4
+    },
+    {
+     "day": "2026-06-16",
+     "actual": 3,
+     "forecast": 3.7
+    },
+    {
+     "day": "2026-06-17",
+     "actual": 2,
+     "forecast": 4.3
+    }
+   ],
+   "forecast": [
+    {
+     "day": "2026-07-01",
+     "expected": 9.8
+    },
+    {
+     "day": "2026-07-02",
+     "expected": 22.6
+    },
+    {
+     "day": "2026-07-03",
+     "expected": 7.5
+    },
+    {
+     "day": "2026-07-04",
+     "expected": 1.5
+    },
+    {
+     "day": "2026-07-05",
+     "expected": 1.2
+    },
+    {
+     "day": "2026-07-06",
+     "expected": 4.1
+    },
+    {
+     "day": "2026-07-07",
+     "expected": 5.4
+    },
+    {
+     "day": "2026-07-08",
+     "expected": 6.4
+    },
+    {
+     "day": "2026-07-09",
+     "expected": 6.0
+    },
+    {
+     "day": "2026-07-10",
+     "expected": 4.6
+    },
+    {
+     "day": "2026-07-11",
+     "expected": 3.2
+    },
+    {
+     "day": "2026-07-12",
+     "expected": 1.9
+    },
+    {
+     "day": "2026-07-13",
+     "expected": 19.4
+    },
+    {
+     "day": "2026-07-14",
+     "expected": 17.1
+    }
+   ],
+   "next_7_days": {
+    "expected": 51.9,
+    "low": 7.9,
+    "high": 331.0
+   }
+  },
+  "smoke_detected": {
+   "selection_2025": {
+    "calendar+level": {
+     "day": 1.22,
+     "week": 0.9039
+    },
+    "calendar+level+weather": {
+     "day": 1.2269,
+     "week": 0.9064
+    },
+    "last_28_days": {
+     "day": 1.487,
+     "week": 1.0678
+    }
+   },
+   "method": "calendar+level",
+   "recent": {
+    "period": "2026H1",
+    "calendar+level": {
+     "day": 1.3164,
+     "week": 0.9549
+    },
+    "calendar+level+weather": {
+     "day": 1.2954,
+     "week": 0.9493
+    },
+    "last_28_days": {
+     "day": 1.4936,
+     "week": 1.0457
+    },
+    "same_weekday_4_weeks": {
+     "day": 1.5169,
+     "week": 1.0457
+    },
+    "mean_per_day": 46.36
+   },
+   "week_interval_80": [
+    0.064,
+    5.745
+   ],
+   "history": {
+    "last_30_days": 2117,
+    "last_365_days": 17758
+   },
+   "backtest": [
+    {
+     "day": "2026-01-01",
+     "actual": 2,
+     "forecast": 0.3
+    },
+    {
+     "day": "2026-01-02",
+     "actual": 0,
+     "forecast": 0.2
+    },
+    {
+     "day": "2026-01-03",
+     "actual": 2,
+     "forecast": 0.6
+    },
+    {
+     "day": "2026-01-04",
+     "actual": 0,
+     "forecast": 0.5
+    },
+    {
+     "day": "2026-01-05",
+     "actual": 1,
+     "forecast": 0.9
+    },
+    {
+     "day": "2026-01-06",
+     "actual": 0,
+     "forecast": 0.9
+    },
+    {
+     "day": "2026-01-07",
+     "actual": 2,
+     "forecast": 0.8
+    },
+    {
+     "day": "2026-01-08",
+     "actual": 1,
+     "forecast": 0.8
+    },
+    {
+     "day": "2026-01-09",
+     "actual": 0,
+     "forecast": 22.0
+    },
+    {
+     "day": "2026-01-10",
+     "actual": 1,
+     "forecast": 1.1
+    },
+    {
+     "day": "2026-01-11",
+     "actual": 0,
+     "forecast": 0.7
+    },
+    {
+     "day": "2026-01-12",
+     "actual": 1,
+     "forecast": 32.0
+    },
+    {
+     "day": "2026-01-13",
+     "actual": 1,
+     "forecast": 57.9
+    },
+    {
+     "day": "2026-01-14",
+     "actual": 2,
+     "forecast": 31.3
+    },
+    {
+     "day": "2026-01-15",
+     "actual": 51,
+     "forecast": 36.4
+    },
+    {
+     "day": "2026-01-16",
+     "actual": 178,
+     "forecast": 53.1
+    },
+    {
+     "day": "2026-01-17",
+     "actual": 0,
+     "forecast": 3.1
+    },
+    {
+     "day": "2026-01-18",
+     "actual": 5,
+     "forecast": 1.2
+    },
+    {
+     "day": "2026-01-19",
+     "actual": 22,
+     "forecast": 190.2
+    },
+    {
+     "day": "2026-01-20",
+     "actual": 321,
+     "forecast": 188.9
+    },
+    {
+     "day": "2026-01-21",
+     "actual": 71,
+     "forecast": 116.2
+    },
+    {
+     "day": "2026-01-22",
+     "actual": 6,
+     "forecast": 131.8
+    },
+    {
+     "day": "2026-01-23",
+     "actual": 3,
+     "forecast": 124.9
+    },
+    {
+     "day": "2026-01-24",
+     "actual": 4,
+     "forecast": 3.9
+    },
+    {
+     "day": "2026-01-25",
+     "actual": 1,
+     "forecast": 2.1
+    },
+    {
+     "day": "2026-01-26",
+     "actual": 73,
+     "forecast": 104.3
+    },
+    {
+     "day": "2026-01-27",
+     "actual": 68,
+     "forecast": 130.9
+    },
+    {
+     "day": "2026-01-28",
+     "actual": 3,
+     "forecast": 113.7
+    },
+    {
+     "day": "2026-01-29",
+     "actual": 11,
+     "forecast": 98.4
+    },
+    {
+     "day": "2026-01-30",
+     "actual": 4,
+     "forecast": 33.9
+    },
+    {
+     "day": "2026-01-31",
+     "actual": 5,
+     "forecast": 2.4
+    },
+    {
+     "day": "2026-02-01",
+     "actual": 1,
+     "forecast": 1.3
+    },
+    {
+     "day": "2026-02-02",
+     "actual": 40,
+     "forecast": 52.2
+    },
+    {
+     "day": "2026-02-03",
+     "actual": 61,
+     "forecast": 63.7
+    },
+    {
+     "day": "2026-02-04",
+     "actual": 18,
+     "forecast": 69.1
+    },
+    {
+     "day": "2026-02-05",
+     "actual": 7,
+     "forecast": 152.6
+    },
+    {
+     "day": "2026-02-06",
+     "actual": 1,
+     "forecast": 113.5
+    },
+    {
+     "day": "2026-02-07",
+     "actual": 3,
+     "forecast": 3.0
+    },
+    {
+     "day": "2026-02-08",
+     "actual": 0,
+     "forecast": 1.6
+    },
+    {
+     "day": "2026-02-09",
+     "actual": 1,
+     "forecast": 61.2
+    },
+    {
+     "day": "2026-02-10",
+     "actual": 13,
+     "forecast": 43.6
+    },
+    {
+     "day": "2026-02-11",
+     "actual": 0,
+     "forecast": 48.9
+    },
+    {
+     "day": "2026-02-12",
+     "actual": 2,
+     "forecast": 54.0
+    },
+    {
+     "day": "2026-02-13",
+     "actual": 3,
+     "forecast": 31.3
+    },
+    {
+     "day": "2026-02-14",
+     "actual": 3,
+     "forecast": 1.8
+    },
+    {
+     "day": "2026-02-15",
+     "actual": 2,
+     "forecast": 1.0
+    },
+    {
+     "day": "2026-02-16",
+     "actual": 0,
+     "forecast": 31.1
+    },
+    {
+     "day": "2026-02-17",
+     "actual": 1,
+     "forecast": 36.6
+    },
+    {
+     "day": "2026-02-18",
+     "actual": 293,
+     "forecast": 84.3
+    },
+    {
+     "day": "2026-02-19",
+     "actual": 179,
+     "forecast": 76.3
+    },
+    {
+     "day": "2026-02-20",
+     "actual": 2,
+     "forecast": 32.2
+    },
+    {
+     "day": "2026-02-21",
+     "actual": 4,
+     "forecast": 2.2
+    },
+    {
+     "day": "2026-02-22",
+     "actual": 3,
+     "forecast": 0.9
+    },
+    {
+     "day": "2026-02-23",
+     "actual": 2,
+     "forecast": 1.6
+    },
+    {
+     "day": "2026-02-24",
+     "actual": 1,
+     "forecast": 25.6
+    },
+    {
+     "day": "2026-02-25",
+     "actual": 0,
+     "forecast": 35.3
+    },
+    {
+     "day": "2026-02-26",
+     "actual": 4,
+     "forecast": 32.5
+    },
+    {
+     "day": "2026-02-27",
+     "actual": 2,
+     "forecast": 9.8
+    },
+    {
+     "day": "2026-02-28",
+     "actual": 0,
+     "forecast": 1.5
+    },
+    {
+     "day": "2026-03-01",
+     "actual": 0,
+     "forecast": 0.7
+    },
+    {
+     "day": "2026-03-02",
+     "actual": 3,
+     "forecast": 26.5
+    },
+    {
+     "day": "2026-03-03",
+     "actual": 11,
+     "forecast": 24.8
+    },
+    {
+     "day": "2026-03-04",
+     "actual": 52,
+     "forecast": 26.2
+    },
+    {
+     "day": "2026-03-05",
+     "actual": 641,
+     "forecast": 29.6
+    },
+    {
+     "day": "2026-03-06",
+     "actual": 323,
+     "forecast": 26.9
+    },
+    {
+     "day": "2026-03-07",
+     "actual": 1,
+     "forecast": 1.5
+    },
+    {
+     "day": "2026-03-08",
+     "actual": 1,
+     "forecast": 0.5
+    },
+    {
+     "day": "2026-03-09",
+     "actual": 0,
+     "forecast": 96.9
+    },
+    {
+     "day": "2026-03-10",
+     "actual": 23,
+     "forecast": 161.5
+    },
+    {
+     "day": "2026-03-11",
+     "actual": 9,
+     "forecast": 88.4
+    },
+    {
+     "day": "2026-03-12",
+     "actual": 577,
+     "forecast": 153.4
+    },
+    {
+     "day": "2026-03-13",
+     "actual": 2,
+     "forecast": 31.6
+    },
+    {
+     "day": "2026-03-14",
+     "actual": 0,
+     "forecast": 1.2
+    },
+    {
+     "day": "2026-03-15",
+     "actual": 3,
+     "forecast": 1.1
+    },
+    {
+     "day": "2026-03-16",
+     "actual": 29,
+     "forecast": 60.9
+    },
+    {
+     "day": "2026-03-17",
+     "actual": 23,
+     "forecast": 55.1
+    },
+    {
+     "day": "2026-03-18",
+     "actual": 12,
+     "forecast": 60.0
+    },
+    {
+     "day": "2026-03-19",
+     "actual": 9,
+     "forecast": 31.5
+    },
+    {
+     "day": "2026-03-20",
+     "actual": 3,
+     "forecast": 20.0
+    },
+    {
+     "day": "2026-03-21",
+     "actual": 22,
+     "forecast": 1.8
+    },
+    {
+     "day": "2026-03-22",
+     "actual": 8,
+     "forecast": 1.2
+    },
+    {
+     "day": "2026-03-23",
+     "actual": 528,
+     "forecast": 133.4
+    },
+    {
+     "day": "2026-03-24",
+     "actual": 399,
+     "forecast": 129.7
+    },
+    {
+     "day": "2026-03-25",
+     "actual": 2,
+     "forecast": 179.5
+    },
+    {
+     "day": "2026-03-26",
+     "actual": 13,
+     "forecast": 75.9
+    },
+    {
+     "day": "2026-03-27",
+     "actual": 22,
+     "forecast": 45.8
+    },
+    {
+     "day": "2026-03-28",
+     "actual": 20,
+     "forecast": 0.6
+    },
+    {
+     "day": "2026-03-29",
+     "actual": 1,
+     "forecast": 0.3
+    },
+    {
+     "day": "2026-03-30",
+     "actual": 10,
+     "forecast": 6.3
+    },
+    {
+     "day": "2026-03-31",
+     "actual": 13,
+     "forecast": 8.6
+    },
+    {
+     "day": "2026-04-01",
+     "actual": 127,
+     "forecast": 12.0
+    },
+    {
+     "day": "2026-04-02",
+     "actual": 185,
+     "forecast": 10.8
+    },
+    {
+     "day": "2026-04-03",
+     "actual": 20,
+     "forecast": 5.1
+    },
+    {
+     "day": "2026-04-04",
+     "actual": 30,
+     "forecast": 2.4
+    },
+    {
+     "day": "2026-04-05",
+     "actual": 18,
+     "forecast": 0.7
+    },
+    {
+     "day": "2026-04-06",
+     "actual": 2,
+     "forecast": 27.5
+    },
+    {
+     "day": "2026-04-07",
+     "actual": 9,
+     "forecast": 38.6
+    },
+    {
+     "day": "2026-04-08",
+     "actual": 1,
+     "forecast": 56.5
+    },
+    {
+     "day": "2026-04-09",
+     "actual": 2,
+     "forecast": 35.4
+    },
+    {
+     "day": "2026-04-10",
+     "actual": 40,
+     "forecast": 35.5
+    },
+    {
+     "day": "2026-04-11",
+     "actual": 0,
+     "forecast": 2.2
+    },
+    {
+     "day": "2026-04-12",
+     "actual": 1,
+     "forecast": 1.3
+    },
+    {
+     "day": "2026-04-13",
+     "actual": 73,
+     "forecast": 75.6
+    },
+    {
+     "day": "2026-04-14",
+     "actual": 4,
+     "forecast": 270.4
+    },
+    {
+     "day": "2026-04-15",
+     "actual": 0,
+     "forecast": 297.2
+    },
+    {
+     "day": "2026-04-16",
+     "actual": 0,
+     "forecast": 268.1
+    },
+    {
+     "day": "2026-04-17",
+     "actual": 0,
+     "forecast": 114.1
+    },
+    {
+     "day": "2026-04-18",
+     "actual": 0,
+     "forecast": 2.3
+    },
+    {
+     "day": "2026-04-19",
+     "actual": 8,
+     "forecast": 0.8
+    },
+    {
+     "day": "2026-04-20",
+     "actual": 21,
+     "forecast": 30.9
+    },
+    {
+     "day": "2026-04-21",
+     "actual": 76,
+     "forecast": 83.1
+    },
+    {
+     "day": "2026-04-22",
+     "actual": 320,
+     "forecast": 35.3
+    },
+    {
+     "day": "2026-04-23",
+     "actual": 4,
+     "forecast": 28.8
+    },
+    {
+     "day": "2026-04-24",
+     "actual": 126,
+     "forecast": 17.1
+    },
+    {
+     "day": "2026-04-25",
+     "actual": 0,
+     "forecast": 4.2
+    },
+    {
+     "day": "2026-04-26",
+     "actual": 1,
+     "forecast": 1.4
+    },
+    {
+     "day": "2026-04-27",
+     "actual": 341,
+     "forecast": 15.2
+    },
+    {
+     "day": "2026-04-28",
+     "actual": 299,
+     "forecast": 16.2
+    },
+    {
+     "day": "2026-04-29",
+     "actual": 5,
+     "forecast": 16.9
+    },
+    {
+     "day": "2026-04-30",
+     "actual": 3,
+     "forecast": 15.7
+    },
+    {
+     "day": "2026-05-01",
+     "actual": 1,
+     "forecast": 0.9
+    },
+    {
+     "day": "2026-05-02",
+     "actual": 6,
+     "forecast": 1.1
+    },
+    {
+     "day": "2026-05-03",
+     "actual": 2,
+     "forecast": 0.6
+    },
+    {
+     "day": "2026-05-04",
+     "actual": 2,
+     "forecast": 15.3
+    },
+    {
+     "day": "2026-05-05",
+     "actual": 301,
+     "forecast": 19.1
+    },
+    {
+     "day": "2026-05-06",
+     "actual": 187,
+     "forecast": 22.6
+    },
+    {
+     "day": "2026-05-07",
+     "actual": 53,
+     "forecast": 25.7
+    },
+    {
+     "day": "2026-05-08",
+     "actual": 8,
+     "forecast": 8.4
+    },
+    {
+     "day": "2026-05-09",
+     "actual": 3,
+     "forecast": 0.5
+    },
+    {
+     "day": "2026-05-10",
+     "actual": 3,
+     "forecast": 1.4
+    },
+    {
+     "day": "2026-05-11",
+     "actual": 0,
+     "forecast": 20.6
+    },
+    {
+     "day": "2026-05-12",
+     "actual": 2,
+     "forecast": 17.1
+    },
+    {
+     "day": "2026-05-13",
+     "actual": 17,
+     "forecast": 31.4
+    },
+    {
+     "day": "2026-05-14",
+     "actual": 4,
+     "forecast": 74.6
+    },
+    {
+     "day": "2026-05-15",
+     "actual": 2,
+     "forecast": 144.3
+    },
+    {
+     "day": "2026-05-16",
+     "actual": 2,
+     "forecast": 5.8
+    },
+    {
+     "day": "2026-05-17",
+     "actual": 10,
+     "forecast": 1.1
+    },
+    {
+     "day": "2026-05-18",
+     "actual": 25,
+     "forecast": 42.0
+    },
+    {
+     "day": "2026-05-19",
+     "actual": 8,
+     "forecast": 46.7
+    },
+    {
+     "day": "2026-05-20",
+     "actual": 1,
+     "forecast": 74.9
+    },
+    {
+     "day": "2026-05-21",
+     "actual": 16,
+     "forecast": 45.1
+    },
+    {
+     "day": "2026-05-22",
+     "actual": 0,
+     "forecast": 21.1
+    },
+    {
+     "day": "2026-05-23",
+     "actual": 9,
+     "forecast": 1.7
+    },
+    {
+     "day": "2026-05-24",
+     "actual": 0,
+     "forecast": 0.8
+    },
+    {
+     "day": "2026-05-25",
+     "actual": 0,
+     "forecast": 49.1
+    },
+    {
+     "day": "2026-05-26",
+     "actual": 3,
+     "forecast": 42.6
+    },
+    {
+     "day": "2026-05-27",
+     "actual": 6,
+     "forecast": 35.4
+    },
+    {
+     "day": "2026-05-28",
+     "actual": 8,
+     "forecast": 36.7
+    },
+    {
+     "day": "2026-05-29",
+     "actual": 14,
+     "forecast": 26.3
+    },
+    {
+     "day": "2026-05-30",
+     "actual": 8,
+     "forecast": 1.5
+    },
+    {
+     "day": "2026-05-31",
+     "actual": 4,
+     "forecast": 1.1
+    },
+    {
+     "day": "2026-06-01",
+     "actual": 0,
+     "forecast": 315.0
+    },
+    {
+     "day": "2026-06-02",
+     "actual": 501,
+     "forecast": 85.0
+    },
+    {
+     "day": "2026-06-03",
+     "actual": 432,
+     "forecast": 75.5
+    },
+    {
+     "day": "2026-06-04",
+     "actual": 104,
+     "forecast": 60.7
+    },
+    {
+     "day": "2026-06-05",
+     "actual": 18,
+     "forecast": 19.7
+    },
+    {
+     "day": "2026-06-06",
+     "actual": 5,
+     "forecast": 2.3
+    },
+    {
+     "day": "2026-06-07",
+     "actual": 3,
+     "forecast": 1.1
+    },
+    {
+     "day": "2026-06-08",
+     "actual": 6,
+     "forecast": 51.1
+    },
+    {
+     "day": "2026-06-09",
+     "actual": 2,
+     "forecast": 106.4
+    },
+    {
+     "day": "2026-06-10",
+     "actual": 6,
+     "forecast": 117.7
+    },
+    {
+     "day": "2026-06-11",
+     "actual": 23,
+     "forecast": 53.5
+    },
+    {
+     "day": "2026-06-12",
+     "actual": 4,
+     "forecast": 1.4
+    },
+    {
+     "day": "2026-06-13",
+     "actual": 10,
+     "forecast": 1.7
+    },
+    {
+     "day": "2026-06-14",
+     "actual": 0,
+     "forecast": 0.6
+    },
+    {
+     "day": "2026-06-15",
+     "actual": 4,
+     "forecast": 97.1
+    },
+    {
+     "day": "2026-06-16",
+     "actual": 1,
+     "forecast": 77.5
+    },
+    {
+     "day": "2026-06-17",
+     "actual": 3,
+     "forecast": 61.7
+    }
+   ],
+   "forecast": [
+    {
+     "day": "2026-07-01",
+     "expected": 33.3
+    },
+    {
+     "day": "2026-07-02",
+     "expected": 17.0
+    },
+    {
+     "day": "2026-07-03",
+     "expected": 11.6
+    },
+    {
+     "day": "2026-07-04",
+     "expected": 1.2
+    },
+    {
+     "day": "2026-07-05",
+     "expected": 0.6
+    },
+    {
+     "day": "2026-07-06",
+     "expected": 27.4
+    },
+    {
+     "day": "2026-07-07",
+     "expected": 47.5
+    },
+    {
+     "day": "2026-07-08",
+     "expected": 33.6
+    },
+    {
+     "day": "2026-07-09",
+     "expected": 44.5
+    },
+    {
+     "day": "2026-07-10",
+     "expected": 30.0
+    },
+    {
+     "day": "2026-07-11",
+     "expected": 1.5
+    },
+    {
+     "day": "2026-07-12",
+     "expected": 0.8
+    },
+    {
+     "day": "2026-07-13",
+     "expected": 115.9
+    },
+    {
+     "day": "2026-07-14",
+     "expected": 152.0
+    }
+   ],
+   "next_7_days": {
+    "expected": 138.6,
+    "low": 8.9,
+    "high": 796.4
+   }
+  },
+  "power_loss": {
+   "selection_2025": {
+    "calendar+level": {
+     "day": 0.2188,
+     "week": 0.089
+    },
+    "calendar+level+weather": {
+     "day": 0.2168,
+     "week": 0.0883
+    },
+    "last_28_days": {
+     "day": 0.4969,
+     "week": 0.1206
+    }
+   },
+   "method": "calendar+level+weather",
+   "recent": {
+    "period": "2026H1",
+    "calendar+level": {
+     "day": 0.2305,
+     "week": 0.1258
+    },
+    "calendar+level+weather": {
+     "day": 0.2306,
+     "week": 0.1268
+    },
+    "last_28_days": {
+     "day": 0.5257,
+     "week": 0.1416
+    },
+    "same_weekday_4_weeks": {
+     "day": 0.2691,
+     "week": 0.1416
+    },
+    "mean_per_day": 183.81
+   },
+   "week_interval_80": [
+    0.862,
+    1.148
+   ],
+   "history": {
+    "last_30_days": 5714,
+    "last_365_days": 66100
+   },
+   "backtest": [
+    {
+     "day": "2026-01-01",
+     "actual": 38,
+     "forecast": 31.5
+    },
+    {
+     "day": "2026-01-02",
+     "actual": 128,
+     "forecast": 122.6
+    },
+    {
+     "day": "2026-01-03",
+     "actual": 32,
+     "forecast": 60.9
+    },
+    {
+     "day": "2026-01-04",
+     "actual": 36,
+     "forecast": 56.3
+    },
+    {
+     "day": "2026-01-05",
+     "actual": 101,
+     "forecast": 148.8
+    },
+    {
+     "day": "2026-01-06",
+     "actual": 173,
+     "forecast": 134.9
+    },
+    {
+     "day": "2026-01-07",
+     "actual": 17,
+     "forecast": 72.0
+    },
+    {
+     "day": "2026-01-08",
+     "actual": 177,
+     "forecast": 83.4
+    },
+    {
+     "day": "2026-01-09",
+     "actual": 200,
+     "forecast": 171.6
+    },
+    {
+     "day": "2026-01-10",
+     "actual": 37,
+     "forecast": 45.6
+    },
+    {
+     "day": "2026-01-11",
+     "actual": 29,
+     "forecast": 29.8
+    },
+    {
+     "day": "2026-01-12",
+     "actual": 221,
+     "forecast": 236.3
+    },
+    {
+     "day": "2026-01-13",
+     "actual": 214,
+     "forecast": 257.9
+    },
+    {
+     "day": "2026-01-14",
+     "actual": 164,
+     "forecast": 240.2
+    },
+    {
+     "day": "2026-01-15",
+     "actual": 247,
+     "forecast": 224.6
+    },
+    {
+     "day": "2026-01-16",
+     "actual": 139,
+     "forecast": 202.1
+    },
+    {
+     "day": "2026-01-17",
+     "actual": 16,
+     "forecast": 45.3
+    },
+    {
+     "day": "2026-01-18",
+     "actual": 56,
+     "forecast": 35.3
+    },
+    {
+     "day": "2026-01-19",
+     "actual": 193,
+     "forecast": 240.5
+    },
+    {
+     "day": "2026-01-20",
+     "actual": 244,
+     "forecast": 245.7
+    },
+    {
+     "day": "2026-01-21",
+     "actual": 330,
+     "forecast": 241.8
+    },
+    {
+     "day": "2026-01-22",
+     "actual": 259,
+     "forecast": 231.1
+    },
+    {
+     "day": "2026-01-23",
+     "actual": 190,
+     "forecast": 191.6
+    },
+    {
+     "day": "2026-01-24",
+     "actual": 42,
+     "forecast": 43.3
+    },
+    {
+     "day": "2026-01-25",
+     "actual": 10,
+     "forecast": 27.7
+    },
+    {
+     "day": "2026-01-26",
+     "actual": 265,
+     "forecast": 256.3
+    },
+    {
+     "day": "2026-01-27",
+     "actual": 300,
+     "forecast": 251.6
+    },
+    {
+     "day": "2026-01-28",
+     "actual": 325,
+     "forecast": 242.1
+    },
+    {
+     "day": "2026-01-29",
+     "actual": 282,
+     "forecast": 234.3
+    },
+    {
+     "day": "2026-01-30",
+     "actual": 171,
+     "forecast": 211.6
+    },
+    {
+     "day": "2026-01-31",
+     "actual": 56,
+     "forecast": 32.8
+    },
+    {
+     "day": "2026-02-01",
+     "actual": 41,
+     "forecast": 28.0
+    },
+    {
+     "day": "2026-02-02",
+     "actual": 266,
+     "forecast": 259.2
+    },
+    {
+     "day": "2026-02-03",
+     "actual": 283,
+     "forecast": 257.2
+    },
+    {
+     "day": "2026-02-04",
+     "actual": 213,
+     "forecast": 250.1
+    },
+    {
+     "day": "2026-02-05",
+     "actual": 194,
+     "forecast": 238.7
+    },
+    {
+     "day": "2026-02-06",
+     "actual": 145,
+     "forecast": 198.8
+    },
+    {
+     "day": "2026-02-07",
+     "actual": 89,
+     "forecast": 44.4
+    },
+    {
+     "day": "2026-02-08",
+     "actual": 21,
+     "forecast": 27.2
+    },
+    {
+     "day": "2026-02-09",
+     "actual": 204,
+     "forecast": 253.0
+    },
+    {
+     "day": "2026-02-10",
+     "actual": 260,
+     "forecast": 268.4
+    },
+    {
+     "day": "2026-02-11",
+     "actual": 327,
+     "forecast": 238.1
+    },
+    {
+     "day": "2026-02-12",
+     "actual": 267,
+     "forecast": 233.4
+    },
+    {
+     "day": "2026-02-13",
+     "actual": 162,
+     "forecast": 198.0
+    },
+    {
+     "day": "2026-02-14",
+     "actual": 52,
+     "forecast": 60.3
+    },
+    {
+     "day": "2026-02-15",
+     "actual": 20,
+     "forecast": 29.5
+    },
+    {
+     "day": "2026-02-16",
+     "actual": 286,
+     "forecast": 229.0
+    },
+    {
+     "day": "2026-02-17",
+     "actual": 244,
+     "forecast": 252.4
+    },
+    {
+     "day": "2026-02-18",
+     "actual": 265,
+     "forecast": 264.0
+    },
+    {
+     "day": "2026-02-19",
+     "actual": 192,
+     "forecast": 219.6
+    },
+    {
+     "day": "2026-02-20",
+     "actual": 104,
+     "forecast": 173.9
+    },
+    {
+     "day": "2026-02-21",
+     "actual": 36,
+     "forecast": 54.9
+    },
+    {
+     "day": "2026-02-22",
+     "actual": 4,
+     "forecast": 28.3
+    },
+    {
+     "day": "2026-02-23",
+     "actual": 28,
+     "forecast": 19.4
+    },
+    {
+     "day": "2026-02-24",
+     "actual": 264,
+     "forecast": 224.4
+    },
+    {
+     "day": "2026-02-25",
+     "actual": 246,
+     "forecast": 265.3
+    },
+    {
+     "day": "2026-02-26",
+     "actual": 175,
+     "forecast": 231.5
+    },
+    {
+     "day": "2026-02-27",
+     "actual": 254,
+     "forecast": 207.0
+    },
+    {
+     "day": "2026-02-28",
+     "actual": 42,
+     "forecast": 60.1
+    },
+    {
+     "day": "2026-03-01",
+     "actual": 29,
+     "forecast": 31.5
+    },
+    {
+     "day": "2026-03-02",
+     "actual": 298,
+     "forecast": 264.3
+    },
+    {
+     "day": "2026-03-03",
+     "actual": 303,
+     "forecast": 261.3
+    },
+    {
+     "day": "2026-03-04",
+     "actual": 257,
+     "forecast": 251.3
+    },
+    {
+     "day": "2026-03-05",
+     "actual": 228,
+     "forecast": 242.1
+    },
+    {
+     "day": "2026-03-06",
+     "actual": 182,
+     "forecast": 206.6
+    },
+    {
+     "day": "2026-03-07",
+     "actual": 11,
+     "forecast": 50.6
+    },
+    {
+     "day": "2026-03-08",
+     "actual": 13,
+     "forecast": 19.7
+    },
+    {
+     "day": "2026-03-09",
+     "actual": 32,
+     "forecast": 263.9
+    },
+    {
+     "day": "2026-03-10",
+     "actual": 250,
+     "forecast": 239.5
+    },
+    {
+     "day": "2026-03-11",
+     "actual": 330,
+     "forecast": 254.0
+    },
+    {
+     "day": "2026-03-12",
+     "actual": 370,
+     "forecast": 222.5
+    },
+    {
+     "day": "2026-03-13",
+     "actual": 233,
+     "forecast": 196.5
+    },
+    {
+     "day": "2026-03-14",
+     "actual": 34,
+     "forecast": 45.0
+    },
+    {
+     "day": "2026-03-15",
+     "actual": 35,
+     "forecast": 26.6
+    },
+    {
+     "day": "2026-03-16",
+     "actual": 290,
+     "forecast": 256.2
+    },
+    {
+     "day": "2026-03-17",
+     "actual": 317,
+     "forecast": 264.2
+    },
+    {
+     "day": "2026-03-18",
+     "actual": 266,
+     "forecast": 254.7
+    },
+    {
+     "day": "2026-03-19",
+     "actual": 306,
+     "forecast": 235.7
+    },
+    {
+     "day": "2026-03-20",
+     "actual": 288,
+     "forecast": 207.4
+    },
+    {
+     "day": "2026-03-21",
+     "actual": 43,
+     "forecast": 67.2
+    },
+    {
+     "day": "2026-03-22",
+     "actual": 89,
+     "forecast": 51.5
+    },
+    {
+     "day": "2026-03-23",
+     "actual": 278,
+     "forecast": 232.1
+    },
+    {
+     "day": "2026-03-24",
+     "actual": 251,
+     "forecast": 270.2
+    },
+    {
+     "day": "2026-03-25",
+     "actual": 207,
+     "forecast": 260.3
+    },
+    {
+     "day": "2026-03-26",
+     "actual": 232,
+     "forecast": 242.4
+    },
+    {
+     "day": "2026-03-27",
+     "actual": 213,
+     "forecast": 218.7
+    },
+    {
+     "day": "2026-03-28",
+     "actual": 67,
+     "forecast": 51.6
+    },
+    {
+     "day": "2026-03-29",
+     "actual": 83,
+     "forecast": 38.6
+    },
+    {
+     "day": "2026-03-30",
+     "actual": 203,
+     "forecast": 254.5
+    },
+    {
+     "day": "2026-03-31",
+     "actual": 269,
+     "forecast": 249.6
+    },
+    {
+     "day": "2026-04-01",
+     "actual": 289,
+     "forecast": 233.7
+    },
+    {
+     "day": "2026-04-02",
+     "actual": 220,
+     "forecast": 227.7
+    },
+    {
+     "day": "2026-04-03",
+     "actual": 217,
+     "forecast": 172.2
+    },
+    {
+     "day": "2026-04-04",
+     "actual": 59,
+     "forecast": 36.4
+    },
+    {
+     "day": "2026-04-05",
+     "actual": 66,
+     "forecast": 37.2
+    },
+    {
+     "day": "2026-04-06",
+     "actual": 261,
+     "forecast": 163.2
+    },
+    {
+     "day": "2026-04-07",
+     "actual": 327,
+     "forecast": 123.8
+    },
+    {
+     "day": "2026-04-08",
+     "actual": 349,
+     "forecast": 131.3
+    },
+    {
+     "day": "2026-04-09",
+     "actual": 356,
+     "forecast": 137.4
+    },
+    {
+     "day": "2026-04-10",
+     "actual": 243,
+     "forecast": 91.0
+    },
+    {
+     "day": "2026-04-11",
+     "actual": 20,
+     "forecast": 45.8
+    },
+    {
+     "day": "2026-04-12",
+     "actual": 46,
+     "forecast": 29.6
+    },
+    {
+     "day": "2026-04-13",
+     "actual": 316,
+     "forecast": 257.0
+    },
+    {
+     "day": "2026-04-14",
+     "actual": 334,
+     "forecast": 284.1
+    },
+    {
+     "day": "2026-04-15",
+     "actual": 323,
+     "forecast": 255.2
+    },
+    {
+     "day": "2026-04-16",
+     "actual": 243,
+     "forecast": 241.7
+    },
+    {
+     "day": "2026-04-17",
+     "actual": 170,
+     "forecast": 196.2
+    },
+    {
+     "day": "2026-04-18",
+     "actual": 18,
+     "forecast": 39.6
+    },
+    {
+     "day": "2026-04-19",
+     "actual": 16,
+     "forecast": 35.2
+    },
+    {
+     "day": "2026-04-20",
+     "actual": 304,
+     "forecast": 262.4
+    },
+    {
+     "day": "2026-04-21",
+     "actual": 362,
+     "forecast": 283.2
+    },
+    {
+     "day": "2026-04-22",
+     "actual": 258,
+     "forecast": 273.3
+    },
+    {
+     "day": "2026-04-23",
+     "actual": 250,
+     "forecast": 238.2
+    },
+    {
+     "day": "2026-04-24",
+     "actual": 287,
+     "forecast": 194.0
+    },
+    {
+     "day": "2026-04-25",
+     "actual": 58,
+     "forecast": 37.5
+    },
+    {
+     "day": "2026-04-26",
+     "actual": 69,
+     "forecast": 26.0
+    },
+    {
+     "day": "2026-04-27",
+     "actual": 294,
+     "forecast": 265.0
+    },
+    {
+     "day": "2026-04-28",
+     "actual": 315,
+     "forecast": 273.1
+    },
+    {
+     "day": "2026-04-29",
+     "actual": 278,
+     "forecast": 280.9
+    },
+    {
+     "day": "2026-04-30",
+     "actual": 224,
+     "forecast": 197.5
+    },
+    {
+     "day": "2026-05-01",
+     "actual": 36,
+     "forecast": 26.2
+    },
+    {
+     "day": "2026-05-02",
+     "actual": 133,
+     "forecast": 28.2
+    },
+    {
+     "day": "2026-05-03",
+     "actual": 11,
+     "forecast": 27.8
+    },
+    {
+     "day": "2026-05-04",
+     "actual": 222,
+     "forecast": 152.6
+    },
+    {
+     "day": "2026-05-05",
+     "actual": 275,
+     "forecast": 172.7
+    },
+    {
+     "day": "2026-05-06",
+     "actual": 259,
+     "forecast": 168.4
+    },
+    {
+     "day": "2026-05-07",
+     "actual": 246,
+     "forecast": 154.9
+    },
+    {
+     "day": "2026-05-08",
+     "actual": 142,
+     "forecast": 121.7
+    },
+    {
+     "day": "2026-05-09",
+     "actual": 24,
+     "forecast": 20.8
+    },
+    {
+     "day": "2026-05-10",
+     "actual": 38,
+     "forecast": 26.1
+    },
+    {
+     "day": "2026-05-11",
+     "actual": 137,
+     "forecast": 242.0
+    },
+    {
+     "day": "2026-05-12",
+     "actual": 271,
+     "forecast": 287.5
+    },
+    {
+     "day": "2026-05-13",
+     "actual": 195,
+     "forecast": 270.2
+    },
+    {
+     "day": "2026-05-14",
+     "actual": 312,
+     "forecast": 242.6
+    },
+    {
+     "day": "2026-05-15",
+     "actual": 243,
+     "forecast": 204.3
+    },
+    {
+     "day": "2026-05-16",
+     "actual": 59,
+     "forecast": 53.6
+    },
+    {
+     "day": "2026-05-17",
+     "actual": 8,
+     "forecast": 34.9
+    },
+    {
+     "day": "2026-05-18",
+     "actual": 266,
+     "forecast": 261.1
+    },
+    {
+     "day": "2026-05-19",
+     "actual": 286,
+     "forecast": 272.5
+    },
+    {
+     "day": "2026-05-20",
+     "actual": 235,
+     "forecast": 250.8
+    },
+    {
+     "day": "2026-05-21",
+     "actual": 287,
+     "forecast": 238.1
+    },
+    {
+     "day": "2026-05-22",
+     "actual": 260,
+     "forecast": 203.0
+    },
+    {
+     "day": "2026-05-23",
+     "actual": 102,
+     "forecast": 57.9
+    },
+    {
+     "day": "2026-05-24",
+     "actual": 19,
+     "forecast": 28.1
+    },
+    {
+     "day": "2026-05-25",
+     "actual": 318,
+     "forecast": 260.7
+    },
+    {
+     "day": "2026-05-26",
+     "actual": 226,
+     "forecast": 285.5
+    },
+    {
+     "day": "2026-05-27",
+     "actual": 260,
+     "forecast": 256.7
+    },
+    {
+     "day": "2026-05-28",
+     "actual": 284,
+     "forecast": 256.0
+    },
+    {
+     "day": "2026-05-29",
+     "actual": 325,
+     "forecast": 202.6
+    },
+    {
+     "day": "2026-05-30",
+     "actual": 114,
+     "forecast": 62.5
+    },
+    {
+     "day": "2026-05-31",
+     "actual": 45,
+     "forecast": 29.6
+    },
+    {
+     "day": "2026-06-01",
+     "actual": 0,
+     "forecast": 268.3
+    },
+    {
+     "day": "2026-06-02",
+     "actual": 269,
+     "forecast": 265.1
+    },
+    {
+     "day": "2026-06-03",
+     "actual": 205,
+     "forecast": 256.5
+    },
+    {
+     "day": "2026-06-04",
+     "actual": 307,
+     "forecast": 252.4
+    },
+    {
+     "day": "2026-06-05",
+     "actual": 229,
+     "forecast": 199.9
+    },
+    {
+     "day": "2026-06-06",
+     "actual": 31,
+     "forecast": 55.7
+    },
+    {
+     "day": "2026-06-07",
+     "actual": 51,
+     "forecast": 27.4
+    },
+    {
+     "day": "2026-06-08",
+     "actual": 232,
+     "forecast": 205.7
+    },
+    {
+     "day": "2026-06-09",
+     "actual": 318,
+     "forecast": 264.5
+    },
+    {
+     "day": "2026-06-10",
+     "actual": 306,
+     "forecast": 249.7
+    },
+    {
+     "day": "2026-06-11",
+     "actual": 265,
+     "forecast": 264.5
+    },
+    {
+     "day": "2026-06-12",
+     "actual": 78,
+     "forecast": 30.0
+    },
+    {
+     "day": "2026-06-13",
+     "actual": 72,
+     "forecast": 57.8
+    },
+    {
+     "day": "2026-06-14",
+     "actual": 70,
+     "forecast": 35.0
+    },
+    {
+     "day": "2026-06-15",
+     "actual": 320,
+     "forecast": 256.8
+    },
+    {
+     "day": "2026-06-16",
+     "actual": 234,
+     "forecast": 292.5
+    },
+    {
+     "day": "2026-06-17",
+     "actual": 300,
+     "forecast": 265.6
+    }
+   ],
+   "forecast": [
+    {
+     "day": "2026-07-01",
+     "expected": 262.6
+    },
+    {
+     "day": "2026-07-02",
+     "expected": 231.3
+    },
+    {
+     "day": "2026-07-03",
+     "expected": 217.6
+    },
+    {
+     "day": "2026-07-04",
+     "expected": 64.2
+    },
+    {
+     "day": "2026-07-05",
+     "expected": 60.7
+    },
+    {
+     "day": "2026-07-06",
+     "expected": 275.3
+    },
+    {
+     "day": "2026-07-07",
+     "expected": 279.8
+    },
+    {
+     "day": "2026-07-08",
+     "expected": 253.4
+    },
+    {
+     "day": "2026-07-09",
+     "expected": 230.2
+    },
+    {
+     "day": "2026-07-10",
+     "expected": 213.6
+    },
+    {
+     "day": "2026-07-11",
+     "expected": 63.5
+    },
+    {
+     "day": "2026-07-12",
+     "expected": 42.7
+    },
+    {
+     "day": "2026-07-13",
+     "expected": 277.6
+    },
+    {
+     "day": "2026-07-14",
+     "expected": 274.6
+    }
+   ],
+   "next_7_days": {
+    "expected": 1391.5,
+    "low": 1199.0,
+    "high": 1597.2
+   }
+  }
+ }
+}

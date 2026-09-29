@@ -36,7 +36,7 @@ def event_candidates(events, target_state, silence=True):
     return out.drop_duplicates(subset=["channel_id", "ts"]).sort_values(["channel_id", "ts"]).reset_index(drop=True)
 
 
-def build_frame(events, target_state, horizons=(6, 24, 72), silence=True, episodes=None):
+def build_frame(events, target_state, horizons=(6, 24, 72), silence=True, episodes=None, include_lockbox=False):
     events = events.sort_values(["channel_id", "ts"]).reset_index(drop=True)
     if episodes is None:
         episodes = discovery.state_episodes(events, target_state)
@@ -46,7 +46,8 @@ def build_frame(events, target_state, horizons=(6, 24, 72), silence=True, episod
                                          global_rates=rates)
     for h in horizons:
         feat = episodes_mod.assign_targets(feat, episodes, h).rename(columns={"target": f"y{h}"})
-    feat = feat.loc[feat["ts"] < LOCKBOX_START].reset_index(drop=True)
+    if not include_lockbox:
+        feat = feat.loc[feat["ts"] < LOCKBOX_START].reset_index(drop=True)
     return feat, episodes
 
 

@@ -1,42 +1,42 @@
 {
- "ece_raw": 0.0793,
- "ece_calibrated": 0.0025,
+ "ece_raw": 0.0842,
+ "ece_calibrated": 0.002,
  "period": "2025",
  "location_days": 194353,
  "locations": 910,
- "event_rate": 0.1827,
- "roc_auc": 0.8439,
- "pr_auc": 0.4855,
+ "event_rate": 0.1854,
+ "roc_auc": 0.8316,
+ "pr_auc": 0.4886,
  "bands": [
   {
    "index": "0-25",
-   "location_days": 178,
-   "event_rate": 0.7753,
-   "predicted_risk": 0.8366
+   "location_days": 2293,
+   "event_rate": 0.7881,
+   "predicted_risk": 0.7874
   },
   {
    "index": "25-50",
-   "location_days": 7233,
-   "event_rate": 0.6298,
-   "predicted_risk": 0.6245
+   "location_days": 7024,
+   "event_rate": 0.5907,
+   "predicted_risk": 0.5905
   },
   {
    "index": "50-75",
-   "location_days": 54692,
-   "event_rate": 0.4177,
-   "predicted_risk": 0.4179
+   "location_days": 48318,
+   "event_rate": 0.4209,
+   "predicted_risk": 0.4209
   },
   {
    "index": "75-90",
-   "location_days": 31042,
-   "event_rate": 0.1497,
-   "predicted_risk": 0.15
+   "location_days": 35124,
+   "event_rate": 0.1684,
+   "predicted_risk": 0.1692
   },
   {
    "index": "90-100",
-   "location_days": 101208,
-   "event_rate": 0.0328,
-   "predicted_risk": 0.0327
+   "location_days": 101594,
+   "event_rate": 0.0376,
+   "predicted_risk": 0.0375
   }
  ]
 }

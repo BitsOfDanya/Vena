@@ -14,8 +14,8 @@ PHASE_STATE = "Обесточен"
 MAX_VALID_YEAR = 2025
 
 
-def build_phase_frame(events, horizons=(24,), sustained_minutes=30):
-    frame, episodes = state_target.build_frame(events, PHASE_STATE, horizons=horizons)
+def build_phase_frame(events, horizons=(24,), sustained_minutes=30, include_lockbox=False):
+    frame, episodes = state_target.build_frame(events, PHASE_STATE, horizons=horizons, include_lockbox=include_lockbox)
     frame = frame.rename(columns={f"y{h}": f"any_y{h}" for h in horizons})
     sustained = discovery.sustained_onsets(events, PHASE_STATE, sustained_minutes)
     for h in horizons:

@@ -17,24 +17,18 @@
     "calibrated": true,
     "calibration": {
       "method": "isotonic",
-      "fit_period": "2024",
-      "evaluated_on": "test 2025-2026H1",
-      "brier_raw": 0.0992,
-      "brier_calibrated": 0.0633,
-      "ece_raw": 0.1255,
-      "ece_calibrated": 0.0052
+      "fit_period": "2025, same recipe trained through 2024",
+      "evaluated_on": "2026H1",
+      "ece_calibrated": 0.0367
     },
     "risk_level_thresholds": {
-      "critical": 0.8640124666304491,
-      "high": 0.7695749577057486,
-      "medium": 0.6121831300674003
+      "critical": 0.9209879020067835,
+      "high": 0.8307859605011995,
+      "medium": 0.684656737576391
     },
-    "risk_level_basis": {
-      "critical": "precision 0.7",
-      "high": "precision 0.5",
-      "medium": "precision 0.3"
-    },
-    "feature_set": "events+duty"
+    "risk_level_basis": "alert volume of the previous model on 2026H1",
+    "feature_set": "events+duty",
+    "recipe": "lightgbm"
   },
   "feature_columns": [
     "events_10m",
@@ -102,5 +96,8 @@
     "on_off_cycles_24h",
     "on_off_cycles_7d"
   ],
-  "artifact": "flood_24h"
+  "artifact": "flood_24h",
+  "training_period": {
+    "train_years": "2019-2025"
+  }
 }

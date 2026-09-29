@@ -1,10 +1,14 @@
 """Retrain every production model on the current journal and publish a snapshot.
 
 This is the retraining module: when new journal data arrives it re-extracts the
-events, refits each model with its frozen recipe, recalibrates it and writes a
-new prediction snapshot. Each refit is a challenger: it replaces the current
-artifact only when its reported quality is not worse than the current one by
-more than TOLERANCE, otherwise the previous artifact is restored.
+events and rebuilds the models in two steps.
+1. Reference models: each frozen recipe is refitted on its fixed split and
+   calibrated. A refit replaces the reference artifact only when its reported
+   quality is not worse by more than TOLERANCE, otherwise the previous one is restored.
+2. run_refit_study.py refits the reference and the best recipe on the latest
+   full year and promotes a refit that is better on the most recent half-year.
+Then the reports, the fire alarm model, the health index calibration and the
+snapshot are rebuilt.
 """
 
 import json
@@ -25,12 +29,13 @@ SENSOR_TYPES = [config.SENSOR_ALIASES[key] for key in ("pump", "fan", "smoke", "
 ]
 FINAL_MODELS = [
     ("pump", 24, "catboost"),
+    ("fan", 24, "catboost"),
+    ("fan", 72, "catboost"),
     ("smoke", 24, "catboost"),
 ]
 SCRIPTS = [
     ("run_pump_blend_freeze.py", ["pump_72h"]),
     ("run_power_freeze.py", ["phase_24h"]),
-    ("run_fan_refresh.py", ["fan_24h", "fan_72h"]),
     ("run_flood_freeze.py", ["flood_24h"]),
     ("run_alarm_freeze.py", ["alarm_30m"]),
 ]
@@ -51,7 +56,13 @@ def quality(name):
     if not os.path.exists(path):
         return None
     with open(path, encoding="utf-8") as handle:
-        metrics = json.load(handle)["metrics_snapshot"]
+        meta = json.load(handle)
+    # A model promoted by the refit study is measured on another period; the
+    # study compares it with the new reference again.
+    years = (meta.get("training_period") or {}).get("train_years")
+    if years and int(years.split("-")[-1]) > config.TRAIN_YEARS[1] + 1:
+        return None
+    metrics = meta["metrics_snapshot"]
     if "variants" in metrics:
         return metrics["variants"][metrics["selected"]]["test"]["pr_auc"]
     test = metrics.get("test") or {}
@@ -108,10 +119,15 @@ def main() -> None:
         challenge(names, lambda s=script: run(s))
 
     run("run_calibration.py")
+    run("run_refit_study.py", "--promote")
+    run("run_detection_study.py", "--freeze")
     run("run_model_report.py")
     run("run_incident_calibration.py")
+    run("run_health_index.py")
     run("run_access_analysis.py")
     run("run_seasonality.py")
+    run("run_workload_forecast.py")
+    run("build_model_registry.py")
     run("score_snapshot.py")
     log("production refresh done")
 

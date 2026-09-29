@@ -21,14 +21,21 @@ DEVICES = [
     ("flood", ["flood_24h"], flood.FLOOD_STATE),
 ]
 
-# The flooding model reads the pump chamber state of the pump channels.
-DEVICE_SENSOR = {"flood": "pump"}
+# The fire alarm model is frozen only when it beats the detector's own detection
+# rate (run_detection_study.py).
+if os.path.exists(os.path.join(artifacts.artifact_dir("smoke_alarm_24h"), "meta.json")):
+    DEVICES.append(("smoke_alarm", ["smoke_alarm_24h"], "Обнаружен дым"))
+
+# The flooding model reads the pump chamber state of the pump channels, the fire
+# alarm model the smoke detectors.
+DEVICE_SENSOR = {"flood": "pump", "smoke_alarm": "smoke"}
 
 # Incident scenario each device model forecasts (ТЗ, section 6: incident types).
 SCENARIOS = {
     "pump": "flooding",
     "fan": "ventilation",
     "smoke": "fire",
+    "smoke_alarm": "fire",
     "phase": "power_loss",
     "flood": "flooding",
 }

@@ -1,0 +1,339 @@
+[
+ {
+  "name": "pump_24h",
+  "scenario": "flooding",
+  "sensor": "Состояние насоса",
+  "target": "начало эпизода «Неисправен» за 24 ч",
+  "horizon_hours": 24,
+  "recipe": "blend_lr_lightgbm",
+  "features": 51,
+  "train_years": "2019-2025",
+  "version": "2026-09-29",
+  "calibration": {
+   "method": "isotonic",
+   "fit_period": "2025, same recipe trained through 2024"
+  },
+  "held_out": {
+   "period": "2026H1",
+   "base_rate": 0.1174,
+   "avg_precision": 0.3288,
+   "roc_auc": 0.6894,
+   "precision_top5_per_day": 0.4156,
+   "ece": 0.0314
+  },
+  "lead_time": {
+   "episode_recall": 0.0197,
+   "alert_precision_dedup": 0.6515,
+   "median_lead_time_hours": 13.0494,
+   "alerts_per_day": 0.3667
+  },
+  "daily_top_k": {
+   "5": 0.4156,
+   "10": 0.4156,
+   "20": 0.3992
+  },
+  "drift_psi": 0.026
+ },
+ {
+  "name": "pump_72h",
+  "scenario": "flooding",
+  "sensor": "Состояние насоса",
+  "target": "начало эпизода «Неисправен» за 72 ч",
+  "horizon_hours": 72,
+  "recipe": "blend_lr_lightgbm",
+  "features": 51,
+  "train_years": "2021-2023",
+  "version": "2026-09-28",
+  "calibration": {
+   "method": "isotonic",
+   "fit_period": "2024-2025"
+  },
+  "held_out": {
+   "period": "2026H1",
+   "base_rate": 0.2588,
+   "avg_precision": 0.508,
+   "roc_auc": 0.6594,
+   "precision_top5_per_day": 0.7629,
+   "ece": 0.0381
+  },
+  "lead_time": {
+   "episode_recall": 0.0264,
+   "alert_precision_dedup": 0.8364,
+   "median_lead_time_hours": 47.7344,
+   "alerts_per_day": 0.309
+  },
+  "daily_top_k": {
+   "5": 0.7629,
+   "10": 0.7404,
+   "20": 0.7152
+  },
+  "drift_psi": 0.0267
+ },
+ {
+  "name": "pump_baseline_72h",
+  "scenario": "flooding",
+  "sensor": "Состояние насоса",
+  "target": "то же для каналов с историей меньше 30 сут",
+  "horizon_hours": 72,
+  "recipe": "logistic_regression",
+  "features": 51,
+  "train_years": "2019-2023",
+  "version": "2026-09-28",
+  "calibration": {
+   "method": "isotonic",
+   "fit_period": "2024-2025"
+  },
+  "held_out": {
+   "period": "2025-2026H1",
+   "avg_precision": 0.448,
+   "roc_auc": 0.6657,
+   "ece": 0.0364
+  },
+  "lead_time": {
+   "episode_recall": 0.0257,
+   "alert_precision_dedup": 0.8182,
+   "median_lead_time_hours": 42.0989,
+   "alerts_per_day": 0.309
+  },
+  "daily_top_k": {
+   "5": 0.7393,
+   "10": 0.7337,
+   "20": 0.7112
+  },
+  "drift_psi": 0.0242
+ },
+ {
+  "name": "fan_24h",
+  "scenario": "ventilation",
+  "sensor": "Состояние вентилятора",
+  "target": "начало эпизода «Неисправен» за 24 ч",
+  "horizon_hours": 24,
+  "recipe": "catboost",
+  "features": 51,
+  "train_years": "2019-2025",
+  "version": "2026-09-29",
+  "calibration": {
+   "method": "isotonic",
+   "fit_period": "2025, model trained through 2024"
+  },
+  "held_out": {
+   "period": "2026H1",
+   "base_rate": 0.0421,
+   "avg_precision": 0.2396,
+   "roc_auc": 0.8788,
+   "precision_top5_per_day": 0.1756,
+   "ece": 0.0042
+  },
+  "lead_time": {
+   "episode_recall": 0.0199,
+   "alert_precision_dedup": 0.2346,
+   "median_lead_time_hours": 5.0961,
+   "alerts_per_day": 1.4481
+  },
+  "daily_top_k": {
+   "5": 0.1756,
+   "10": 0.1694,
+   "20": 0.16
+  },
+  "drift_psi": 1.0155
+ },
+ {
+  "name": "fan_72h",
+  "scenario": "ventilation",
+  "sensor": "Состояние вентилятора",
+  "target": "начало эпизода «Неисправен» за 72 ч",
+  "horizon_hours": 72,
+  "recipe": "catboost",
+  "features": 51,
+  "train_years": "2019-2025",
+  "version": "2026-09-29",
+  "calibration": {
+   "method": "isotonic",
+   "fit_period": "2025, model trained through 2024"
+  },
+  "held_out": {
+   "period": "2026H1",
+   "base_rate": 0.0919,
+   "avg_precision": 0.5398,
+   "roc_auc": 0.9219,
+   "precision_top5_per_day": 0.4382,
+   "ece": 0.0097
+  },
+  "lead_time": {
+   "episode_recall": 0.037,
+   "alert_precision_dedup": 0.9118,
+   "median_lead_time_hours": 45.0461,
+   "alerts_per_day": 0.5743
+  },
+  "daily_top_k": {
+   "5": 0.4382,
+   "10": 0.4326,
+   "20": 0.4166
+  },
+  "drift_psi": 0.6357
+ },
+ {
+  "name": "smoke_24h",
+  "scenario": "fire",
+  "sensor": "Датчик дыма",
+  "target": "неисправность дымового датчика за 24 ч",
+  "horizon_hours": 24,
+  "recipe": "catboost",
+  "features": 51,
+  "train_years": "2019-2025",
+  "version": "2026-09-29",
+  "calibration": {
+   "method": "isotonic",
+   "fit_period": "2025, same recipe trained through 2024"
+  },
+  "held_out": {
+   "period": "2026H1",
+   "base_rate": 0.0088,
+   "avg_precision": 0.2712,
+   "roc_auc": 0.9304,
+   "precision_top5_per_day": 0.2389,
+   "ece": 0.0071
+  },
+  "lead_time": {
+   "episode_recall": 0.3103,
+   "alert_precision_dedup": 0.5652,
+   "median_lead_time_hours": 0.045,
+   "alerts_per_day": 4.857
+  },
+  "daily_top_k": {
+   "5": 0.2389,
+   "10": 0.2067,
+   "20": 0.1742
+  },
+  "drift_psi": 0.0376
+ },
+ {
+  "name": "smoke_alarm_24h",
+  "scenario": "fire",
+  "sensor": "Датчик дыма",
+  "target": "срабатывание «Обнаружен дым» за 24 ч",
+  "horizon_hours": 24,
+  "recipe": "catboost",
+  "features": 51,
+  "train_years": "2023-2025",
+  "version": "2026-09-29",
+  "calibration": {
+   "method": "isotonic",
+   "fit_period": "2025, same recipe trained through 2024"
+  },
+  "held_out": {
+   "period": "2026H1",
+   "base_rate": 0.0178,
+   "avg_precision": 0.2184,
+   "roc_auc": 0.8577,
+   "precision_top5_per_day": 0.2033,
+   "ece": 0.0081
+  },
+  "lead_time": {
+   "episode_recall": 0.0887,
+   "alert_precision_dedup": 0.5596,
+   "median_lead_time_hours": 1.6928,
+   "alerts_per_day": 7.4577
+  },
+  "daily_top_k": {
+   "5": 0.2033,
+   "10": 0.1878,
+   "20": 0.1664
+  },
+  "drift_psi": 0.6241
+ },
+ {
+  "name": "phase_24h",
+  "scenario": "power_loss",
+  "sensor": "Состояние фазы",
+  "target": "начало эпизода «Обесточен» за 24 ч",
+  "horizon_hours": 24,
+  "recipe": "catboost",
+  "features": 51,
+  "train_years": "2023-2025",
+  "version": "2026-09-29",
+  "calibration": {
+   "method": "isotonic",
+   "fit_period": "2025, same recipe trained through 2024"
+  },
+  "held_out": {
+   "period": "2026H1",
+   "base_rate": 0.2527,
+   "avg_precision": 0.7512,
+   "roc_auc": 0.8743,
+   "precision_top5_per_day": 0.9633,
+   "ece": 0.0222
+  },
+  "lead_time": {
+   "episode_recall": 0.7652,
+   "alert_precision_dedup": 0.8757,
+   "median_lead_time_hours": 4.9536,
+   "alerts_per_day": 147.3862
+  },
+  "daily_top_k": {
+   "5": 0.9633,
+   "10": 0.9567,
+   "20": 0.9403
+  },
+  "drift_psi": 0.2091
+ },
+ {
+  "name": "flood_24h",
+  "scenario": "flooding",
+  "sensor": "Состояние насоса",
+  "target": "состояние камеры «Затоплен» за 24 ч",
+  "horizon_hours": 24,
+  "recipe": "lightgbm",
+  "features": 64,
+  "train_years": "2019-2025",
+  "version": "2026-09-29",
+  "calibration": {
+   "method": "isotonic",
+   "fit_period": "2025, same recipe trained through 2024"
+  },
+  "held_out": {
+   "period": "2026H1",
+   "base_rate": 0.0861,
+   "avg_precision": 0.2536,
+   "roc_auc": 0.7014,
+   "precision_top5_per_day": 0.3289,
+   "ece": 0.0367
+  },
+  "lead_time": {
+   "episode_recall": 0.1108,
+   "alert_precision_dedup": 0.3891,
+   "median_lead_time_hours": 12.3499,
+   "alerts_per_day": 1.5278
+  },
+  "daily_top_k": {
+   "5": 0.3289,
+   "10": 0.3139,
+   "20": 0.3158
+  },
+  "drift_psi": 0.3333
+ },
+ {
+  "name": "alarm_30m",
+  "scenario": "false_alarms",
+  "sensor": "дым, газ, температура",
+  "target": "подтверждение тревоги за 30 мин",
+  "horizon_hours": null,
+  "recipe": "lightgbm",
+  "features": 58,
+  "train_years": "2019-2024",
+  "version": "2026-09-28",
+  "calibration": {
+   "method": "isotonic",
+   "fit_period": "2025"
+  },
+  "held_out": {
+   "period": "2026H1",
+   "avg_precision": 0.9717,
+   "roc_auc": 0.8481,
+   "ece": 0.0352
+  },
+  "lead_time": null,
+  "daily_top_k": null,
+  "drift_psi": null
+ }
+]

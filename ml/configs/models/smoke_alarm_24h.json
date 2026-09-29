@@ -1,34 +1,31 @@
 {
-  "sensor_type": "Состояние фазы",
-  "tag": "phase",
-  "device": "phase",
-  "horizon": "24h",
+  "sensor_type": "Датчик дыма",
+  "tag": "smoke_alarm",
   "model": {
     "model_name": "catboost",
+    "recipe": "catboost",
     "horizon_hours": 24,
+    "target_state": "Обнаружен дым",
     "numeric_mode": false,
     "duty_cycle_mode": false,
     "with_neighbors": false,
-    "target_state": "Обесточен",
     "global_rates": {
-      "event": 1.8888673584602704,
-      "alarm": 0.006919864047465592,
-      "failure": 0.5403365904321925
+      "event": 0.45440486464973706,
+      "alarm": 0.15734195621892177,
+      "failure": 0.01312536899073184
     },
     "calibrated": true,
     "risk_level_thresholds": {
-      "critical": 0.823131721675138,
-      "high": 0.6874100101826498,
-      "medium": 0.4285866449184594
+      "critical": 0.9864171484477303,
+      "high": 0.9671681782137287,
+      "medium": 0.8737340063289816
     },
-    "risk_level_basis": "alert volume of the previous model on 2026H1",
     "calibration": {
       "method": "isotonic",
       "fit_period": "2025, same recipe trained through 2024",
       "evaluated_on": "2026H1",
-      "ece_calibrated": 0.0222
-    },
-    "recipe": "catboost"
+      "ece_calibrated": 0.0081
+    }
   },
   "feature_columns": [
     "events_10m",
@@ -83,9 +80,8 @@
     "weekday_sin",
     "weekday_cos"
   ],
-  "artifact": "phase_24h",
+  "artifact": "smoke_alarm_24h",
   "training_period": {
     "train_years": "2023-2025"
-  },
-  "version": "2026-09-28"
+  }
 }

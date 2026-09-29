@@ -14,10 +14,18 @@
     },
     "calibrated": true,
     "risk_level_thresholds": {
-      "critical": 0.9693134690783064,
-      "high": 0.937100775167875,
-      "medium": 0.8233728393563412
-    }
+      "critical": 0.9753538226024845,
+      "high": 0.936222518987933,
+      "medium": 0.8055751065248291
+    },
+    "calibration": {
+      "method": "isotonic",
+      "fit_period": "2025, same recipe trained through 2024",
+      "evaluated_on": "2026H1",
+      "ece_calibrated": 0.0071
+    },
+    "recipe": "catboost",
+    "risk_level_basis": "alert volume of the previous model on 2026H1"
   },
   "feature_columns": [
     "events_10m",
@@ -72,5 +80,8 @@
     "weekday_sin",
     "weekday_cos"
   ],
-  "artifact": "smoke_24h"
+  "artifact": "smoke_24h",
+  "training_period": {
+    "train_years": "2019-2025"
+  }
 }

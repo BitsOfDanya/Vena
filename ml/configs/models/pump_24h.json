@@ -2,7 +2,7 @@
   "sensor_type": "Состояние насоса",
   "tag": "pump",
   "model": {
-    "model_name": "catboost",
+    "model_name": "blend_lr_lightgbm",
     "horizon_hours": 24,
     "numeric_mode": false,
     "duty_cycle_mode": false,
@@ -14,10 +14,18 @@
     },
     "calibrated": true,
     "risk_level_thresholds": {
-      "critical": 0.9688491630468433,
-      "high": 0.9456142610932083,
-      "medium": 0.8616813532504273
-    }
+      "critical": 0.9699377390929222,
+      "high": 0.9532175022480122,
+      "medium": 0.8886337669761263
+    },
+    "calibration": {
+      "method": "isotonic",
+      "fit_period": "2025, same recipe trained through 2024",
+      "evaluated_on": "2026H1",
+      "ece_calibrated": 0.0314
+    },
+    "recipe": "blend_lr_lightgbm",
+    "risk_level_basis": "alert volume of the previous model on 2026H1"
   },
   "feature_columns": [
     "events_10m",
@@ -72,5 +80,8 @@
     "weekday_sin",
     "weekday_cos"
   ],
-  "artifact": "pump_24h"
+  "artifact": "pump_24h",
+  "training_period": {
+    "train_years": "2019-2025"
+  }
 }

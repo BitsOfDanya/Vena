@@ -17,7 +17,7 @@ import numpy as np
 import pandas as pd
 from sklearn.metrics import average_precision_score, brier_score_loss, roc_auc_score
 
-from pipeline import artifacts, calibration, config, extract
+from pipeline import artifacts, calibration, config, extract, recipes
 from pipeline.locations import location_group
 from pipeline.targets import modules
 
@@ -51,9 +51,11 @@ def daily_locations(scored, starts, groups):
 
 
 def main() -> None:
-    model, meta = artifacts.load_artifact(NAME)
+    meta = artifacts.load_artifact(NAME)[1]
     events = extract.extract_events(modules.PHASE_SENSOR)
     frame, episodes, _ = modules.build_phase_frame(events, horizons=(24,))
+    # A phase model refitted through YEAR is replaced by its recipe trained before YEAR.
+    model, _ = recipes.out_of_sample(NAME, frame.rename(columns={"any_y24": "target"}), YEAR)
     valid = frame.loc[frame["ts"].dt.year == YEAR, ["channel_id", "ts"] + meta["feature_columns"]]
     scored = valid[["channel_id", "ts"]].assign(score=model.predict_proba(valid[meta["feature_columns"]]))
     scored["channel_id"] = scored["channel_id"].astype(str)

@@ -53,7 +53,7 @@
     "weekday_cos"
   ],
   "model_config": {
-    "model_name": "lightgbm",
+    "model_name": "catboost",
     "horizon_hours": 24,
     "numeric_mode": false,
     "duty_cycle_mode": false,
@@ -66,124 +66,55 @@
     },
     "calibrated": true,
     "risk_level_thresholds": {
-      "critical": 0.7386165818855198,
-      "high": 0.4693174179556136,
-      "medium": 0.1976860989644908
+      "critical": 0.823131721675138,
+      "high": 0.6874100101826498,
+      "medium": 0.4285866449184594
     },
-    "risk_level_basis": "validation precision targets 0.9 / 0.7 / 0.5",
+    "risk_level_basis": "alert volume of the previous model on 2026H1",
     "calibration": {
       "method": "isotonic",
-      "fit_period": "2025",
-      "evaluated_on": "2025, two-fold cross-fitting by alternate months",
-      "n": 332326,
-      "base_rate": 0.2904,
-      "brier_raw": 0.104,
-      "brier_calibrated": 0.091,
-      "ece_raw": 0.0852,
-      "ece_calibrated": 0.0062,
-      "reliability": [
-        {
-          "n": 155343,
-          "predicted": 0.0417,
-          "observed": 0.0431
-        },
-        {
-          "n": 47635,
-          "predicted": 0.1544,
-          "observed": 0.1547
-        },
-        {
-          "n": 27575,
-          "predicted": 0.243,
-          "observed": 0.2613
-        },
-        {
-          "n": 13357,
-          "predicted": 0.3355,
-          "observed": 0.3521
-        },
-        {
-          "n": 17955,
-          "predicted": 0.4465,
-          "observed": 0.4237
-        },
-        {
-          "n": 9725,
-          "predicted": 0.5582,
-          "observed": 0.5503
-        },
-        {
-          "n": 1930,
-          "predicted": 0.6426,
-          "observed": 0.7098
-        },
-        {
-          "n": 3547,
-          "predicted": 0.7521,
-          "observed": 0.7559
-        },
-        {
-          "n": 2290,
-          "predicted": 0.8454,
-          "observed": 0.8044
-        },
-        {
-          "n": 52969,
-          "predicted": 0.9832,
-          "observed": 0.9758
-        }
-      ]
-    }
+      "fit_period": "2025, same recipe trained through 2024",
+      "evaluated_on": "2026H1",
+      "ece_calibrated": 0.0222
+    },
+    "recipe": "catboost"
   },
   "training_period": {
-    "train_years": "2019-2024"
+    "train_years": "2023-2025"
   },
-  "version": "2026-09-28",
+  "version": "2026-09-29",
   "metrics_snapshot": {
-    "valid": {
-      "pr_auc": 0.8708447535292528,
-      "roc_auc": 0.9178036964034243,
-      "precision_at_recall_0.1": 0.9948223350253808,
-      "precision_at_recall_0.2": 0.9937084398976982,
-      "precision_at_recall_0.3": 0.9926060315612912,
-      "precision_at_recall_0.4": 0.9905355493998154,
-      "precision_at_recall_0.5": 0.9865704590981562,
-      "precision_at_recall_0.6": 0.9454121027114383,
-      "recall_at_precision_0.5": 0.933994322537867,
-      "recall_at_precision_0.6": 0.878815192391372,
-      "recall_at_precision_0.7": 0.8131306852323823,
-      "recall_at_precision_0.8": 0.7380079152939226,
-      "best_f1": 0.7679686791587325,
-      "best_f2": 0.8053152248071314,
-      "formal_gap_oracle": 0.0,
-      "oracle_precision": 0.7000026756807378,
-      "oracle_recall": 0.8131306852323823,
-      "formal_reached_oracle": true
+    "test": {
+      "period": "2026H1",
+      "role": "best on 2025",
+      "recipe": "catboost",
+      "window": "3y",
+      "train_rows": 960734,
+      "train_years": "through 2025",
+      "before_2025": {
+        "avg_precision": 0.6715,
+        "roc_auc": 0.8139,
+        "recall_at_precision_0.7": 0.4284,
+        "precision_at_recall_0.5": 0.6052,
+        "precision_top5_per_day": 0.9656,
+        "ece": null
+      },
+      "avg_precision": 0.7512,
+      "roc_auc": 0.8743,
+      "recall_at_precision_0.7": 0.5842,
+      "precision_at_recall_0.5": 0.7645,
+      "precision_top5_per_day": 0.9633,
+      "ece": 0.0222
     },
-    "operating_point_precision_0.70": {
-      "candidate_precision": 0.7000026756807378,
-      "candidate_recall": 0.8131306852323823,
-      "n_candidates_selected": 112121,
-      "n_alerts_dedup": 65821,
-      "alert_precision_dedup": 0.669679889397001,
-      "episode_recall": 0.7580892452167247,
-      "alerts_per_day": 180.35056787299342,
-      "median_lead_time_hours": 5.88,
-      "episodes": 62614
-    },
-    "frozen_threshold": 0.4693174179556136,
-    "target": "any_y24",
-    "target_state": "Обесточен",
-    "train_end_year": 2024,
-    "valid_year": 2025,
-    "n_train": 3031919,
-    "n_valid": 332326,
-    "base_rate": 0.2904437209246342,
-    "channels": 957,
-    "risk_level_thresholds_percentile": {
-      "critical": 0.997833433219864,
-      "high": 0.9972277758573184,
-      "medium": 0.9960300788405367
+    "previous": {
+      "recipe": "lightgbm",
+      "train_years": "2019-2024",
+      "avg_precision": 0.6739,
+      "roc_auc": 0.8183,
+      "recall_at_precision_0.7": 0.4477,
+      "precision_at_recall_0.5": 0.6323,
+      "precision_top5_per_day": 0.9522,
+      "ece": 0.0854
     }
   }
 }
