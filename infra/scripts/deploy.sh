@@ -15,7 +15,20 @@ if [[ ! -d $release ]]; then
 fi
 compose() { docker compose --env-file "$VENA_ENV_FILE" -f "$release/infra/compose.yaml" "$@"; }
 compose config --quiet
-compose build --pull
+build_log=$(mktemp)
+trap 'rm -f "$build_log"' EXIT
+if compose build --pull 2>&1 | tee "$build_log"; then
+  :
+else
+  if grep -Eq '429 Too Many Requests|toomanyrequests' "$build_log"; then
+    echo 'Registry rate limit reached; retrying base images through mirror.gcr.io'
+    compose build \
+      --build-arg VENA_NODE_IMAGE=mirror.gcr.io/library/node:22-alpine \
+      --build-arg VENA_PYTHON_IMAGE=mirror.gcr.io/library/python:3.12-slim
+  else
+    exit 1
+  fi
+fi
 compose run --rm --no-deps caddy caddy validate --config /etc/caddy/Caddyfile --adapter caddyfile
 compose run --rm --no-deps backend python -c \
   'from alembic.config import Config; from app.main import app; assert Config("alembic.ini").get_main_option("script_location"); print("Backend image preflight passed")'

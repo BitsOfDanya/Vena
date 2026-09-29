@@ -1,4 +1,5 @@
-FROM python:3.12-slim
+ARG VENA_PYTHON_IMAGE=python:3.12-slim
+FROM ${VENA_PYTHON_IMAGE}
 ENV PYTHONUNBUFFERED=1 PYTHONDONTWRITEBYTECODE=1 OMP_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1
 RUN apt-get update && apt-get install -y --no-install-recommends libgomp1 && rm -rf /var/lib/apt/lists/*
 WORKDIR /srv/ml

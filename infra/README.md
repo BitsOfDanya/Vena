@@ -48,6 +48,9 @@ Actions → Deploy Vena → Run workflow. Секреты репозитория:
 Workflow передаёт архив точного Git commit по SSH. `infra/scripts/deploy.sh`
 блокирует параллельные деплои, собирает образы с тегом SHA, проверяет Caddy,
 сохраняет дамп БД перед миграциями, дожидается healthchecks и проверяет API.
+При ограничении реестра (`429 Too Many Requests`) сборка повторяется с базовыми
+образами Node.js и Python из [кэша Google `mirror.gcr.io`](https://docs.cloud.google.com/artifact-registry/docs/pull-cached-dockerhub-images).
+Если повторная сборка не удаётся, работающие контейнеры остаются на месте.
 Успешный SHA хранится в `/opt/vena/deployed-revision`, текущий релиз — в
 `/opt/vena/current`. Сборка завершается до замены работающих контейнеров;
 при их пересоздании возможен короткий перерыв в обслуживании.
