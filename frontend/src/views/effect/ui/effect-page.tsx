@@ -35,10 +35,10 @@ function Metric({
   detail?: string
 }) {
   return (
-    <section className="border border-border bg-elevated px-4 py-3">
-      <h3 className="text-[12px] font-medium text-muted-foreground">{title}</h3>
+    <section className="border-r border-b border-border bg-elevated px-4 py-3.5">
+      <h3 className="text-[12.5px] font-medium text-muted-foreground">{title}</h3>
       <p className="mt-2 flex items-baseline gap-2">
-        <span className="font-mono text-[28px] leading-none tabular-nums">{value}</span>
+        <span className="font-mono text-[28px] leading-none font-medium tabular-nums">{value}</span>
         {unit ? <span className="text-[13px] text-muted-foreground">{unit}</span> : null}
       </p>
       {detail ? <p className="mt-2 text-[12px] text-muted-foreground">{detail}</p> : null}
@@ -86,7 +86,7 @@ function AlarmLoadBlock() {
   return (
     <section className="border border-border bg-elevated">
       <div className="border-b border-border-soft px-4 py-3">
-        <h2 className="text-[12px] font-medium">Нагрузка тревог · ISA-18.2</h2>
+        <h2 className="text-[15px] font-semibold">Нагрузка тревог · ISA-18.2</h2>
         <p className="mt-1 text-[12px] text-muted-foreground">
           {recent.start && recent.end ? `${recent.start} — ${recent.end}` : "Последний месяц"} · норма до {manageable}/ч
         </p>
@@ -198,27 +198,28 @@ export function EffectPage() {
 
   return (
     <div className="flex size-full min-h-0 flex-col overflow-auto print:overflow-visible">
-      <div className="flex shrink-0 flex-wrap items-center gap-x-6 gap-y-3 px-6 pt-4 pb-3 print:border-b print:pb-4">
-        <h1 className="text-[24px] font-semibold tracking-[-0.01em]">Эффект</h1>
-        <p className="text-[13px] text-muted-foreground">Предсказано · опережение · прогноз против факта · решения</p>
+      <div className="flex shrink-0 flex-wrap items-end gap-x-6 gap-y-3 px-6 pt-5 pb-3 print:border-b print:pb-4">
+        <div>
+          <h1 className="text-[24px] font-semibold tracking-[-0.01em]">Эффект</h1>
+          <p className="text-[13px] text-muted-foreground">Что модели предсказали, насколько заранее и что решили диспетчеры</p>
+        </div>
         <div className="ml-auto flex flex-wrap items-center gap-2 print:hidden">
-          <Button variant="outline" size="sm" disabled={downloading !== null} onClick={() => runDownload("xlsx")}>
-            {downloading === "xlsx" ? "…" : "XLSX"}
-          </Button>
-          <Button variant="outline" size="sm" disabled={downloading !== null} onClick={() => runDownload("csv")}>
-            {downloading === "csv" ? "…" : "CSV"}
-          </Button>
-          <Button variant="outline" size="sm" disabled={downloading !== null} onClick={() => runDownload("xml")}>
-            {downloading === "xml" ? "…" : "XML"}
-          </Button>
+          <span className="text-[12.5px] text-muted-foreground">Выгрузка</span>
+          <div className="inline-flex h-8 divide-x divide-border border border-border bg-elevated">
+            {(["xlsx", "csv", "xml"] as const).map((kind) => (
+              <button
+                key={kind}
+                type="button"
+                disabled={downloading !== null}
+                onClick={() => runDownload(kind)}
+                className="cursor-pointer px-3 font-mono text-[12px] uppercase outline-none hover:bg-accent focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-ring/60 disabled:opacity-50"
+              >
+                {downloading === kind ? "…" : kind}
+              </button>
+            ))}
+          </div>
           <Button variant="outline" size="sm" onClick={() => window.print()}>
             Печать / PDF
-          </Button>
-          <Button asChild variant="outline" size="sm">
-            <Link href="/models">Модели</Link>
-          </Button>
-          <Button asChild variant="outline" size="sm">
-            <Link href="/dashboard">К дашборду</Link>
           </Button>
         </div>
       </div>
@@ -240,7 +241,7 @@ export function EffectPage() {
           />
         ) : effect.data ? (
           <>
-            <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
+            <div className="grid border-t border-l border-border sm:grid-cols-2 xl:grid-cols-4">
               <Metric title="Каналы в риске" value={String(effect.data.channelsAtRisk)} unit="сейчас" />
               <Metric title="Инциденты" value={String(effect.data.incidents)} unit="групп" />
               <Metric
@@ -255,8 +256,8 @@ export function EffectPage() {
               />
             </div>
 
-            <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
-              <Metric title="Тревоги 30д" value={String(effect.data.alarms30d)} />
+            <div className="grid border-t border-l border-border sm:grid-cols-2 xl:grid-cols-4">
+              <Metric title="Тревоги за 30 дней" value={String(effect.data.alarms30d)} />
               <Metric
                 title="К проверке"
                 value={String(effect.data.alarmsToVerify)}
@@ -266,13 +267,13 @@ export function EffectPage() {
                     : `Фильтр срезает ${pct(effect.data.alarmFilterShare)} неподтверждённых`
                 }
               />
-              <Metric title="Доступ 30д" value={String(effect.data.accessEvents30d)} unit="событий" />
+              <Metric title="Доступ за 30 дней" value={String(effect.data.accessEvents30d)} unit="событий" />
               <Metric title="Прогнозов в журнале" value={String(effect.data.forecastsInJournal)} />
             </div>
 
             <section className="border border-border bg-elevated">
               <div className="border-b border-border-soft px-4 py-3">
-                <h2 className="text-[12px] font-medium">Опережение по моделям</h2>
+                <h2 className="text-[15px] font-semibold">Опережение по моделям</h2>
                 <p className="mt-1 text-[12px] text-muted-foreground">
                   Насколько заранее модель предупреждает и какая доля тревог подтверждается ·{" "}
                   <Link href="/models" className="text-vena underline-offset-4 hover:underline">
@@ -326,7 +327,7 @@ export function EffectPage() {
 
         <section className="border border-border bg-elevated">
           <div className="border-b border-border-soft px-4 py-3">
-            <h2 className="text-[12px] font-medium">Топ локаций → действие</h2>
+            <h2 className="text-[15px] font-semibold">Топ локаций → действие</h2>
             <p className="mt-1 text-[12px] text-muted-foreground">
               Сортировка по индексу здоровья (хуже выше). Открытых работ: {openActions.length}.
             </p>

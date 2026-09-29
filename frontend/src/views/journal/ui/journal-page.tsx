@@ -88,9 +88,11 @@ export function JournalPage() {
   return (
     <div className="flex size-full min-h-0 flex-col">
       <div className="flex shrink-0 flex-wrap items-center justify-between gap-4 border-b border-border px-6 py-4">
-        <div className="flex items-baseline gap-4">
+        <div>
           <h1 className="text-[24px] font-semibold tracking-[-0.01em]">Журнал прогнозов</h1>
-          <span className="font-mono text-[12px] text-faint">прогноз · решение · результат</span>
+          <p className="text-[13px] text-muted-foreground">
+            Каждый прогноз, дошедший до диспетчера: решение, причина и результат. Размеченные записи идут в дообучение.
+          </p>
         </div>
         <div className="flex items-center gap-3">
           {me?.role === "admin" && <Button variant="outline" size="sm" asChild><Link href="/settings/integrations">Загрузить CSV / XLSX</Link></Button>}
@@ -113,11 +115,6 @@ export function JournalPage() {
       </div>
 
       <div className="min-h-0 flex-1 overflow-y-auto">
-        <p className="border-b border-border-soft px-6 py-2.5 text-[12px] text-muted-foreground">
-          Каждый прогноз, дошедший до диспетчера: решение с причиной из справочника и результат работ. Размеченные записи
-          выгружаются для дообучения моделей.
-        </p>
-
         {journal.isError || summary.isError ? (
           <div className="p-6">
             <StateMessage
@@ -132,16 +129,16 @@ export function JournalPage() {
           </div>
         ) : (
           <>
-            <section aria-label="Сводка журнала" className="mx-6 mt-5 grid grid-cols-2 border border-border md:grid-cols-4">
+            <section aria-label="Сводка журнала" className="mx-6 mt-5 grid grid-cols-2 border border-border bg-elevated md:grid-cols-4">
               <Metric label="Прогнозы" value={summary.data?.total ?? "—"} hint="Прогнозов в журнале" />
               <Metric label="Ожидают решения" value={summary.data?.pending ?? "—"} hint="Нужна реакция диспетчера" />
               <Metric label="Бригада выехала" value={summary.data?.inWork ?? "—"} hint="Работы в процессе" />
               <Metric label="С обратной связью" value={summary.data?.decided ?? "—"} hint="Размечено для дообучения" />
             </section>
 
-            <section aria-label="Обратная связь по сценариям" className="mx-6 mt-5 border border-border">
+            <section aria-label="Обратная связь по сценариям" className="mx-6 mt-5 border border-border bg-elevated">
               <div className="border-b border-border-soft px-5 py-3">
-                <h2 className="text-[12px]">Обратная связь по сценариям</h2>
+                <h2 className="text-[15px] font-semibold">Обратная связь по сценариям</h2>
                 <p className="mt-1 text-[12px] text-muted-foreground">
                   Доля подтверждённых среди решённых — обратная связь диспетчеров, а не метрика модели на отложенной
                   выборке.

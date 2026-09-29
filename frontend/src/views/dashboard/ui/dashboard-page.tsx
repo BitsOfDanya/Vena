@@ -79,7 +79,7 @@ function SectionTitle({ children, description, action }: { children: React.React
   return (
     <div className="mb-5 flex items-start justify-between gap-4">
       <div>
-        <h2 className="text-[12px] font-medium">{children}</h2>
+        <h2 className="text-[15px] font-semibold">{children}</h2>
         {description ? <p className="mt-1.5 text-[12px] text-muted-foreground">{description}</p> : null}
       </div>
       {action}

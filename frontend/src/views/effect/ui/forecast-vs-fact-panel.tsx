@@ -122,7 +122,7 @@ export function ForecastVsFactPanel({ className }: { className?: string }) {
   return (
     <section className={cn("border border-border bg-elevated", className)}>
       <div className="border-b border-border-soft px-4 py-3">
-        <h2 className="text-[12px] font-medium">Прогноз против факта</h2>
+        <h2 className="text-[15px] font-semibold">Прогноз против факта</h2>
         <p className="mt-1 text-[12px] text-muted-foreground">
           Критерий жюри: прогноз на следующий день vs сколько случилось (янв–июнь 2026) и прогноз на 14 дней.
         </p>

@@ -68,19 +68,19 @@ function AlarmMonthsBars({
   const recent = months.slice(-12)
   const max = Math.max(manageable, ...recent.map((item) => item.perHourMean), 1)
   return (
-    <div className="mt-3">
-      <p className="text-[12px] text-faint">Тревог /ч по месяцам</p>
-      <div className="mt-2 flex h-14 items-end gap-1">
+    <div>
+      <p className="text-[12.5px] font-medium text-muted-foreground">Тревог в час по месяцам</p>
+      <div className="mt-3 flex h-24 items-end gap-1.5">
         {recent.map((item) => {
-          const height = Math.max(4, Math.round((item.perHourMean / max) * 48))
+          const height = Math.max(4, Math.round((item.perHourMean / max) * 72))
           const over = item.perHourMean > manageable
           return (
-            <div key={item.start} className="flex min-w-0 flex-1 flex-col items-center gap-1" title={`${monthLabel(item.start)}: ${item.perHourMean.toFixed(1)}/ч`}>
+            <div key={item.start} className="flex min-w-0 flex-1 flex-col items-center gap-1" title={`${monthLabel(item.start)}: ${item.perHourMean.toFixed(1)} в час`}>
               <div
-                className={cn("w-full max-w-5", over ? "bg-status-attention" : "bg-vena/70")}
+                className={cn("w-full max-w-8", over ? "bg-status-attention" : "bg-vena/70")}
                 style={{ height }}
               />
-              <span className="truncate font-mono text-[9px] text-faint">{monthLabel(item.start)}</span>
+              <span className="truncate font-mono text-[10px] text-faint">{monthLabel(item.start)}</span>
             </div>
           )
         })}
@@ -93,22 +93,35 @@ function AlarmLoadStrip() {
   const kpis = useAlarmKpis()
   if (workflowMode !== "api" || kpis.isPending || kpis.isError || !kpis.data?.recent) return null
   const recent = kpis.data.recent
+  const over = recent.perHourMean > kpis.data.manageablePerHour
   return (
-    <section aria-label="Нагрузка тревог ISA-18.2" className="mx-6 mt-4 border border-border bg-elevated px-4 py-3">
-      <p className="text-[12px] text-faint">Нагрузка тревог · ISA-18.2</p>
-      <p className="mt-2 flex flex-wrap gap-x-6 gap-y-1 text-[13px]">
-        <span>
-          <span className="font-mono text-[18px] tabular-nums">{recent.perHourMean.toFixed(1)}</span>
-          <span className="ml-1 text-muted-foreground">/ч · норма {kpis.data.manageablePerHour}</span>
-        </span>
-        <span className="text-muted-foreground">
-          лавины {recent.activationsInFloods == null ? "—" : `${Math.round(recent.activationsInFloods * 100)} %`}
-        </span>
-        <span className="text-muted-foreground">
-          дребезг: {recent.chatteringTop.slice(0, 3).map((item) => item.name ?? item.channelId).join(", ") || "—"}
-        </span>
-      </p>
-      <AlarmMonthsBars months={kpis.data.months} manageable={kpis.data.manageablePerHour} />
+    <section aria-label="Нагрузка тревог" className="grid border border-border bg-elevated lg:grid-cols-[minmax(0,1fr)_minmax(0,2fr)]">
+      <div className="border-b border-border px-5 py-4 lg:border-r lg:border-b-0">
+        <p className="text-[12.5px] font-medium text-muted-foreground">Нагрузка на диспетчера, 30 дней</p>
+        <p className="mt-2 flex items-baseline gap-2">
+          <span className={cn("font-mono text-[30px] leading-none font-medium tabular-nums", over ? "text-status-attention" : "text-foreground")}>
+            {recent.perHourMean.toFixed(1).replace(".", ",")}
+          </span>
+          <span className="text-[13px] text-muted-foreground">тревог в час при норме до {kpis.data.manageablePerHour} (ISA-18.2)</span>
+        </p>
+        <dl className="mt-4 space-y-1.5 text-[13px]">
+          <div className="flex gap-2">
+            <dt className="text-muted-foreground">Во время лавин</dt>
+            <dd className="ml-auto font-mono tabular-nums">
+              {recent.activationsInFloods == null ? "—" : `${Math.round(recent.activationsInFloods * 100)}%`}
+            </dd>
+          </div>
+          <div className="flex gap-2">
+            <dt className="shrink-0 text-muted-foreground">Дребезг</dt>
+            <dd className="ml-auto truncate text-right">
+              {recent.chatteringTop.slice(0, 3).map((item) => item.name ?? item.channelId).join(", ") || "—"}
+            </dd>
+          </div>
+        </dl>
+      </div>
+      <div className="px-5 py-4">
+        <AlarmMonthsBars months={kpis.data.months} manageable={kpis.data.manageablePerHour} />
+      </div>
     </section>
   )
 }
@@ -119,9 +132,9 @@ function AlarmsTable({ alarms }: { alarms: AlarmAssessment[] }) {
   const flagged = alarms.filter((alarm) => alarm.needsVerification).length
   const maintenance = alarms.filter((alarm) => alarm.maintenance).length
   return (
-    <>
+    <div className="flex flex-col gap-4 px-4 py-5 sm:px-6">
       <AlarmLoadStrip />
-      <section aria-label="Сводка по тревогам" className="mx-6 mt-5 grid grid-cols-1 border border-border sm:grid-cols-4">
+      <section aria-label="Сводка по тревогам" className="grid grid-cols-2 border border-border bg-elevated sm:grid-cols-4">
         <Metric label="Тревоги, 30 дней" value={alarms.length} hint="Тревоги дыма, газа и температуры" />
         <Metric label="Серии ППР" value={maintenance} hint="Проверки извещателей в рабочее время" />
         <Metric label="Сначала проверить" value={flagged} hint="Низкая вероятность подтверждения" />
@@ -131,22 +144,33 @@ function AlarmsTable({ alarms }: { alarms: AlarmAssessment[] }) {
           hint="Доля тревог на проверку перед выездом"
         />
       </section>
-      <p className="mx-6 mt-4 text-[12px] leading-relaxed text-muted-foreground">
-        Вероятность — шанс, что тревога подтвердится в течение 30 минут: повтором, срабатыванием соседнего датчика или
-        продолжением тревожного состояния. Метка «проверить перед выездом» стоит у тревог, которые подтверждаются реже
-        обычного: в первом полугодии 2026 года среди них не подтвердились 48 % против 21 % в среднем. Серия ППР — 5 и
-        более дымовых датчиков объекта за 10 минут или 3 и более газоанализатора за 30 минут в рабочее время: это
-        плановая проверка, выезд не нужен. Метка — подсказка для проверки по камерам и телеметрии, а не вывод о ложности.
-      </p>
-      <div className="flex items-center gap-2 px-6 pt-4 pb-3 text-[12px]">
-        <label className="flex items-center gap-2">
-          <input type="checkbox" checked={onlyFlagged} onChange={(event) => setOnlyFlagged(event.target.checked)} />
-          Только «проверить перед выездом»
-        </label>
+      <details className="group border-l-2 border-vena bg-elevated px-4 py-2.5 text-[13px]">
+        <summary className="cursor-pointer list-none font-medium text-foreground marker:hidden">
+          Как читать таблицу <span className="text-muted-foreground group-open:hidden">— развернуть</span>
+        </summary>
+        <p className="mt-2 leading-relaxed text-muted-foreground">
+          Подтверждение — шанс, что тревога подтвердится в течение 30 минут: повтором, срабатыванием соседнего датчика или
+          продолжением тревожного состояния. Метка «проверить перед выездом» стоит у тревог, которые подтверждаются реже
+          обычного: в первом полугодии 2026 года среди них не подтвердились 48 % против 21 % в среднем. Серия ППР — 5 и
+          более дымовых датчиков объекта за 10 минут или 3 и более газоанализатора за 30 минут в рабочее время: это
+          плановая проверка, выезд не нужен. Метка — подсказка для проверки по камерам и телеметрии, а не вывод о ложности.
+        </p>
+      </details>
+      <div className="flex flex-wrap items-center justify-between gap-3">
+        <h2 className="text-[15px] font-semibold">Тревоги</h2>
+        <Segmented
+          label="Фильтр тревог"
+          value={onlyFlagged ? "flagged" : "all"}
+          onChange={(value) => setOnlyFlagged(value === "flagged")}
+          options={[
+            { value: "flagged", label: `Проверить перед выездом ${flagged}` },
+            { value: "all", label: `Все ${alarms.length}` },
+          ]}
+        />
       </div>
-      <div className="mx-6 mb-8 overflow-x-auto border border-border">
+      <div className="overflow-x-auto border border-border bg-elevated">
         <table className="w-full min-w-[760px] text-left text-[13px]">
-          <thead className="border-b border-border text-[12px] text-faint">
+          <thead className="border-b border-border bg-surface/60 text-[12px] text-muted-foreground">
             <tr>
               <th className="px-4 py-2 font-medium">Время</th>
               <th className="px-4 py-2 font-medium">Датчик / локация</th>
@@ -174,21 +198,26 @@ function AlarmsTable({ alarms }: { alarms: AlarmAssessment[] }) {
                   </span>
                 </td>
                 <td className="px-4 py-2.5 text-right font-mono tabular-nums">{formatProbability(alarm.corroborationProbability)}</td>
-                <td
-                  className={cn(
-                    "px-4 py-2.5",
-                    alarm.maintenance
-                      ? "text-faint"
+                <td className="px-4 py-2.5">
+                  <span
+                    className={cn(
+                      "inline-flex items-center gap-1.5 text-[12.5px]",
+                      alarm.maintenance ? "text-faint" : alarm.needsVerification ? "font-medium text-status-attention" : "text-muted-foreground"
+                    )}
+                  >
+                    <span
+                      aria-hidden
+                      className={cn(
+                        "size-2 shrink-0",
+                        alarm.maintenance ? "bg-faint" : alarm.needsVerification ? "bg-status-attention" : "bg-status-normal"
+                      )}
+                    />
+                    {alarm.maintenance
+                      ? "Плановая проверка ППР, выезд не нужен"
                       : alarm.needsVerification
-                        ? "text-status-attention"
-                        : "text-muted-foreground"
-                  )}
-                >
-                  {alarm.maintenance
-                    ? "Серия ППР — плановая проверка, выезд не нужен"
-                    : alarm.needsVerification
-                      ? "Проверить по камерам перед выездом"
-                      : "Типичная тревога"}
+                        ? "Проверить по камерам перед выездом"
+                        : "Типичная тревога"}
+                  </span>
                 </td>
               </tr>
             ))}
@@ -196,7 +225,7 @@ function AlarmsTable({ alarms }: { alarms: AlarmAssessment[] }) {
         </table>
         {rows.length === 0 ? <p className="px-4 py-4 text-[13px] text-muted-foreground">Нет тревог.</p> : null}
       </div>
-    </>
+    </div>
   )
 }
 
@@ -356,16 +385,14 @@ export function AlarmsPage() {
 
   return (
     <div className="flex size-full min-h-0 flex-col">
-      <div className="flex shrink-0 flex-wrap items-center justify-between gap-4 border-b border-border px-6 py-4">
-        <div className="flex items-baseline gap-4">
+      <div className="flex shrink-0 flex-wrap items-end justify-between gap-4 border-b border-border px-4 py-4 sm:px-6">
+        <div>
           <h1 className="text-[24px] font-semibold tracking-[-0.01em]">Алармы</h1>
-          <span className="font-mono text-[12px] text-faint">поддержка проверки</span>
-          <a href="/pulse" className="text-[13px] text-vena underline-offset-4 hover:underline">
-            К пульсу →
-          </a>
-          <a href="/effect" className="text-[13px] text-vena underline-offset-4 hover:underline">
-            Эффект →
-          </a>
+          <p className="text-[13px] text-muted-foreground">
+            {view === "alarms"
+              ? "Тревоги дыма, газа и температуры: какие подтвердятся, а какие проверить до выезда"
+              : "Срабатывания точек входа на охраняемых объектах"}
+          </p>
         </div>
         <Segmented label="Вид алармов" options={VIEWS} value={view} onChange={setView} />
       </div>
