@@ -69,7 +69,6 @@ def _what_from_feeder(feeder: dict[str, str], scenario: str) -> str:
 
 
 def _feeder(catalogue: dict[str, Any], lead: Prediction, scenario: str) -> dict[str, str] | None:
-    """Match by channel name, location tag, or asset id; prefer feeders for this scenario."""
     haystack = " ".join(
         part
         for part in (lead.name, lead.location_tag, lead.location, lead.asset_id)

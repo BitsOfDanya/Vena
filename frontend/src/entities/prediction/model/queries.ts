@@ -36,7 +36,6 @@ export function useRiskRising(horizon: 24 | 72, limit = 20) {
   })
 }
 
-/** Same snapshot as Dashboard — counts critical/attention for the workspace horizon. */
 export function useCriticalPredictions(horizon: 24 | 72) {
   const predictions = useDashboardPredictions(horizon)
   const critical = (predictions.data ?? []).filter((item) => item.riskLevel === "critical")

@@ -397,7 +397,6 @@ export async function getInspectionPlan(modelId: string, count = 5): Promise<Ins
   return mapInspectionPlan(raw)
 }
 
-/** Five pumps + five fans for today's dispatch; fans skip channels with work in the last day. */
 export async function getTodaysInspectionPlan(): Promise<TodaysInspectionPlan> {
   const [pumps, fans] = await Promise.all([
     getInspectionPlan("pump_72h", 5),

@@ -1,4 +1,3 @@
-/** Human labels for model ids on dispatcher-facing screens. */
 
 const PREFIX: Record<string, string> = {
   phase: "Питание",

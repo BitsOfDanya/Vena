@@ -7,7 +7,13 @@ from app.core.config import Settings
 from app.db.models import Action, Notification
 from app.domain.actions import OPEN_STATUSES
 from app.domain.health import load_calibration, location_health
-from app.domain.incidents import SCENARIO_LABELS, group_incidents, location_label, reason_text, score_text
+from app.domain.incidents import (
+    SCENARIO_LABELS,
+    group_incidents,
+    location_label,
+    reason_text,
+    score_text,
+)
 from app.domain.predictions import get_prediction_source
 from app.domain.recommendations import driver_hints, recommend
 from app.schemas.predictions import Prediction

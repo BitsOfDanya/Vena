@@ -52,7 +52,6 @@ def inspection_plan(
     model_id: Annotated[str, Query(pattern="^[a-z0-9_]+$")] = "pump_72h",
     count: Annotated[int, Query(ge=1, le=50)] = 5,
 ) -> InspectionPlan:
-    """Today's inspection list for one model; fans skip channels worked on in the last day."""
     if model_id not in analytics_service.PLAN_MODELS:
         raise HTTPException(status_code=404, detail="no inspection plan for this model")
     now = datetime.now(tz=UTC)
@@ -61,7 +60,6 @@ def inspection_plan(
 
 @router.get("/analytics/weather")
 def weather(settings: SettingsDep, _: ReaderDep) -> dict[str, Any]:
-    """Moscow weather forecast (Open-Meteo) and how weather relates to chamber flooding."""
     source = get_prediction_source(settings)
     seasonality = analytics_service.read_report(settings, "seasonality") or {}
     return {
@@ -73,7 +71,6 @@ def weather(settings: SettingsDep, _: ReaderDep) -> dict[str, Any]:
 
 @router.get("/analytics/alarm-kpis")
 def alarm_kpis(settings: SettingsDep, _: ReaderDep) -> dict[str, Any]:
-    """Alarm load by ISA-18.2: rate per hour, floods, bad actors, chattering channels."""
     report = analytics_service.read_report(settings, "alarm_kpis")
     if report is None:
         raise HTTPException(status_code=404, detail="alarm KPIs have not been computed")
@@ -82,7 +79,6 @@ def alarm_kpis(settings: SettingsDep, _: ReaderDep) -> dict[str, Any]:
 
 @router.get("/analytics/health-history")
 def health_history(settings: SettingsDep, _: ReaderDep) -> dict[str, Any]:
-    """Daily health index of every object over the recent half-year."""
     report = analytics_service.read_report(settings, "health_history")
     if report is None:
         raise HTTPException(status_code=404, detail="health history has not been computed")
@@ -91,7 +87,6 @@ def health_history(settings: SettingsDep, _: ReaderDep) -> dict[str, Any]:
 
 @router.get("/analytics/health-history/{group}")
 def section_health_history(group: str, settings: SettingsDep, _: ReaderDep) -> list[list[Any]]:
-    """Daily health index of one section (location group of the SMVU tag)."""
     report = analytics_service.read_report(settings, "health_history") or {}
     series = report.get("sections", {}).get(group)
     if series is None:

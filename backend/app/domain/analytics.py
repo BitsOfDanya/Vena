@@ -233,8 +233,6 @@ PLAN_SKIP_REPEATS = {"fan_72h", "fan_24h"}
 def inspection_plan(
     session: Session, source: PredictionSource, model_id: str, count: int, now: datetime
 ) -> InspectionPlan:
-    """Channels to inspect today: highest risk first; for fans, channels with a work
-    created in the last 24 hours give way to the next ones."""
     candidates = sorted(
         (item for item in source.all() if item.model_id == model_id),
         key=lambda item: item.score,

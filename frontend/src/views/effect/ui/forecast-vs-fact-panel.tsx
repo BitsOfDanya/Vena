@@ -99,10 +99,6 @@ export function ForecastVsFactPanel({ className }: { className?: string }) {
   const withSeries = (eventTypes.data ?? []).filter((item) => item.backtest.length > 0 || item.forecast.length > 0)
   const [selected, setSelected] = React.useState<string>("")
 
-  React.useEffect(() => {
-    if (!selected && withSeries[0]) setSelected(withSeries[0].eventType)
-  }, [selected, withSeries])
-
   const current = withSeries.find((item) => item.eventType === selected) ?? withSeries[0]
 
   if (eventTypes.isPending) return <LoadingBar className={cn("min-h-40", className)} />

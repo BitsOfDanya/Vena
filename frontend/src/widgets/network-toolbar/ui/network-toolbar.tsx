@@ -47,7 +47,6 @@ export function NetworkToolbar({
   horizon: ForecastHorizon
   onHorizon: (value: ForecastHorizon) => void
   showTree?: boolean
-  /** Hide demo geometry modes (canvas / map) when real spatial is unavailable */
   realGeometryOnly?: boolean
 }) {
   return (

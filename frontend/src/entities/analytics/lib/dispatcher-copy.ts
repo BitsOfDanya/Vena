@@ -1,4 +1,3 @@
-/** Dispatcher-facing copy for model cards (no raw AP/ROC/ECE as primary text). */
 
 const SCENARIO_TITLE: Record<string, string> = {
   flooding: "Отказ насоса / подтопление",
