@@ -53,3 +53,41 @@ class EffectReport(BaseModel):
     rejected: int
     dispatches_avoided: int
     prospective: dict[str, Any] | None
+
+
+class ForecastDay(BaseModel):
+    day: str
+    expected: float
+
+
+class ForecastTotal(BaseModel):
+    expected: float
+    # 80 % interval of the 7-day total.
+    low: float
+    high: float
+
+
+class BacktestDay(BaseModel):
+    day: str
+    actual: int
+    forecast: float
+
+
+class EventTypeStats(BaseModel):
+    """Statistics and seasonal forecast of one incident type (ТЗ, section 8)."""
+
+    event_type: str
+    title: str
+    scenario: str
+    models: list[str]
+    channels_at_risk: dict[str, int]
+    episodes_30d: int | None
+    episodes_365d: int | None
+    monthly_per_100_channels: dict[str, float]
+    forecast_method: str | None
+    forecast: list[ForecastDay]
+    next_7_days: ForecastTotal | None
+    # Error of 7-day totals on 2026H1: the selected method and the mean of the last 28 days.
+    week_error: float | None
+    week_error_baseline: float | None
+    backtest: list[BacktestDay]

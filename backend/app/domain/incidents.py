@@ -16,6 +16,7 @@ SCENARIO_BY_DEVICE = {
     "pump": "flooding",
     "fan": "ventilation",
     "smoke": "fire",
+    "smoke_alarm": "fire",
     "phase": "power_loss",
     "power": "power_loss",
     "flood": "flooding",

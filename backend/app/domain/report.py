@@ -1,7 +1,10 @@
 """Management report as an XLSX workbook (ТЗ, section 8)."""
 
-from io import BytesIO
+import csv
+from datetime import datetime
+from io import BytesIO, StringIO
 from typing import Any
+from xml.etree.ElementTree import Element, SubElement, tostring
 
 from openpyxl import Workbook
 from openpyxl.styles import Font
@@ -13,6 +16,7 @@ from app.domain import journal as journal_service
 from app.domain import system as system_service
 from app.domain.incidents import SCENARIO_LABELS, reason_text
 from app.domain.predictions import PredictionSource
+from app.schemas.predictions import Prediction
 
 DECISIONS = {
     "awaiting_decision": "Ожидает решения",
@@ -178,3 +182,49 @@ def management_report(session: Session, settings: Settings, source: PredictionSo
     buffer = BytesIO()
     workbook.save(buffer)
     return buffer.getvalue()
+
+
+EXPORT_FIELDS = (
+    "id",
+    "asset_id",
+    "name",
+    "sensor_type",
+    "location_tag",
+    "location_group",
+    "scenario",
+    "model_id",
+    "horizon_hours",
+    "score",
+    "score_type",
+    "risk_level",
+    "prediction_time",
+)
+
+
+def _export_value(prediction: Prediction, field: str) -> str:
+    value = getattr(prediction, field)
+    if value is None:
+        return ""
+    if isinstance(value, datetime):
+        return value.isoformat()
+    return str(value)
+
+
+def predictions_csv(predictions: list[Prediction]) -> bytes:
+    """Forecasts as CSV for file exchange (ТЗ, section 7)."""
+    buffer = StringIO()
+    writer = csv.writer(buffer)
+    writer.writerow(EXPORT_FIELDS)
+    for prediction in predictions:
+        writer.writerow([_export_value(prediction, field) for field in EXPORT_FIELDS])
+    return buffer.getvalue().encode("utf-8-sig")
+
+
+def predictions_xml(predictions: list[Prediction], snapshot: str | None) -> bytes:
+    """Forecasts as XML for systems that exchange XML (ТЗ, section 7)."""
+    root = Element("predictions", {"snapshot": snapshot or "", "count": str(len(predictions))})
+    for prediction in predictions:
+        node = SubElement(root, "prediction")
+        for field in EXPORT_FIELDS:
+            SubElement(node, field).text = _export_value(prediction, field)
+    return b'<?xml version="1.0" encoding="UTF-8"?>\n' + tostring(root, encoding="utf-8")

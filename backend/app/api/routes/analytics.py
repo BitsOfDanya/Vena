@@ -10,7 +10,7 @@ from app.db.session import get_session
 from app.domain import analytics as analytics_service
 from app.domain import report as report_service
 from app.domain.predictions import get_prediction_source
-from app.schemas.analytics import EffectReport, ObjectNode
+from app.schemas.analytics import EffectReport, EventTypeStats, ObjectNode
 
 router = APIRouter(tags=["analytics"])
 
@@ -39,6 +39,12 @@ def effect(session: SessionDep, settings: SettingsDep, _: ReaderDep) -> EffectRe
     return analytics_service.effect(session, settings, _source(settings))
 
 
+@router.get("/analytics/event-types", response_model=list[EventTypeStats])
+def event_types(settings: SettingsDep, _: ReaderDep) -> list[EventTypeStats]:
+    """Statistics by incident type with the seasonal forecast of daily counts."""
+    return analytics_service.event_types(settings, get_prediction_source(settings))
+
+
 @router.get("/reports/management.xlsx")
 def management_report(session: SessionDep, settings: SettingsDep, _: ReaderDep) -> Response:
     content = report_service.management_report(session, settings, _source(settings))
@@ -47,3 +53,20 @@ def management_report(session: SessionDep, settings: SettingsDep, _: ReaderDep) 
         media_type=XLSX,
         headers={"Content-Disposition": 'attachment; filename="vena-management-report.xlsx"'},
     )
+
+
+@router.get("/reports/predictions.csv")
+def predictions_csv(settings: SettingsDep, _: ReaderDep) -> Response:
+    content = report_service.predictions_csv(_source(settings).all())
+    return Response(
+        content=content,
+        media_type="text/csv; charset=utf-8",
+        headers={"Content-Disposition": 'attachment; filename="vena-predictions.csv"'},
+    )
+
+
+@router.get("/reports/predictions.xml")
+def predictions_xml(settings: SettingsDep, _: ReaderDep) -> Response:
+    source = _source(settings)
+    content = report_service.predictions_xml(source.all(), source.status().snapshot_id)
+    return Response(content=content, media_type="application/xml")

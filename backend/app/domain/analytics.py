@@ -11,7 +11,17 @@ from app.domain import journal as journal_service
 from app.domain.health import load_calibration, location_health
 from app.domain.incidents import LEVEL_RANK, group_incidents, location_label
 from app.domain.predictions import PredictionSource
-from app.schemas.analytics import ChannelNode, EffectReport, ModelEffect, ObjectNode, SectionNode
+from app.schemas.analytics import (
+    BacktestDay,
+    ChannelNode,
+    EffectReport,
+    EventTypeStats,
+    ForecastDay,
+    ForecastTotal,
+    ModelEffect,
+    ObjectNode,
+    SectionNode,
+)
 from app.schemas.predictions import Prediction
 
 AVOIDED = {"false_or_irrelevant_signal", "no_issue_found"}
@@ -144,3 +154,55 @@ def effect(session: Session, settings: Settings, source: PredictionSource) -> Ef
         ),
         prospective=_read(settings.ml_dir / "results" / "predictions" / "prospective.json"),
     )
+
+
+# Incident types of the seasonal analytics: the ML key, title, scenario and the
+# models that forecast the type channel by channel.
+EVENT_TYPES = (
+    ("pump_fault", "Отказ насоса", "flooding", ("pump_24h", "pump_72h")),
+    ("flooding", "Затопление камеры", "flooding", ("flood_24h",)),
+    ("ventilation_fault", "Отказ вентилятора", "ventilation", ("fan_24h", "fan_72h")),
+    ("smoke_sensor_fault", "Неисправность дымового датчика", "fire", ("smoke_24h",)),
+    ("smoke_detected", "Срабатывание дымового датчика", "fire", ("smoke_alarm_24h",)),
+    ("power_loss", "Потеря питания", "power_loss", ("phase_24h",)),
+)
+
+
+def event_types(settings: Settings, source: PredictionSource) -> list[EventTypeStats]:
+    """Current risk, past volume, seasonal profile and 14-day forecast per incident type."""
+    seasonality = _read(settings.ml_dir / "results" / "seasonality.json") or {}
+    workload = (_read(settings.ml_dir / "results" / "workload_forecast.json") or {}).get(
+        "scenarios", {}
+    )
+    predictions = source.all() if source.available else []
+    result = []
+    for key, title, scenario, models in EVENT_TYPES:
+        at_risk: dict[str, set[str]] = {}
+        for item in predictions:
+            if item.model_id in models and item.risk_level in ("critical", "attention"):
+                at_risk.setdefault(item.risk_level, set()).add(item.asset_id)
+        forecast = workload.get(key, {})
+        recent = forecast.get("recent", {})
+        history = forecast.get("history", {})
+        method = forecast.get("method")
+        week = forecast.get("next_7_days")
+        monthly = seasonality.get("monthly_onsets_per_100_channels", {}).get(key, {})
+        result.append(
+            EventTypeStats(
+                event_type=key,
+                title=title,
+                scenario=scenario,
+                models=list(models),
+                channels_at_risk={level: len(ids) for level, ids in at_risk.items()},
+                episodes_30d=history.get("last_30_days"),
+                episodes_365d=history.get("last_365_days"),
+                monthly_per_100_channels={str(month): value for month, value in monthly.items()},
+                forecast_method=method,
+                forecast=[ForecastDay(**day) for day in forecast.get("forecast", [])],
+                next_7_days=ForecastTotal(**week) if week else None,
+                week_error=(recent.get(method) or {}).get("week") if method else None,
+                week_error_baseline=(recent.get("last_28_days") or {}).get("week"),
+                backtest=[BacktestDay(**day) for day in forecast.get("backtest", [])],
+            )
+        )
+    return result

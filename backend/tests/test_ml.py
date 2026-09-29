@@ -15,14 +15,14 @@ def test_directions_lists_statuses_and_never_claims_fire_labels() -> None:
     assert proxies and all(i["status"] == "PROXY ONLY" for i in proxies)
 
 
-def test_models_expose_frozen_model_metadata() -> None:
+def test_models_expose_model_cards() -> None:
     response = client.get("/api/v1/ml/models")
     assert response.status_code == 200
     by_name = {item["name"]: item for item in response.json()}
-    assert by_name["pump_72h"]["model_name"] == "blend_lr_lightgbm"
-    assert by_name["pump_baseline_72h"]["model_name"] == "logistic_regression"
-    assert by_name["fan_72h"]["model_name"] == "catboost"
-    assert by_name["fan_72h"]["n_features"] > 0
+    assert by_name["pump_baseline_72h"]["recipe"] == "logistic_regression"
+    assert by_name["fan_72h"]["features"] > 0
+    assert by_name["phase_24h"]["held_out"]["period"] == "2026H1"
+    assert 0 < by_name["phase_24h"]["held_out"]["avg_precision"] <= 1
 
 
 def test_results_listing_and_read_with_limit() -> None:

@@ -20,6 +20,11 @@ REPORTS = (
     "access_analysis",
     "flood_variants",
     "sustained_study",
+    "model_report",
+    "refit_study",
+    "detection_study",
+    "health_index",
+    "workload_forecast",
 )
 FILE_NAME = re.compile(r"^[A-Za-z0-9_.-]+\.csv$")
 MAX_ROWS = 1000
@@ -71,6 +76,11 @@ def get_report(name: str, settings: SettingsDep, _: ReaderDep) -> Any:
 
 @router.get("/models")
 def list_models(settings: SettingsDep, _: ReaderDep) -> list[dict[str, Any]]:
+    """Model cards: target, recipe, training years and quality on 2026H1."""
+    registry = settings.ml_dir / "results" / "models.json"
+    if registry.is_file():
+        cards: list[dict[str, Any]] = _read_json(registry)
+        return cards
     models: list[dict[str, Any]] = []
     for path in sorted((settings.ml_dir / "configs" / "models").glob("*.json")):
         config = _read_json(path)
@@ -78,12 +88,10 @@ def list_models(settings: SettingsDep, _: ReaderDep) -> list[dict[str, Any]]:
         models.append(
             {
                 "name": path.stem,
-                "device": config.get("device"),
-                "horizon": config.get("horizon"),
-                "model_name": model.get("model_name"),
-                "n_features": len(config.get("feature_columns", [])),
-                "training_period": config.get("training_period"),
-                "version": config.get("version"),
+                "horizon_hours": model.get("horizon_hours"),
+                "recipe": model.get("model_name"),
+                "features": len(config.get("feature_columns", [])),
+                "train_years": (config.get("training_period") or {}).get("train_years"),
             }
         )
     return models

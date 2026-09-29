@@ -526,6 +526,44 @@ def test_asset_tree_effect_and_report(client: TestClient, ml_root: Path) -> None
     assert report.content[:2] == b"PK"
 
 
+def test_forecast_exchange_formats_and_event_types(client: TestClient, ml_root: Path) -> None:
+    _snapshot_with_sections(ml_root)
+    (ml_root / "results" / "workload_forecast.json").write_text(
+        json.dumps(
+            {
+                "scenarios": {
+                    "power_loss": {
+                        "method": "calendar+level",
+                        "recent": {"calendar+level": {"week": 0.1}, "last_28_days": {"week": 0.2}},
+                        "history": {"last_30_days": 40, "last_365_days": 500},
+                        "forecast": [{"day": "2026-07-01", "expected": 3.0}],
+                        "next_7_days": {"expected": 21.0, "low": 15.0, "high": 30.0},
+                        "backtest": [{"day": "2026-06-30", "actual": 2, "forecast": 2.5}],
+                    }
+                }
+            }
+        ),
+        encoding="utf-8",
+    )
+
+    xml = client.get("/api/v1/reports/predictions.xml")
+    table = client.get("/api/v1/reports/predictions.csv")
+    listing = client.get("/api/v1/analytics/event-types").json()
+    types = {item["event_type"]: item for item in listing}
+
+    assert xml.status_code == 200
+    assert xml.content.startswith(b"<?xml")
+    assert xml.text.count("<prediction>") == len(client.get("/api/v1/predictions").json())
+    assert table.text.splitlines()[0].lstrip("\ufeff").startswith("id,asset_id,name")
+    power = types["power_loss"]
+    assert power["channels_at_risk"] == {"critical": 1}
+    assert power["episodes_365d"] == 500
+    assert power["forecast"][0]["expected"] == 3.0
+    assert power["next_7_days"]["high"] == 30.0
+    assert power["week_error"] < power["week_error_baseline"]
+    assert types["pump_fault"]["forecast"] == []
+
+
 def test_health_calibration_interpolates_between_points() -> None:
     from app.domain.health import calibrate
 
