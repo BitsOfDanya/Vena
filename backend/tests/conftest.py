@@ -51,3 +51,26 @@ def client() -> Iterator[TestClient]:
     Base.metadata.create_all(engine)
     with TestClient(app) as test_client:
         yield test_client
+
+
+@pytest.fixture()
+def auth_users(client, monkeypatch):
+    from app.core.config import get_settings
+    from app.db.seed_users import create_user
+    from app.db.session import SessionLocal
+
+    settings = get_settings()
+    monkeypatch.setattr(settings, "auth_enabled", True)
+    monkeypatch.setattr(settings, "jwt_secret", "test-signing-secret-with-at-least-32-bytes")
+    with SessionLocal.begin() as session:
+        for role in ["admin", "dispatcher", "viewer"]:
+            create_user(session, role, f"{role}@example.com", "test-password-123", role)
+    tokens = {}
+    for role in ["admin", "dispatcher", "viewer"]:
+        response = client.post(
+            "/api/v1/auth/login", json={"email": role, "password": "test-password-123"}
+        )
+        assert response.status_code == 200
+        tokens[role] = {"Authorization": "Bearer " + response.json()["access_token"]}
+    client.cookies.clear()
+    return tokens

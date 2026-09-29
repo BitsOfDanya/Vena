@@ -1,5 +1,3 @@
-import { getStoredApiKey } from "./auth-storage"
-
 const API_URL = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8000"
 
 export class ApiError extends Error {
@@ -14,18 +12,20 @@ export class ApiError extends Error {
 }
 
 export async function apiFetch<T>(path: string, init?: RequestInit): Promise<T> {
-  const apiKey = getStoredApiKey()
   const response = await fetch(`${API_URL}${path}`, {
     ...init,
+    credentials: "include",
     headers: {
       Accept: "application/json",
       ...(init?.body ? { "Content-Type": "application/json" } : {}),
-      ...(apiKey ? { "X-API-Key": apiKey } : {}),
       ...init?.headers,
     },
   })
 
   if (!response.ok) {
+    if (response.status === 401 && typeof window !== "undefined" && !path.startsWith("/api/v1/auth/")) {
+      window.dispatchEvent(new Event("vena:unauthorized"))
+    }
     let detail = response.statusText
     try {
       const body = (await response.json()) as { detail?: string }

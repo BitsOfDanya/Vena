@@ -29,7 +29,7 @@ docker compose up -d --build
 
 Бэкенд при старте ждёт базу, применяет миграции (`alembic upgrade head`) и читает снимок прогнозов из `ml/results/predictions/snapshot.json`. Каталоги `ml/results`, `ml/configs`, `ml/artifacts` монтируются только на чтение.
 
-Вход в интерфейс — по API-ключу. Ключи и роли задаются `VENA_API_KEYS_JSON`, например `{"<ключ>":"admin"}`. Для публичного стенда задайте собственные ключи: значения по умолчанию в `compose.yaml` предназначены только для локального запуска.
+Вход — по email/логину и паролю. Настройте `VENA_JWT_SECRET` и создайте пользователей по [инструкции](authentication.md). Старые API-ключи больше не принимаются.
 
 ## Снимок прогнозов
 
@@ -94,7 +94,7 @@ pnpm dev
 |---|---|
 | `VENA_DATABASE_URL` | строка подключения PostgreSQL (`postgresql+psycopg://…`) |
 | `VENA_ML_DIR` | каталог ML-компонента |
-| `VENA_AUTH_ENABLED`, `VENA_API_KEYS_JSON` | включение RBAC и ключи с ролями `admin` / `dispatcher` / `viewer` |
+| `VENA_AUTH_ENABLED`, `VENA_JWT_SECRET`, `VENA_JWT_TTL_MINUTES` | включение JWT-аутентификации, секрет подписи, срок токена; роли `admin` / `dispatcher` / `viewer` |
 | `VENA_PREDICTION_STALE_SECONDS` | возраст снимка, после которого выводится уведомление об устаревании |
 | `VENA_SEED_DEMO`, `VENA_DIGEST_ENABLED`, `VENA_TIMEZONE`, `VENA_PUBLIC_URL` | демо-данные, утренний дайджест, часовой пояс, публичный адрес |
 | `SMTP_HOST`, `SMTP_PORT`, `SMTP_USERNAME`, `SMTP_PASSWORD`, `SMTP_FROM`, `SMTP_TLS` | почтовые уведомления; без `SMTP_HOST` канал email отключён |

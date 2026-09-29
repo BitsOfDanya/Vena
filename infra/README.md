@@ -20,8 +20,8 @@ cp infra/.env.example /opt/vena/shared/.env
 chmod 600 /opt/vena/shared/.env
 ```
 
-Замените пароль PostgreSQL случайным hex-значением, а API-ключи — случайными
-значениями для ролей admin, dispatcher, viewer. Не коммитьте `.env` и закрытый
+Замените пароль PostgreSQL и `VENA_JWT_SECRET` разными случайными hex-значениями.
+Создание пользователей и роли описаны в [docs/authentication.md](../docs/authentication.md). Не коммитьте `.env` и закрытый
 SSH-ключ. `VENA_SITE_ADDRESS=http://5.129.225.86` включает HTTP по IP.
 Для HTTPS укажите домен в `VENA_SITE_ADDRESS`, `https://домен` в `VENA_PUBLIC_URL`
 и направьте A/AAAA на сервер: Caddy получит и продлит сертификат автоматически.

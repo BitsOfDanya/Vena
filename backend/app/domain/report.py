@@ -47,7 +47,8 @@ def _percent(value: float | None) -> str:
 def management_report(session: Session, settings: Settings, source: PredictionSource) -> bytes:
     effect = analytics.effect(session, settings, source)
     workbook = Workbook()
-    workbook.remove(workbook.active)
+    if workbook.active is not None:
+        workbook.remove(workbook.active)
     _sheet(
         workbook,
         "Сводка",

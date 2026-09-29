@@ -56,7 +56,7 @@ AP сравнивается с долей событий: у случайног�
 | 11 | резервное копирование, восстановление ≤ 4 ч | ✅ | ежедневный дамп, откат релиза при сбое деплоя |
 | 11 | RBAC, журнал действий | ✅ | роли viewer / dispatcher / admin, `GET /audit` |
 | 11 | TLS 1.2+ | ⚠️ | Caddy выпускает сертификат при указании домена; стенд по IP работает по HTTP |
-| 11 | LDAP / AD | ❌ | вход по учётным записям сервиса и API-ключам |
+| 11 | LDAP / AD | ❌ | вход по email/логину и паролю, JWT |
 | 14 | документация, библиотеки, открытый код | ✅ | `docs/`, `ml/README.md` |
 
 ## Локальный запуск
@@ -68,7 +68,7 @@ docker compose up -d --build
 - Интерфейс: http://localhost:3100
 - API: http://localhost:8100/docs
 
-Вход — по API-ключу из `VENA_API_KEYS_JSON` (локальные значения по умолчанию — в `compose.yaml`). Прогнозы читаются из `ml/results/predictions/snapshot.json`; как его построить — в [docs/installation.md](docs/installation.md#снимок-прогнозов).
+Вход — по email или логину и паролю (JWT). Создание `user1`–`user20` и настройки описаны в [docs/authentication.md](docs/authentication.md). Прогнозы читаются из `ml/results/predictions/snapshot.json`; как его построить — в [docs/installation.md](docs/installation.md#снимок-прогнозов).
 
 ## Структура
 

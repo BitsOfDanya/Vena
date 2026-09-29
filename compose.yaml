@@ -33,7 +33,7 @@ services:
       VENA_SEED_DEMO: ${VENA_SEED_DEMO:-false}
       VENA_PREDICTION_STALE_SECONDS: ${VENA_PREDICTION_STALE_SECONDS:-86400}
       VENA_AUTH_ENABLED: ${VENA_AUTH_ENABLED:-true}
-      VENA_API_KEYS_JSON: ${VENA_API_KEYS_JSON:-{"vena-admin":"admin","vena-dispatch":"dispatcher","vena-view":"viewer"}}
+      VENA_JWT_SECRET: ${VENA_JWT_SECRET:-local-development-only-change-this-secret-12345}
       SMTP_HOST: ${SMTP_HOST:-}
       SMTP_PORT: ${SMTP_PORT:-587}
       SMTP_USERNAME: ${SMTP_USERNAME:-}

@@ -1,14 +1,13 @@
 from fastapi.testclient import TestClient
 
 
-def test_spatial_demo_seeded_and_wkt_import(client: TestClient, monkeypatch) -> None:
-    from app.core.config import get_settings
+def test_spatial_demo_seeded_and_wkt_import(client: TestClient, auth_users) -> None:
 
-    status = client.get("/api/v1/spatial/status").json()
+    status = client.get("/api/v1/spatial/status", headers=auth_users["admin"]).json()
     assert status["configured"] is True
     assert status["asset_count"] >= 1
 
-    collection = client.get("/api/v1/spatial").json()
+    collection = client.get("/api/v1/spatial", headers=auth_users["admin"]).json()
     assert collection["type"] == "FeatureCollection"
     assert collection["source"] == "demo_spatial"
     assert any(
@@ -16,10 +15,7 @@ def test_spatial_demo_seeded_and_wkt_import(client: TestClient, monkeypatch) -> 
         for feature in collection["features"]
     )
 
-    settings = get_settings()
-    monkeypatch.setattr(settings, "auth_enabled", True)
-    monkeypatch.setattr(settings, "api_keys_json", '{"admin-secret":"admin"}')
-    headers = {"X-API-Key": "admin-secret"}
+    headers = auth_users["admin"]
 
     wkt = client.put(
         "/api/v1/spatial/wkt",

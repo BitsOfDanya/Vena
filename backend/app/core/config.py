@@ -36,7 +36,12 @@ class Settings(BaseSettings):
     inbox_dir: Path | None = None
     ingest_on_startup: bool = True
     auth_enabled: bool = False
-    api_keys_json: str = ""
+    jwt_secret: str = ""
+    jwt_issuer: str = "vena"
+    jwt_audience: str = "vena-api"
+    jwt_ttl_minutes: int = Field(default=60, ge=1, le=1440)
+    auth_login_limit: int = Field(default=10, ge=1)
+    auth_login_window_seconds: int = Field(default=300, ge=1)
     smtp_host: str = Field(default="", validation_alias=AliasChoices("SMTP_HOST", "VENA_SMTP_HOST"))
     smtp_port: int = Field(
         default=587, validation_alias=AliasChoices("SMTP_PORT", "VENA_SMTP_PORT")

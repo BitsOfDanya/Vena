@@ -14,7 +14,9 @@ RUN pip install --no-cache-dir \
     "apscheduler>=3.11.0" \
     "email-validator>=2.2.0" \
     "psycopg[binary]>=3.2.0" \
-    "openpyxl>=3.1"
+    "openpyxl>=3.1" \
+    "pyjwt>=2.10,<3" \
+    "pwdlib[argon2]>=0.3,<1"
 
 COPY app ./app
 COPY migrations ./migrations

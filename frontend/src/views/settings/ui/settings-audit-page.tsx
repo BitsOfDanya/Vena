@@ -27,7 +27,7 @@ export function SettingsAuditPage() {
         ) : audit.isError ? (
           <StateMessage
             title="Журнал недоступен"
-            description="Нужен API-ключ с ролью admin или сервис недоступен."
+            description="Нужна учётная запись администратора, либо сервис временно недоступен."
             action={
               <Button variant="outline" size="sm" onClick={() => audit.refetch()}>
                 Retry

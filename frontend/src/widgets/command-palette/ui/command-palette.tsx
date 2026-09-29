@@ -24,7 +24,7 @@ const COMMANDS = [
   { href: "/actions", label: "Create action", icon: ListChecks },
   { href: "/settings/notifications", label: "Notification settings", icon: BellRing },
   { href: "/settings/integrations", label: "Integrations", icon: Plug },
-  { href: "/settings/security", label: "Security / API key", icon: SlidersHorizontal },
+  { href: "/settings/security", label: "Security / Password", icon: SlidersHorizontal },
   { href: "/settings/audit", label: "Audit log", icon: ListChecks },
   { href: "/settings", label: "Settings", icon: SlidersHorizontal },
 ] as const

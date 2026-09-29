@@ -19,6 +19,8 @@ from app.domain.scheduler import build_scheduler
 async def lifespan(_: FastAPI) -> AsyncIterator[None]:
     """Manage application resources."""
     settings = get_settings()
+    if settings.auth_enabled and len(settings.jwt_secret.encode()) < 32:
+        raise RuntimeError("Set VENA_JWT_SECRET to at least 32 random bytes")
     Base.metadata.create_all(engine)
     if settings.seed_demo:
         session = SessionLocal()

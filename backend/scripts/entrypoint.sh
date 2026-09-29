@@ -22,4 +22,7 @@ raise SystemExit(f"database not reachable at {host}:{port}")
 PY
 
 alembic upgrade head
+if [ "${VENA_SEED_USERS:-false}" = "true" ]; then
+    python -m app.db.seed_users
+fi
 exec uvicorn app.main:app --host 0.0.0.0 --port 8000
