@@ -22,11 +22,9 @@ export function SettingsShell({ title, descriptor, children }: { title: string; 
 
   return (
     <div className="flex size-full min-h-0 flex-col">
-      <div className="shrink-0 px-6 pt-4">
-        <h1 className="flex items-baseline gap-3">
-          <span className="text-[24px] font-semibold tracking-[-0.01em]">{title}</span>
-          <span className="font-mono text-[13px] text-faint">{descriptor}</span>
-        </h1>
+      <div className="shrink-0 px-6 pt-5">
+        <h1 className="text-[24px] font-semibold tracking-[-0.01em]">{title}</h1>
+        <p className="text-[13px] text-muted-foreground">{descriptor}</p>
         <nav aria-label="Настройки" className="mt-3 flex gap-5 border-b border-border">
           {TABS.filter(tab => tab.href !== "/settings/users" || me?.role === "admin").map((tab) => {
             const active = pathname === tab.href

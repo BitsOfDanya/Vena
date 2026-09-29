@@ -8,6 +8,8 @@ import { getAuthMe } from "@/entities/system"
 
 import { SettingsSection, SettingsShell, StateTag } from "./settings-shell"
 
+const ROLE_LABEL: Record<string, string> = { admin: "Администратор", dispatcher: "Диспетчер", viewer: "Наблюдатель" }
+
 export function SettingsOverviewPage() {
   const settings = useNotificationSettings()
   const me = useQuery({ queryKey: ["system", "auth-me"], queryFn: getAuthMe, retry: false, staleTime: 30_000 })
@@ -15,7 +17,7 @@ export function SettingsOverviewPage() {
   const digest = settings.data?.digests[0]
 
   return (
-    <SettingsShell title="Настройки" descriptor="рабочая область">
+    <SettingsShell title="Настройки" descriptor="Учётная запись, каналы уведомлений и ежедневная сводка">
       <SettingsSection title="Учётная запись">
         <dl className="grid grid-cols-2 gap-x-6 gap-y-3 border border-border bg-elevated px-5 py-4 text-[14px]">
           <div>
@@ -24,11 +26,11 @@ export function SettingsOverviewPage() {
           </div>
           <div>
             <dt className="text-[12px] text-faint">Роль</dt>
-            <dd className="mt-0.5 font-mono text-[13px]">{me.data?.role ?? "dispatcher"}</dd>
+            <dd className="mt-0.5 text-[14px]">{ROLE_LABEL[me.data?.role ?? "dispatcher"] ?? me.data?.role}</dd>
           </div>
           <div>
             <dt className="text-[12px] text-faint">Часовой пояс</dt>
-            <dd className="mt-0.5 font-mono text-[13px]">Europe/Moscow</dd>
+            <dd className="mt-0.5 text-[14px]">Москва (UTC+3)</dd>
           </div>
           <div>
             <dt className="text-[12px] text-faint">Язык интерфейса</dt>

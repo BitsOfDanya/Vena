@@ -44,7 +44,7 @@ export function SettingsNotificationsPage() {
     } catch (e) { setError(errorText(e)) } finally { setBusy(false) }
   }
 
-  return <SettingsShell title="Уведомления" descriptor="электронная почта · правила · доставка">
+  return <SettingsShell title="Уведомления" descriptor="Электронная почта, правила и журнал доставки">
     {error && <p role="alert" className="text-status-critical">{error}</p>}
     {message && <p role="status" className="text-sm">{message}</p>}
     <SettingsSection title="Почтовый сервер" description="SMTP-пароль хранится только на сервере. Письма из очереди отправляются автоматически; временные ошибки повторяются до шести попыток.">

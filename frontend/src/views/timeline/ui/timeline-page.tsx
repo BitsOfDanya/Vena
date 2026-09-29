@@ -26,6 +26,7 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/shared/ui/popover"
 import { Segmented } from "@/shared/ui/segmented"
 import { LoadingBar, StateMessage } from "@/shared/ui/state-message"
 import { ReplayEntry } from "@/widgets/replay-controller"
+import { ChannelHistory } from "@/widgets/channel-history"
 import { DEFAULT_LAYERS, TemporalCanvas, ZOOM_STEPS, type Layers } from "@/widgets/temporal-canvas"
 
 const MAX_ASSETS = 5
@@ -248,17 +249,17 @@ export function TimelinePage() {
     return (
       <StateMessage
         title="Нужен экран пошире"
-        description="Хронология рассчитана на настольные и диспетчерские экраны. На этом устройстве используйте «Пульс» и «Работы»."
+        description="Таймлайн рассчитан на настольные и диспетчерские экраны. На этом устройстве используйте «Пульс» и «Работы»."
       />
     )
   }
 
   return (
     <div className="flex size-full flex-col">
-      <div className="flex shrink-0 flex-wrap items-center gap-x-6 gap-y-3 px-6 pt-1 pb-3">
-        <div className="flex items-baseline gap-3">
-          <h1 className="text-[22px] font-semibold tracking-[-0.01em]">Хронология</h1>
-          <span className="font-mono text-[12px] text-faint">{mode === "replay" ? "запись" : "прошлое · сейчас · прогноз"}</span>
+      <div className="flex shrink-0 flex-wrap items-center gap-x-6 gap-y-3 px-6 pt-5 pb-3">
+        <div>
+          <h1 className="text-[24px] font-semibold tracking-[-0.01em]">Таймлайн</h1>
+          <p className="text-[13px] text-muted-foreground">{mode === "replay" ? "Воспроизведение записи" : "История канала, текущее состояние и прогноз риска"}</p>
         </div>
         <ul aria-label="Объекты на хронологии" className="flex flex-wrap items-center gap-1.5">
           {ids.map((id) => (
@@ -278,8 +279,8 @@ export function TimelinePage() {
             <AssetPicker chosen={ids} onPick={add} />
           </li>
         </ul>
-        <div className="ml-auto flex flex-wrap items-center gap-3">
-          <div role="group" aria-label="Слои" className="flex items-center gap-1">
+        <div className={cn("ml-auto flex flex-wrap items-center gap-3", workflowMode === "api" && "hidden")}>
+          <div role="group" aria-label="Слои" className="inline-flex h-8 items-stretch divide-x divide-border border border-border bg-elevated">
             {LAYER_LABELS.map((layer) => (
               <button
                 key={layer.key}
@@ -287,8 +288,8 @@ export function TimelinePage() {
                 aria-pressed={layers[layer.key]}
                 onClick={() => setLayers((current) => ({ ...current, [layer.key]: !current[layer.key] }))}
                 className={cn(
-                  "h-7 border px-2 text-[12px] font-medium outline-none focus-visible:ring-2 focus-visible:ring-ring/60",
-                  layers[layer.key] ? "border-foreground/40 bg-elevated text-foreground" : "border-transparent text-faint hover:text-foreground"
+                  "relative cursor-pointer px-3 text-[13px] outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-ring/60",
+                  layers[layer.key] ? "bg-accent font-medium text-foreground" : "text-faint line-through decoration-faint/50 hover:text-foreground"
                 )}
               >
                 {layer.label}
@@ -306,11 +307,6 @@ export function TimelinePage() {
             <span className="font-mono text-[16px]">{primary.id}</span>
             <span className="text-[13px] text-muted-foreground">{TYPE_LABEL[primary.type]}</span>
           </span>
-          {workflowMode === "api" ? (
-            <span className="text-[12px] text-status-attention">
-              Ряд риска по снимку модели; полная телеметрия журнала на канале пока не подключена к хронологии
-            </span>
-          ) : null}
           <span className="text-[13px]">
             <span className="text-faint">риск </span>
             <span className="font-mono tabular-nums">{formatScore(primary.riskScore, primary.scoreType)}</span>
@@ -352,10 +348,12 @@ export function TimelinePage() {
               setCompare([id])
             }}
           />
+        ) : workflowMode === "api" ? (
+          <ChannelHistory assetId={ids[0]} />
         ) : temporal.pending && temporal.bundles.length === 0 ? (
           <LoadingBar />
         ) : temporal.error && temporal.bundles.length === 0 ? (
-          <StateMessage title="Хронология недоступна" description="Не удалось загрузить историю и прогноз по выбранным объектам." />
+          <StateMessage title="Таймлайн недоступен" description="Не удалось загрузить историю и прогноз по выбранным объектам." />
         ) : (
           <TemporalCanvas
             now={now}
