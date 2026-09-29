@@ -32,7 +32,7 @@ export function NetworkPage() {
   const [sheetOpen, setSheetOpen] = React.useState(false)
   const [draft, setDraft] = React.useState<ActionDraft>({})
   const [focusId, setFocusId] = React.useState<string | null>(selectedAssetId)
-  const [mode, setMode] = React.useState<NetworkMode>(apiMode ? "tree" : "network")
+  const [mode, setMode] = React.useState<NetworkMode>(apiMode ? "picket" : "network")
   const assets = useAssets(now, horizon, {
     enabled: mode === "assets" || mode === "network" || mode === "map" || sheetOpen || Boolean(selectedAssetId),
   })
@@ -99,9 +99,9 @@ export function NetworkPage() {
         title="Инфраструктурная сеть"
         descriptor={
           mode === "tree"
-            ? "объект → секция → канал · индекс здоровья"
+            ? "Объекты, шкафы и каналы с индексом здоровья"
             : mode === "picket"
-              ? "объект → шкафы по пикетам · риск моделей"
+              ? "Датчики на трассе объекта по пикетам, цвет — риск модели"
               : network.data
                 ? `${network.data.groups.length} групп · ${network.data.nodes.length} объектов`
                 : ""

@@ -104,9 +104,9 @@ export function NotificationCenter() {
                 </div>
                 <p className="mt-1 pl-5 text-[12px] text-muted-foreground">{item.description}</p>
                 <div className="mt-2 flex items-center gap-3 pl-5">
-                  <span className="text-[11px] tracking-[0.06em] text-faint uppercase">{NOTIFICATION_TYPE_LABEL[item.type]}</span>
+                  <span className="text-[12px] text-faint">{NOTIFICATION_TYPE_LABEL[item.type]}</span>
                   {item.status !== "new" ? (
-                    <span className="text-[11px] tracking-[0.06em] text-faint uppercase">{item.status === "resolved" ? "Закрыто" : "Принято"}</span>
+                    <span className="text-[12px] text-faint">{item.status === "resolved" ? "Закрыто" : "Принято"}</span>
                   ) : null}
                   <span className="ml-auto flex items-center gap-3">
                     {item.status === "new" ? (

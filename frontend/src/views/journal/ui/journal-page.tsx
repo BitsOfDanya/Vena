@@ -38,7 +38,7 @@ const DECISION_TONE: Record<JournalDecision, string> = {
 function Metric({ label, value, hint }: { label: string; value: React.ReactNode; hint: string }) {
   return (
     <div className="flex flex-col gap-2 border-r border-border-soft px-5 py-4 last:border-r-0">
-      <span className="text-[11px] tracking-[0.08em] text-faint uppercase">{label}</span>
+      <span className="text-[12px] text-faint">{label}</span>
       <span className="font-mono text-[30px] leading-none tabular-nums">{value}</span>
       <span className="text-[12px] text-muted-foreground">{hint}</span>
     </div>
@@ -141,7 +141,7 @@ export function JournalPage() {
 
             <section aria-label="Обратная связь по сценариям" className="mx-6 mt-5 border border-border">
               <div className="border-b border-border-soft px-5 py-3">
-                <h2 className="text-[11px] tracking-[0.08em] uppercase">Обратная связь по сценариям</h2>
+                <h2 className="text-[12px]">Обратная связь по сценариям</h2>
                 <p className="mt-1 text-[12px] text-muted-foreground">
                   Доля подтверждённых среди решённых — обратная связь диспетчеров, а не метрика модели на отложенной
                   выборке.
@@ -152,7 +152,7 @@ export function JournalPage() {
               ) : (
                 <div className="overflow-x-auto">
                   <table className="w-full min-w-[560px] text-left text-[13px]">
-                    <thead className="border-b border-border-soft text-[11px] tracking-[0.08em] text-faint uppercase">
+                    <thead className="border-b border-border-soft text-[12px] text-faint">
                       <tr>
                         <th className="px-5 py-2 font-medium">Сценарий</th>
                         <th className="px-5 py-2 text-right font-medium">Прогнозы</th>
@@ -229,7 +229,7 @@ export function JournalPage() {
                 <>
                   <div className="overflow-x-auto border border-border">
                     <table className="w-full min-w-[960px] text-left text-[13px]">
-                      <thead className="border-b border-border text-[11px] tracking-[0.08em] text-faint uppercase">
+                      <thead className="border-b border-border text-[12px] text-faint">
                         <tr>
                           <th className="px-4 py-2 font-medium">Прогноз</th>
                           <th className="px-4 py-2 font-medium">Объект / локация</th>

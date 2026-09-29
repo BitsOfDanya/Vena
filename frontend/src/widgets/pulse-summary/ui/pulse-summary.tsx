@@ -2,6 +2,7 @@
 
 import type { PulseSummary } from "@/entities/infrastructure"
 import type { SnapshotStatus } from "@/entities/prediction"
+import { formatCount, plural } from "@/shared/lib/plural"
 import { formatClock, formatDateTime } from "@/shared/lib/time"
 import { cn } from "@/shared/lib/utils"
 
@@ -32,27 +33,32 @@ function Module({
   onAction: () => void
 }) {
   return (
-    <section className="flex min-w-0 flex-col rounded-[5px] border border-border bg-elevated px-3.5 py-2.5">
-      <h3 className="text-[11px] font-medium tracking-[0.12em] text-muted-foreground uppercase">{title}</h3>
-      <p className="mt-1 flex items-baseline gap-2">
-        <span className={cn("font-mono text-[22px] leading-none tabular-nums", TONE_TEXT[tone])}>{value}</span>
-        <span className="text-[13px] text-muted-foreground">{unit}</span>
-      </p>
-      <div className="mt-1 min-h-[30px] space-y-0.5">
+    <button
+      type="button"
+      onClick={onAction}
+      className="group flex min-w-0 cursor-pointer flex-col rounded-lg border border-border bg-elevated p-4 text-left shadow-[var(--shadow-card)] outline-none transition-colors hover:border-input focus-visible:ring-2 focus-visible:ring-ring/60"
+    >
+      <span className="flex items-center gap-2 text-[13px] font-medium text-muted-foreground">
+        {tone === "critical" || tone === "attention" ? (
+          <span aria-hidden className={cn("size-2 rounded-full", tone === "critical" ? "bg-status-critical" : "bg-status-attention")} />
+        ) : null}
+        {title}
+      </span>
+      <span className="mt-2 flex items-baseline gap-2">
+        <span className={cn("text-[30px] leading-none font-semibold tabular-nums", TONE_TEXT[tone])}>{value}</span>
+        <span className="text-[14px] text-muted-foreground">{unit}</span>
+      </span>
+      <span className="mt-2 min-h-[36px] space-y-0.5">
         {lines.map((line) => (
-          <p key={line} className="truncate font-mono text-[12px] text-muted-foreground tabular-nums">
+          <span key={line} className="block truncate text-[13px] text-muted-foreground">
             {line}
-          </p>
+          </span>
         ))}
-      </div>
-      <button
-        type="button"
-        onClick={onAction}
-        className="mt-1.5 self-start text-[13px] text-vena underline-offset-4 outline-none hover:underline focus-visible:ring-2 focus-visible:ring-ring/60"
-      >
+      </span>
+      <span className="mt-2 text-[13px] font-medium text-vena group-hover:underline group-hover:underline-offset-4">
         {actionLabel} →
-      </button>
-    </section>
+      </span>
+    </button>
   )
 }
 
@@ -60,26 +66,27 @@ export function SnapshotLine({ snapshot }: { snapshot: SnapshotStatus | undefine
   if (!snapshot) return null
   if (!snapshot.available) {
     return (
-      <p className="text-[12px] text-status-critical">{snapshot.detail || "Снимок прогнозов недоступен"}</p>
+      <p className="text-[13px] text-status-critical">{snapshot.detail || "Снимок прогнозов недоступен"}</p>
     )
   }
-  const days = snapshot.ageSeconds === null ? null : Math.floor(snapshot.ageSeconds / 86_400)
   return (
-    <p className="flex flex-wrap items-baseline gap-x-4 gap-y-1 text-[12px] text-muted-foreground">
-      <span className="font-medium tracking-[0.1em] text-faint uppercase">Снимок</span>
-      <span className="font-mono tabular-nums">{snapshot.snapshotId}</span>
-      <span className="font-mono tabular-nums">
-        {snapshot.predictionTime === null ? "" : formatDateTime(snapshot.predictionTime)}
+    <p className="flex flex-wrap items-center gap-x-3 gap-y-1 text-[12.5px] text-muted-foreground">
+      <span className="inline-flex items-center gap-1.5">
+        <span aria-hidden className={cn("size-1.5 rounded-full", snapshot.stream ? "bg-status-normal" : "bg-faint")} />
+        {snapshot.stream ? "Поток СМВУ подключён" : "Прогноз по журналу"}
       </span>
-      <span className="font-mono tabular-nums">{snapshot.predictionCount} прогнозов</span>
-      <span className="font-mono tabular-nums">{snapshot.models.length} моделей</span>
+      {snapshot.predictionTime === null ? null : <span>на {formatDateTime(snapshot.predictionTime)}</span>}
+      <span aria-hidden className="text-border">|</span>
+      <span className="tabular-nums">{formatCount(snapshot.predictionCount)} {plural(snapshot.predictionCount, ["прогноз", "прогноза", "прогнозов"])}</span>
+      <span aria-hidden className="text-border">|</span>
+      <span className="tabular-nums">{snapshot.models.length} {plural(snapshot.models.length, ["модель", "модели", "моделей"])}</span>
       {snapshot.stream ? (
-        <span className="font-mono tabular-nums text-vena">
-          поток · {snapshot.stream.events} соб. · {Math.round(snapshot.stream.latencySeconds)} с
-        </span>
-      ) : null}
-      {snapshot.stale && days !== null ? (
-        <span className="text-vena">демо-снимок · {days} дн.</span>
+        <>
+          <span aria-hidden className="text-border">|</span>
+          <span className="tabular-nums text-vena">
+            {formatCount(snapshot.stream.events)} событий, задержка {Math.round(snapshot.stream.latencySeconds)} с
+          </span>
+        </>
       ) : null}
     </p>
   )
@@ -122,52 +129,52 @@ export function PulseSummaryModules({
 
   if (apiMode) {
     return (
-      <div className="grid gap-2.5 md:grid-cols-2 xl:grid-cols-4">
+      <div className="grid grid-cols-2 gap-3 lg:grid-cols-4">
         <Module
           title="Критично"
-          value={predictionsUnavailable ? "—" : String(criticalCount).padStart(2, "0")}
-          unit={criticalCount === 1 ? "объект" : "объектов"}
+          value={predictionsUnavailable ? "—" : formatCount(criticalCount)}
+          unit={plural(criticalCount, ["канал", "канала", "каналов"])}
           tone={criticalCount > 0 ? "critical" : "neutral"}
           lines={
             predictionsUnavailable
               ? ["Прогнозы недоступны."]
               : criticalAssets.length > 0
                 ? criticalAssets
-                : ["Нет критичных рисков."]
+                : ["критичных рисков нет"]
           }
           actionLabel="Открыть"
           onAction={onInspectCritical}
         />
         <Module
           title="Внимание"
-          value={predictionsUnavailable ? "—" : String(attentionCount).padStart(2, "0")}
-          unit={attentionCount === 1 ? "объект" : "объектов"}
+          value={predictionsUnavailable ? "—" : formatCount(attentionCount)}
+          unit={plural(attentionCount, ["канал", "канала", "каналов"])}
           tone={attentionCount > 0 ? "attention" : "neutral"}
-          lines={predictionsUnavailable ? ["Прогнозы недоступны."] : ["высокий уровень риска модели"]}
+          lines={predictionsUnavailable ? ["Прогнозы недоступны."] : ["риск выше обычного, стоит проверить"]}
           actionLabel="Открыть"
           onAction={onInspectCritical}
         />
         <Module
           title="Рост риска"
-          value={predictionsUnavailable ? "—" : String(risingCount).padStart(2, "0")}
-          unit="объектов"
+          value={predictionsUnavailable ? "—" : formatCount(risingCount)}
+          unit={plural(risingCount, ["канал", "канала", "каналов"])}
           tone={risingCount > 0 ? "attention" : "neutral"}
           lines={
             predictionsUnavailable
               ? ["Прогнозы недоступны."]
               : risingTop
                 ? ["наибольший прирост", risingTop]
-                : ["Без изменений относительно предыдущего снимка."]
+                : ["риск не вырос с прошлого расчёта"]
           }
           actionLabel="Смотреть изменения"
           onAction={onViewChanges}
         />
         <Module
           title="Работы к сроку"
-          value={String(actionsDue).padStart(2, "0")}
-          unit="за 24ч"
+          value={formatCount(actionsDue)}
+          unit="на ближайшие 24 ч"
           tone={actionsOverdue > 0 ? "attention" : "neutral"}
-          lines={[`${String(actionsOverdue).padStart(2, "0")} просрочено`]}
+          lines={[actionsOverdue > 0 ? `${actionsOverdue} просрочено` : "просроченных нет"]}
           actionLabel="Открыть план"
           onAction={onOpenPlan}
         />
@@ -176,10 +183,10 @@ export function PulseSummaryModules({
   }
 
   return (
-    <div className="grid gap-2.5 md:grid-cols-2 xl:grid-cols-4">
+    <div className="grid grid-cols-2 gap-3 xl:grid-cols-4">
       <Module
         title="Критично"
-        value={String(critical?.count ?? 0).padStart(2, "0")}
+        value={String(critical?.count ?? 0)}
         unit={critical && critical.count === 1 ? "объект" : "объектов"}
         tone={critical && critical.count > 0 ? "critical" : "neutral"}
         lines={
@@ -192,7 +199,7 @@ export function PulseSummaryModules({
       />
       <Module
         title="Рост риска"
-        value={String(rising?.count ?? 0).padStart(2, "0")}
+        value={String(rising?.count ?? 0)}
         unit={rising && rising.count === 1 ? "объект" : "объектов"}
         tone={rising && rising.count > 0 ? "attention" : "neutral"}
         lines={rising?.top ? [`наибольший прирост`, `${rising.top.id} +${rising.top.delta}`] : ["Без изменений за 6 часов."]}
@@ -201,7 +208,7 @@ export function PulseSummaryModules({
       />
       <Module
         title="Новые связки"
-        value={String(patterns?.count ?? 0).padStart(2, "0")}
+        value={String(patterns?.count ?? 0)}
         unit="обнаружено"
         tone={patterns && patterns.count > 0 ? "vena" : "neutral"}
         lines={
@@ -214,10 +221,10 @@ export function PulseSummaryModules({
       />
       <Module
         title="Работы к сроку"
-        value={String(actionsDue).padStart(2, "0")}
+        value={String(actionsDue)}
         unit="за 24ч"
         tone={actionsOverdue > 0 ? "attention" : "neutral"}
-        lines={[`${String(actionsOverdue).padStart(2, "0")} просрочено`]}
+        lines={[`${String(actionsOverdue)} просрочено`]}
         actionLabel="Открыть план"
         onAction={onOpenPlan}
       />
@@ -236,7 +243,7 @@ export function ShiftSummary({ summary, completed }: { summary: PulseSummary | u
 
   return (
     <p className="flex flex-wrap items-baseline gap-x-4 gap-y-1 text-[12px] text-muted-foreground">
-      <span className="font-medium tracking-[0.1em] text-faint uppercase">С {formatClock(summary.shift.since)}</span>
+      <span className="font-medium text-faint">С {formatClock(summary.shift.since)}</span>
       {parts.length > 0 ? parts.map((part) => <span key={part}>{part}</span>) : <span>за смену без изменений</span>}
     </p>
   )

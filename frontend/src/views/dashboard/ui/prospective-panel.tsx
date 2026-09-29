@@ -16,7 +16,7 @@ export function ProspectivePanel() {
   return (
     <section aria-label="Проспективная проверка" className="mx-6 mb-6 border border-border bg-elevated">
       <div className="border-b border-border-soft px-5 py-3">
-        <h2 className="text-[11px] tracking-[0.08em] uppercase">Проспективная проверка</h2>
+        <h2 className="text-[12px]">Проспективная проверка</h2>
         <p className="mt-1 text-[12px] text-muted-foreground">
           Прогнозы, выданные после {formatDateTime(data.start)}, сверены с событиями, пришедшими позже, по{" "}
           {formatDateTime(data.now)}. Засчитываются прогнозы с истёкшим горизонтом.
@@ -24,7 +24,7 @@ export function ProspectivePanel() {
       </div>
       <div className="overflow-x-auto">
         <table className="w-full min-w-[760px] text-left text-[13px]">
-          <thead className="border-b border-border-soft text-[11px] tracking-[0.08em] text-faint uppercase">
+          <thead className="border-b border-border-soft text-[12px] text-faint">
             <tr>
               <th className="px-5 py-2 font-medium">Модель</th>
               <th className="px-5 py-2 text-right font-medium">Прогнозы</th>

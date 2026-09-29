@@ -78,7 +78,7 @@ function SectionTitle({ children, description, action }: { children: React.React
   return (
     <div className="mb-5 flex items-start justify-between gap-4">
       <div>
-        <h2 className="text-[12px] font-medium tracking-[0.12em] uppercase">{children}</h2>
+        <h2 className="text-[12px] font-medium">{children}</h2>
         {description ? <p className="mt-1.5 text-[12px] text-muted-foreground">{description}</p> : null}
       </div>
       {action}
@@ -339,7 +339,7 @@ function PredictionInspector({
             </div>
             <div className="flex justify-between">
               <dt className="text-muted-foreground">Время прогноза</dt>
-              <dd className="font-mono">{formatDateTime(row.time)} MSK</dd>
+              <dd>{formatDateTime(row.time)}</dd>
             </div>
           </dl>
         </InspectorSection>
@@ -476,8 +476,8 @@ export function DashboardPage() {
     <div className="flex size-full min-h-0 flex-col">
       <div className="flex shrink-0 flex-wrap items-center justify-between gap-4 border-b border-border px-6 py-4">
         <div className="flex items-baseline gap-4">
-          <h1 className="text-[26px] font-semibold tracking-[-0.01em]">Дашборд</h1>
-          <span className="font-mono text-[12px] text-faint">горизонт {horizon}ч</span>
+          <h1 className="text-[24px] font-semibold tracking-[-0.01em]">Дашборд</h1>
+          
         </div>
         <div className="flex flex-wrap items-center gap-3">
           <Segmented
@@ -505,25 +505,21 @@ export function DashboardPage() {
       </div>
       <div className="relative flex min-h-0 flex-1">
         <div className="min-w-0 flex-1 overflow-y-auto">
-          <div className="flex flex-wrap items-center justify-between gap-2 border-b border-border-soft px-6 py-2.5 text-[11px] text-muted-foreground">
+          <div className="flex flex-wrap items-center justify-between gap-2 border-b border-border-soft px-6 py-2.5 text-[12.5px] text-muted-foreground">
             <span className="flex items-center gap-2">
-              <span aria-hidden className={cn("size-1.5", workflowMode === "demo" ? "bg-brass" : "bg-vena")} />
+              <span aria-hidden className={cn("size-1.5 rounded-full", workflowMode === "demo" ? "bg-brass" : "bg-vena")} />
               {workflowMode === "demo"
-                ? "DEMO · Детерминированные данные стенда, не результаты модели"
-                : "API · Все прогнозы выбранного горизонта, без демо-подстановки"}
+                ? "Демонстрационные данные стенда"
+                : `Все прогнозы моделей на ${horizon} ч`}
             </span>
-            <span className="font-mono">{sampleTime ? `${formatDateTime(sampleTime)} MSK` : "Нет снимка"}</span>
+            <span>{sampleTime ? `Прогноз на ${formatDateTime(sampleTime)}` : loading ? "Загрузка прогнозов…" : "Прогнозов нет"}</span>
           </div>
-          {workflowMode === "api" && snapshot.data?.stale ? (
-            <p role="status" className="border-b border-vena/40 bg-vena/10 px-6 py-3 text-[12px] text-vena">
-              Демонстрационный снимок: аналитика показывает зафиксированный срез стенда, а не сбой сервиса.
-            </p>
-          ) : workflowMode === "api" && (snapshot.isError || snapshot.data?.available === false) ? (
+          {workflowMode === "api" && (snapshot.isError || snapshot.data?.available === false) ? (
             <p
               role="status"
-              className="border-b border-status-attention/40 bg-status-attention/10 px-6 py-3 text-[12px] text-status-attention"
+              className="border-b border-status-attention/40 bg-status-attention/10 px-6 py-3 text-[12.5px] text-status-attention"
             >
-              Свежесть снимка не подтверждена. Проверьте источник прогнозов.
+              Снимок прогнозов недоступен. Проверьте состояние ML в «Настройки → Интеграции».
             </p>
           ) : null}
           <section aria-label="Фильтры сводки" className="flex flex-wrap items-center gap-3 px-6 py-4">
@@ -586,7 +582,7 @@ export function DashboardPage() {
               },
             ].map((item) => (
               <div key={item.label} className="border-r border-border-soft px-5 py-5 last:border-0">
-                <p className="text-[11px] font-medium tracking-[0.1em] text-muted-foreground uppercase">{item.label}</p>
+                <p className="text-[12px] font-medium text-muted-foreground">{item.label}</p>
                 <p className={cn("mt-3 font-mono text-[38px] leading-none tabular-nums", item.tone)}>
                   {sourceUnavailable || item.value === null ? "—" : String(item.value).padStart(2, "0")}
                 </p>
@@ -698,7 +694,7 @@ export function DashboardPage() {
                   <>
                     <div className="overflow-x-auto border-y border-border">
                       <table className="w-full min-w-[760px] text-left text-[12px]">
-                        <thead className="bg-surface/40 text-[10px] tracking-[0.08em] text-muted-foreground uppercase">
+                        <thead className="bg-surface/40 text-[10px] text-muted-foreground">
                           <tr>
                             {COLUMNS.map((column) => {
                               const active = sort.key === column.key
@@ -716,7 +712,7 @@ export function DashboardPage() {
                                     disabled={column.key === "response" && actionUnavailable}
                                     aria-label={`Сортировать по ${column.label}`}
                                     className={cn(
-                                      "flex w-full items-center gap-2 px-3 py-3 text-left tracking-[0.08em] uppercase outline-none hover:bg-surface/60 focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50",
+                                      "flex w-full items-center gap-2 px-3 py-3 text-left outline-none hover:bg-surface/60 focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50",
                                       active && "text-vena"
                                     )}
                                   >

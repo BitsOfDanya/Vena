@@ -35,7 +35,7 @@ const HORIZONS = [
 
 function SectionTitle({ children, count }: { children: React.ReactNode; count?: number }) {
   return (
-    <h2 className="flex items-baseline gap-2.5 text-[13px] font-medium tracking-[0.1em] text-muted-foreground uppercase">
+    <h2 className="text-[15px] font-semibold text-foreground flex items-baseline gap-2.5">
       {children}
       {count !== undefined ? <span className="font-mono text-[12px] text-faint tabular-nums">{count}</span> : null}
     </h2>

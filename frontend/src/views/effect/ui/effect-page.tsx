@@ -36,7 +36,7 @@ function Metric({
 }) {
   return (
     <section className="border border-border bg-elevated px-4 py-3">
-      <h3 className="text-[11px] font-medium tracking-[0.12em] text-muted-foreground uppercase">{title}</h3>
+      <h3 className="text-[12px] font-medium text-muted-foreground">{title}</h3>
       <p className="mt-2 flex items-baseline gap-2">
         <span className="font-mono text-[28px] leading-none tabular-nums">{value}</span>
         {unit ? <span className="text-[13px] text-muted-foreground">{unit}</span> : null}
@@ -86,28 +86,28 @@ function AlarmLoadBlock() {
   return (
     <section className="border border-border bg-elevated">
       <div className="border-b border-border-soft px-4 py-3">
-        <h2 className="text-[12px] font-medium tracking-[0.12em] uppercase">Нагрузка тревог · ISA-18.2</h2>
+        <h2 className="text-[12px] font-medium">Нагрузка тревог · ISA-18.2</h2>
         <p className="mt-1 text-[12px] text-muted-foreground">
           {recent.start && recent.end ? `${recent.start} — ${recent.end}` : "Последний месяц"} · норма до {manageable}/ч
         </p>
       </div>
       <div className="grid gap-3 px-4 py-3 sm:grid-cols-2 xl:grid-cols-4">
         <div>
-          <p className="text-[11px] tracking-[0.08em] text-faint uppercase">Тревог в час</p>
+          <p className="text-[12px] text-faint">Тревог в час</p>
           <p className={cn("mt-1 font-mono text-[22px] tabular-nums", over && "text-status-attention")}>
             {recent.perHourMean.toFixed(1)}
           </p>
         </div>
         <div>
-          <p className="text-[11px] tracking-[0.08em] text-faint uppercase">Доля лавин</p>
+          <p className="text-[12px] text-faint">Доля лавин</p>
           <p className="mt-1 font-mono text-[22px] tabular-nums">{pct(recent.activationsInFloods)}</p>
         </div>
         <div>
-          <p className="text-[11px] tracking-[0.08em] text-faint uppercase">Топ-10 каналов</p>
+          <p className="text-[12px] text-faint">Топ-10 каналов</p>
           <p className="mt-1 font-mono text-[22px] tabular-nums">{pct(recent.top10Share)}</p>
         </div>
         <div>
-          <p className="text-[11px] tracking-[0.08em] text-faint uppercase">Серии ППР</p>
+          <p className="text-[12px] text-faint">Серии ППР</p>
           <p className="mt-1 font-mono text-[22px] tabular-nums">{pct(recent.maintenanceShare)}</p>
         </div>
       </div>
@@ -272,7 +272,7 @@ export function EffectPage() {
 
             <section className="border border-border bg-elevated">
               <div className="border-b border-border-soft px-4 py-3">
-                <h2 className="text-[12px] font-medium tracking-[0.12em] uppercase">Опережение по моделям</h2>
+                <h2 className="text-[12px] font-medium">Опережение по моделям</h2>
                 <p className="mt-1 text-[12px] text-muted-foreground">
                   Насколько заранее модель предупреждает и какая доля тревог подтверждается ·{" "}
                   <Link href="/models" className="text-vena underline-offset-4 hover:underline">
@@ -284,7 +284,7 @@ export function EffectPage() {
                 <p className="px-4 py-6 text-[13px] text-muted-foreground">Метрики опережения ещё не рассчитаны.</p>
               ) : (
                 <div>
-                  <div className="grid grid-cols-[1fr_minmax(12rem,2fr)] gap-3 border-b border-border-soft px-4 py-2 text-[11px] tracking-[0.08em] text-faint uppercase">
+                  <div className="grid grid-cols-[1fr_minmax(12rem,2fr)] gap-3 border-b border-border-soft px-4 py-2 text-[12px] text-faint">
                     <span>Модель</span>
                     <span>Упреждение</span>
                   </div>
@@ -326,7 +326,7 @@ export function EffectPage() {
 
         <section className="border border-border bg-elevated">
           <div className="border-b border-border-soft px-4 py-3">
-            <h2 className="text-[12px] font-medium tracking-[0.12em] uppercase">Топ локаций → действие</h2>
+            <h2 className="text-[12px] font-medium">Топ локаций → действие</h2>
             <p className="mt-1 text-[12px] text-muted-foreground">
               Сортировка по индексу здоровья (хуже выше). Открытых работ: {openActions.length}.
             </p>
@@ -358,7 +358,7 @@ export function EffectPage() {
                     <span className="truncate text-muted-foreground">
                       {item.recommendation?.consequence ?? item.recommendation?.title ?? item.primaryReason}
                     </span>
-                    <span className={cn("text-[12px] tracking-[0.04em] uppercase", hasAction ? "text-vena" : "text-faint")}>
+                    <span className={cn("text-[12px]", hasAction ? "text-vena" : "text-faint")}>
                       {hasAction ? "работа есть" : (STATUS_RU[item.status] ?? "нужна работа")}
                     </span>
                   </li>

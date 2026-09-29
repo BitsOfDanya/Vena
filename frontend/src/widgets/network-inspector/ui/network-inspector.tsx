@@ -101,11 +101,11 @@ export function NetworkInspector({
           </div>
           <dl className="mt-3 grid grid-cols-2 gap-3 text-xs">
             <div>
-              <dt className="text-[11px] font-medium tracking-[0.08em] text-faint uppercase">Окно прогноза</dt>
+              <dt className="text-[12px] font-medium text-faint">Окно прогноза</dt>
               <dd className="mt-0.5 font-mono text-sm tabular-nums">{asset.forecastHorizon} ч</dd>
             </div>
             <div>
-              <dt className="text-[11px] font-medium tracking-[0.08em] text-faint uppercase">Последнее событие</dt>
+              <dt className="text-[12px] font-medium text-faint">Последнее событие</dt>
               <dd className="mt-0.5 font-mono text-sm tabular-nums">{asset.lastEventAt ? formatAgo(asset.lastEventAt, now) : "нет"}</dd>
             </div>
           </dl>

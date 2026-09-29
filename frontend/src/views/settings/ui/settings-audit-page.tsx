@@ -53,7 +53,7 @@ export function SettingsAuditPage() {
         ) : (
           <div className="overflow-x-auto border border-border bg-elevated">
             <table className="w-full min-w-[640px] text-left text-[13px]">
-              <thead className="border-b border-border text-[11px] tracking-[0.08em] text-faint uppercase">
+              <thead className="border-b border-border text-[12px] text-faint">
                 <tr>
                   <th className="px-4 py-2 font-medium">Время</th>
                   <th className="px-4 py-2 font-medium">Исполнитель</th>

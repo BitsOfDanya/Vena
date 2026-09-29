@@ -31,7 +31,7 @@ export function InspectorHeader({
   return (
     <div className="flex items-start gap-3 border-b px-4 py-3">
       <div className="min-w-0 flex-1">
-        {eyebrow ? <p className="text-[11px] font-medium tracking-[0.08em] text-faint uppercase">{eyebrow}</p> : null}
+        {eyebrow ? <p className="text-[12px] font-medium text-faint">{eyebrow}</p> : null}
         <h2 className="truncate font-mono text-[15px] font-medium text-foreground tabular-nums">{title}</h2>
         {children}
       </div>
@@ -60,7 +60,7 @@ export function InspectorSection({
 }) {
   return (
     <section className={cn("border-b px-4 py-3 last:border-b-0", className)}>
-      {title ? <h3 className="mb-2 text-[11px] font-medium tracking-[0.1em] text-muted-foreground uppercase">{title}</h3> : null}
+      {title ? <h3 className="mb-2 text-[12px] font-medium text-muted-foreground">{title}</h3> : null}
       {children}
     </section>
   )

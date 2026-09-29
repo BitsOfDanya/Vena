@@ -5,29 +5,33 @@ import { AppProviders } from "@/app/providers"
 
 import "./globals.css"
 
-const geist = localFont({
-  src: "./fonts/geist-latin.woff2",
-  variable: "--font-geist",
+const sans = localFont({
+  src: "./fonts/plex-sans.woff2",
+  weight: "100 700",
+  variable: "--font-plex-sans",
   display: "swap",
 })
 
-const geistMono = localFont({
-  src: "./fonts/geist-mono-latin.woff2",
-  variable: "--font-geist-mono",
+const mono = localFont({
+  src: [
+    { path: "./fonts/plex-mono-400.woff2", weight: "400" },
+    { path: "./fonts/plex-mono-500.woff2", weight: "500" },
+  ],
+  variable: "--font-plex-mono",
   display: "swap",
 })
 
 export const metadata: Metadata = {
   title: {
-    default: "Vena",
-    template: "%s · Vena",
+    default: "VENA",
+    template: "%s · VENA",
   },
   description: "Прогноз инцидентов и работы по инженерным коллекторам.",
 }
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
-    <html lang="ru" className={`${geist.variable} ${geistMono.variable}`} suppressHydrationWarning>
+    <html lang="ru" className={`${sans.variable} ${mono.variable}`} suppressHydrationWarning>
       <body>
         <AppProviders>{children}</AppProviders>
       </body>

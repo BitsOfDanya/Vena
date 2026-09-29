@@ -8,7 +8,8 @@ describe("formatAgo", () => {
     expect(formatAgo(now - 15_000, now)).toBe("15 с назад")
     expect(formatAgo(now - 5 * 60_000, now)).toBe("5 мин назад")
     expect(formatAgo(now - 3 * 3_600_000, now)).toBe("3 ч назад")
-    expect(formatAgo(now - 2 * 86_400_000, now)).toBe("2.0 дн. назад")
+    expect(formatAgo(now - 30 * 3_600_000, now)).toBe("вчера")
+    expect(formatAgo(now - 5 * 86_400_000, now)).toMatch(/,\s\d{2}:\d{2}$/)
   })
 })
 

@@ -167,7 +167,7 @@ export function NetworkCanvas({ model, selectedId, dimmed, pulseAssetId, onSelec
             <g key={group.id}>
               <line x1={group.x} x2={group.x + 340} y1={group.y + 8} y2={group.y + 8} className="stroke-foreground/25" strokeWidth={1} vectorEffect="non-scaling-stroke" />
               <line x1={group.x} x2={group.x} y1={group.y + 8} y2={group.y + 14} className="stroke-foreground/45" strokeWidth={1} vectorEffect="non-scaling-stroke" />
-              <text x={group.x} y={group.y} className="fill-muted-foreground text-[11px] font-medium uppercase tracking-[0.08em]">
+              <text x={group.x} y={group.y} className="fill-muted-foreground text-[12px] font-medium">
                 {group.id}
                 <tspan dx={6} className="fill-faint font-normal">
                   {group.system}
@@ -278,7 +278,7 @@ export function NetworkCanvas({ model, selectedId, dimmed, pulseAssetId, onSelec
           <Maximize />
         </Button>
       </div>
-      <div className="pointer-events-none absolute right-4 bottom-4 flex flex-col gap-1.5 border-l bg-background/80 pl-3 text-[10px] font-medium tracking-[0.1em] text-muted-foreground uppercase">
+      <div className="pointer-events-none absolute right-4 bottom-4 flex flex-col gap-1.5 border-l bg-background/80 pl-3 text-[10px] font-medium text-muted-foreground">
         <span className="text-faint">Легенда</span>
         <span className="flex items-center gap-2"><StatusMark status="normal" />Норма</span>
         <span className="flex items-center gap-2"><StatusMark status="attention" />Внимание</span>

@@ -225,13 +225,13 @@ export function PulseSurface({
         })}
 
         <line x1={x(data.now)} x2={x(data.now)} y1={TOP - 14} y2={lanesBottom} className="stroke-foreground" strokeWidth={1.5} />
-        <text x={x(data.now) - 8} y={TOP - 6} textAnchor="end" className="fill-foreground text-[12px] font-semibold tracking-[0.1em] uppercase">
+        <text x={x(data.now) - 8} y={TOP - 6} textAnchor="end" className="fill-foreground text-[12px] font-semibold">
           Now
           <tspan className="fill-muted-foreground font-mono text-[11px] font-normal tracking-normal" dx={7}>
             {formatClock(data.now)}
           </tspan>
         </text>
-        <text x={LEFT - 16} y={lanesBottom + 18} textAnchor="end" className="fill-faint text-[11px] tracking-[0.06em] uppercase">
+        <text x={LEFT - 16} y={lanesBottom + 18} textAnchor="end" className="fill-faint text-[12px]">
           Past
         </text>
       </svg>
@@ -255,7 +255,7 @@ export function PulseSurface({
               height: labelHeight,
             }}
           >
-            <span className="text-[13px] font-semibold tracking-[0.12em] text-vena uppercase">
+            <span className="text-[13px] font-semibold text-vena">
               Связка {patternLabel(item.pattern)}
             </span>
             <span className="font-mono text-[12px] text-muted-foreground tabular-nums">

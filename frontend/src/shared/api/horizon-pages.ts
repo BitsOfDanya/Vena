@@ -1,6 +1,6 @@
 import { apiFetch } from "@/shared/api/http"
 
-const PAGE = 500
+const PAGE = 5000
 const CACHE_MS = 15_000
 
 type CacheEntry = { at: number; pages: unknown[][] }

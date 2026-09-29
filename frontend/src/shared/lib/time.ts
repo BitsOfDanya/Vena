@@ -17,13 +17,13 @@ const clockSeconds = new Intl.DateTimeFormat("ru-RU", {
 
 const day = new Intl.DateTimeFormat("ru-RU", {
   timeZone: ZONE,
-  day: "2-digit",
+  day: "numeric",
   month: "short",
 })
 
 const fullDay = new Intl.DateTimeFormat("ru-RU", {
   timeZone: ZONE,
-  day: "2-digit",
+  day: "numeric",
   month: "short",
   year: "numeric",
 })
@@ -50,15 +50,15 @@ export function formatClockSeconds(timestamp: number) {
 }
 
 export function formatDay(timestamp: number) {
-  return day.format(timestamp).replace(/\./g, "").toUpperCase()
+  return day.format(timestamp).replace(/\./g, "")
 }
 
 export function formatFullDay(timestamp: number) {
-  return fullDay.format(timestamp).replace(/\./g, "").toUpperCase()
+  return fullDay.format(timestamp).replace(/\./g, "").replace(/\s*г$/, "")
 }
 
 export function formatDateTime(timestamp: number) {
-  return `${formatDay(timestamp)} ${formatClock(timestamp)}`
+  return `${formatDay(timestamp)}, ${formatClock(timestamp)}`
 }
 
 export function toDateTimeLocal(timestamp: number) {
@@ -77,9 +77,8 @@ export function formatAgo(from: number, to: number) {
   if (seconds < 60) return `${seconds} с назад`
   if (seconds < 3600) return `${Math.round(seconds / 60)} мин назад`
   if (seconds < 86_400) return `${Math.round(seconds / 3600)} ч назад`
-  const days = seconds / 86_400
-  if (days < 10) return `${days.toFixed(1)} дн. назад`
-  return `${Math.round(days)} дн. назад`
+  if (seconds < 2 * 86_400) return "вчера"
+  return formatDateTime(from)
 }
 
 export function formatDuration(hours: number) {

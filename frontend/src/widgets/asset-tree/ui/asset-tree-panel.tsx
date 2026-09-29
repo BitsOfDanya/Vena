@@ -138,7 +138,7 @@ export function AssetTreePanel({
                             <span className="font-mono text-[12px] tabular-nums">{channel.probability === null ? "Нет прогноза" : `${Math.round(channel.probability * 100)}%`}</span>
                             <span
                               className={cn(
-                                "text-[11px] tracking-[0.04em] uppercase",
+                                "text-[12px]",
                                 channel.riskLevel === "critical"
                                   ? "text-status-critical"
                                   : channel.riskLevel === "attention"

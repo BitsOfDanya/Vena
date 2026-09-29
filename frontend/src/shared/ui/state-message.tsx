@@ -15,7 +15,7 @@ export function StateMessage({
 }) {
   return (
     <div role="status" className={cn("flex h-full min-h-32 flex-col items-start justify-center gap-1.5 px-6 py-8", className)}>
-      <p className="text-[11px] font-medium tracking-[0.08em] text-faint uppercase">{title}</p>
+      <p className="text-[12px] font-medium text-faint">{title}</p>
       {description ? <p className="max-w-md text-sm text-muted-foreground">{description}</p> : null}
       {action ? <div className="mt-2">{action}</div> : null}
     </div>

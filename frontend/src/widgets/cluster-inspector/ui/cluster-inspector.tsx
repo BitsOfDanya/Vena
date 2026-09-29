@@ -104,15 +104,15 @@ export function ClusterInspector({ cluster, onClose }: { cluster: PulseCluster; 
         <InspectorSection>
           <dl className="grid grid-cols-3 gap-3">
             <div>
-              <dt className="text-[11px] font-medium tracking-[0.08em] text-faint uppercase">Переходы</dt>
+              <dt className="text-[12px] font-medium text-faint">Переходы</dt>
               <dd className="font-mono text-xl tabular-nums">{cluster.transitions}</dd>
             </div>
             <div>
-              <dt className="text-[11px] font-medium tracking-[0.08em] text-faint uppercase">Объекты</dt>
+              <dt className="text-[12px] font-medium text-faint">Объекты</dt>
               <dd className="font-mono text-xl tabular-nums">{cluster.assetIds.length}</dd>
             </div>
             <div>
-              <dt className="text-[11px] font-medium tracking-[0.08em] text-faint uppercase">Δ риска</dt>
+              <dt className="text-[12px] font-medium text-faint">Δ риска</dt>
               <dd className={cn("font-mono text-xl tabular-nums", cluster.riskDelta > 1 && "text-status-attention")}>
                 {formatDelta(cluster.riskDelta)}
               </dd>
@@ -152,15 +152,15 @@ export function PatternInspector({
         <InspectorSection>
           <dl className="grid grid-cols-3 gap-3">
             <div>
-              <dt className="text-[11px] font-medium tracking-[0.08em] text-faint uppercase">События</dt>
+              <dt className="text-[12px] font-medium text-faint">События</dt>
               <dd className="font-mono text-xl tabular-nums">{pattern.events}</dd>
             </div>
             <div>
-              <dt className="text-[11px] font-medium tracking-[0.08em] text-faint uppercase">Системы</dt>
+              <dt className="text-[12px] font-medium text-faint">Системы</dt>
               <dd className="font-mono text-xl tabular-nums">{pattern.systems.length}</dd>
             </div>
             <div>
-              <dt className="text-[11px] font-medium tracking-[0.08em] text-faint uppercase">Δ риска</dt>
+              <dt className="text-[12px] font-medium text-faint">Δ риска</dt>
               <dd className={cn("font-mono text-xl tabular-nums", pattern.riskDelta > 1 && "text-status-attention")}>{formatDelta(pattern.riskDelta)}</dd>
             </div>
           </dl>

@@ -42,7 +42,7 @@ function WeatherForecastStrip({ bordered = true, showCorrelation = true }: { bor
     <div className={cn("px-5 py-4", bordered && "border-t border-border-soft")}>
       <div className="flex flex-wrap items-baseline justify-between gap-2">
         <div>
-          <h3 className="text-[11px] tracking-[0.08em] text-muted-foreground uppercase">Прогноз осадков · 7 дней</h3>
+          <h3 className="text-[12px] text-muted-foreground">Прогноз осадков · 7 дней</h3>
           <p className="mt-1 text-[12px] text-muted-foreground">
             Для сценария подтопления · источник {weather.data.source}
           </p>
@@ -110,7 +110,7 @@ export function SeasonalityPanel() {
     <section aria-label="Сезонность" className="mx-6 mb-6 border border-border bg-elevated">
       <div className="flex flex-wrap items-baseline justify-between gap-2 border-b border-border-soft px-5 py-3">
         <div>
-          <h2 className="text-[11px] tracking-[0.08em] uppercase">Сезонность</h2>
+          <h2 className="text-[12px]">Сезонность</h2>
           <p className="mt-1 text-[12px] text-muted-foreground">
             Частота начала эпизодов по месяцам относительно среднего месяца сценария, 2019–2025. 1.0× — обычный месяц.
           </p>

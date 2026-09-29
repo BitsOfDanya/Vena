@@ -66,7 +66,7 @@ export function SettingsSection({
   return (
     <section className="space-y-3">
       <div>
-        <h2 className="text-[13px] font-medium tracking-[0.1em] text-muted-foreground uppercase">{title}</h2>
+        <h2 className="text-[15px] font-semibold text-foreground">{title}</h2>
         {description ? <p className="mt-1 text-[13px] text-muted-foreground">{description}</p> : null}
       </div>
       {children}
@@ -79,7 +79,7 @@ export function StateTag({ state }: { state: "configured" | "not_configured" | "
   return (
     <span
       className={cn(
-        "border px-2 py-0.5 text-[11px] font-medium tracking-[0.06em] uppercase",
+        "border px-2 py-0.5 text-[12px] font-medium",
         state === "configured" && "border-status-normal/60 text-status-normal",
         state === "not_configured" && "border-status-attention/60 text-status-attention",
         state === "disabled" && "border-border text-faint"

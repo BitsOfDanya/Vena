@@ -31,7 +31,7 @@ export function AssetDiagnostic({
     <div className="flex size-full">
       <div className="flex min-w-0 flex-1 flex-col">
         <div className="flex shrink-0 items-center gap-4 border-b px-4 py-2.5">
-          <h2 className="text-[13px] font-semibold tracking-[0.14em] uppercase">
+          <h2 className="text-[13px] font-semibold">
             {assetId} <span className="text-faint">/</span> Диагностика
           </h2>
           <Segmented
@@ -80,7 +80,7 @@ export function AssetDiagnostic({
                   </li>
                 ))}
                 <li className="flex items-baseline justify-between border-t pt-2 text-sm">
-                  <span className="text-[11px] font-medium tracking-[0.08em] text-faint uppercase">Риск</span>
+                  <span className="text-[12px] font-medium text-faint">Риск</span>
                   <span className="font-mono tabular-nums">{total}</span>
                 </li>
               </ul>

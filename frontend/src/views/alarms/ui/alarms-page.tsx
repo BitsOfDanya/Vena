@@ -21,7 +21,7 @@ const VIEWS: { value: View; label: string }[] = [
 function Metric({ label, value, hint }: { label: string; value: React.ReactNode; hint: string }) {
   return (
     <div className="flex flex-col gap-2 border-r border-border-soft px-5 py-4 last:border-r-0">
-      <span className="text-[11px] tracking-[0.08em] text-faint uppercase">{label}</span>
+      <span className="text-[12px] text-faint">{label}</span>
       <span className="font-mono text-[30px] leading-none tabular-nums">{value}</span>
       <span className="text-[12px] text-muted-foreground">{hint}</span>
     </div>
@@ -69,7 +69,7 @@ function AlarmMonthsBars({
   const max = Math.max(manageable, ...recent.map((item) => item.perHourMean), 1)
   return (
     <div className="mt-3">
-      <p className="text-[11px] tracking-[0.08em] text-faint uppercase">Тревог /ч по месяцам</p>
+      <p className="text-[12px] text-faint">Тревог /ч по месяцам</p>
       <div className="mt-2 flex h-14 items-end gap-1">
         {recent.map((item) => {
           const height = Math.max(4, Math.round((item.perHourMean / max) * 48))
@@ -95,7 +95,7 @@ function AlarmLoadStrip() {
   const recent = kpis.data.recent
   return (
     <section aria-label="Нагрузка тревог ISA-18.2" className="mx-6 mt-4 border border-border bg-elevated px-4 py-3">
-      <p className="text-[11px] tracking-[0.08em] text-faint uppercase">Нагрузка тревог · ISA-18.2</p>
+      <p className="text-[12px] text-faint">Нагрузка тревог · ISA-18.2</p>
       <p className="mt-2 flex flex-wrap gap-x-6 gap-y-1 text-[13px]">
         <span>
           <span className="font-mono text-[18px] tabular-nums">{recent.perHourMean.toFixed(1)}</span>
@@ -146,7 +146,7 @@ function AlarmsTable({ alarms }: { alarms: AlarmAssessment[] }) {
       </div>
       <div className="mx-6 mb-8 overflow-x-auto border border-border">
         <table className="w-full min-w-[760px] text-left text-[13px]">
-          <thead className="border-b border-border text-[11px] tracking-[0.08em] text-faint uppercase">
+          <thead className="border-b border-border text-[12px] text-faint">
             <tr>
               <th className="px-4 py-2 font-medium">Время</th>
               <th className="px-4 py-2 font-medium">Датчик / локация</th>
@@ -244,14 +244,14 @@ function PicketStrip({ route }: { route: AccessRoute }) {
 function RoutesTable({ routes }: { routes: AccessRoute[] }) {
   return (
     <section aria-label="Маршруты по пикетам" className="mx-6 mt-4 mb-2">
-      <h2 className="text-[11px] tracking-[0.08em] text-faint uppercase">Маршруты по пикетам, 30 дней</h2>
+      <h2 className="text-[12px] text-faint">Маршруты по пикетам, 30 дней</h2>
       <p className="mt-1 text-[12px] text-muted-foreground">
         Срабатывания точек входа одного объекта на охране с паузами до 30 минут, упорядоченные по пикетам (шаг около 10 м).
         Ниже — схема участка по пикетам, не только таблица.
       </p>
       <div className="mt-2 overflow-x-auto border border-border">
         <table className="w-full min-w-[760px] text-left text-[13px]">
-          <thead className="border-b border-border text-[11px] tracking-[0.08em] text-faint uppercase">
+          <thead className="border-b border-border text-[12px] text-faint">
             <tr>
               <th className="px-4 py-2 font-medium">Начало</th>
               <th className="px-4 py-2 font-medium">Объект</th>
@@ -307,7 +307,7 @@ function AccessTable({ events }: { events: AccessEvent[] }) {
       </p>
       <div className="mx-6 mt-4 mb-8 overflow-x-auto border border-border">
         <table className="w-full min-w-[760px] text-left text-[13px]">
-          <thead className="border-b border-border text-[11px] tracking-[0.08em] text-faint uppercase">
+          <thead className="border-b border-border text-[12px] text-faint">
             <tr>
               <th className="px-4 py-2 font-medium">Время</th>
               <th className="px-4 py-2 font-medium">Точка входа / локация</th>

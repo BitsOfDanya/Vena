@@ -153,10 +153,10 @@ export function TemporalCanvas({
         </defs>
 
         <rect x={future.left} y={HEADER - 4} width={future.width} height={bundles.length * blockHeight} className="fill-vena/[0.06]" />
-        <text x={LEFT + 6} y={12} className="fill-faint text-[11px] font-medium uppercase tracking-[0.1em]">
+        <text x={LEFT + 6} y={12} className="fill-faint text-[12px] font-medium">
           Past
         </text>
-        <text x={width - RIGHT - 6} y={12} textAnchor="end" className="fill-faint text-[11px] font-medium uppercase tracking-[0.1em]">
+        <text x={width - RIGHT - 6} y={12} textAnchor="end" className="fill-faint text-[12px] font-medium">
           Будущее · прогноз модели
         </text>
 
@@ -196,7 +196,7 @@ export function TemporalCanvas({
                 cursor += track.height + ROW_GAP
                 return (
                   <g key={track.key}>
-                    <text x={LEFT - 10} y={y + Math.min(track.height, 16) / 2 + 3} textAnchor="end" className="fill-muted-foreground text-[11px] font-medium uppercase tracking-[0.08em]">
+                    <text x={LEFT - 10} y={y + Math.min(track.height, 16) / 2 + 3} textAnchor="end" className="fill-muted-foreground text-[12px] font-medium">
                       {track.label}
                     </text>
                     <line x1={LEFT} x2={width - RIGHT} y1={y + track.height} y2={y + track.height} className="stroke-border" strokeWidth={1} />
@@ -214,7 +214,7 @@ export function TemporalCanvas({
 
         <line x1={centerX} x2={centerX} y1={HEADER - 8} y2={bottom + 4} className="stroke-foreground" strokeWidth={1.6} />
         <rect x={centerX - 24} y={bottom + 5} width={48} height={17} rx={2} className="fill-foreground" />
-        <text x={centerX} y={bottom + 17} textAnchor="middle" className="fill-background text-[10px] font-semibold uppercase tracking-[0.14em]">
+        <text x={centerX} y={bottom + 17} textAnchor="middle" className="fill-background text-[10px] font-semibold">
           Now
         </text>
         {tooltip ? <line x1={tooltip.x} x2={tooltip.x} y1={HEADER - 4} y2={bottom} className="stroke-muted-foreground/60" strokeWidth={1} strokeDasharray="2 3" /> : null}

@@ -19,19 +19,19 @@ export function SettingsOverviewPage() {
       <SettingsSection title="Учётная запись">
         <dl className="grid grid-cols-2 gap-x-6 gap-y-3 border border-border bg-elevated px-5 py-4 text-[14px]">
           <div>
-            <dt className="text-[12px] text-faint uppercase">Пользователь</dt>
+            <dt className="text-[12px] text-faint">Пользователь</dt>
             <dd className="mt-0.5 font-mono text-[13px]">{me.data?.subject ?? "Дежурный инженер"}</dd>
           </div>
           <div>
-            <dt className="text-[12px] text-faint uppercase">Роль</dt>
+            <dt className="text-[12px] text-faint">Роль</dt>
             <dd className="mt-0.5 font-mono text-[13px]">{me.data?.role ?? "dispatcher"}</dd>
           </div>
           <div>
-            <dt className="text-[12px] text-faint uppercase">Часовой пояс</dt>
+            <dt className="text-[12px] text-faint">Часовой пояс</dt>
             <dd className="mt-0.5 font-mono text-[13px]">Europe/Moscow</dd>
           </div>
           <div>
-            <dt className="text-[12px] text-faint uppercase">Язык интерфейса</dt>
+            <dt className="text-[12px] text-faint">Язык интерфейса</dt>
             <dd className="mt-0.5">Русский</dd>
           </div>
         </dl>

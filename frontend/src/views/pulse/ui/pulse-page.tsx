@@ -65,7 +65,7 @@ const TAPE_LIMIT = 12
 
 function SectionTitle({ children, count }: { children: React.ReactNode; count?: number }) {
   return (
-    <h2 className="mb-2 flex items-baseline gap-2.5 text-[13px] font-medium tracking-[0.1em] text-muted-foreground uppercase">
+    <h2 className="text-[15px] font-semibold text-foreground mb-2 flex items-baseline gap-2.5">
       {children}
       {count !== undefined ? <span className="font-mono text-[12px] text-faint tabular-nums">{count}</span> : null}
     </h2>
@@ -231,6 +231,97 @@ export function PulsePage() {
     setSheetOpen(true)
   }
 
+  const summaryModules = (
+    <PulseSummaryModules
+      summary={summary}
+      apiMode={apiMode}
+      predictionsUnavailable={Boolean(predictionsUnavailable)}
+      criticalCount={criticalPredictions.data?.criticalCount ?? 0}
+      criticalAssets={(criticalPredictions.data?.critical ?? []).slice(0, 2).map((item) => `${item.name?.trim() || item.assetId} · ${formatProbability(item.score)}`)}
+      attentionCount={criticalPredictions.data?.attentionCount ?? 0}
+      risingCount={(riskRising.data ?? []).filter((item) => (item.scoreDelta ?? 0) > 0).length}
+      risingTop={(() => {
+        const top = (riskRising.data ?? []).find((item) => (item.scoreDelta ?? 0) > 0)
+        return top ? `${top.assetId} ${formatProbabilityDelta(top.scoreDelta ?? 0)}` : null
+      })()}
+      actionsDue={actionsDue}
+      actionsOverdue={actionsOverdue}
+      onInspectCritical={() => {
+        const first = criticalPredictions.data?.critical[0] ?? criticalPredictions.data?.attention[0]
+        if (first) {
+          selectAsset(first.assetId)
+          router.push("/network")
+        } else {
+          router.push("/network")
+        }
+      }}
+      onViewChanges={() => router.push("/network")}
+      onInvestigatePattern={() => undefined}
+      onOpenPlan={() => router.push("/actions")}
+    />
+  )
+
+  if (apiMode) {
+    const counted = (item: (typeof SCENARIO_FILTERS)[number]) =>
+      item.value === "all" ? resolved.length : resolved.filter((situation) => situation.scenario === item.value).length
+    return (
+      <div className="size-full overflow-y-auto">
+        <div className="mx-auto flex w-full max-w-[1600px] flex-col gap-5 px-4 py-5 sm:px-6">
+          <div className="flex flex-wrap items-end justify-between gap-3">
+            <div>
+              <h1 className="text-[24px] font-semibold tracking-[-0.01em]">Пульс системы</h1>
+              <div className="mt-1">
+                <SnapshotLine snapshot={snapshot.data} />
+              </div>
+            </div>
+            <Segmented label="Окно пульса" value={windowHours} onChange={setWindowHours} options={WINDOWS} />
+          </div>
+          {summaryModules}
+          <div className="grid gap-5 xl:grid-cols-[minmax(0,1fr)_420px]">
+            <section aria-label="Требуют внимания" className="flex min-w-0 flex-col rounded-lg border border-border bg-elevated shadow-[var(--shadow-card)]">
+              <div className="flex flex-wrap items-center gap-x-4 gap-y-2 border-b border-border px-4 py-3">
+                <h2 className="text-[16px] font-semibold">Требуют внимания</h2>
+                <span className="rounded-full bg-surface px-2 py-0.5 text-[12px] font-medium tabular-nums text-muted-foreground">
+                  {filtered.length}
+                </span>
+                <div className="w-full overflow-x-auto sm:ml-auto sm:w-auto">
+                  <Segmented
+                    label="Сценарий"
+                    value={scenarioFilter}
+                    onChange={setScenarioFilter}
+                    options={SCENARIO_FILTERS.map((item) => ({ ...item, label: `${item.label} ${counted(item)}` }))}
+                  />
+                </div>
+              </div>
+              {predictionsUnavailable ? (
+                <StateMessage
+                  title="Прогнозы недоступны"
+                  description="Снимок прогнозов ещё не рассчитан. Как только ML обработает журнал, здесь появятся ситуации."
+                />
+              ) : backendSituations.isPending ? (
+                <LoadingBar className="min-h-24" />
+              ) : (
+                <SituationRail
+                  className="px-1"
+                  situations={filtered}
+                  now={now}
+                  onInspect={inspect}
+                  onAcknowledge={acknowledgeSituation}
+                  onCreateAction={createAction}
+                />
+              )}
+            </section>
+            <div className="flex min-w-0 flex-col gap-5">
+              {!predictionsUnavailable ? <InspectionPlanPanel onCreate={createFromInspection} /> : null}
+              <RecentEvents hours={windowHours} onSelect={(id) => { selectAsset(id); router.push("/network") }} />
+            </div>
+          </div>
+        </div>
+        <CreateActionSheet open={sheetOpen} onOpenChange={setSheetOpen} draft={draft} />
+      </div>
+    )
+  }
+
   return (
     <div className="flex size-full min-h-0 flex-col">
       <div className="flex shrink-0 flex-wrap items-center gap-x-8 gap-y-3 px-6 pt-4 pb-3">
@@ -252,7 +343,7 @@ export function PulsePage() {
           apiMode={apiMode}
           predictionsUnavailable={Boolean(predictionsUnavailable)}
           criticalCount={criticalPredictions.data?.criticalCount ?? 0}
-          criticalAssets={(criticalPredictions.data?.critical ?? []).slice(0, 2).map((item) => `${item.assetId} · ${formatProbability(item.score)}`)}
+          criticalAssets={(criticalPredictions.data?.critical ?? []).slice(0, 2).map((item) => `${item.name?.trim() || item.assetId} · ${formatProbability(item.score)}`)}
           attentionCount={criticalPredictions.data?.attentionCount ?? 0}
           risingCount={(riskRising.data ?? []).filter((item) => (item.scoreDelta ?? 0) > 0).length}
           risingTop={(() => {
@@ -343,7 +434,7 @@ export function PulsePage() {
           {apiMode ? <RecentEvents hours={windowHours} onSelect={(id) => { selectAsset(id); router.push("/network") }} /> : (
           <section aria-label="Активность" className="flex min-h-[120px] flex-1 flex-col border-t border-border-soft px-6 pt-2.5">
             <div className="mb-2 flex items-baseline gap-4">
-              <h2 className="flex items-baseline gap-2.5 text-[13px] font-medium tracking-[0.1em] text-muted-foreground uppercase">
+              <h2 className="text-[15px] font-semibold text-foreground flex items-baseline gap-2.5">
                 Активность · последние {windowHours} ч
               </h2>
               {!hideDemoTelemetry ? (
@@ -382,7 +473,7 @@ export function PulsePage() {
           {hideDemoTelemetry ? null : (
           <section aria-label="Недавние события" className="mt-3 shrink-0 border-t border-border bg-surface">
             <div className="flex items-center gap-3 px-6 py-2">
-              <h2 className="flex items-baseline gap-2.5 text-[13px] font-medium tracking-[0.1em] text-muted-foreground uppercase">
+              <h2 className="text-[15px] font-semibold text-foreground flex items-baseline gap-2.5">
                 Недавние события
               </h2>
               <span className="font-mono text-[12px] text-faint tabular-nums">{data?.recent.length ?? 0}</span>

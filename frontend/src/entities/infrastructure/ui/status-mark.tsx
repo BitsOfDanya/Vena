@@ -25,7 +25,7 @@ export function StatusMark({ status, className }: { status: AssetStatus; classNa
 
 export function StatusLabel({ status, className }: { status: AssetStatus; className?: string }) {
   return (
-    <span className={cn("inline-flex items-center gap-1.5 text-[11px] font-medium uppercase tracking-[0.06em]", STATUS_TEXT[status], className)}>
+    <span className={cn("inline-flex items-center gap-1.5 text-[12px] font-medium", STATUS_TEXT[status], className)}>
       <StatusMark status={status} />
       {STATUS_LABEL[status]}
     </span>
@@ -36,7 +36,7 @@ const LEVEL_STATUS: Record<RiskLevel, AssetStatus> = { low: "normal", medium: "a
 
 export function RiskLevelLabel({ level, className }: { level: RiskLevel; className?: string }) {
   return (
-    <span className={cn("inline-flex items-center gap-1.5 text-[11px] font-medium uppercase tracking-[0.06em]", STATUS_TEXT[LEVEL_STATUS[level]], className)}>
+    <span className={cn("inline-flex items-center gap-1.5 text-[12px] font-medium", STATUS_TEXT[LEVEL_STATUS[level]], className)}>
       <StatusMark status={LEVEL_STATUS[level]} />
       {LEVEL_LABEL[level]}
     </span>

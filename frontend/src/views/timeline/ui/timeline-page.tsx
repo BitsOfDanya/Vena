@@ -182,7 +182,7 @@ function Suggestions({ onPick }: { onPick: (id: string) => void }) {
 
       {needle.length > 0 ? (
         <div className="w-full max-w-xl">
-          <p className="mb-1 text-[12px] font-medium tracking-[0.1em] text-faint uppercase">Результаты поиска</p>
+          <p className="mb-1 text-[12px] font-medium text-faint">Результаты поиска</p>
           {(search.data ?? []).length === 0 ? (
             <p className="text-[13px] text-muted-foreground">Объекты не найдены.</p>
           ) : (
@@ -193,19 +193,19 @@ function Suggestions({ onPick }: { onPick: (id: string) => void }) {
         <>
           {recent.length > 0 ? (
             <div className="w-full max-w-xl">
-              <p className="mb-1 text-[12px] font-medium tracking-[0.1em] text-faint uppercase">Недавно просмотренные</p>
+              <p className="mb-1 text-[12px] font-medium text-faint">Недавно просмотренные</p>
               <AssetRows assets={recent} onPick={onPick} />
             </div>
           ) : null}
           {top.length > 0 ? (
             <div className="w-full max-w-xl">
-              <p className="mb-1 text-[12px] font-medium tracking-[0.1em] text-faint uppercase">Наивысший риск сейчас</p>
+              <p className="mb-1 text-[12px] font-medium text-faint">Наивысший риск сейчас</p>
               <AssetRows assets={top} onPick={onPick} />
             </div>
           ) : null}
           {changed.length > 0 ? (
             <div className="w-full max-w-xl">
-              <p className="mb-1 text-[12px] font-medium tracking-[0.1em] text-faint uppercase">Недавно изменившиеся</p>
+              <p className="mb-1 text-[12px] font-medium text-faint">Недавно изменившиеся</p>
               <AssetRows assets={changed} onPick={onPick} />
             </div>
           ) : null}
@@ -287,7 +287,7 @@ export function TimelinePage() {
                 aria-pressed={layers[layer.key]}
                 onClick={() => setLayers((current) => ({ ...current, [layer.key]: !current[layer.key] }))}
                 className={cn(
-                  "h-7 border px-2 text-[11px] font-medium tracking-[0.06em] uppercase outline-none focus-visible:ring-2 focus-visible:ring-ring/60",
+                  "h-7 border px-2 text-[12px] font-medium outline-none focus-visible:ring-2 focus-visible:ring-ring/60",
                   layers[layer.key] ? "border-foreground/40 bg-elevated text-foreground" : "border-transparent text-faint hover:text-foreground"
                 )}
               >
@@ -331,7 +331,7 @@ export function TimelinePage() {
           </span>
           <span className="ml-auto flex items-center gap-3">
             {acknowledged.includes(primary.id) ? (
-              <span className="text-[12px] tracking-[0.06em] text-faint uppercase">Принято</span>
+              <span className="text-[12px] text-faint">Принято</span>
             ) : (
               <Button variant="outline" size="sm" onClick={() => setAcknowledged((current) => [...current, primary.id])}>
                 Подтвердить риск

@@ -1,14 +1,35 @@
 import { cn } from "@/shared/lib/utils"
 
-export function VenaMark({ className }: { className?: string }) {
+export function VenaMark({ className, tile = false }: { className?: string; tile?: boolean }) {
   return (
-    <svg aria-hidden viewBox="0 0 24 24" className={cn("size-[22px]", className)}>
-      <g fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round">
-        <path d="M3.5 3.5 10.6 11.2" />
-        <path d="M20.5 3.5 13.4 11.2" />
-        <path d="M12 15.4V20.5" />
+    <svg aria-hidden viewBox="0 0 32 32" className={cn("size-[26px] shrink-0", className)}>
+      {tile ? <rect width="32" height="32" rx="8" fill="var(--vena)" /> : null}
+      <g
+        fill="none"
+        stroke={tile ? "var(--primary-foreground)" : "currentColor"}
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      >
+        <path d="M7.5 24V15.5a8.5 8.5 0 0 1 17 0V24" strokeWidth="2.2" />
+        <path d="M5 24h22" strokeWidth="2.2" />
+        <path d="M9.5 18.5h3l1.6-3.6 2.4 6 1.8-4.2 1.1 1.8h3.1" strokeWidth="1.9" />
       </g>
-      <path d="M12 9.6 14.4 12.3 12 15 9.6 12.3Z" fill="currentColor" />
     </svg>
+  )
+}
+
+export function VenaLogo({ className, compact = false }: { className?: string; compact?: boolean }) {
+  return (
+    <span className={cn("flex items-center gap-2.5", className)}>
+      <VenaMark tile className="size-8" />
+      {compact ? null : (
+        <span className="flex flex-col leading-none">
+          <span className="text-[16px] font-semibold tracking-[0.14em] text-foreground">VENA</span>
+          <span className="mt-1 text-[10.5px] font-medium tracking-[0.02em] text-muted-foreground">
+            мониторинг коллекторов
+          </span>
+        </span>
+      )}
+    </span>
   )
 }

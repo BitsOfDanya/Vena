@@ -4,7 +4,7 @@ import Link from "next/link"
 import * as React from "react"
 
 import { useMlModels, useObjectHealthHistory, useSectionHealthHistory } from "@/entities/analytics"
-import { StatusMark, type Situation } from "@/entities/infrastructure"
+import type { Situation } from "@/entities/infrastructure"
 import { SCENARIO_LABEL, type PredictionScenario } from "@/entities/prediction"
 import {
   leadTimeLine,
@@ -45,24 +45,6 @@ function whatText(situation: Situation) {
 function objectIdFromLocation(location: string | null | undefined) {
   const match = location?.match(/Объект\s+(\d+)/i)
   return match?.[1] ?? null
-}
-
-function whenText(situation: Situation) {
-  const probability =
-    situation.incidentProbability ??
-    (situation.scoreText !== null && situation.riskScore !== null ? situation.riskScore : null)
-  const pct =
-    probability === null
-      ? situation.scoreText
-      : `вероятность ${Math.round(probability <= 1 ? probability * 100 : probability)} %`
-  const horizon =
-    situation.horizon == null
-      ? null
-      : situation.horizon >= 24
-        ? `В ближайшие ${Math.round(situation.horizon / 24)} ${situation.horizon >= 72 ? "суток" : "сут."}`
-        : `В ближайшие ${situation.horizon} ч`
-  if (horizon && pct) return `${horizon}, ${pct}`
-  return horizon ?? pct
 }
 
 function whereText(situation: Situation) {
@@ -149,13 +131,165 @@ function ModelTrust({ situation }: { situation: Situation }) {
   )
 }
 
-function Field({ label, children }: { label: string; children: React.ReactNode }) {
+function probabilityOf(situation: Situation) {
+  const value =
+    situation.incidentProbability ??
+    (situation.scoreText !== null && situation.riskScore !== null ? situation.riskScore : null)
+  if (value === null || value === undefined) return null
+  return Math.round(value <= 1 ? value * 100 : value)
+}
+
+function horizonText(situation: Situation) {
+  if (situation.horizon == null) return null
+  if (situation.horizon >= 72) return "за 3 суток"
+  if (situation.horizon >= 24) return "за сутки"
+  return `за ${situation.horizon} ч`
+}
+
+function Detail({ label, children }: { label: string; children: React.ReactNode }) {
   if (!children) return null
   return (
-    <p className="mt-0.5 text-[13px] text-muted-foreground">
-      <span className="text-faint">{label} · </span>
-      {children}
-    </p>
+    <div className="min-w-0">
+      <dt className="text-[12px] font-medium text-faint">{label}</dt>
+      <dd className="mt-0.5 text-[13.5px] text-foreground">{children}</dd>
+    </div>
+  )
+}
+
+function SituationCard({
+  situation,
+  now,
+  onInspect,
+  onAcknowledge,
+  onCreateAction,
+}: {
+  situation: Situation
+  now: number
+  onInspect: (situation: Situation) => void
+  onAcknowledge: (situation: Situation) => void
+  onCreateAction: (situation: Situation) => void
+}) {
+  const [open, setOpen] = React.useState(false)
+  const whyText = situation.recommendation?.hint || situation.primaryReason
+  const actions = situation.recommendation?.actions ?? []
+  const past = historyLine(situation)
+  const group = situation.locationGroup ?? null
+  const consequence = situation.recommendation?.consequence
+  const critical = situation.severity === "critical"
+  const probability = probabilityOf(situation)
+  const horizon = horizonText(situation)
+
+  return (
+    <li className="relative px-4 py-4">
+      <span aria-hidden className={cn("absolute inset-y-4 left-0 w-[3px] rounded-r-full", critical ? "bg-status-critical" : "bg-status-attention")} />
+      <div className="flex items-start gap-4">
+        <div className="min-w-0 flex-1">
+          <div className="flex flex-wrap items-center gap-x-2.5 gap-y-1">
+            <span
+              className={cn(
+                "rounded-full px-2 py-0.5 text-[11.5px] font-medium",
+                critical ? "bg-status-critical/12 text-status-critical" : "bg-status-attention/14 text-status-attention"
+              )}
+            >
+              {critical ? "Критично" : "Внимание"}
+            </span>
+            {scenarioLabel(situation.scenario) ? (
+              <span className="text-[12.5px] text-muted-foreground">{scenarioLabel(situation.scenario)}</span>
+            ) : null}
+            <span className="text-[12px] text-faint">· {formatAgo(situation.changedAt, now)}</span>
+          </div>
+          <h3 className={cn("mt-1.5 text-[16px] leading-snug font-semibold", situation.type === "pattern" && "text-vena")}>
+            {whatText(situation)}
+          </h3>
+          {whereText(situation) ? <p className="mt-0.5 text-[13px] text-muted-foreground">{whereText(situation)}</p> : null}
+        </div>
+        {probability !== null ? (
+          <div className="shrink-0 text-right">
+            <p className={cn("text-[26px] leading-none font-semibold tabular-nums", critical ? "text-status-critical" : "text-status-attention")}>
+              {probability}%
+            </p>
+            {horizon ? <p className="mt-1 text-[12px] text-muted-foreground">{horizon}</p> : null}
+          </div>
+        ) : null}
+      </div>
+
+      <dl className="mt-3 grid gap-3 sm:grid-cols-2">
+        <Detail label="Почему">{whyText}</Detail>
+        <Detail label="Первый шаг">{actions[0] ?? situation.recommendation?.title}</Detail>
+        {consequence ? <Detail label="Если не отреагировать">{consequence}</Detail> : null}
+      </dl>
+
+      {open ? (
+        <div className="mt-3 space-y-3 rounded-md bg-surface/60 p-3">
+          {actions.length > 1 ? (
+            <div>
+              <p className="text-[12px] font-medium text-faint">Порядок действий</p>
+              <ol className="mt-1 list-decimal space-y-0.5 pl-5 text-[13px]">
+                {actions.map((step) => (
+                  <li key={step}>{step}</li>
+                ))}
+              </ol>
+            </div>
+          ) : null}
+          {past ? (
+            <p className="text-[13px]">
+              <span className="text-faint">Так было раньше: </span>
+              {past}
+            </p>
+          ) : null}
+          {situation.healthIndex !== null && situation.healthIndex !== undefined ? (
+            <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-[13px]">
+              <span>
+                <span className="text-faint">Индекс здоровья участка: </span>
+                <span className="font-medium tabular-nums">{situation.healthIndex} из 100</span>
+              </span>
+              {workflowMode === "api" && group ? <HealthSpark group={group} location={situation.location} /> : null}
+            </div>
+          ) : null}
+          {workflowMode === "api" ? <ModelTrust situation={situation} /> : null}
+        </div>
+      ) : null}
+
+      <div className="mt-3 flex flex-wrap items-center gap-2">
+        {situation.status !== "action_created" ? (
+          <button
+            type="button"
+            onClick={() => onCreateAction(situation)}
+            className="h-8 cursor-pointer rounded-md bg-primary px-3 text-[13px] font-medium text-primary-foreground outline-none transition-opacity hover:opacity-90 focus-visible:ring-2 focus-visible:ring-ring/60"
+          >
+            Создать работу
+          </button>
+        ) : (
+          <span className="rounded-md bg-status-normal/12 px-2.5 py-1 text-[12.5px] font-medium text-status-normal">Работа создана</span>
+        )}
+        {situation.status === "new" ? (
+          <button
+            type="button"
+            onClick={() => onAcknowledge(situation)}
+            className="h-8 cursor-pointer rounded-md border border-border px-3 text-[13px] outline-none hover:bg-accent focus-visible:ring-2 focus-visible:ring-ring/60"
+          >
+            Принять
+          </button>
+        ) : situation.status === "acknowledged" ? (
+          <span className="text-[12.5px] text-muted-foreground">Принято</span>
+        ) : null}
+        <button
+          type="button"
+          onClick={() => onInspect(situation)}
+          className="h-8 cursor-pointer rounded-md px-2 text-[13px] text-vena outline-none hover:bg-accent focus-visible:ring-2 focus-visible:ring-ring/60"
+        >
+          Показать на схеме
+        </button>
+        <button
+          type="button"
+          onClick={() => setOpen((value) => !value)}
+          aria-expanded={open}
+          className="ml-auto h-8 cursor-pointer rounded-md px-2 text-[13px] text-muted-foreground outline-none hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring/60"
+        >
+          {open ? "Свернуть" : "Подробнее"}
+        </button>
+      </div>
+    </li>
   )
 }
 
@@ -176,111 +310,25 @@ export function SituationRail({
 }) {
   if (situations.length === 0) {
     return (
-      <div className="border border-border bg-elevated px-5 py-6">
-        <p className="text-[13px] font-medium tracking-[0.06em] text-muted-foreground uppercase">Внимание не требуется</p>
-        <p className="mt-1 text-[14px] text-muted-foreground">В выбранном окне нет объектов и связок, требующих вмешательства.</p>
+      <div className="px-5 py-10 text-center">
+        <p className="text-[15px] font-medium">Всё спокойно</p>
+        <p className="mt-1 text-[13.5px] text-muted-foreground">Ситуаций, требующих вмешательства, сейчас нет.</p>
       </div>
     )
   }
 
   return (
-    <ul className={cn("border border-border bg-elevated", className)}>
-      {situations.map((situation) => {
-        const whyText = situation.recommendation?.hint || situation.primaryReason
-        const actions = situation.recommendation?.actions.slice(0, 3) ?? []
-        const past = historyLine(situation)
-        const group = situation.locationGroup ?? null
-        const consequence = situation.recommendation?.consequence
-        const severityStatus = situation.severity === "critical" ? "critical" : "attention"
-
-        return (
-          <li
-            key={situation.id}
-            className="grid grid-cols-[3px_1fr] gap-3 border-b border-border-soft last:border-b-0"
-          >
-            <span
-              aria-hidden
-              className={cn("self-stretch", situation.severity === "critical" ? "bg-status-critical" : "bg-status-attention")}
-            />
-            <div className="min-w-0 py-2.5 pr-4">
-              <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1">
-                <StatusMark status={severityStatus} className="translate-y-0.5 size-3" />
-                <span className={cn("text-[15px] font-semibold", situation.type === "pattern" && "text-vena")}>
-                  {situation.title}
-                </span>
-                <span className="ml-auto font-mono text-[12px] text-faint tabular-nums">{formatAgo(situation.changedAt, now)}</span>
-              </div>
-
-              <div className="mt-1.5 space-y-0">
-                <Field label="Что">{whatText(situation)}</Field>
-                <Field label="Где">{whereText(situation)}</Field>
-                <Field label="Когда">{whenText(situation)}</Field>
-                <Field label="Почему">{whyText}</Field>
-                {consequence ? <Field label="Последствие">{consequence}</Field> : null}
-                {situation.recommendation ? (
-                  <div className="mt-0.5 text-[13px] text-muted-foreground">
-                    <p>
-                      <span className="text-faint">Что делать · </span>
-                      {situation.recommendation.title}
-                    </p>
-                    {actions.length > 0 ? (
-                      <ol className="mt-0.5 list-decimal space-y-0.5 pl-4 text-[12px]">
-                        {actions.map((step) => (
-                          <li key={step}>{step}</li>
-                        ))}
-                      </ol>
-                    ) : null}
-                  </div>
-                ) : null}
-                {past ? <Field label="Так было раньше">{past}</Field> : null}
-                {situation.healthIndex !== null && situation.healthIndex !== undefined ? (
-                  <div className="mt-0.5 flex flex-wrap items-center gap-x-3 gap-y-1 text-[13px] text-muted-foreground">
-                    <span>
-                      <span className="text-faint">Здоровье · </span>
-                      <span className="font-mono tabular-nums">{situation.healthIndex} из 100</span>
-                    </span>
-                    {workflowMode === "api" && group ? <HealthSpark group={group} location={situation.location} /> : null}
-                  </div>
-                ) : null}
-                {workflowMode === "api" ? <ModelTrust situation={situation} /> : null}
-              </div>
-
-              <div className="mt-1.5 flex flex-wrap items-center gap-x-4 gap-y-1">
-                <button
-                  type="button"
-                  onClick={() => onInspect(situation)}
-                  className="cursor-pointer text-[13px] font-medium text-vena underline-offset-4 outline-none hover:underline focus-visible:ring-2 focus-visible:ring-ring/60"
-                >
-                  В дереве
-                </button>
-                {situation.status === "new" ? (
-                  <button
-                    type="button"
-                    onClick={() => onAcknowledge(situation)}
-                    className="cursor-pointer text-[13px] text-muted-foreground underline-offset-4 outline-none hover:text-foreground hover:underline focus-visible:ring-2 focus-visible:ring-ring/60"
-                  >
-                    Принять
-                  </button>
-                ) : null}
-                {situation.status !== "action_created" ? (
-                  <button
-                    type="button"
-                    onClick={() => onCreateAction(situation)}
-                    className="cursor-pointer text-[13px] text-muted-foreground underline-offset-4 outline-none hover:text-foreground hover:underline focus-visible:ring-2 focus-visible:ring-ring/60"
-                  >
-                    Создать работу
-                  </button>
-                ) : (
-                  <span className="text-[12px] tracking-[0.04em] text-faint uppercase">работа создана</span>
-                )}
-                {situation.status === "acknowledged" ? (
-                  <span className="text-[12px] tracking-[0.04em] text-faint uppercase">принято</span>
-                ) : null}
-              </div>
-            </div>
-          </li>
-        )
-      })}
+    <ul className={cn("divide-y divide-border", className)}>
+      {situations.map((situation) => (
+        <SituationCard
+          key={situation.id}
+          situation={situation}
+          now={now}
+          onInspect={onInspect}
+          onAcknowledge={onAcknowledge}
+          onCreateAction={onCreateAction}
+        />
+      ))}
     </ul>
   )
 }

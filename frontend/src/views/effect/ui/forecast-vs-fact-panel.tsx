@@ -122,7 +122,7 @@ export function ForecastVsFactPanel({ className }: { className?: string }) {
   return (
     <section className={cn("border border-border bg-elevated", className)}>
       <div className="border-b border-border-soft px-4 py-3">
-        <h2 className="text-[12px] font-medium tracking-[0.12em] uppercase">Прогноз против факта</h2>
+        <h2 className="text-[12px] font-medium">Прогноз против факта</h2>
         <p className="mt-1 text-[12px] text-muted-foreground">
           Критерий жюри: прогноз на следующий день vs сколько случилось (янв–июнь 2026) и прогноз на 14 дней.
         </p>
@@ -148,7 +148,7 @@ export function ForecastVsFactPanel({ className }: { className?: string }) {
           <DualSeriesChart title={current.title} backtest={current.backtest} forecast={current.forecast} />
           <div className="grid gap-3 border-t border-border-soft px-4 py-3 sm:grid-cols-3">
             <div>
-              <p className="text-[11px] tracking-[0.08em] text-faint uppercase">След. 7 дней</p>
+              <p className="text-[12px] text-faint">След. 7 дней</p>
               <p className="mt-1 font-mono text-[18px] tabular-nums">
                 {current.next7Days ? current.next7Days.expected.toFixed(1) : "—"}
               </p>
@@ -159,7 +159,7 @@ export function ForecastVsFactPanel({ className }: { className?: string }) {
               ) : null}
             </div>
             <div>
-              <p className="text-[11px] tracking-[0.08em] text-faint uppercase">Ошибка прогноза на неделю</p>
+              <p className="text-[12px] text-faint">Ошибка прогноза на неделю</p>
               <p className="mt-1 font-mono text-[18px] tabular-nums">
                 {current.weekError === null ? "—" : `${Math.round(current.weekError * 100)} %`}
               </p>
@@ -170,7 +170,7 @@ export function ForecastVsFactPanel({ className }: { className?: string }) {
               ) : null}
             </div>
             <div>
-              <p className="text-[11px] tracking-[0.08em] text-faint uppercase">Эпизоды</p>
+              <p className="text-[12px] text-faint">Эпизоды</p>
               <p className="mt-1 font-mono text-[18px] tabular-nums">
                 {current.episodes30d ?? "—"}
                 <span className="ml-1 text-[12px] text-muted-foreground">/ 30д</span>

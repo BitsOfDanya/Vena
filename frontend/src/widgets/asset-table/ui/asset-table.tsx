@@ -64,14 +64,14 @@ export function AssetTable({
                     type="button"
                     onClick={() => setSort(column.key as SortKey)}
                     className={cn(
-                      "text-[12px] tracking-[0.06em] uppercase outline-none focus-visible:ring-2 focus-visible:ring-ring/60",
+                      "text-[12px] outline-none focus-visible:ring-2 focus-visible:ring-ring/60",
                       sort === column.key ? "text-foreground underline underline-offset-4" : "hover:text-foreground"
                     )}
                   >
                     {column.label}
                   </button>
                 ) : (
-                  <span className="text-[12px] tracking-[0.06em] uppercase">{column.label}</span>
+                  <span className="text-[12px]">{column.label}</span>
                 )}
               </th>
             ))}

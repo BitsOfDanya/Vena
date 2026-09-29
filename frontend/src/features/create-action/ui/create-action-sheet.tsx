@@ -138,7 +138,7 @@ export function CreateActionSheet({
     <Sheet open={open} onOpenChange={onOpenChange}>
       <SheetContent side="right" className="w-full gap-0 sm:max-w-md">
         <SheetHeader className="border-b">
-          <SheetTitle className="text-sm font-medium tracking-[0.12em] uppercase">Создать работу</SheetTitle>
+          <SheetTitle className="text-sm font-medium">Создать работу</SheetTitle>
           <SheetDescription>Запланируйте работу по объекту. Она появится в плане обслуживания.</SheetDescription>
         </SheetHeader>
         <form onSubmit={submit} className="flex min-h-0 flex-1 flex-col">
@@ -199,7 +199,7 @@ export function CreateActionSheet({
                 />
               </Field>
               <Field data-invalid={Boolean(errors.recommendedAt)}>
-                <FieldLabel htmlFor="action-date">Рекомендуемая дата (MSK)</FieldLabel>
+                <FieldLabel htmlFor="action-date">Рекомендуемая дата (МСК)</FieldLabel>
                 <Input id="action-date" type="datetime-local" className="font-mono" {...register("recommendedAt")} />
                 <FieldError errors={[errors.recommendedAt]} />
               </Field>

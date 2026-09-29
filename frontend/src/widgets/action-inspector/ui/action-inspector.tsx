@@ -41,7 +41,7 @@ const NEXT_STATUS: Partial<Record<ActionStatus, { status: ActionStatus; label: s
 function Field({ label, children }: { label: string; children: React.ReactNode }) {
   return (
     <div>
-      <dt className="text-[11px] font-medium tracking-[0.08em] text-faint uppercase">{label}</dt>
+      <dt className="text-[12px] font-medium text-faint">{label}</dt>
       <dd className="mt-0.5 text-[13px]">{children}</dd>
     </div>
   )

@@ -54,7 +54,7 @@ export function AboutPage() {
       <div className="space-y-6 px-6 pb-8">
         <section className="border border-border bg-elevated">
           <div className="border-b border-border-soft px-4 py-3">
-            <h2 className="text-[12px] font-medium tracking-[0.12em] uppercase">Контур для жюри</h2>
+            <h2 className="text-[12px] font-medium">Контур для жюри</h2>
             <p className="mt-1 text-[12px] text-muted-foreground">Каждый шаг ведёт на рабочий экран</p>
           </div>
           <ol className="divide-y divide-border-soft">

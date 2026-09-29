@@ -5,9 +5,9 @@
 @custom-variant dark (&:is(.dark *));
 
 @theme inline {
-  --font-heading: var(--font-geist);
-  --font-sans: var(--font-geist);
-  --font-mono: var(--font-geist-mono);
+  --font-heading: var(--font-plex-sans);
+  --font-sans: var(--font-plex-sans);
+  --font-mono: var(--font-plex-mono);
   --color-surface: var(--surface);
   --color-elevated: var(--elevated);
   --color-faint: var(--faint);
@@ -63,52 +63,102 @@
 }
 
 :root {
-  --page: #d8d3c7;
-  --background: #eeeae1;
-  --surface: #c9c4b8;
-  --elevated: #f3efe7;
-  --foreground: #202422;
-  --muted-foreground: #59605d;
-  --faint: #777c76;
-  --border: #b6b0a3;
-  --grid: #cbc5b9;
-  --border-soft: #cbc5b9;
-  --input: #b6b0a3;
-  --ring: #276e68;
-  --vena: #276e68;
-  --vena-soft: #89a7a0;
-  --brass: #b47828;
-  --card: #f3efe7;
-  --card-foreground: #1d2223;
-  --popover: #f3efe7;
-  --popover-foreground: #1d2223;
-  --primary: #276e68;
-  --primary-foreground: #eeebe3;
-  --secondary: #c9c4b8;
-  --secondary-foreground: #1d2223;
-  --muted: #c9c4b8;
-  --accent: #c9c4b8;
-  --accent-foreground: #1d2223;
-  --destructive: #a84d45;
-  --status-normal: #667d70;
-  --status-attention: #b47828;
-  --status-critical: #a84d45;
-  --status-offline: #777c76;
-  --chart-1: #276e68;
-  --chart-2: #667d70;
-  --chart-3: #b47828;
-  --chart-4: #59605d;
-  --chart-5: #a84d45;
-  --radius: 0.375rem;
-  --sidebar: #eeeae1;
-  --sidebar-foreground: #1d2223;
-  --sidebar-primary: #276e68;
-  --sidebar-primary-foreground: #eeebe3;
-  --sidebar-accent: #c9c4b8;
-  --sidebar-accent-foreground: #1d2223;
-  --sidebar-border: #b6b0a3;
-  --sidebar-ring: #276e68;
+  --page: #eef0ee;
+  --background: #f5f6f4;
+  --surface: #e6e9e6;
+  --elevated: #ffffff;
+  --foreground: #14201d;
+  --muted-foreground: #56625e;
+  --faint: #86908c;
+  --border: #d5dad6;
+  --grid: #e3e7e3;
+  --border-soft: #e3e7e3;
+  --input: #cdd3cf;
+  --ring: #0f766e;
+  --vena: #0f766e;
+  --vena-soft: #9fd0c8;
+  --brass: #b7791f;
+  --card: #ffffff;
+  --card-foreground: #14201d;
+  --popover: #ffffff;
+  --popover-foreground: #14201d;
+  --primary: #0f766e;
+  --primary-foreground: #f4fbfa;
+  --secondary: #e6e9e6;
+  --secondary-foreground: #14201d;
+  --muted: #e6e9e6;
+  --accent: #e6ecea;
+  --accent-foreground: #14201d;
+  --destructive: #c8413c;
+  --status-normal: #3b8a67;
+  --status-attention: #c7811a;
+  --status-critical: #c8413c;
+  --status-offline: #86908c;
+  --chart-1: #0f766e;
+  --chart-2: #3b8a67;
+  --chart-3: #c7811a;
+  --chart-4: #56625e;
+  --chart-5: #c8413c;
+  --radius: 0.5rem;
+  --sidebar: #f5f6f4;
+  --sidebar-foreground: #14201d;
+  --sidebar-primary: #0f766e;
+  --sidebar-primary-foreground: #f4fbfa;
+  --sidebar-accent: #e6ecea;
+  --sidebar-accent-foreground: #14201d;
+  --sidebar-border: #d5dad6;
+  --sidebar-ring: #0f766e;
+  --shadow-card: 0 1px 2px rgb(20 32 29 / 0.05), 0 1px 1px rgb(20 32 29 / 0.03);
   color-scheme: light;
+}
+
+.dark {
+  --page: #0c1211;
+  --background: #0f1716;
+  --surface: #1a2423;
+  --elevated: #141e1d;
+  --foreground: #e3ebe8;
+  --muted-foreground: #97a6a1;
+  --faint: #6c7b77;
+  --border: #253230;
+  --grid: #1c2826;
+  --border-soft: #1c2826;
+  --input: #2c3b38;
+  --ring: #2bb3a3;
+  --vena: #2bb3a3;
+  --vena-soft: #1f5f58;
+  --brass: #e0a445;
+  --card: #141e1d;
+  --card-foreground: #e3ebe8;
+  --popover: #172221;
+  --popover-foreground: #e3ebe8;
+  --primary: #2bb3a3;
+  --primary-foreground: #06201d;
+  --secondary: #1a2423;
+  --secondary-foreground: #e3ebe8;
+  --muted: #1a2423;
+  --accent: #1d2b29;
+  --accent-foreground: #e3ebe8;
+  --destructive: #ef5f58;
+  --status-normal: #52b788;
+  --status-attention: #e9a23b;
+  --status-critical: #ef5f58;
+  --status-offline: #6c7b77;
+  --chart-1: #2bb3a3;
+  --chart-2: #52b788;
+  --chart-3: #e9a23b;
+  --chart-4: #97a6a1;
+  --chart-5: #ef5f58;
+  --sidebar: #0f1716;
+  --sidebar-foreground: #e3ebe8;
+  --sidebar-primary: #2bb3a3;
+  --sidebar-primary-foreground: #06201d;
+  --sidebar-accent: #1d2b29;
+  --sidebar-accent-foreground: #e3ebe8;
+  --sidebar-border: #253230;
+  --sidebar-ring: #2bb3a3;
+  --shadow-card: 0 1px 2px rgb(0 0 0 / 0.3);
+  color-scheme: dark;
 }
 
 @layer base {
@@ -118,6 +168,13 @@
 
   html {
     @apply font-sans antialiased;
+    font-feature-settings: "tnum" 0;
+    text-rendering: optimizeLegibility;
+  }
+
+  .font-mono,
+  .tabular-nums {
+    font-variant-numeric: tabular-nums;
   }
 
   body {

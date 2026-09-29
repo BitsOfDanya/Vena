@@ -50,15 +50,15 @@ describe("prediction service", () => {
   }
 
   it("loads every dashboard page with the selected horizon", async () => {
-    const first = Array.from({ length: 500 }, (_, i) => ({ ...prediction, id: `prediction-${i}` }))
+    const first = Array.from({ length: 5000 }, (_, i) => ({ ...prediction, id: `prediction-${i}` }))
     const calls = mockFetch((url) => ({
-      body: url.endsWith("/snapshot") ? status : url.includes("offset=500") ? [{ ...prediction, id: "last" }] : first,
+      body: url.endsWith("/snapshot") ? status : url.includes("offset=5000") ? [{ ...prediction, id: "last" }] : first,
     }))
     const result = await getDashboardPredictions(72)
-    expect(result).toHaveLength(501)
+    expect(result).toHaveLength(5001)
     expect(calls.filter((url) => !url.endsWith("/snapshot"))).toEqual([
-      expect.stringContaining("horizon=72&sort=risk_desc&limit=500&offset=0"),
-      expect.stringContaining("horizon=72&sort=risk_desc&limit=500&offset=500"),
+      expect.stringContaining("horizon=72&sort=risk_desc&limit=5000&offset=0"),
+      expect.stringContaining("horizon=72&sort=risk_desc&limit=5000&offset=5000"),
     ])
   })
 
@@ -70,9 +70,9 @@ describe("prediction service", () => {
   })
 
   it("rejects a failed page instead of returning partial counts", async () => {
-    const first = Array.from({ length: 500 }, (_, i) => ({ ...prediction, id: `prediction-${i}` }))
+    const first = Array.from({ length: 5000 }, (_, i) => ({ ...prediction, id: `prediction-${i}` }))
     mockFetch((url) =>
-      url.endsWith("/snapshot") ? { body: status } : url.includes("offset=500") ? { status: 503, body: {} } : { body: first }
+      url.endsWith("/snapshot") ? { body: status } : url.includes("offset=5000") ? { status: 503, body: {} } : { body: first }
     )
     await expect(getDashboardPredictions(72)).rejects.toMatchObject({ status: 503 })
   })
