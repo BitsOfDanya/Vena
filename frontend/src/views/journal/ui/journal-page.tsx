@@ -13,6 +13,7 @@ import {
   type JournalEntry,
 } from "@/entities/journal"
 import { SCENARIO_LABEL, formatProbability, modelLabel, type PredictionScenario } from "@/entities/prediction"
+import { useAuthSession } from "@/features/auth"
 import { workflowMode } from "@/shared/config/env"
 import { formatDateTime } from "@/shared/lib/time"
 import { cn } from "@/shared/lib/utils"
@@ -49,6 +50,7 @@ function scoreText(row: JournalEntry) {
 }
 
 export function JournalPage() {
+  const { me } = useAuthSession()
   const journal = useJournal()
   const summary = useJournalSummary()
   const [filter, setFilter] = React.useState<JournalFilter>({ query: "", scenario: "all", decision: "all" })
@@ -91,6 +93,7 @@ export function JournalPage() {
           <span className="font-mono text-[12px] text-faint">прогноз · решение · результат</span>
         </div>
         <div className="flex items-center gap-3">
+          {me?.role === "admin" && <Button variant="outline" size="sm" asChild><Link href="/settings/integrations">Загрузить CSV / XLSX</Link></Button>}
           <Button
             variant="outline"
             size="sm"

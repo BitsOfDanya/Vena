@@ -100,13 +100,13 @@ export function AuthGate({ children }: { children: React.ReactNode }) {
           {pending ? "Вход…" : "Войти"}
         </Button>
         <div className="mt-6 border-t border-border-soft pt-4 text-[13px] text-muted-foreground">
-          <p className="font-medium text-foreground">Демо-доступ для жюри</p>
+          <p className="font-medium text-foreground">Доступ для жюри</p>
           <p className="mt-1">
             Логин <span className="font-mono text-foreground">user1</span>
             {" · "}
             пароль <span className="font-mono text-foreground">0987654321</span>
           </p>
-          <p className="mt-1 text-[12px] text-faint">Также: user2–user20 / тот же пароль. Роль — диспетчер.</p>
+          <p className="mt-1 text-[12px] text-faint">user1 — администратор. user2–user20 / тот же пароль — диспетчеры.</p>
           <p className="mt-3 border-t border-border-soft pt-3 text-[12px] leading-relaxed text-muted-foreground">
             После входа: <span className="text-foreground">Пульс</span> → карточка инцидента →{" "}
             <span className="text-foreground">Создать работу</span>. Для руководства:{" "}

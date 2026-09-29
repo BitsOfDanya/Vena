@@ -21,7 +21,7 @@ export function SettingsSecurityPage() {
         <dl className="grid grid-cols-2 gap-4 border border-border bg-elevated p-5">
           <div><dt>Логин</dt><dd>{me?.subject}</dd></div>
           <div><dt>Email</dt><dd>{me?.email ?? "—"}</dd></div>
-          <div><dt>Роль</dt><dd>{me?.role}</dd></div>
+          <div><dt>Роль</dt><dd>{{ admin: "Администратор", dispatcher: "Диспетчер", viewer: "Наблюдатель" }[me?.role ?? "viewer"]}</dd></div>
         </dl>
         <Button className="mt-4" variant="outline" disabled={!authEnabled} onClick={async () => {
           try { await signOut() } catch { setError("Не удалось выйти. Попробуйте ещё раз.") }

@@ -8,6 +8,20 @@ import { StateMessage } from "@/shared/ui/state-message"
 
 import { SettingsSection, SettingsShell } from "./settings-shell"
 
+const roles: Record<string, string> = { admin: "Администратор", dispatcher: "Диспетчер", viewer: "Наблюдатель" }
+const actions: Record<string, string> = {
+  "user.create": "Создание пользователя", "user.update": "Изменение доступа", "user.password_reset": "Сброс пароля",
+  "auth.ldap_login": "Вход через LDAP / AD", "import.validate": "Проверка файла", "import.apply": "Применение загрузки",
+  "equipment.update": "Обновление реестра", "equipment.sync": "Синхронизация реестра", "stand.cleanup": "Очистка стенда",
+  "action.create": "Создание работы", "action.patch": "Изменение работы", "action.approve": "Согласование работы",
+  "action.dismissed": "Отклонение рекомендации", "action.assign": "Назначение исполнителя", "action.result": "Результат работы",
+  "action.planned": "Работа запланирована", "action.in_progress": "Работа начата", "action.completed": "Работа завершена", "action.cancelled": "Работа отменена",
+  "notification.create": "Создание уведомления", "notification.patch": "Изменение уведомления",
+  "settings.notifications.update": "Настройка уведомлений", "predictions.refresh": "Обновление прогнозов", "smvu.ingest": "Приём событий",
+  "spatial.import_geojson": "Загрузка карты GeoJSON", "spatial.import_wkt": "Загрузка карты WKT", "spatial.reset_demo": "Сброс демонстрационной карты",
+}
+const resources: Record<string, string> = { user: "Пользователь", action: "Работа", notification: "Уведомление", equipment: "Оборудование", integration_run: "Загрузка", database: "База данных", settings: "Настройки", snapshot: "Снимок прогнозов", smvu_batch: "Пакет событий", spatial_layer: "Карта" }
+
 export function SettingsAuditPage() {
   const audit = useQuery({
     queryKey: ["system", "audit"],
@@ -17,10 +31,10 @@ export function SettingsAuditPage() {
   })
 
   return (
-    <SettingsShell title="Аудит" descriptor="журнал RBAC">
+    <SettingsShell title="Аудит" descriptor="Контроль доступа">
       <SettingsSection
         title="Последние записи"
-        description="Требуется роль admin при включённой аутентификации. Записи появляются при мутациях actions / settings / spatial / SMVU."
+        description="Раздел администратора. Здесь сохраняются изменения работ, настроек, пользователей, загрузки данных и события интеграций."
       >
         {audit.isPending ? (
           <p className="text-sm text-muted-foreground">Загрузка журнала…</p>
@@ -55,11 +69,11 @@ export function SettingsAuditPage() {
                     </td>
                     <td className="px-4 py-2">
                       <span className="font-mono text-[12px]">{entry.actor}</span>
-                      <span className="ml-2 text-[11px] text-faint">{entry.role}</span>
+                      <span className="ml-2 text-[11px] text-faint">{roles[entry.role] ?? entry.role}</span>
                     </td>
-                    <td className="px-4 py-2 font-mono text-[12px]">{entry.action}</td>
+                    <td className="px-4 py-2 font-mono text-[12px]">{actions[entry.action] ?? entry.action}</td>
                     <td className="px-4 py-2 font-mono text-[12px] text-muted-foreground">
-                      {entry.resource_type}
+                      {resources[entry.resource_type] ?? entry.resource_type}
                       {entry.resource_id ? `:${entry.resource_id}` : ""}
                     </td>
                   </tr>
