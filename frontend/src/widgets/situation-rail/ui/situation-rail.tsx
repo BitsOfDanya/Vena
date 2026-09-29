@@ -54,7 +54,7 @@ function whenText(situation: Situation) {
   const pct =
     probability === null
       ? situation.scoreText
-      : `вероятность ${Math.round(probability * 100)} %`
+      : `вероятность ${Math.round(probability <= 1 ? probability * 100 : probability)} %`
   const horizon =
     situation.horizon == null
       ? null
@@ -178,7 +178,7 @@ export function SituationRail({
     return (
       <div className="border border-border bg-elevated px-5 py-6">
         <p className="text-[13px] font-medium tracking-[0.06em] text-muted-foreground uppercase">Внимание не требуется</p>
-        <p className="mt-1 text-[14px] text-muted-foreground">В выбранном окне нет объектов и паттернов, требующих вмешательства.</p>
+        <p className="mt-1 text-[14px] text-muted-foreground">В выбранном окне нет объектов и связок, требующих вмешательства.</p>
       </div>
     )
   }

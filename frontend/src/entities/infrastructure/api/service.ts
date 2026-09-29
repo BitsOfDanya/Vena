@@ -386,7 +386,8 @@ function detectClusters(significant: SensorEvent[], assetType: (id: string) => A
           assetIds: ids,
           transitions: group.length,
           riskDelta,
-          summary: riskDelta > 1 ? "Risk increased" : riskDelta < -1 ? "Risk decreased" : "Risk unchanged",
+          summary:
+            riskDelta > 1 ? "Риск вырос" : riskDelta < -1 ? "Риск снизился" : "Риск без изменений",
         })
       }
       group = []
@@ -665,16 +666,16 @@ export async function getSituations(view: View, limit = 4): Promise<Situation[]>
       id: pattern.id,
       type: "pattern",
       severity: pattern.riskDelta > 1 ? "critical" : "warning",
-      title: `Pattern ${String(pattern.number).padStart(3, "0")}`,
+      title: `Связка ${String(pattern.number).padStart(3, "0")}`,
       assetIds: pattern.assetIds,
       patternId: pattern.id,
-      summary: `${pattern.events} abnormal transitions across ${pattern.systems.length} systems (${systems}).`,
+      summary: `${pattern.events} нетипичных переходов в ${pattern.systems.length} системах (${systems}).`,
       changedAt: pattern.end,
       riskScore: null,
       scoreText: null,
       delta: null,
       horizon: null,
-      primaryReason: "Correlated activity in independent systems",
+      primaryReason: "Согласованная активность в независимых системах",
       status: "new",
     })
   }
@@ -707,14 +708,14 @@ export async function getSituations(view: View, limit = 4): Promise<Situation[]>
       patternId: null,
       summary:
         delta > 0
-          ? `Risk ${Math.round(item.score)}/100, +${Math.round(delta)} over the last 6 hours.`
-          : `Risk ${Math.round(item.score)}/100, stable over the last 6 hours.`,
+          ? `Риск ${Math.round(item.score)}/100, +${Math.round(delta)} за последние 6 часов.`
+          : `Риск ${Math.round(item.score)}/100, стабильно за последние 6 часов.`,
       changedAt: last?.timestamp ?? view.now,
       riskScore: item.score,
       scoreText: `${Math.round(item.score)}/100`,
       delta: Math.round(delta),
       horizon: item.asset.forecastHorizon,
-      primaryReason: rising ? `${rising.label} ${rising.value}` : "Sustained abnormal state",
+      primaryReason: rising ? `${rising.label} ${rising.value}` : "Устойчивое ненормальное состояние",
       status: "new",
     })
   }

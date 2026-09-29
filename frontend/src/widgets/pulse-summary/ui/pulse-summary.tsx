@@ -200,14 +200,14 @@ export function PulseSummaryModules({
         onAction={onViewChanges}
       />
       <Module
-        title="Новые паттерны"
+        title="Новые связки"
         value={String(patterns?.count ?? 0).padStart(2, "0")}
         unit="обнаружено"
         tone={patterns && patterns.count > 0 ? "vena" : "neutral"}
         lines={
           patterns?.latest
-            ? [`последний`, `Паттерн ${String(patterns.latest.number).padStart(3, "0")} · ${patterns.latest.systems} систем`]
-            : ["Коррелированных паттернов нет."]
+            ? [`последняя`, `Связка ${String(patterns.latest.number).padStart(3, "0")} · ${patterns.latest.systems} систем`]
+            : ["Коррелированных связок нет."]
         }
         actionLabel="Исследовать"
         onAction={onInvestigatePattern}
@@ -229,7 +229,7 @@ export function ShiftSummary({ summary, completed }: { summary: PulseSummary | u
   if (!summary) return null
   const parts = [
     summary.shift.critical > 0 ? `+${summary.shift.critical} критичных` : null,
-    summary.shift.patterns > 0 ? `+${summary.shift.patterns} паттерн${summary.shift.patterns === 1 ? "" : summary.shift.patterns < 5 ? "а" : "ов"}` : null,
+    summary.shift.patterns > 0 ? `+${summary.shift.patterns} связк${summary.shift.patterns === 1 ? "а" : summary.shift.patterns < 5 ? "и" : "ок"}` : null,
     summary.shift.rising > 0 ? `+${summary.shift.rising} рост риска` : null,
     completed > 0 ? `${completed} работ${completed === 1 ? "а" : completed < 5 ? "ы" : ""} завершено` : null,
   ].filter((part): part is string => part !== null)

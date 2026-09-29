@@ -126,7 +126,7 @@ export function AssetTable({
                       <span className="font-mono tabular-nums">{formatScore(asset.riskScore, asset.scoreType)}</span>
                     </span>
                   </td>
-                  <td className="px-4 py-2 font-mono text-muted-foreground tabular-nums">{asset.forecastHorizon}h</td>
+                  <td className="px-4 py-2 font-mono text-muted-foreground tabular-nums">{asset.forecastHorizon} ч</td>
                   <td className="px-4 py-2 font-mono text-muted-foreground tabular-nums">
                     {asset.lastEventAt ? formatAgo(asset.lastEventAt, now) : "—"}
                   </td>

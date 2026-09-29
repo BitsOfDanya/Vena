@@ -96,6 +96,7 @@ class PlanItem(BaseModel):
     name: str | None
     location: str | None
     model_id: str
+    prediction_id: str
     probability: float
     risk_level: str
     reason: str | None

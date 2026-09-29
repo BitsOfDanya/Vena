@@ -87,6 +87,21 @@ class SnapshotStatus(BaseModel):
     detail: str = ""
 
 
+class RiskLevelCounts(BaseModel):
+    critical: int = 0
+    attention: int = 0
+    observe: int = 0
+    normal: int = 0
+
+
+class PredictionSummary(BaseModel):
+    horizon_hours: int | None = None
+    total: int = 0
+    counts: RiskLevelCounts
+    top_critical: list[Prediction] = []
+    top_attention: list[Prediction] = []
+
+
 class AlarmAssessment(BaseModel):
     channel_id: str
     ts: datetime

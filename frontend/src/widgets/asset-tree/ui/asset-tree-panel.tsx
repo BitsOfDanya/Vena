@@ -94,7 +94,7 @@ export function AssetTreePanel({
   return (
     <div className="h-full overflow-auto px-6 py-3">
       <p className="mb-3 text-[12px] text-muted-foreground">
-        HI: &lt;40 критично · &lt;70 внимание · иначе норма
+        Здоровье: &lt;40 критично · &lt;70 внимание · иначе норма
       </p>
       <ul className="space-y-4">
         {objects.map((object) => (
@@ -103,7 +103,7 @@ export function AssetTreePanel({
               <span className="text-[15px] font-semibold">{object.label}</span>
               <span className="font-mono text-[12px] text-faint">{object.objectId}</span>
               <span className={cn("ml-auto font-mono text-[13px] tabular-nums", hiTone(object.healthIndex))}>
-                {object.healthIndex === null ? "HI —" : `HI ${object.healthIndex}`}
+                {object.healthIndex === null ? "Здоровье —" : `Здоровье ${object.healthIndex}`}
               </span>
             </div>
             <ul>

@@ -50,6 +50,29 @@ def calibrate(raw: float, points: Points | None) -> float:
     return y0 if x1 == x0 else y0 + (y1 - y0) * (raw - x0) / (x1 - x0)
 
 
+def effective_risk(raw: float, points: Points | None) -> float:
+    """Event probability used for the 0–100 health index.
+
+    Isotonic `health_index.json` has a long plateau: many raw risks collapse to
+    ~0.45 (index 55). That makes 20+ objects look identical even though sorting
+    by raw_risk is still correct. When raw exceeds the calibrated value we open
+    the remaining headroom so higher raw risk continues to lower the index.
+    """
+    calibrated = calibrate(raw, points)
+    if points is None or raw <= calibrated + 1e-9:
+        return calibrated
+    headroom = max(0.0, 1.0 - calibrated)
+    if headroom <= 1e-9:
+        return calibrated
+    excess = min(1.0, (raw - calibrated) / headroom)
+    return calibrated + excess * headroom * 0.9
+
+
+def to_index(raw_risk: float, points: Points | None = None) -> int:
+    value = round(100 * (1.0 - effective_risk(raw_risk, points)))
+    return int(max(0, min(100, value)))
+
+
 def location_health(
     predictions: list[Prediction],
     incident_probability: dict[tuple[str, str], float],
@@ -76,11 +99,12 @@ def location_health(
         survive = 1.0
         for risk in scenario_risk.values():
             survive *= 1.0 - risk
+        raw_risk = 1.0 - survive
         result[group] = LocationHealth(
             group=group,
             label=location_label(group),
-            index=round(100 * (1 - calibrate(1 - survive, points))),
-            raw_risk=round(1 - survive, 6),
+            index=to_index(raw_risk, points),
+            raw_risk=round(raw_risk, 6),
             risk_by_scenario={key: round(value, 4) for key, value in scenario_risk.items()},
             channels=len(channels[group]),
         )

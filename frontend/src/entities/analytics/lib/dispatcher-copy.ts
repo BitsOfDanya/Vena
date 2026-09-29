@@ -19,8 +19,8 @@ export function scenarioTitle(scenario: string) {
 export function horizonPhrase(hours: number) {
   if (hours >= 72) return "в ближайшие 3 суток"
   if (hours >= 24) return "в ближайшие сутки"
-  if (hours >= 60) return `в ближайшие ${Math.round(hours / 60)} ч`
-  return `в ближайшие ${hours} мин`
+  if (hours >= 1) return `в ближайшие ${Math.round(hours)} ч`
+  return `в ближайшие ${Math.max(1, Math.round(hours * 60))} мин`
 }
 
 export function modelWhatPredicts(model: { target: string | null; sensor: string | null; scenario: string; horizonHours: number }) {
@@ -66,10 +66,18 @@ export function leadTimeLine(medianHours: number | null | undefined, alertPrecis
   if (alertPrecision != null) {
     parts.push(`${Math.round(alertPrecision * 100)} % тревог высокого уровня подтверждаются`)
   }
-  if (medianHours != null && medianHours > 0) {
-    parts.push(`предупреждение в среднем за ${Math.round(medianHours)} ч`)
-  }
+  const lead = leadHorizonPhrase(medianHours)
+  if (lead) parts.push(lead)
   return parts.length ? parts.join(", ") : null
+}
+
+/** Human-readable lead horizon for Effect / model cards. */
+export function leadHorizonPhrase(medianHours: number | null | undefined, prefix = "предупреждение в среднем за") {
+  if (medianHours == null || medianHours <= 0) return null
+  if (medianHours < 1) {
+    return `${prefix} ${Math.max(1, Math.round(medianHours * 60))} мин`
+  }
+  return `${prefix} ${Math.round(medianHours)} ч`
 }
 
 export function verifiedLine(period: string | null | undefined) {

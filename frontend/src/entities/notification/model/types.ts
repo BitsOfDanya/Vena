@@ -38,7 +38,7 @@ export type NotificationRepository = {
 
 export const NOTIFICATION_TYPE_LABEL: Record<NotificationType, string> = {
   risk: "Риск",
-  pattern: "Паттерн",
+  pattern: "Связка",
   action: "Работа",
   system: "Система",
   integration: "Интеграция",
@@ -89,7 +89,7 @@ export type NotificationRule = {
 export const RULE_TRIGGER_LABEL: Record<NotificationRuleTrigger, string> = {
   critical_risk: "Обнаружен критический риск",
   risk_horizon_24h: "Горизонт риска 24 ч или меньше",
-  new_pattern: "Новый коррелированный паттерн",
+  new_pattern: "Новая коррелированная связка",
   action_overdue: "Работа просрочена",
   action_assigned: "Работа назначена",
   data_source_unavailable: "Источник данных недоступен",
@@ -109,7 +109,7 @@ export type DigestSchedule = {
 
 export const DIGEST_SECTION_LABEL: Record<DigestSection, string> = {
   critical_risks: "Критические риски",
-  new_patterns: "Новые паттерны",
+  new_patterns: "Новые связки",
   open_actions: "Открытые работы",
   overdue_actions: "Просроченные работы",
   changes: "Изменения с прошлого дайджеста",

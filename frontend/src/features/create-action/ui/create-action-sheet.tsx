@@ -6,7 +6,7 @@ import * as React from "react"
 import { Controller, useForm } from "react-hook-form"
 import { toast } from "sonner"
 
-import { STATUS_LABEL, useAssets } from "@/entities/infrastructure"
+import { STATUS_LABEL, formatScore, useAssets, type AssetStatus, type ScoreType } from "@/entities/infrastructure"
 import {
   ASSIGNEES,
   KIND_LABEL,
@@ -16,6 +16,7 @@ import {
   type ActionPriority,
 } from "@/entities/maintenance"
 import { useWorkspace } from "@/features/workspace"
+import { workflowMode } from "@/shared/config/env"
 import { HOUR, formatDateTime, fromDateTimeLocal, toDateTimeLocal } from "@/shared/lib/time"
 import { Button } from "@/shared/ui/button"
 import { Field, FieldError, FieldGroup, FieldLabel } from "@/shared/ui/field"
@@ -39,6 +40,8 @@ export type ActionDraft = {
   sourceHorizonHours?: number
 }
 
+type Option = { id: string; status: AssetStatus; riskScore: number; scoreType: ScoreType }
+
 const PRIORITY_HOURS: Record<ActionPriority, number> = { high: 24, medium: 48, low: 72 }
 
 export function CreateActionSheet({
@@ -52,7 +55,10 @@ export function CreateActionSheet({
 }) {
   const router = useRouter()
   const { now, horizon } = useWorkspace()
-  const assets = useAssets(now, horizon)
+  const hasDraftAsset = Boolean(draft.assetId)
+  const apiMode = workflowMode === "api"
+  // Avoid full 10k scan when the draft already names the asset (Pulse / plan / Network).
+  const assets = useAssets(now, horizon, { enabled: open && !hasDraftAsset && !apiMode })
   const create = useCreateAction(now)
   const [notify, setNotify] = React.useState(false)
   const priority = draft.priority ?? "medium"
@@ -107,7 +113,27 @@ export function CreateActionSheet({
     })
   })
 
-  const sorted = [...(assets.data ?? [])].sort((left, right) => right.riskScore - left.riskScore)
+  const draftScore =
+    draft.sourceScore == null ? 0 : draft.sourceScore <= 1 ? draft.sourceScore * 100 : draft.sourceScore
+  const draftOption: Option | null = draft.assetId
+    ? {
+        id: draft.assetId,
+        status: "attention",
+        riskScore: Math.round(draftScore),
+        scoreType: "calibrated_probability",
+      }
+    : null
+  const catalog: Option[] = [...(assets.data ?? [])]
+    .sort((left, right) => right.riskScore - left.riskScore)
+    .map((asset) => ({
+      id: asset.id,
+      status: asset.status,
+      riskScore: asset.riskScore,
+      scoreType: asset.scoreType,
+    }))
+  const options = draftOption
+    ? [draftOption, ...catalog.filter((asset) => asset.id !== draftOption.id)]
+    : catalog
 
   return (
     <Sheet open={open} onOpenChange={onOpenChange}>
@@ -121,14 +147,26 @@ export function CreateActionSheet({
             <FieldGroup>
               <Field data-invalid={Boolean(errors.assetId)}>
                 <FieldLabel htmlFor="action-asset">Объект</FieldLabel>
-                <NativeSelect id="action-asset" className="w-full" aria-invalid={Boolean(errors.assetId)} {...register("assetId")}>
-                  <NativeSelectOption value="">Выберите объект</NativeSelectOption>
-                  {sorted.map((asset) => (
-                    <NativeSelectOption key={asset.id} value={asset.id}>
-                      {asset.id} · {STATUS_LABEL[asset.status]} · {Math.round(asset.riskScore)}
+                {apiMode && !hasDraftAsset ? (
+                  <Input
+                    id="action-asset"
+                    className="font-mono"
+                    placeholder="ID канала СМВУ"
+                    aria-invalid={Boolean(errors.assetId)}
+                    {...register("assetId")}
+                  />
+                ) : (
+                  <NativeSelect id="action-asset" className="w-full" aria-invalid={Boolean(errors.assetId)} {...register("assetId")}>
+                    <NativeSelectOption value="">
+                      {assets.isPending && open ? "Загрузка объектов…" : "Выберите объект"}
                     </NativeSelectOption>
-                  ))}
-                </NativeSelect>
+                    {options.map((asset) => (
+                      <NativeSelectOption key={asset.id} value={asset.id}>
+                        {asset.id} · {STATUS_LABEL[asset.status]} · {formatScore(asset.riskScore, asset.scoreType)}
+                      </NativeSelectOption>
+                    ))}
+                  </NativeSelect>
+                )}
                 <FieldError errors={[errors.assetId]} />
               </Field>
               <Field data-invalid={Boolean(errors.reason)}>

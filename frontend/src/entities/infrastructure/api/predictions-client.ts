@@ -1,3 +1,4 @@
+import { flattenHorizonPages, loadHorizonPages } from "@/shared/api/horizon-pages"
 import { apiFetch } from "@/shared/api/http"
 import { workflowMode } from "@/shared/config/env"
 
@@ -38,6 +39,7 @@ export type LivePrediction = {
 
 type CacheEntry = {
   at: number
+  snapshotId: string | null
   byAsset: Map<string, PredictionOverlay>
   raw: Map<string, LivePrediction>
 }
@@ -61,29 +63,30 @@ function mapItem(item: ApiPrediction): LivePrediction {
   }
 }
 
-async function fetchHorizonPage(horizon: ForecastHorizon, offset: number) {
-  return apiFetch<ApiPrediction[]>(
-    `/api/v1/predictions?horizon=${horizon}&sort=risk_desc&limit=500&offset=${offset}`
-  )
+async function currentSnapshotId(): Promise<string | null> {
+  try {
+    const status = await apiFetch<{ snapshot_id: string | null }>("/api/v1/predictions/snapshot")
+    return status.snapshot_id
+  } catch {
+    return null
+  }
 }
 
 async function loadPredictions(horizon: ForecastHorizon): Promise<CacheEntry> {
   if (workflowMode !== "api") {
-    return { at: Date.now(), byAsset: new Map(), raw: new Map() }
+    return { at: Date.now(), snapshotId: null, byAsset: new Map(), raw: new Map() }
   }
   const now = Date.now()
+  const snapshotId = await currentSnapshotId()
   const hit = cache.get(horizon)
-  if (hit && now - hit.at < CACHE_MS) return hit
+  if (hit && now - hit.at < CACHE_MS && hit.snapshotId === snapshotId) return hit
 
   try {
+    const pages = await loadHorizonPages(horizon, snapshotId)
     const mapped: LivePrediction[] = []
-    for (let offset = 0; offset < 100_000; offset += 500) {
-      const page = await fetchHorizonPage(horizon, offset)
-      for (const item of page) {
-        if (item.horizon_hours !== horizon) continue
-        mapped.push(mapItem(item))
-      }
-      if (page.length < 500) break
+    for (const item of flattenHorizonPages(pages) as ApiPrediction[]) {
+      if (item.horizon_hours !== horizon) continue
+      mapped.push(mapItem(item))
     }
     const indexed = indexPredictionsByAsset(mapped)
     const byAsset = new Map<string, PredictionOverlay>()
@@ -91,11 +94,11 @@ async function loadPredictions(horizon: ForecastHorizon): Promise<CacheEntry> {
       byAsset.set(assetId, overlayFromPrediction(prediction))
     }
     const raw = new Map(mapped.map((item) => [item.assetId, indexed.get(item.assetId) ?? item]))
-    const entry: CacheEntry = { at: now, byAsset, raw }
+    const entry: CacheEntry = { at: now, snapshotId, byAsset, raw }
     cache.set(horizon, entry)
     return entry
   } catch {
-    return { at: now, byAsset: new Map(), raw: new Map() }
+    return { at: now, snapshotId, byAsset: new Map(), raw: new Map() }
   }
 }
 

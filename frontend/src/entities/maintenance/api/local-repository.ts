@@ -37,7 +37,7 @@ function seed(): MaintenanceAction[] {
       createdAt: DEMO_NOW - 2 * HOUR,
       notifyChannels: ["in_app"],
       history: [
-        event(DEMO_NOW - 3 * HOUR, "suggested", SYSTEM_ACTOR, "Risk 68/100, horizon 72h"),
+        event(DEMO_NOW - 3 * HOUR, "suggested", SYSTEM_ACTOR, "Риск 68/100, горизонт 72 ч"),
         event(DEMO_NOW - 2 * HOUR, "approved", USER_ACTOR),
         event(DEMO_NOW - 2 * HOUR, "planned", USER_ACTOR),
         event(DEMO_NOW - 100 * MINUTE, "assigned", USER_ACTOR, "Бригада А"),
@@ -61,7 +61,7 @@ function seed(): MaintenanceAction[] {
       createdAt: DEMO_NOW - 5 * HOUR,
       notifyChannels: [],
       history: [
-        event(DEMO_NOW - 6 * HOUR, "suggested", SYSTEM_ACTOR, "Risk 58/100, horizon 24h"),
+        event(DEMO_NOW - 6 * HOUR, "suggested", SYSTEM_ACTOR, "Риск 58/100, горизонт 24 ч"),
         event(DEMO_NOW - 5 * HOUR, "approved", USER_ACTOR),
         event(DEMO_NOW - 5 * HOUR, "planned", USER_ACTOR),
       ],
@@ -83,7 +83,7 @@ function seed(): MaintenanceAction[] {
       createdBy: SYSTEM_ACTOR,
       createdAt: DEMO_NOW - 40 * MINUTE,
       notifyChannels: [],
-      history: [event(DEMO_NOW - 40 * MINUTE, "suggested", SYSTEM_ACTOR, "Risk 49/100, horizon 72h")],
+      history: [event(DEMO_NOW - 40 * MINUTE, "suggested", SYSTEM_ACTOR, "Риск 49/100, горизонт 72 ч")],
       result: null,
     },
     {
@@ -97,12 +97,12 @@ function seed(): MaintenanceAction[] {
       status: "suggested",
       assignee: "Дежурный инженер",
       source: "vena_forecast",
-      sourceDetail: "Alarm corroboration",
+      sourceDetail: "Подтверждение тревоги",
       note: "",
       createdBy: SYSTEM_ACTOR,
       createdAt: DEMO_NOW - 90 * MINUTE,
       notifyChannels: [],
-      history: [event(DEMO_NOW - 90 * MINUTE, "suggested", SYSTEM_ACTOR, "Alarm sequence without corroboration")],
+      history: [event(DEMO_NOW - 90 * MINUTE, "suggested", SYSTEM_ACTOR, "Серия тревог без подтверждения")],
       result: null,
     },
     {

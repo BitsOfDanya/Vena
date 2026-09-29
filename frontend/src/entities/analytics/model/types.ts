@@ -165,6 +165,7 @@ export type InspectionPlanItem = {
   name: string | null
   location: string | null
   modelId: string
+  predictionId: string
   probability: number
   riskLevel: string
   reason: string | null
@@ -180,4 +181,16 @@ export type InspectionPlan = {
 export type TodaysInspectionPlan = {
   pumps: InspectionPlan
   fans: InspectionPlan
+}
+
+export type WeatherDay = {
+  day: string
+  precipitationMm: number | null
+  thaw: boolean | null
+}
+
+export type WeatherReport = {
+  source: string
+  forecast: WeatherDay[]
+  floodingVsWeather: Record<string, number>
 }

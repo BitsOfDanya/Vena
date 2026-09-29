@@ -15,6 +15,7 @@ import {
   getSeasonality,
   getSectionHealthHistory,
   getTodaysInspectionPlan,
+  getWeatherReport,
 } from "../api/service"
 
 const api = workflowMode === "api"
@@ -99,5 +100,14 @@ export function useTodaysInspectionPlan() {
     enabled: api,
     staleTime: 60_000,
     refetchInterval: 60_000,
+  })
+}
+
+export function useWeatherReport() {
+  return useQuery({
+    queryKey: ["analytics", "weather"],
+    queryFn: getWeatherReport,
+    enabled: api,
+    staleTime: 300_000,
   })
 }

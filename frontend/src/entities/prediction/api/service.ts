@@ -2,7 +2,14 @@ import { z } from "zod"
 
 import { apiFetch } from "@/shared/api/http"
 
-import type { BackendSituation, Prediction, PredictionScenario, SnapshotStatus } from "../model/types"
+import type {
+  BackendSituation,
+  Prediction,
+  PredictionScenario,
+  PredictionSummary,
+  SnapshotStatus,
+} from "../model/types"
+import { loadHorizonPages } from "@/shared/api/horizon-pages"
 
 type ApiPrediction = {
   id: string
@@ -109,23 +116,37 @@ const PredictionSchema = z.object({
 export async function getDashboardPredictions(horizon: 24 | 72): Promise<Prediction[]> {
   const before = await getSnapshotStatus()
   if (!before.available || !before.snapshotId) throw new Error("Predictions unavailable")
+  const pages = await loadHorizonPages(horizon, before.snapshotId)
   const result: Prediction[] = []
   const ids = new Set<string>()
-  for (let offset = 0; offset < 100_000; offset += 500) {
-    const raw = await apiFetch<unknown>(`/api/v1/predictions?horizon=${horizon}&sort=risk_desc&limit=500&offset=${offset}`)
+  for (const raw of pages) {
     const page = z.array(PredictionSchema).parse(raw).map(toPrediction)
     for (const item of page) {
       if (item.horizonHours !== horizon || ids.has(item.id)) throw new Error("Inconsistent prediction snapshot")
       ids.add(item.id)
       result.push(item)
     }
-    if (page.length < 500) {
-      const after = await getSnapshotStatus()
-      if (!after.available || after.snapshotId !== before.snapshotId) throw new Error("Snapshot changed; refresh dashboard")
-      return result
-    }
   }
-  throw new Error("Prediction snapshot exceeds dashboard capacity")
+  const after = await getSnapshotStatus()
+  if (!after.available || after.snapshotId !== before.snapshotId) throw new Error("Snapshot changed; refresh dashboard")
+  return result
+}
+
+export async function getPredictionSummary(horizon: 24 | 72, top = 5): Promise<PredictionSummary> {
+  const raw = await apiFetch<{
+    horizon_hours: number | null
+    total: number
+    counts: { critical: number; attention: number; observe: number; normal: number }
+    top_critical: ApiPrediction[]
+    top_attention: ApiPrediction[]
+  }>(`/api/v1/predictions/summary?horizon=${horizon}&top=${top}`)
+  return {
+    horizonHours: raw.horizon_hours,
+    total: raw.total,
+    counts: raw.counts,
+    topCritical: raw.top_critical.map(toPrediction),
+    topAttention: raw.top_attention.map(toPrediction),
+  }
 }
 
 export async function getAssetPrediction(assetId: string): Promise<Prediction | null> {

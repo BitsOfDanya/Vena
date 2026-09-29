@@ -489,7 +489,7 @@ def main() -> None:
             device_ids = {channel_id for channel_id, _ in DEMO_CHANNELS[device]}
             events = demo_events[demo_events["channel_id"].isin(device_ids)]
             predictions.extend(score_rows(device, model_names, target_state, events, {}))
-        write_snapshot(predictions, prediction_time, arguments.output)
+        write_snapshot(predictions, prediction_time, arguments.output, weather_forecast=forecast_weather())
         return
 
     from pipeline import extract

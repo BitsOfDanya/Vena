@@ -1,18 +1,110 @@
 "use client"
 
-import { SEASONALITY_LABEL, useSeasonality } from "@/entities/analytics"
+import { SEASONALITY_LABEL, useSeasonality, useWeatherReport } from "@/entities/analytics"
 import { cn } from "@/shared/lib/utils"
 
 import { cellShade, seasonalIndex } from "../model/seasonality"
 
 const MONTHS = ["Янв", "Фев", "Мар", "Апр", "Май", "Июн", "Июл", "Авг", "Сен", "Окт", "Ноя", "Дек"]
 
+const DAY_RU = new Intl.DateTimeFormat("ru-RU", {
+  weekday: "short",
+  day: "numeric",
+  month: "short",
+  timeZone: "Europe/Moscow",
+})
+
+function formatForecastDay(day: string) {
+  const stamp = Date.parse(`${day}T12:00:00Z`)
+  if (Number.isNaN(stamp)) return day
+  return DAY_RU.format(stamp)
+}
+
+function WeatherForecastStrip({ bordered = true, showCorrelation = true }: { bordered?: boolean; showCorrelation?: boolean }) {
+  const weather = useWeatherReport()
+  if (weather.isPending) {
+    return (
+      <p className={cn("px-5 py-3 text-[13px] text-muted-foreground", bordered && "border-t border-border-soft")}>
+        Прогноз осадков загружается…
+      </p>
+    )
+  }
+  if (weather.isError || !weather.data?.forecast.length) return null
+
+  const days = weather.data.forecast.slice(0, 7)
+  const maxRain = Math.max(
+    1,
+    ...days.map((item) => (item.precipitationMm === null ? 0 : item.precipitationMm))
+  )
+  const rainCorrelation = weather.data.floodingVsWeather["precipitation_lag0d"]
+
+  return (
+    <div className={cn("px-5 py-4", bordered && "border-t border-border-soft")}>
+      <div className="flex flex-wrap items-baseline justify-between gap-2">
+        <div>
+          <h3 className="text-[11px] tracking-[0.08em] text-muted-foreground uppercase">Прогноз осадков · 7 дней</h3>
+          <p className="mt-1 text-[12px] text-muted-foreground">
+            Для сценария подтопления · источник {weather.data.source}
+          </p>
+        </div>
+        {showCorrelation && rainCorrelation !== undefined ? (
+          <p className="text-[12px] text-muted-foreground">
+            Связь затоплений с осадками: <span className="font-mono tabular-nums">r = {rainCorrelation.toFixed(2)}</span>
+          </p>
+        ) : null}
+      </div>
+      <ul
+        className="mt-3 grid gap-2"
+        style={{ gridTemplateColumns: `repeat(${Math.max(days.length, 1)}, minmax(0, 1fr))` }}
+      >
+        {days.map((item) => {
+          const rain = item.precipitationMm
+          const height = rain === null ? 4 : Math.max(4, Math.round((rain / maxRain) * 40))
+          return (
+            <li key={item.day} className="min-w-0 text-center">
+              <div className="flex h-11 items-end justify-center">
+                <div
+                  className={cn("w-full max-w-8", rain !== null && rain >= 5 ? "bg-vena" : "bg-vena/40")}
+                  style={{ height }}
+                  title={
+                    rain === null
+                      ? `${item.day}: нет данных`
+                      : `${item.day}: ${rain.toFixed(1)} мм${item.thaw ? ", оттепель" : ""}`
+                  }
+                />
+              </div>
+              <p className="mt-1 truncate font-mono text-[11px] tabular-nums">
+                {rain === null ? "—" : rain.toFixed(1)}
+              </p>
+              <p className="truncate text-[11px] text-faint">{formatForecastDay(item.day)}</p>
+              {item.thaw ? <p className="truncate text-[10px] text-status-attention">оттепель</p> : null}
+            </li>
+          )
+        })}
+      </ul>
+      <p className="mt-2 text-[11px] text-muted-foreground">мм осадков в сутки</p>
+    </div>
+  )
+}
+
 export function SeasonalityPanel() {
   const seasonality = useSeasonality()
-  if (seasonality.isError || (!seasonality.isPending && !seasonality.data?.rows.length)) return null
+  const weather = useWeatherReport()
+  const seasonalityEmpty = seasonality.isError || (!seasonality.isPending && !seasonality.data?.rows.length)
+  const weatherEmpty = weather.isError || (!weather.isPending && !weather.data?.forecast.length)
 
-  const weather = seasonality.data?.weather ?? {}
-  const rainCorrelation = weather["precipitation_lag0d"]
+  if (seasonalityEmpty && weatherEmpty && !weather.isPending) return null
+
+  if (seasonalityEmpty) {
+    return (
+      <section aria-label="Погода и сезонность" className="mx-6 mb-6 border border-border bg-elevated">
+        <WeatherForecastStrip bordered={false} />
+      </section>
+    )
+  }
+
+  const seasonWeather = seasonality.data?.weather ?? {}
+  const rainCorrelation = seasonWeather["precipitation_lag0d"]
 
   return (
     <section aria-label="Сезонность" className="mx-6 mb-6 border border-border bg-elevated">
@@ -88,6 +180,7 @@ export function SeasonalityPanel() {
           </div>
         </div>
       )}
+      <WeatherForecastStrip showCorrelation={false} />
     </section>
   )
 }

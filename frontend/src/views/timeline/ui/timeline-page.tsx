@@ -295,7 +295,7 @@ export function TimelinePage() {
               </button>
             ))}
           </div>
-          <Segmented label="Окно времени" value={halfSpan} onChange={setHalfSpan} options={ZOOM_STEPS.map((value) => ({ value, label: `±${value}h` }))} />
+          <Segmented label="Окно времени" value={halfSpan} onChange={setHalfSpan} options={ZOOM_STEPS.map((value) => ({ value, label: `±${value} ч` }))} />
           <ReplayEntry />
         </div>
       </div>

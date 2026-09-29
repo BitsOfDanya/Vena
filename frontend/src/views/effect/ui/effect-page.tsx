@@ -3,7 +3,7 @@
 import Link from "next/link"
 import * as React from "react"
 
-import { useAlarmKpis, useEffectReport } from "@/entities/analytics"
+import { useAlarmKpis, useEffectReport, leadHorizonPhrase } from "@/entities/analytics"
 import { OPEN_STATUSES, useActions } from "@/entities/maintenance"
 import { SCENARIO_LABEL, useBackendSituations, modelLabel, type PredictionScenario } from "@/entities/prediction"
 import { ApiError } from "@/shared/api/http"
@@ -256,7 +256,7 @@ export function EffectPage() {
             </div>
 
             <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
-              <Metric title="Алармы 30д" value={String(effect.data.alarms30d)} />
+              <Metric title="Тревоги 30д" value={String(effect.data.alarms30d)} />
               <Metric
                 title="К проверке"
                 value={String(effect.data.alarmsToVerify)}
@@ -274,39 +274,48 @@ export function EffectPage() {
               <div className="border-b border-border-soft px-4 py-3">
                 <h2 className="text-[12px] font-medium tracking-[0.12em] uppercase">Опережение по моделям</h2>
                 <p className="mt-1 text-[12px] text-muted-foreground">
-                  Медианный lead time, полнота эпизодов и точность алертов ·{" "}
+                  Насколько заранее модель предупреждает и какая доля тревог подтверждается ·{" "}
                   <Link href="/models" className="text-vena underline-offset-4 hover:underline">
                     карточки моделей →
                   </Link>
                 </p>
               </div>
               {effect.data.leadTime.length === 0 ? (
-                <p className="px-4 py-6 text-[13px] text-muted-foreground">Метрики lead time ещё не рассчитаны.</p>
+                <p className="px-4 py-6 text-[13px] text-muted-foreground">Метрики опережения ещё не рассчитаны.</p>
               ) : (
-                <ul>
-                  {effect.data.leadTime.map((row) => (
-                    <li
-                      key={`${row.modelId}-${row.level}`}
-                      className="grid grid-cols-[1fr_5rem_5rem_5rem_5rem] gap-3 border-b border-border-soft px-4 py-2.5 text-[13px] last:border-b-0"
-                    >
-                      <Link href={`/models#${row.modelId}`} className="truncate text-vena underline-offset-4 hover:underline">
-                        {modelLabel(row.modelId)}
-                      </Link>
-                      <span className="font-mono text-muted-foreground tabular-nums">
-                        {row.level === "high" ? "высокий" : row.level === "critical" ? "критич." : row.level}
-                      </span>
-                      <span className="font-mono tabular-nums" title="Медианный lead time, ч">
-                        {row.medianLeadTimeHours === null ? "—" : `${row.medianLeadTimeHours.toFixed(1)}ч`}
-                      </span>
-                      <span className="font-mono tabular-nums" title="Полнота эпизодов">
-                        {pct(row.episodeRecall)}
-                      </span>
-                      <span className="font-mono tabular-nums" title="Точность алертов">
-                        {pct(row.alertPrecision)}
-                      </span>
-                    </li>
-                  ))}
-                </ul>
+                <div>
+                  <div className="grid grid-cols-[1fr_minmax(12rem,2fr)] gap-3 border-b border-border-soft px-4 py-2 text-[11px] tracking-[0.08em] text-faint uppercase">
+                    <span>Модель</span>
+                    <span>Упреждение</span>
+                  </div>
+                  <ul>
+                    {effect.data.leadTime.map((row) => {
+                      const lead = leadHorizonPhrase(row.medianLeadTimeHours, "предупреждает за ~")
+                      const precision =
+                        row.alertPrecision === null ? null : Math.round(row.alertPrecision * 100)
+                      const phrase =
+                        lead === null && precision === null
+                          ? "данных пока недостаточно"
+                          : [lead, precision === null ? null : `${precision} % тревог подтверждаются`]
+                              .filter(Boolean)
+                              .join(", ")
+                      return (
+                        <li
+                          key={`${row.modelId}-${row.level}`}
+                          className="grid grid-cols-[1fr_minmax(12rem,2fr)] gap-3 border-b border-border-soft px-4 py-2.5 text-[13px] last:border-b-0"
+                        >
+                          <Link
+                            href={`/models#${row.modelId}`}
+                            className="truncate text-vena underline-offset-4 hover:underline"
+                          >
+                            {modelLabel(row.modelId)}
+                          </Link>
+                          <span className="text-muted-foreground">{phrase}</span>
+                        </li>
+                      )
+                    })}
+                  </ul>
+                </div>
               )}
             </section>
           </>
@@ -319,7 +328,7 @@ export function EffectPage() {
           <div className="border-b border-border-soft px-4 py-3">
             <h2 className="text-[12px] font-medium tracking-[0.12em] uppercase">Топ локаций → действие</h2>
             <p className="mt-1 text-[12px] text-muted-foreground">
-              Сортировка по HI (хуже выше). Открытых работ: {openActions.length}.
+              Сортировка по индексу здоровья (хуже выше). Открытых работ: {openActions.length}.
             </p>
           </div>
           {situations.isPending ? (
@@ -344,7 +353,7 @@ export function EffectPage() {
                       {scenario ? <span className="ml-2 text-[12px] font-normal text-muted-foreground">{scenario}</span> : null}
                     </span>
                     <span className="font-mono tabular-nums text-muted-foreground">
-                      {item.healthIndex === null ? "—" : `HI ${item.healthIndex}`}
+                      {item.healthIndex === null ? "—" : `Здоровье ${item.healthIndex}`}
                     </span>
                     <span className="truncate text-muted-foreground">
                       {item.recommendation?.consequence ?? item.recommendation?.title ?? item.primaryReason}

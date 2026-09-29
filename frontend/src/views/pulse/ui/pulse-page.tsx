@@ -22,6 +22,7 @@ import {
   SCENARIO_LABEL,
   formatProbability,
   formatProbabilityDelta,
+  getAssetPrediction,
   useBackendSituations,
   useCriticalPredictions,
   useRiskRising,
@@ -80,20 +81,20 @@ export function PulsePage() {
   const [scenarioFilter, setScenarioFilter] = React.useState<"all" | PredictionScenario>("all")
   const [selection, setSelection] = React.useState<PulseSelection | null>(null)
   const [tapeOpen, setTapeOpen] = React.useState(false)
-  const [demoTelemetryOpen, setDemoTelemetryOpen] = React.useState(false)
+  const [demoTelemetryOpen, setDemoTelemetryOpen] = React.useState(true)
   const [acknowledged, setAcknowledged] = React.useState<string[]>([])
   const [sheetOpen, setSheetOpen] = React.useState(false)
   const [draft, setDraft] = React.useState<ActionDraft>({})
 
   const apiMode = workflowMode === "api"
   const hideDemoTelemetry = apiMode ? !demoTelemetryOpen : false
-  const pulse = usePulse(now, windowHours)
-  const demoSummary = usePulseSummary(now, horizon)
+  const pulse = usePulse(now, windowHours, { enabled: !hideDemoTelemetry })
+  const demoSummary = usePulseSummary(now, horizon, { enabled: !apiMode })
   const snapshot = useSnapshotStatus()
   const backendSituations = useBackendSituations()
   const riskRising = useRiskRising(horizon)
   const criticalPredictions = useCriticalPredictions(horizon)
-  const demoSituations = useSituations(now, horizon)
+  const demoSituations = useSituations(now, horizon, { enabled: !apiMode })
   const actions = useActions()
   const notifications = useNotifications()
   const acknowledge = useAcknowledgeNotification(now)
@@ -186,25 +187,29 @@ export function PulsePage() {
     if (notification && notification.status === "new") acknowledge.mutate(notification.id)
   }
 
-  function createAction(situation: Situation) {
+  async function createAction(situation: Situation) {
     const assetId = situation.assetIds[0]
-    const prediction =
+    let prediction =
       apiMode
         ? [...(criticalPredictions.data?.critical ?? []), ...(criticalPredictions.data?.attention ?? [])].find(
             (item) => item.assetId === assetId,
           )
         : undefined
+    if (apiMode && assetId && !prediction) {
+      prediction = (await getAssetPrediction(assetId)) ?? undefined
+    }
     const reason = situation.recommendation
       ? `${situation.recommendation.title}${situation.recommendation.hint ? ` — ${situation.recommendation.hint}` : ""}`
       : `${situation.title}: ${situation.primaryReason}`
+    const rawScore = prediction?.score ?? situation.incidentProbability ?? situation.riskScore ?? undefined
     setDraft({
       assetId,
       reason,
       priority: situation.severity === "critical" ? "high" : "medium",
       sourcePredictionId: prediction?.id,
-      sourceModelId: prediction?.modelId,
-      sourceScore: prediction?.score,
-      sourceHorizonHours: prediction?.horizonHours ?? undefined,
+      sourceModelId: prediction?.modelId ?? situation.modelId ?? undefined,
+      sourceScore: rawScore == null ? undefined : rawScore > 1 ? rawScore / 100 : rawScore,
+      sourceHorizonHours: prediction?.horizonHours ?? situation.horizon ?? undefined,
     })
     setSheetOpen(true)
   }
@@ -217,6 +222,7 @@ export function PulsePage() {
         : `План осмотра · ${item.name?.trim() || item.assetId}`,
       priority: item.riskLevel === "critical" || item.riskLevel === "attention" ? "high" : "medium",
       kind: "inspect",
+      sourcePredictionId: item.predictionId,
       sourceModelId: item.modelId,
       sourceScore: item.probability,
       sourceHorizonHours: item.modelId.includes("72") ? 72 : 24,
@@ -244,9 +250,9 @@ export function PulsePage() {
           summary={summary}
           apiMode={apiMode}
           predictionsUnavailable={Boolean(predictionsUnavailable)}
-          criticalCount={criticalPredictions.data?.critical.length ?? 0}
+          criticalCount={criticalPredictions.data?.criticalCount ?? 0}
           criticalAssets={(criticalPredictions.data?.critical ?? []).slice(0, 2).map((item) => `${item.assetId} · ${formatProbability(item.score)}`)}
-          attentionCount={criticalPredictions.data?.attention.length ?? 0}
+          attentionCount={criticalPredictions.data?.attentionCount ?? 0}
           risingCount={(riskRising.data ?? []).filter((item) => (item.scoreDelta ?? 0) > 0).length}
           risingTop={(() => {
             const top = (riskRising.data ?? []).find((item) => (item.scoreDelta ?? 0) > 0)
@@ -295,9 +301,9 @@ export function PulsePage() {
               {apiMode && !predictionsUnavailable ? (
                 <span className="text-[12px] text-muted-foreground">
                   в очереди {filtered.length}
-                  {(criticalPredictions.data?.critical.length ?? 0) + (criticalPredictions.data?.attention.length ?? 0) >
+                  {(criticalPredictions.data?.criticalCount ?? 0) + (criticalPredictions.data?.attentionCount ?? 0) >
                   filtered.length
-                    ? ` · критичных/внимание в снимке: ${(criticalPredictions.data?.critical.length ?? 0) + (criticalPredictions.data?.attention.length ?? 0)}`
+                    ? ` · критичных/внимание в снимке: ${(criticalPredictions.data?.criticalCount ?? 0) + (criticalPredictions.data?.attentionCount ?? 0)}`
                     : null}
                 </span>
               ) : null}
@@ -436,7 +442,7 @@ export function PulsePage() {
                             <span className="text-foreground">{EVENT_TYPE_LABEL[event.type]}</span>
                             <span className="text-muted-foreground"> · {event.state}</span>
                           </span>
-                          <span className="text-[12px] text-vena">{linked ? `Паттерн ${patternLabel(linked)}` : ""}</span>
+                          <span className="text-[12px] text-vena">{linked ? `Связка ${patternLabel(linked)}` : ""}</span>
                           <EventGlyph kind={glyphKind(event)} className="size-3.5" />
                         </button>
                       </li>

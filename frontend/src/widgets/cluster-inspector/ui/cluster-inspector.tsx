@@ -1,14 +1,16 @@
 "use client"
 
+import { useQueries } from "@tanstack/react-query"
 import { useRouter } from "next/navigation"
 
 import {
   EventGlyph,
   StatusLabel,
   TYPE_LABEL,
+  bucketNow,
   formatDelta,
   formatScore,
-  useAssets,
+  getAsset,
   type Asset,
   type PulseCluster,
   type PulsePattern,
@@ -21,8 +23,17 @@ import { cn } from "@/shared/lib/utils"
 
 export function useInvolvedAssets(assetIds: string[]) {
   const { now, horizon } = useWorkspace()
-  const assets = useAssets(now, horizon)
-  return (assets.data ?? []).filter((asset) => assetIds.includes(asset.id)).sort((left, right) => right.riskScore - left.riskScore)
+  const results = useQueries({
+    queries: assetIds.slice(0, 12).map((id) => ({
+      queryKey: ["asset", id, bucketNow(now, 1), horizon],
+      queryFn: () => getAsset(id, { now, horizon }),
+      enabled: assetIds.length > 0,
+    })),
+  })
+  return results
+    .map((result) => result.data?.asset)
+    .filter((asset): asset is Asset => Boolean(asset))
+    .sort((left, right) => right.riskScore - left.riskScore)
 }
 
 export function InvolvedAssets({ involved }: { involved: Asset[] }) {
@@ -131,8 +142,8 @@ export function PatternInspector({
 }) {
   const involved = useInvolvedAssets(pattern.assetIds)
   return (
-    <Inspector label="Инспектор паттерна">
-      <InspectorHeader eyebrow={`Паттерн · ${formatDay(pattern.start)}`} title={`Паттерн ${String(pattern.number).padStart(3, "0")}`} onClose={onClose}>
+    <Inspector label="Инспектор связки">
+      <InspectorHeader eyebrow={`Связка · ${formatDay(pattern.start)}`} title={`Связка ${String(pattern.number).padStart(3, "0")}`} onClose={onClose}>
         <p className="mt-0.5 font-mono text-xs text-muted-foreground tabular-nums">
           {formatClock(pattern.start)}–{formatClock(pattern.end)}
         </p>
@@ -157,7 +168,7 @@ export function PatternInspector({
             Связанная активность: нетипичные переходы в системах ({pattern.systems.map((type) => TYPE_LABEL[type].toLowerCase()).join(", ")}) в пределах одного часа.
           </p>
         </InspectorSection>
-        <InspectorSection title="Кластеры в паттерне">
+        <InspectorSection title="Кластеры в связке">
           <ul className="divide-y">
             {clusters.map((cluster) => (
               <li key={cluster.id}>

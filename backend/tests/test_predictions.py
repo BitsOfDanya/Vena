@@ -99,6 +99,33 @@ def test_calibrated_flag_changes_score_type(client: TestClient, ml_root: Path) -
     assert item["score_type"] == "calibrated_probability"
 
 
+def test_prediction_summary_requires_snapshot(client: TestClient, ml_root: Path) -> None:
+    assert client.get("/api/v1/predictions/summary").status_code == 503
+
+
+def test_prediction_summary_avoids_full_listing(client: TestClient, ml_root: Path) -> None:
+    rows = [
+        row("100", 0.99, "critical"),
+        row("101", 0.95, "critical"),
+        row("200", 0.8, "high"),
+        row("300", 0.4, "medium"),
+        row("400", 0.1, "low"),
+        row("500", 0.9, "critical"),
+    ]
+    for item in rows[:-1]:
+        item["horizon_hours"] = 24
+        item["model_id"] = "pump_24h"
+    write_snapshot(ml_root, datetime.now(tz=UTC), rows)
+
+    body = client.get("/api/v1/predictions/summary", params={"horizon": 24, "top": 1}).json()
+
+    assert body["horizon_hours"] == 24
+    assert body["total"] == 5
+    assert body["counts"] == {"critical": 2, "attention": 1, "observe": 1, "normal": 1}
+    assert [item["asset_id"] for item in body["top_critical"]] == ["100"]
+    assert [item["asset_id"] for item in body["top_attention"]] == ["200"]
+
+
 def test_predictions_unavailable_without_snapshot(client: TestClient, ml_root: Path) -> None:
     response = client.get("/api/v1/predictions")
 
@@ -606,12 +633,28 @@ def test_forecast_exchange_formats_and_event_types(client: TestClient, ml_root: 
 
 
 def test_health_calibration_interpolates_between_points() -> None:
-    from app.domain.health import calibrate
+    from app.domain.health import calibrate, to_index
 
     points = ([0.0, 0.5, 1.0], [0.02, 0.2, 0.5])
     assert calibrate(0.25, points) == pytest.approx(0.11)
     assert calibrate(2.0, points) == 0.5
     assert calibrate(0.3, None) == 0.3
+    assert to_index(0.3, None) == 70
+
+
+def test_health_index_keeps_discriminating_above_calibration_plateau() -> None:
+    from app.domain.health import to_index
+
+    # Mimic the production isotonic plateau: raw 0.35…0.95 → calibrated ~0.45 (HI≈55).
+    points = ([0.0, 0.32, 0.98, 1.0], [0.0, 0.45, 0.45, 0.95])
+    mild = to_index(0.40, points)
+    mid = to_index(0.70, points)
+    severe = to_index(0.95, points)
+    assert mild == 55
+    assert mid < mild
+    assert severe < mid
+    assert severe < 40
+    assert to_index(0.10, points) > 55
 
 
 def test_access_routes_and_alarm_categories(client: TestClient, ml_root: Path) -> None:
@@ -708,6 +751,7 @@ def test_inspection_plan_skips_fans_with_recent_work(client: TestClient, ml_root
     assert after["skipped_recent"] == ["f1"]
     pumps = client.get(url, params={"model_id": "pump_72h"}).json()
     assert pumps["items"][0]["asset_id"] == "p1"
+    assert pumps["items"][0]["prediction_id"]
     assert client.get(url, params={"model_id": "x_1"}).status_code == 404
 
 

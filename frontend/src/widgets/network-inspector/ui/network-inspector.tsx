@@ -9,6 +9,7 @@ import {
   StatusLabel,
   TYPE_LABEL,
   formatDelta,
+  formatScore,
   scoreLabel,
   useAssetDetail,
   type FactorDirection,
@@ -41,7 +42,15 @@ export function NetworkInspector({
   assetId: string
   onClose: () => void
   onInspect: () => void
-  onCreateAction: (draft: { assetId: string; reason: string; priority: "high" | "medium" | "low" }) => void
+  onCreateAction: (draft: {
+    assetId: string
+    reason: string
+    priority: "high" | "medium" | "low"
+    sourcePredictionId?: string
+    sourceModelId?: string
+    sourceScore?: number
+    sourceHorizonHours?: number
+  }) => void
 }) {
   const router = useRouter()
   const { now, horizon, selectAsset, setCompare } = useWorkspace()
@@ -84,8 +93,7 @@ export function NetworkInspector({
       <InspectorBody>
         <InspectorSection title={scoreLabel(asset.scoreType)}>
           <div className="flex items-baseline gap-3">
-            <span className="font-mono text-4xl tabular-nums">{Math.round(asset.riskScore)}</span>
-            <span className="font-mono text-sm text-muted-foreground">/ 100</span>
+            <span className="font-mono text-4xl tabular-nums">{formatScore(asset.riskScore, asset.scoreType)}</span>
             <span className={cn("ml-auto font-mono text-sm tabular-nums", data.delta > 0 ? "text-status-attention" : "text-muted-foreground")}>
               {data.delta > 0 ? "↑" : data.delta < 0 ? "↓" : "→"}
               {formatDelta(Math.abs(data.delta))} с {formatClock(data.deltaSince)}
@@ -94,7 +102,7 @@ export function NetworkInspector({
           <dl className="mt-3 grid grid-cols-2 gap-3 text-xs">
             <div>
               <dt className="text-[11px] font-medium tracking-[0.08em] text-faint uppercase">Окно прогноза</dt>
-              <dd className="mt-0.5 font-mono text-sm tabular-nums">{asset.forecastHorizon} h</dd>
+              <dd className="mt-0.5 font-mono text-sm tabular-nums">{asset.forecastHorizon} ч</dd>
             </div>
             <div>
               <dt className="text-[11px] font-medium tracking-[0.08em] text-faint uppercase">Последнее событие</dt>
@@ -158,7 +166,17 @@ export function NetworkInspector({
         </Button>
         <Button
           className="flex-1"
-          onClick={() => onCreateAction({ assetId: asset.id, reason: reasons ? `Повышенный риск: ${reasons}` : "Проверить текущее состояние", priority })}
+          onClick={() =>
+            onCreateAction({
+              assetId: asset.id,
+              reason: reasons ? `Повышенный риск: ${reasons}` : "Проверить текущее состояние",
+              priority,
+              sourcePredictionId: asset.predictionId ?? undefined,
+              sourceModelId: asset.predictionModelId ?? undefined,
+              sourceScore: asset.riskScore / 100,
+              sourceHorizonHours: asset.forecastHorizon,
+            })
+          }
         >
           Создать работу
         </Button>

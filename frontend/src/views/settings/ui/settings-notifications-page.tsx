@@ -124,7 +124,7 @@ export function SettingsNotificationsPage() {
                   <p className="mt-1 text-[13px] text-muted-foreground">
                     уведомить {rule.recipients.map((id) => data.recipients.find((group) => group.id === id)?.name ?? id).join(", ")} ·{" "}
                     {rule.channels.map((channel) => CHANNEL_LABEL[channel]).join(" + ")} · пауза{" "}
-                    <span className="font-mono tabular-nums">{rule.cooldownHours}h</span>
+                    <span className="font-mono tabular-nums">{rule.cooldownHours} ч</span>
                   </p>
                 </li>
               ))}

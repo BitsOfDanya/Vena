@@ -2,7 +2,7 @@
 
 import * as React from "react"
 
-import { RiskLevelLabel, scoreLabel, useAssetDetail, useTemporalBundles } from "@/entities/infrastructure"
+import { RiskLevelLabel, formatScore, scoreLabel, useAssetDetail, useTemporalBundles } from "@/entities/infrastructure"
 import { useWorkspace } from "@/features/workspace"
 import { cn } from "@/shared/lib/utils"
 import { Button } from "@/shared/ui/button"
@@ -56,11 +56,11 @@ export function AssetDiagnostic({
         </div>
       </div>
       <Inspector label="Объяснение риска">
-        <InspectorHeader eyebrow="Текущий риск" title={asset ? `${Math.round(asset.riskScore)}` : "—"}>
+        <InspectorHeader eyebrow="Текущий риск" title={asset ? formatScore(asset.riskScore, asset.scoreType) : "—"}>
           {asset ? (
             <div className="mt-1 flex items-center gap-3">
               <RiskLevelLabel level={asset.riskLevel} />
-              <span className="text-xs text-muted-foreground">{scoreLabel(asset.scoreType)} / 100</span>
+              <span className="text-xs text-muted-foreground">{scoreLabel(asset.scoreType)}</span>
             </div>
           ) : null}
         </InspectorHeader>

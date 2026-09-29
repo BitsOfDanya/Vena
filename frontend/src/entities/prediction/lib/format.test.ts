@@ -8,6 +8,10 @@ describe("probability format", () => {
     expect(formatProbability(0.0123)).toBe("1.2%")
   })
 
+  it("keeps already-percent values", () => {
+    expect(formatProbability(68)).toBe("68%")
+  })
+
   it("shows deltas in percentage points", () => {
     expect(formatProbabilityDelta(0.031)).toBe("+3.1 п.п.")
     expect(formatProbabilityDelta(-0.004)).toBe("−0.4 п.п.")

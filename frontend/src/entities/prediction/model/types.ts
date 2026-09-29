@@ -52,6 +52,14 @@ export type SnapshotStatus = {
   detail: string
 }
 
+export type PredictionSummary = {
+  horizonHours: number | null
+  total: number
+  counts: { critical: number; attention: number; observe: number; normal: number }
+  topCritical: Prediction[]
+  topAttention: Prediction[]
+}
+
 export type SituationRecommendation = {
   title: string
   actions: string[]

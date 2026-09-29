@@ -7,13 +7,6 @@ import { workflowMode } from "@/shared/config/env"
 import { Button } from "@/shared/ui/button"
 import { LoadingBar } from "@/shared/ui/state-message"
 
-const RISK_RU: Record<string, string> = {
-  critical: "критично",
-  attention: "внимание",
-  observe: "наблюдение",
-  normal: "норма",
-}
-
 function PlanColumn({
   title,
   plan,
@@ -42,7 +35,7 @@ function PlanColumn({
           {plan.items.map((item) => (
             <li
               key={`${item.modelId}-${item.assetId}`}
-              className="flex flex-wrap items-baseline gap-x-3 gap-y-1 border border-border-soft bg-surface px-3 py-2"
+              className="flex flex-wrap items-baseline gap-x-3 gap-y-1 border border-border-soft bg-background px-3 py-2"
             >
               <span className="min-w-0 flex-1 truncate text-[13px] font-medium">
                 {item.name?.trim() || item.assetId}
@@ -50,9 +43,11 @@ function PlanColumn({
               <span className="font-mono text-[12px] tabular-nums text-muted-foreground">
                 {formatProbability(item.probability)}
               </span>
-              <span className="text-[11px] tracking-[0.04em] text-faint uppercase">
-                {RISK_RU[item.riskLevel] ?? item.riskLevel}
-              </span>
+              {item.riskLevel === "critical" || item.riskLevel === "attention" ? (
+                <span className="text-[11px] tracking-[0.04em] text-faint">
+                  {item.riskLevel === "critical" ? "критично" : "внимание"}
+                </span>
+              ) : null}
               {item.location ? (
                 <span className="basis-full truncate text-[12px] text-muted-foreground">{item.location}</span>
               ) : null}
@@ -95,9 +90,11 @@ export function InspectionPlanPanel({
       ) : plan.isError ? (
         <p className="text-[13px] text-muted-foreground">Не удалось загрузить план осмотров.</p>
       ) : (
-        <div className="grid gap-4 border border-border bg-elevated p-4 sm:grid-cols-2">
-          <PlanColumn title="Насосы · pump_72h" plan={plan.data?.pumps} onCreate={onCreate} />
-          <PlanColumn title="Вентиляторы · fan_72h" plan={plan.data?.fans} onCreate={onCreate} />
+        <div className="max-h-[min(36vh,22rem)] overflow-y-auto overscroll-contain border border-border bg-elevated p-4">
+          <div className="grid gap-4 sm:grid-cols-2">
+          <PlanColumn title="Насосы · 72 ч" plan={plan.data?.pumps} onCreate={onCreate} />
+          <PlanColumn title="Вентиляторы · 72 ч" plan={plan.data?.fans} onCreate={onCreate} />
+          </div>
         </div>
       )}
     </section>

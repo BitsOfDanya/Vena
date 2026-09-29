@@ -261,7 +261,7 @@ export function JournalPage() {
                               </div>
                               <div className="font-mono text-[11px] text-faint tabular-nums">
                                 {scoreText(row)}
-                                {row.horizonHours ? ` · ${row.horizonHours}h` : ""}
+                                {row.horizonHours ? ` · ${row.horizonHours} ч` : ""}
                               </div>
                             </td>
                             <td className={cn("px-4 py-2.5", DECISION_TONE[row.decision])}>

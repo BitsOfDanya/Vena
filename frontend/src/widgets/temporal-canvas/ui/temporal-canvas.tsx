@@ -119,12 +119,12 @@ export function TemporalCanvas({
     const lines = [`${formatDateTime(time)}`]
     if (time <= now) {
       const point = nearest(bundle.history, time, (item) => item.timestamp)
-      if (point) lines.push(`${bundle.asset.id} · risk ${Math.round(point.score)}/100`)
+      if (point) lines.push(`${bundle.asset.id} · риск ${Math.round(point.score)}/100`)
       const segment = bundle.states.find((item) => item.from <= time && item.to >= time)
-      if (segment) lines.push(`State: ${segment.label}`)
+      if (segment) lines.push(`Состояние: ${segment.label}`)
     } else {
       const point = nearest(bundle.forecast, time, (item) => item.timestamp)
-      if (point) lines.push(`${bundle.asset.id} · expected risk ${Math.round(point.low)}–${Math.round(point.high)}`)
+      if (point) lines.push(`${bundle.asset.id} · ожидаемый риск ${Math.round(point.low)}–${Math.round(point.high)}`)
     }
     setTooltip({ x: px, y: py, time, lines })
   }
@@ -164,7 +164,7 @@ export function TemporalCanvas({
           <g key={offset}>
             <line x1={x(now + offset * HOUR)} x2={x(now + offset * HOUR)} y1={HEADER - 4} y2={bottom} className="stroke-grid" strokeWidth={1} strokeDasharray="1 3" />
             <text x={x(now + offset * HOUR)} y={bottom + 16} textAnchor="middle" className="fill-faint font-mono text-[11px] tabular-nums">
-              {offset === 0 ? "" : offset > 0 ? `+${offset}h` : `${offset}h`}
+              {offset === 0 ? "" : offset > 0 ? `+${offset} ч` : `${offset} ч`}
             </text>
           </g>
         ))}

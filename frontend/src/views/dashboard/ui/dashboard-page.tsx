@@ -206,7 +206,7 @@ function ScenarioExposure() {
                 ) : null}
                 {item.weekError !== null ? (
                   <span className="text-faint" title="Ошибка недельного прогноза vs факт">
-                    ош. нед. {item.weekError.toFixed(2)}
+                    ош. нед. {Math.round(item.weekError * 100)} %
                   </span>
                 ) : null}
                 {item.episodes365d !== null ? (
@@ -247,8 +247,12 @@ function HealthStrip() {
       <SectionTitle
         description={
           history.data?.period
-            ? `Индекс 0–100 по объектам СМВУ · тренд за неделю · период ${history.data.period}`
-            : "Индекс 0–100 по объектам СМВУ (хуже — ниже). HI &lt;40 критично · &lt;70 внимание"
+            ? `Индекс 0–100 по объектам СМВУ · тренд за неделю · период ${history.data.period}${
+                history.data.historyApproximate
+                  ? " · тренд приблизительный до полного пересчёта истории"
+                  : ""
+              }`
+            : "Индекс 0–100 по объектам СМВУ (хуже — ниже). Здоровье <40 критично · <70 внимание"
         }
         action={
           <Link className="text-[13px] text-vena" href="/effect">
@@ -277,7 +281,7 @@ function HealthStrip() {
                       "text-[11px]",
                       delta < 0 ? "text-status-critical" : delta > 0 ? "text-status-normal" : "text-faint"
                     )}
-                    title="Изменение HI за 7 дней"
+                    title="Изменение здоровья за 7 дней"
                   >
                     {delta > 0 ? `+${delta}` : delta}
                   </span>
@@ -331,7 +335,7 @@ function PredictionInspector({
           <dl className="mt-5 space-y-2 text-[12px]">
             <div className="flex justify-between">
               <dt className="text-muted-foreground">Окно прогноза</dt>
-              <dd className="font-mono">{row.horizon}h</dd>
+              <dd className="font-mono">{row.horizon} ч</dd>
             </div>
             <div className="flex justify-between">
               <dt className="text-muted-foreground">Время прогноза</dt>
@@ -388,7 +392,7 @@ function PredictionInspector({
 
 export function DashboardPage() {
   const { now, horizon, setHorizon } = useWorkspace()
-  const assets = useAssets(now, horizon)
+  const assets = useAssets(now, horizon, { enabled: workflowMode !== "api" })
   const predictions = useDashboardPredictions(horizon)
   const snapshot = useSnapshotStatus()
   const actions = useActions()
@@ -450,7 +454,7 @@ export function DashboardPage() {
   const createAction = (row: DashboardRow) => {
     setDraft({
       assetId: row.assetId,
-      reason: `${TYPE_LABEL[row.type]} · ${LABEL[row.level]} · ${formatScore(row.score, row.scoreType)} на ${row.horizon}h`,
+      reason: `${TYPE_LABEL[row.type]} · ${LABEL[row.level]} · ${formatScore(row.score, row.scoreType)} на ${row.horizon} ч`,
       priority: row.level === "critical" || row.level === "attention" ? "high" : "medium",
       sourcePredictionId: row.predictionId ?? undefined,
       sourceModelId: row.modelId ?? undefined,
@@ -680,7 +684,7 @@ export function DashboardPage() {
                   <StateMessage
                     title="Нет подходящих прогнозов"
                     description={
-                      rows.length ? "Измените поиск, систему или уровень риска." : `В источнике нет прогнозов для горизонта ${horizon}h.`
+                      rows.length ? "Измените поиск, систему или уровень риска." : `В источнике нет прогнозов для горизонта ${horizon} ч.`
                     }
                     action={
                       rows.length ? (
@@ -753,7 +757,7 @@ export function DashboardPage() {
                                     {row.scoreType === "calibrated_probability" ? "Вероятность" : "Скор риска"}
                                   </p>
                                 </td>
-                                <td className="px-3 py-3 font-mono">{row.horizon}h</td>
+                                <td className="px-3 py-3 font-mono">{row.horizon} ч</td>
                                 <td className="px-3 py-3 text-muted-foreground">
                                   {actionUnavailable ? "Недоступно" : (responses.get(row.assetId) ?? "Нет открытой работы")}
                                 </td>

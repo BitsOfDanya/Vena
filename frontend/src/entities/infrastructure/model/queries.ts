@@ -1,5 +1,7 @@
 import { keepPreviousData, useQueries, useQuery } from "@tanstack/react-query"
 
+import { getDashboardPredictions, getPredictionSummary, type Prediction } from "@/entities/prediction"
+import { workflowMode } from "@/shared/config/env"
 import { MINUTE } from "@/shared/lib/time"
 
 import {
@@ -18,19 +20,61 @@ import {
   getTemporal,
   searchAssets,
 } from "../api/service"
-import type { ForecastHorizon, TemporalBundle } from "./types"
-import { workflowMode } from "@/shared/config/env"
+import {
+  displayScoreFromPrediction,
+  riskLevelFromPrediction,
+  statusFromPredictionLevel,
+} from "../lib/prediction-overlay"
+import type { Asset, AssetType, ForecastHorizon, TemporalBundle } from "./types"
 
 export function bucketNow(now: number, minutes = 1) {
   const size = minutes * MINUTE
   return Math.floor(now / size) * size
 }
 
-export function usePulse(now: number, windowHours = 6) {
+function typeFromModelId(modelId: string): AssetType {
+  const prefix = modelId.split("_")[0] ?? ""
+  if (prefix === "pump" || prefix === "flood") return "pump"
+  if (prefix === "fan") return "fan"
+  if (prefix === "smoke" || prefix === "alarm") return "smoke"
+  if (prefix === "phase" || prefix === "power") return "power"
+  return "other"
+}
+
+function assetFromPrediction(item: Prediction, horizon: ForecastHorizon): Asset {
+  return {
+    id: item.assetId,
+    name: item.name?.trim() || item.assetId,
+    type: typeFromModelId(item.modelId),
+    group: item.location?.trim() || "СМВУ",
+    channelId: item.assetId,
+    status: statusFromPredictionLevel(item.riskLevel),
+    riskLevel: riskLevelFromPrediction(item.riskLevel),
+    riskScore: displayScoreFromPrediction({
+      id: item.id,
+      assetId: item.assetId,
+      modelId: item.modelId,
+      horizonHours: item.horizonHours,
+      score: item.score,
+      scoreType: item.scoreType,
+      riskLevel: item.riskLevel,
+      scoreDelta: item.scoreDelta,
+      lastEventAt: item.lastEventAt,
+    }),
+    scoreType: item.scoreType,
+    forecastHorizon: item.horizonHours === 72 ? 72 : horizon,
+    lastEventAt: item.lastEventAt,
+    predictionId: item.id,
+    predictionModelId: item.modelId,
+  }
+}
+
+export function usePulse(now: number, windowHours = 6, options?: { enabled?: boolean }) {
   return useQuery({
     queryKey: ["pulse", bucketNow(now, 1), windowHours],
     queryFn: () => getPulse({ now, windowHours }),
     placeholderData: keepPreviousData,
+    enabled: options?.enabled ?? true,
   })
 }
 
@@ -42,11 +86,12 @@ export function useNetwork(now: number, horizon: ForecastHorizon) {
   })
 }
 
-export function useAssets(now: number, horizon: ForecastHorizon) {
+export function useAssets(now: number, horizon: ForecastHorizon, options?: { enabled?: boolean }) {
   return useQuery({
     queryKey: ["assets", bucketNow(now, 5), horizon],
     queryFn: () => getAssets({ now, horizon }),
     placeholderData: keepPreviousData,
+    enabled: options?.enabled ?? true,
   })
 }
 
@@ -56,11 +101,23 @@ export function useAssetSearch(query: string, now: number, horizon: ForecastHori
     queryFn: async () => {
       if (workflowMode !== "api") return searchAssets(query, { now, horizon })
       const needle = query.trim().toLowerCase()
-      const assets = await getPredictionAssets(horizon)
-      if (!needle) return assets.slice(0, 12)
-      return assets
-        .filter((asset) => asset.id.toLowerCase().includes(needle) || asset.channelId.includes(needle))
+      if (!needle) {
+        const summary = await getPredictionSummary(horizon, 12)
+        return [...summary.topCritical, ...summary.topAttention]
+          .slice(0, 12)
+          .map((item) => assetFromPrediction(item, horizon))
+      }
+      // Shared horizon cache (same as Dashboard/Network) — no second full walk when warm.
+      const all = await getDashboardPredictions(horizon)
+      return all
+        .filter(
+          (item) =>
+            item.assetId.toLowerCase().includes(needle) ||
+            (item.name?.toLowerCase().includes(needle) ?? false) ||
+            (item.location?.toLowerCase().includes(needle) ?? false)
+        )
         .slice(0, 12)
+        .map((item) => assetFromPrediction(item, horizon))
     },
     placeholderData: keepPreviousData,
   })
@@ -140,18 +197,20 @@ export function useTemporalBundles(ids: string[], now: number, halfSpanHours: nu
   })
 }
 
-export function useSituations(now: number, horizon: ForecastHorizon) {
+export function useSituations(now: number, horizon: ForecastHorizon, options?: { enabled?: boolean }) {
   return useQuery({
     queryKey: ["situations", bucketNow(now, 1), horizon],
     queryFn: () => getSituations({ now, horizon }),
     placeholderData: keepPreviousData,
+    enabled: options?.enabled ?? true,
   })
 }
 
-export function usePulseSummary(now: number, horizon: ForecastHorizon) {
+export function usePulseSummary(now: number, horizon: ForecastHorizon, options?: { enabled?: boolean }) {
   return useQuery({
     queryKey: ["pulse-summary", bucketNow(now, 1), horizon],
     queryFn: () => getPulseSummary({ now, horizon }),
     placeholderData: keepPreviousData,
+    enabled: options?.enabled ?? true,
   })
 }

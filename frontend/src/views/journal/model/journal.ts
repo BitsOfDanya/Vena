@@ -29,21 +29,21 @@ function cell(value: unknown): string {
 
 export function exportJournalCsv(rows: JournalEntry[]): string {
   const header = [
-    "Action",
-    "Created (UTC)",
-    "Asset",
-    "Location",
-    "Scenario",
-    "Model",
-    "Score",
-    "Horizon (h)",
-    "Prediction time (UTC)",
-    "Status",
-    "Decision",
-    "Outcome",
-    "Note",
-    "Assignee",
-    "Closed (UTC)",
+    "Работа",
+    "Создано (UTC)",
+    "Объект",
+    "Локация",
+    "Сценарий",
+    "Модель",
+    "Оценка",
+    "Горизонт (ч)",
+    "Время прогноза (UTC)",
+    "Статус",
+    "Решение",
+    "Исход",
+    "Примечание",
+    "Исполнитель",
+    "Закрыто (UTC)",
   ]
   const iso = (value: number | null) => (value === null ? "" : new Date(value).toISOString())
   const lines = rows.map((row) =>

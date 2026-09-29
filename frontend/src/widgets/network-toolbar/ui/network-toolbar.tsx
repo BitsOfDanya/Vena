@@ -9,12 +9,13 @@ import { Segmented } from "@/shared/ui/segmented"
 
 export type SystemFilter = "all" | AssetType
 export type RiskFilter = "all" | "attention" | "critical"
-export type NetworkMode = "network" | "tree" | "assets" | "map"
+export type NetworkMode = "network" | "picket" | "tree" | "assets" | "map"
 
 const SYSTEMS: SystemFilter[] = ["all", "pump", "fan", "smoke", "power"]
 
-const MODES: { value: NetworkMode; label: string }[] = [
+const MODES: { value: NetworkMode; label: string; apiOnly?: boolean }[] = [
   { value: "network", label: "Схема" },
+  { value: "picket", label: "Пикеты", apiOnly: true },
   { value: "tree", label: "Дерево" },
   { value: "assets", label: "Объекты" },
   { value: "map", label: "Карта" },
@@ -38,6 +39,7 @@ export function NetworkToolbar({
   horizon,
   onHorizon,
   showTree = false,
+  showPicket = false,
   realGeometryOnly = false,
 }: {
   mode: NetworkMode
@@ -54,10 +56,14 @@ export function NetworkToolbar({
   horizon: ForecastHorizon
   onHorizon: (value: ForecastHorizon) => void
   showTree?: boolean
+  showPicket?: boolean
   realGeometryOnly?: boolean
 }) {
   const modes = MODES.filter(
-    (item) => (item.value !== "tree" || showTree) && (item.value !== "map" || !realGeometryOnly)
+    (item) =>
+      (item.value !== "tree" || showTree) &&
+      (item.value !== "picket" || showPicket) &&
+      (item.value !== "map" || !realGeometryOnly)
   )
   return (
     <div className="flex shrink-0 flex-wrap items-center gap-x-5 gap-y-3 px-6 pt-1 pb-3">

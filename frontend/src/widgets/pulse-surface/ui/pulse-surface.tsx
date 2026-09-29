@@ -42,7 +42,7 @@ export function patternLabel(pattern: PulsePattern) {
 }
 
 export function clusterTitle(cluster: PulseCluster) {
-  return `${TYPE_LABEL[cluster.systemType]} system`
+  return TYPE_LABEL[cluster.systemType]
 }
 
 function thinOut(events: PulseEvent[], toX: (time: number) => number, minGap: number) {
@@ -255,7 +255,9 @@ export function PulseSurface({
               height: labelHeight,
             }}
           >
-            <span className="text-[13px] font-semibold tracking-[0.12em] text-vena uppercase">Pattern {patternLabel(item.pattern)}</span>
+            <span className="text-[13px] font-semibold tracking-[0.12em] text-vena uppercase">
+              Связка {patternLabel(item.pattern)}
+            </span>
             <span className="font-mono text-[12px] text-muted-foreground tabular-nums">
               {item.pattern.systems.length} систем · {item.pattern.events} событий
             </span>
@@ -279,7 +281,7 @@ export function PulseSurface({
             {formatClock(hover.cluster.start)}–{formatClock(hover.cluster.end)}
           </p>
           <p className="text-[12px] text-muted-foreground">{clusterTitle(hover.cluster)}</p>
-          <p className="mt-1 text-[12px]">{hover.cluster.transitions} abnormal transitions</p>
+          <p className="mt-1 text-[12px]">{hover.cluster.transitions} нетипичных переходов</p>
           <p className={cn("text-[12px]", hover.cluster.riskDelta > 1 ? "text-status-attention" : "text-muted-foreground")}>
             {hover.cluster.summary}
           </p>

@@ -60,24 +60,32 @@ def main() -> None:
     data["scenario"] = data["model"].map(SCENARIO)
     data = data.dropna(subset=["group"]).sort_values("ts")
     sections, objects = {}, {}
+    xs = np.asarray(points["raw_risk"], dtype=float)
+    ys = np.asarray(points["risk"], dtype=float)
     for day in pd.date_range(START, data["ts"].max().normalize(), freq="D"):
         window = data.loc[(data["ts"] >= day - pd.Timedelta(hours=24)) & (data["ts"] < day)]
         if window.empty:
             continue
         latest = window.groupby(["model", "channel_id"]).tail(1)
         risk = latest.groupby(["group", "scenario"])["probability"].max()
-        raw = 1 - (1 - risk).groupby(level="group").prod()
-        index = 100 * (1 - np.interp(raw.to_numpy(), points["raw_risk"], points["risk"]))
+        raw_series = 1 - (1 - risk).groupby(level="group").prod()
+        raw = raw_series.to_numpy(dtype=float)
+        calibrated = np.interp(raw, xs, ys)
+        headroom = np.maximum(1.0 - calibrated, 0.0)
+        excess = np.clip((raw - calibrated) / np.maximum(headroom, 1e-9), 0.0, 1.0)
+        stretched = calibrated + excess * headroom * 0.9
+        effective = np.where(raw > calibrated + 1e-9, stretched, calibrated)
+        index = np.clip(np.rint(100 * (1 - effective)), 0, 100).astype(int)
         stamp = day.date().isoformat()
-        for group, value in zip(raw.index, index, strict=True):
-            sections.setdefault(group, []).append([stamp, int(round(value))])
+        for group, value in zip(raw_series.index, index, strict=True):
+            sections.setdefault(group, []).append([stamp, int(value)])
             key = group_object.get(group)
             if key:
                 current = objects.setdefault(key, {})
-                current[stamp] = min(current.get(stamp, 100), int(round(value)))
+                current[stamp] = min(current.get(stamp, 100), int(value))
     report = {
         "period": f"{START.date()} — {data['ts'].max().date()}",
-        "basis": "production models, each channel's latest 24-hour probability before midnight",
+        "basis": "production models, each channel's latest 24-hour probability before midnight; HI uses the same plateau stretch as backend health.to_index",
         "objects": {key: sorted(days.items()) for key, days in objects.items()},
         "sections": sections,
     }

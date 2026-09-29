@@ -22,7 +22,7 @@ export const metadata: Metadata = {
     default: "Vena",
     template: "%s · Vena",
   },
-  description: "Infrastructure health and maintenance system.",
+  description: "Прогноз инцидентов и работы по инженерным коллекторам.",
 }
 
 export default function RootLayout({ children }: LayoutProps<"/">) {

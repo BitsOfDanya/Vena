@@ -13,6 +13,7 @@ import type {
   Prospective,
   Seasonality,
   TodaysInspectionPlan,
+  WeatherReport,
 } from "../model/types"
 
 const monthly = z.record(z.string(), z.record(z.string(), z.number()))
@@ -343,18 +344,30 @@ export async function getAlarmKpis(): Promise<AlarmKpis | null> {
   }
 }
 
-export async function getObjectHealthHistory(): Promise<{ period: string | null; objects: Record<string, HealthPoint[]> }> {
+export async function getObjectHealthHistory(): Promise<{
+  period: string | null
+  objects: Record<string, HealthPoint[]>
+  historyApproximate: boolean
+}> {
   try {
-    const raw = await apiFetch<{ period?: string; objects?: Record<string, [string, number][]> }>(
-      "/api/v1/analytics/health-history"
-    )
+    const raw = await apiFetch<{
+      period?: string
+      objects?: Record<string, [string, number][]>
+      stretch?: { method?: string } | null
+    }>("/api/v1/analytics/health-history")
     const objects: Record<string, HealthPoint[]> = {}
     for (const [id, series] of Object.entries(raw.objects ?? {})) {
       objects[id] = series.map(([day, value]) => ({ day, value }))
     }
-    return { period: raw.period ?? null, objects }
+    return {
+      period: raw.period ?? null,
+      objects,
+      historyApproximate: Boolean(raw.stretch?.method),
+    }
   } catch (error) {
-    if (error instanceof ApiError && error.status === 404) return { period: null, objects: {} }
+    if (error instanceof ApiError && error.status === 404) {
+      return { period: null, objects: {}, historyApproximate: false }
+    }
     throw error
   }
 }
@@ -364,6 +377,7 @@ type ApiPlanItem = {
   name: string | null
   location: string | null
   model_id: string
+  prediction_id: string
   probability: number
   risk_level: string
   reason: string | null
@@ -386,6 +400,7 @@ function mapInspectionPlan(raw: ApiInspectionPlan): InspectionPlan {
       name: item.name,
       location: item.location,
       modelId: item.model_id,
+      predictionId: item.prediction_id,
       probability: item.probability,
       riskLevel: item.risk_level,
       reason: item.reason,
@@ -405,4 +420,23 @@ export async function getTodaysInspectionPlan(): Promise<TodaysInspectionPlan> {
     getInspectionPlan("fan_72h", 5),
   ])
   return { pumps, fans }
+}
+
+export async function getWeatherReport(): Promise<WeatherReport> {
+  const raw = await apiFetch<{
+    source?: string
+    forecast?: { day?: string; precipitation_mm?: number | null; thaw?: boolean | null }[]
+    flooding_vs_weather?: Record<string, number>
+  }>("/api/v1/analytics/weather")
+  return {
+    source: raw.source ?? "Open-Meteo",
+    forecast: (raw.forecast ?? [])
+      .filter((item) => typeof item.day === "string" && item.day.length > 0)
+      .map((item) => ({
+        day: item.day as string,
+        precipitationMm: typeof item.precipitation_mm === "number" ? item.precipitation_mm : null,
+        thaw: typeof item.thaw === "boolean" ? item.thaw : null,
+      })),
+    floodingVsWeather: raw.flooding_vs_weather ?? {},
+  }
 }

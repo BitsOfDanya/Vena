@@ -1,13 +1,13 @@
 const ZONE = "Europe/Moscow"
 
-const clock = new Intl.DateTimeFormat("en-GB", {
+const clock = new Intl.DateTimeFormat("ru-RU", {
   timeZone: ZONE,
   hour: "2-digit",
   minute: "2-digit",
   hourCycle: "h23",
 })
 
-const clockSeconds = new Intl.DateTimeFormat("en-GB", {
+const clockSeconds = new Intl.DateTimeFormat("ru-RU", {
   timeZone: ZONE,
   hour: "2-digit",
   minute: "2-digit",
@@ -15,13 +15,13 @@ const clockSeconds = new Intl.DateTimeFormat("en-GB", {
   hourCycle: "h23",
 })
 
-const day = new Intl.DateTimeFormat("en-GB", {
+const day = new Intl.DateTimeFormat("ru-RU", {
   timeZone: ZONE,
   day: "2-digit",
   month: "short",
 })
 
-const fullDay = new Intl.DateTimeFormat("en-GB", {
+const fullDay = new Intl.DateTimeFormat("ru-RU", {
   timeZone: ZONE,
   day: "2-digit",
   month: "short",
@@ -50,11 +50,11 @@ export function formatClockSeconds(timestamp: number) {
 }
 
 export function formatDay(timestamp: number) {
-  return day.format(timestamp).toUpperCase()
+  return day.format(timestamp).replace(/\./g, "").toUpperCase()
 }
 
 export function formatFullDay(timestamp: number) {
-  return fullDay.format(timestamp).toUpperCase()
+  return fullDay.format(timestamp).replace(/\./g, "").toUpperCase()
 }
 
 export function formatDateTime(timestamp: number) {
@@ -74,14 +74,16 @@ export function fromDateTimeLocal(value: string) {
 
 export function formatAgo(from: number, to: number) {
   const seconds = Math.max(0, Math.round((to - from) / 1000))
-  if (seconds < 60) return `${seconds}s ago`
-  if (seconds < 3600) return `${Math.round(seconds / 60)}m ago`
-  if (seconds < 86_400) return `${Math.round(seconds / 3600)}h ago`
-  return `${(seconds / 86_400).toFixed(1)}d ago`
+  if (seconds < 60) return `${seconds} с назад`
+  if (seconds < 3600) return `${Math.round(seconds / 60)} мин назад`
+  if (seconds < 86_400) return `${Math.round(seconds / 3600)} ч назад`
+  const days = seconds / 86_400
+  if (days < 10) return `${days.toFixed(1)} дн. назад`
+  return `${Math.round(days)} дн. назад`
 }
 
 export function formatDuration(hours: number) {
-  if (hours < 1) return `${Math.round(hours * 60)} min`
-  if (hours < 48) return `${Math.round(hours)} h`
-  return `${(hours / 24).toFixed(1)} d`
+  if (hours < 1) return `${Math.round(hours * 60)} мин`
+  if (hours < 48) return `${Math.round(hours)} ч`
+  return `${(hours / 24).toFixed(1)} дн.`
 }

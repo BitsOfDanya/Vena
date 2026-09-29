@@ -276,6 +276,7 @@ def inspection_plan(
                 name=item.name,
                 location=item.location,
                 model_id=item.model_id,
+                prediction_id=item.id,
                 probability=item.score,
                 risk_level=item.risk_level,
                 reason=_plain_reason(item, hints),

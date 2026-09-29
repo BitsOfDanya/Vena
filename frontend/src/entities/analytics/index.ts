@@ -10,6 +10,7 @@ export {
   getSeasonality,
   getSectionHealthHistory,
   getTodaysInspectionPlan,
+  getWeatherReport,
 } from "./api/service"
 export {
   useAlarmKpis,
@@ -22,12 +23,14 @@ export {
   useSeasonality,
   useSectionHealthHistory,
   useTodaysInspectionPlan,
+  useWeatherReport,
 } from "./model/queries"
 export {
   calibrationLine,
   dailyTopKLines,
   heldOutPeriodPhrase,
   horizonPhrase,
+  leadHorizonPhrase,
   leadTimeLine,
   modelWhatPredicts,
   scenarioTitle,
@@ -54,4 +57,6 @@ export {
   type SeasonalityRow,
   type SectionNode,
   type TodaysInspectionPlan,
+  type WeatherDay,
+  type WeatherReport,
 } from "./model/types"

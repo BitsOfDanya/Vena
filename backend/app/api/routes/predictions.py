@@ -22,6 +22,7 @@ from app.schemas.predictions import (
     ModelInfo,
     Prediction,
     PredictionDetail,
+    PredictionSummary,
     SnapshotStatus,
 )
 
@@ -62,6 +63,17 @@ def list_predictions(
 @router.get("/predictions/snapshot", response_model=SnapshotStatus)
 def snapshot_status(settings: SettingsDep, _: ReaderDep) -> SnapshotStatus:
     return get_prediction_source(settings).status()
+
+
+@router.get("/predictions/summary", response_model=PredictionSummary)
+def predictions_summary(
+    settings: SettingsDep,
+    _: ReaderDep,
+    horizon: int | None = None,
+    top: Annotated[int, Query(ge=1, le=50)] = 5,
+) -> PredictionSummary:
+    _require_snapshot(settings)
+    return get_prediction_source(settings).summary(horizon, top)
 
 
 @router.post("/predictions/refresh", response_model=dict)

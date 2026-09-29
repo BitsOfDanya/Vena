@@ -114,7 +114,7 @@ export function ForecastVsFactPanel({ className }: { className?: string }) {
   if (withSeries.length === 0) {
     return (
       <p className={cn("px-4 py-6 text-[13px] text-muted-foreground", className)}>
-        Ряды backtest/forecast ещё не посчитаны для типов инцидентов.
+        Ряды прогноз/факт ещё не посчитаны для типов инцидентов.
       </p>
     )
   }
@@ -159,12 +159,14 @@ export function ForecastVsFactPanel({ className }: { className?: string }) {
               ) : null}
             </div>
             <div>
-              <p className="text-[11px] tracking-[0.08em] text-faint uppercase">Ошибка недели</p>
+              <p className="text-[11px] tracking-[0.08em] text-faint uppercase">Ошибка прогноза на неделю</p>
               <p className="mt-1 font-mono text-[18px] tabular-nums">
-                {current.weekError === null ? "—" : current.weekError.toFixed(2)}
+                {current.weekError === null ? "—" : `${Math.round(current.weekError * 100)} %`}
               </p>
               {current.weekErrorBaseline !== null ? (
-                <p className="text-[12px] text-muted-foreground">база {current.weekErrorBaseline.toFixed(2)}</p>
+                <p className="text-[12px] text-muted-foreground">
+                  простое среднее — {Math.round(current.weekErrorBaseline * 100)} %
+                </p>
               ) : null}
             </div>
             <div>

@@ -51,7 +51,7 @@ export function MaintenanceTimeline({
               className={cn("absolute top-2.5 text-[11px] font-medium tracking-[0.08em] uppercase", hour === 0 ? "text-foreground" : "text-faint")}
               style={{ left: `${(hour / horizonHours) * 100}%`, transform: hour === horizonHours ? "translateX(-100%)" : undefined }}
             >
-              {hour === 0 ? "Сейчас" : `${hour}h`}
+              {hour === 0 ? "Сейчас" : `${hour} ч`}
             </span>
           ))}
         </div>

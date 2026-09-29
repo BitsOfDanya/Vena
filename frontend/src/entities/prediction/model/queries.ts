@@ -4,7 +4,13 @@ import { useQuery } from "@tanstack/react-query"
 
 import { workflowMode } from "@/shared/config/env"
 
-import { getBackendSituations, getDashboardPredictions, getPredictions, getSnapshotStatus } from "../api/service"
+import {
+  getBackendSituations,
+  getDashboardPredictions,
+  getPredictionSummary,
+  getPredictions,
+  getSnapshotStatus,
+} from "../api/service"
 
 const enabled = workflowMode === "api"
 
@@ -36,12 +42,26 @@ export function useRiskRising(horizon: 24 | 72, limit = 20) {
   })
 }
 
+/** Lightweight Pulse summary — one API call, no full 10k pagination. */
 export function useCriticalPredictions(horizon: 24 | 72) {
-  const predictions = useDashboardPredictions(horizon)
-  const critical = (predictions.data ?? []).filter((item) => item.riskLevel === "critical")
-  const attention = (predictions.data ?? []).filter((item) => item.riskLevel === "attention")
+  const summary = useQuery({
+    queryKey: ["prediction-summary", horizon],
+    queryFn: () => getPredictionSummary(horizon, 5),
+    enabled,
+    staleTime: 60_000,
+    refetchInterval: 60_000,
+    retry: 1,
+  })
   return {
-    ...predictions,
-    data: predictions.data ? { critical, attention } : undefined,
+    ...summary,
+    data: summary.data
+      ? {
+          critical: summary.data.topCritical,
+          attention: summary.data.topAttention,
+          criticalCount: summary.data.counts.critical,
+          attentionCount: summary.data.counts.attention,
+          total: summary.data.total,
+        }
+      : undefined,
   }
 }

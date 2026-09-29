@@ -72,6 +72,7 @@ export function ActionsPage() {
         : `План осмотра · ${item.name?.trim() || item.assetId}`,
       priority: item.riskLevel === "critical" || item.riskLevel === "attention" ? "high" : "medium",
       kind: "inspect",
+      sourcePredictionId: item.predictionId,
       sourceModelId: item.modelId,
       sourceScore: item.probability,
       sourceHorizonHours: item.modelId.includes("72") ? 72 : 24,

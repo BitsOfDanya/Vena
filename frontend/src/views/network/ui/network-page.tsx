@@ -27,13 +27,15 @@ export function NetworkPage() {
   const apiMode = workflowMode === "api"
   const [query, setQuery] = React.useState("")
   const [system, setSystem] = React.useState<SystemFilter>("all")
-  const [risk, setRisk] = React.useState<RiskFilter>(apiMode ? "attention" : "all")
+  const [risk, setRisk] = React.useState<RiskFilter>("all")
   const [diagnostic, setDiagnostic] = React.useState(false)
   const [sheetOpen, setSheetOpen] = React.useState(false)
   const [draft, setDraft] = React.useState<ActionDraft>({})
   const [focusId, setFocusId] = React.useState<string | null>(selectedAssetId)
-  const [mode, setMode] = React.useState<NetworkMode>("network")
-  const assets = useAssets(now, horizon)
+  const [mode, setMode] = React.useState<NetworkMode>(apiMode ? "tree" : "network")
+  const assets = useAssets(now, horizon, {
+    enabled: mode === "assets" || mode === "network" || mode === "map" || sheetOpen || Boolean(selectedAssetId),
+  })
   const actions = useActions()
 
   const needle = query.trim().toLowerCase()
@@ -56,11 +58,12 @@ export function NetworkPage() {
 
   const openAction = (next: ActionDraft) => {
     const asset = (assets.data ?? []).find((item) => item.id === next.assetId)
+    const score = next.sourceScore ?? (asset ? asset.riskScore / 100 : undefined)
     setDraft({
       ...next,
       sourcePredictionId: next.sourcePredictionId ?? asset?.predictionId ?? undefined,
       sourceModelId: next.sourceModelId ?? asset?.predictionModelId ?? undefined,
-      sourceScore: next.sourceScore,
+      sourceScore: score,
       sourceHorizonHours: next.sourceHorizonHours ?? asset?.forecastHorizon,
     })
     setSheetOpen(true)
@@ -96,12 +99,12 @@ export function NetworkPage() {
         title="Инфраструктурная сеть"
         descriptor={
           mode === "tree"
-            ? "объект → секция → канал · Health Index"
-            : apiMode && mode === "network"
+            ? "объект → секция → канал · индекс здоровья"
+            : mode === "picket"
               ? "объект → шкафы по пикетам · риск моделей"
-            : network.data
-              ? `${network.data.groups.length} групп · ${network.data.nodes.length} объектов`
-              : ""
+              : network.data
+                ? `${network.data.groups.length} групп · ${network.data.nodes.length} объектов`
+                : ""
         }
         query={query}
         onQuery={setQuery}
@@ -119,7 +122,8 @@ export function NetworkPage() {
         horizon={horizon}
         onHorizon={setHorizon}
         showTree={apiMode}
-        realGeometryOnly={apiMode}
+        showPicket={apiMode}
+        realGeometryOnly={false}
       />
       <div className="relative flex min-h-0 flex-1">
         <div className="relative min-w-0 flex-1">
@@ -134,7 +138,7 @@ export function NetworkPage() {
                 setFocusId(null)
               }}
             />
-          ) : apiMode && mode === "network" ? (
+          ) : mode === "picket" ? (
             <ObjectSchema
               query={query}
               selectedId={selectedAssetId}
@@ -183,6 +187,13 @@ export function NetworkPage() {
             />
           ) : network.data ? (
             <>
+              {apiMode ? (
+                <p className="pointer-events-none absolute inset-x-0 top-3 z-10 flex justify-center">
+                  <span className="rounded-md border border-border bg-elevated/95 px-3 py-1.5 text-[12px] text-muted-foreground">
+                    Логическая схема стенда · риски из снимка моделей
+                  </span>
+                </p>
+              ) : null}
               <NetworkCanvas
                 model={network.data}
                 selectedId={selectedAssetId}

@@ -18,8 +18,10 @@ from app.schemas.predictions import (
     Driver,
     ModelInfo,
     Prediction,
+    PredictionSummary,
     RiskFactor,
     RiskLevel,
+    RiskLevelCounts,
     SnapshotStatus,
     StreamInfo,
 )
@@ -265,6 +267,34 @@ class PredictionSource:
         else:
             items.sort(key=lambda item: (LEVEL_RANK[item.risk_level], -item.score))
         return items[offset : offset + limit]
+
+    def summary(self, horizon: int | None = None, top: int = 5) -> PredictionSummary:
+        items = self.all()
+        if horizon is not None:
+            items = [item for item in items if item.horizon_hours == horizon]
+        counts = RiskLevelCounts()
+        critical: list[Prediction] = []
+        attention: list[Prediction] = []
+        for item in items:
+            if item.risk_level == "critical":
+                counts.critical += 1
+                critical.append(item)
+            elif item.risk_level == "attention":
+                counts.attention += 1
+                attention.append(item)
+            elif item.risk_level == "observe":
+                counts.observe += 1
+            else:
+                counts.normal += 1
+        critical.sort(key=lambda item: item.score, reverse=True)
+        attention.sort(key=lambda item: item.score, reverse=True)
+        return PredictionSummary(
+            horizon_hours=horizon,
+            total=len(items),
+            counts=counts,
+            top_critical=critical[:top],
+            top_attention=attention[:top],
+        )
 
     def _section(self, key: str) -> list[dict[str, Any]]:
         self._read()

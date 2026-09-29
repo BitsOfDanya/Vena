@@ -1,4 +1,4 @@
-export { getAssetPrediction, getBackendSituations, getPredictions, getSnapshotStatus } from "./api/service"
+export { getAssetPrediction, getBackendSituations, getDashboardPredictions, getPredictionSummary, getPredictions, getSnapshotStatus } from "./api/service"
 export { useBackendSituations, useCriticalPredictions, useDashboardPredictions, useRiskRising, useSnapshotStatus } from "./model/queries"
 export type {
   BackendSituation,
@@ -8,6 +8,7 @@ export type {
   PredictionRiskLevel,
   PredictionScenario,
   PredictionScoreType,
+  PredictionSummary,
   SituationRecommendation,
   SnapshotStatus,
 } from "./model/types"

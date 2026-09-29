@@ -1,6 +1,7 @@
 import { afterEach, describe, expect, it, vi } from "vitest"
 
-import { getAssetPrediction, getBackendSituations, getDashboardPredictions, getPredictions, getSnapshotStatus } from "./service"
+import { getAssetPrediction, getBackendSituations, getDashboardPredictions, getPredictionSummary, getPredictions, getSnapshotStatus } from "./service"
+import { invalidateHorizonPages } from "@/shared/api/horizon-pages"
 
 function mockFetch(handler: (url: string) => { status?: number; body: unknown }) {
   const calls: string[] = []
@@ -33,6 +34,7 @@ const prediction = {
 
 afterEach(() => {
   vi.unstubAllGlobals()
+  invalidateHorizonPages()
 })
 
 describe("prediction service", () => {
@@ -89,6 +91,23 @@ describe("prediction service", () => {
     }))
     await expect(getDashboardPredictions(72)).rejects.toThrow("Snapshot changed")
   })
+  it("loads a lightweight prediction summary without paging", async () => {
+    mockFetch(() => ({
+      body: {
+        horizon_hours: 24,
+        total: 12,
+        counts: { critical: 2, attention: 3, observe: 4, normal: 3 },
+        top_critical: [{ ...prediction, id: "c1", risk_level: "critical", horizon_hours: 24 }],
+        top_attention: [{ ...prediction, id: "a1", risk_level: "attention", horizon_hours: 24 }],
+      },
+    }))
+    const summary = await getPredictionSummary(24, 5)
+    expect(summary.total).toBe(12)
+    expect(summary.counts.critical).toBe(2)
+    expect(summary.topCritical[0].id).toBe("c1")
+    expect(summary.topAttention[0].id).toBe("a1")
+  })
+
   it("maps a backend prediction without inventing a probability", async () => {
     mockFetch(() => ({ body: [prediction] }))
 
