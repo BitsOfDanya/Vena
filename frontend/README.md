@@ -1,44 +1,50 @@
-# Vena frontend
+# VENA frontend
 
-Next.js App Router application organized with Feature-Sliced Design.
-
-## Layers
-
-```text
-src/
-├── app/       Next.js routes and providers
-├── views/     FSD Pages layer (renamed to avoid Next.js Pages Router)
-├── widgets/   Composed interface sections
-├── features/  User interactions and use cases
-├── entities/  Domain data and contracts
-└── shared/    API client, utilities, and UI kit
-```
-
-The dependency direction is `app → views → widgets → features → entities → shared`.
-
-## Commands
+Интерфейс диспетчера и руководителя: Next.js 16 (App Router), React 19, TanStack Query, Tailwind 4, zod. Архитектура — Feature-Sliced Design.
 
 ```bash
+cp .env.example .env.local   # NEXT_PUBLIC_VENA_WORKFLOW_MODE=api, NEXT_PUBLIC_API_URL=http://localhost:8000
+pnpm install
 pnpm dev
-pnpm lint
-pnpm typecheck
-pnpm test
-pnpm build
 ```
 
-Copy `.env.example` to `.env.local` before local development.
+## Слои
 
-## Interface
+```
+src/app/       маршруты Next.js, провайдеры
+src/views/     страницы (слой Pages FSD)
+src/widgets/   составные блоки: схема по пикетам, однолинейная схема питания, карта, инспекторы
+src/features/  действия пользователя: вход, создание, отклонение и закрытие работы
+src/entities/  доменные данные и API-клиенты: прогнозы, работы, уведомления, аналитика
+src/shared/    HTTP-клиент, UI-кит, утилиты
+```
 
-Routes: `/pulse` (what needs attention now), `/network` (schematic state and asset table), `/timeline` (history and forecast around NOW), `/actions` (maintenance lifecycle), `/dashboard` (separate analytics module), `/settings`, `/settings/notifications`, `/settings/integrations`.
+Зависимости направлены `app → views → widgets → features → entities → shared`.
 
-Operational chain: risk → alert → acknowledge → investigate → action → result. Notifications live in the header bell; a global notice bar appears only when `getSystemNotices()` returns a problem (empty by default).
+## Экраны
 
-- Map mode requires real spatial data (GeoJSON/WKT). It is intentionally not fabricated; the network schematic groups assets only by available data.
-- The Dashboard module is reserved for separate implementation. Pulse, Network, Timeline and Actions do not depend on Dashboard components.
-- The demo data adapter lives in `src/entities/infrastructure/data` and is reached only through service functions (`getPulse`, `getNetwork`, `getAsset`, `getRiskHistory`, `getEvents`, `getForecast`); actions go through a repository in `src/entities/maintenance/api`. Both can be replaced with REST clients.
-- Risk is shown as a risk score out of 100 and is not presented as a probability until a calibrated score is available.
+| Маршрут | Назначение |
+|---|---|
+| `/pulse` | что требует внимания сейчас: инциденты по сценариям, план осмотров, лента событий журнала |
+| `/network` | объекты: схема по пикетам, схема питания с каскадом отключений, дерево, таблица |
+| `/alarms` | тревоги с вероятностью подтверждения, нагрузка по ISA-18.2, маршруты по точкам входа |
+| `/timeline` | история канала: индекс здоровья и события журнала |
+| `/actions` | работы: черновики, утверждение, отклонение с причиной, закрытие с результатом |
+| `/journal` | журнал прогнозов: решение диспетчера и исход, выгрузка CSV |
+| `/dashboard` | уровни риска, системы, сезонность, погода, реестр прогнозов |
+| `/effect` | эффект, прогноз против факта, выгрузки XLSX/CSV/XML |
+| `/report/shift` | отчёт смены, печать в PDF |
+| `/models`, `/about` | карточки моделей, описание сервиса |
+| `/settings/*` | уведомления и почта, интеграции и загрузка CSV/XLSX, пользователи, аудит, безопасность |
 
-## Notification and action contracts
+## Режимы
 
-`entities/notification` describes `Notification`, `SystemNotice`, channels, rules and digest schedules; `entities/maintenance` describes the action lifecycle (`suggested → planned → assigned → in_progress → waiting → completed | cancelled`), audit history and outcomes. Both are served by local repositories that can be replaced with REST clients. Email delivery is not implemented in the frontend: the UI only records the requested channel and shows channel state.
+`NEXT_PUBLIC_VENA_WORKFLOW_MODE=api` — все данные из backend (стенд и Docker). `demo` — автономный режим на синтетических данных без API; экраны, которым нужен backend, в нём показывают заглушку.
+
+Уведомления в колокольчике обновляются каждые 15 с, прогнозы и аналитика — каждые 60 с.
+
+## Проверки
+
+```bash
+pnpm lint && pnpm typecheck && pnpm test && pnpm build
+```

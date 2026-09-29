@@ -27,7 +27,7 @@ CSV_COLUMNS = {
 def from_api(url):
     request = urllib.request.Request(
         f"{url.rstrip('/')}/api/v1/journal?limit=2000",
-        headers={"X-API-Key": os.environ.get("VENA_API_KEY", "")},
+        headers={"Authorization": f"Bearer {os.environ.get('VENA_TOKEN', '')}"},
     )
     with urllib.request.urlopen(request, timeout=30) as response:
         return pd.DataFrame(json.load(response))

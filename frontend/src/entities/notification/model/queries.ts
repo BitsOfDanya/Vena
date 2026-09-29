@@ -7,11 +7,17 @@ import { getNotificationSettings, getSystemNotices, notificationRepository } fro
 const KEY = ["notifications"] as const
 
 export function useNotifications() {
-  return useQuery({ queryKey: KEY, queryFn: () => notificationRepository.list(), staleTime: 0 })
+  return useQuery({
+    queryKey: KEY,
+    queryFn: () => notificationRepository.list(),
+    staleTime: 0,
+    refetchInterval: 15_000,
+    refetchIntervalInBackground: true,
+  })
 }
 
 export function useSystemNotices() {
-  return useQuery({ queryKey: ["system-notices"], queryFn: getSystemNotices, staleTime: 30_000 })
+  return useQuery({ queryKey: ["system-notices"], queryFn: getSystemNotices, staleTime: 30_000, refetchInterval: 60_000 })
 }
 
 export function useNotificationSettings() {

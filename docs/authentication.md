@@ -40,6 +40,12 @@ cd backend
 uv run python -m app.db.seed_users
 ```
 
+В локальном Docker Compose:
+
+```sh
+docker compose exec backend python -m app.db.seed_users
+```
+
 Через production Compose:
 
 ```sh
@@ -55,6 +61,8 @@ docker compose --env-file "$VENA_ENV_FILE" -f /opt/vena/current/infra/compose.ya
 Можно задать `--email-domain`, `--count`, `--role`; переменная `VENA_USER_PASSWORD`
 переопределяет пароль. `VENA_SEED_USERS=true` явно включает сидирование при старте
 контейнера; после первого запуска этот флаг можно выключить.
+На стенде `user1` назначен администратором; на новой установке администратора
+создают отдельной командой ниже, затем роли меняют в **Настройки → Пользователи**.
 
 Отдельная учётная запись, в том числе администратор (пароль вводится скрыто):
 

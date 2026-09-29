@@ -37,7 +37,7 @@ def load(start, end):
 def request(url, key, method="GET", body=None):
     data = json.dumps(body).encode() if body is not None else None
     req = urllib.request.Request(url, data=data, method=method,
-                                 headers={"X-API-Key": key, "Content-Type": "application/json"})
+                                 headers={"Authorization": f"Bearer {key}", "Content-Type": "application/json"})
     with urllib.request.urlopen(req, timeout=60) as response:
         return json.load(response)
 
@@ -51,7 +51,7 @@ def main() -> None:
     parser.add_argument("--tick", type=float, default=10.0, help="real seconds between batches")
     parser.add_argument("--timeout", type=float, default=300.0, help="latency budget in seconds")
     arguments = parser.parse_args()
-    key = os.environ.get("VENA_API_KEY", "")
+    key = os.environ.get("VENA_TOKEN", "")
     base = arguments.url.rstrip("/")
 
     start, end = pd.Timestamp(arguments.start), pd.Timestamp(arguments.end)

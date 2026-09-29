@@ -35,10 +35,10 @@ const FEATURES: { title: string; text: string; icon: LucideIcon }[] = [
 ]
 
 const TEAM = [
-  { name: "Даниил", role: "ML и бэкенд", text: "модели прогноза, калибровка, анализ журнала, API" },
-  { name: "Вадим", role: "Фронтенд и UX", text: "рабочие экраны диспетчера и руководителя" },
-  { name: "Денис", role: "Инфраструктура", text: "развёртывание, безопасность, интеграции и загрузка данных" },
-  { name: "Илья", role: "ML-исследования", text: "эксперименты с признаками и архитектурами моделей" },
+  { role: "Данные и модели", text: "анализ журнала СМВУ, признаки, обучение, калибровка, проверка на новых данных" },
+  { role: "Бэкенд и интеграции", text: "API, поток СМВУ, импорт CSV/XLSX, уведомления, LDAP и RBAC" },
+  { role: "Интерфейс", text: "рабочие экраны диспетчера и руководителя" },
+  { role: "Инфраструктура", text: "развёртывание, HTTPS, резервные копии, автодеплой" },
 ]
 
 const STACK = ["Python", "CatBoost", "LightGBM", "scikit-learn", "DuckDB", "FastAPI", "PostgreSQL", "Next.js", "React", "Docker", "Caddy"]
@@ -128,20 +128,15 @@ export function AboutPage() {
             <p className="text-[12.5px] font-medium text-vena">Команда</p>
             <h2 className="mt-1 text-[22px] font-semibold">5bit</h2>
             <p className="mt-2 text-[14px] leading-relaxed text-muted-foreground">
-              Мы собрали VENA от сырого журнала до работающего сервиса: анализ данных, модели, API, интерфейс и
-              развёртывание на собственном сервере.
+              Победители многих российских и международных хакатонов, финалисты прошлого «Лидеры цифровой
+              трансформации». VENA сделана целиком командой: от сырого журнала до работающего сервиса на собственном
+              сервере.
             </p>
             <ul className="mt-5 grid gap-3 sm:grid-cols-2">
-              {TEAM.map((member) => (
-                <li key={member.name} className="flex gap-3 rounded-md border border-border p-3">
-                  <span className="flex size-9 shrink-0 items-center justify-center bg-vena font-mono text-[14px] font-medium text-primary-foreground">
-                    {member.name[0]}
-                  </span>
-                  <span className="min-w-0">
-                    <span className="block text-[14px] font-semibold">{member.name}</span>
-                    <span className="block text-[12.5px] font-medium text-vena">{member.role}</span>
-                    <span className="mt-0.5 block text-[12.5px] text-muted-foreground">{member.text}</span>
-                  </span>
+              {TEAM.map((item) => (
+                <li key={item.role} className="rounded-md border border-border p-3">
+                  <span className="block text-[14px] font-semibold">{item.role}</span>
+                  <span className="mt-0.5 block text-[12.5px] text-muted-foreground">{item.text}</span>
                 </li>
               ))}
             </ul>

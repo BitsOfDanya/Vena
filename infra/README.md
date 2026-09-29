@@ -1,9 +1,10 @@
 # Развёртывание Vena
 
 Production-стек: Caddy → Next.js / FastAPI → PostgreSQL 16. Отдельный ML-контейнер
-раз в час оценивает каналы замороженными моделями и атомарно обновляет снимок.
-Наружу опубликованы только 80/443. PostgreSQL, модели, сертификаты и прогнозы
-сохраняются в Docker volumes. Контейнеры запускаются после перезагрузки сервера.
+оценивает каналы замороженными моделями и атомарно обновляет снимок: по журналу —
+на каждый пакет потока, без журнала — демонстрационный снимок раз в час.
+Наружу опубликованы только 80/443. PostgreSQL, прогнозы и очередь потока хранятся
+в Docker volumes, журнал и сертификаты LDAP — в `/opt/vena/shared`, модели входят в образы. Контейнеры запускаются после перезагрузки сервера.
 
 ## Настройка сервера
 
@@ -102,11 +103,12 @@ infra/scripts/upload-dataset.sh --enable vena-deploy@5.129.225.86
 - По мере поступления событий прогнозы, выданные после конца журнала, сверяются с фактом: `GET /api/v1/ml/prospective`.
 - Раз в сутки выполняется полный пересчёт, включая разделы тревог и доступа.
 
-Для демонстрации потока на уже загруженном журнале задайте `VENA_STREAM_HISTORY_UNTIL=2026-06-01` и воспроизведите последующий период: `python ml/replay_journal.py --url https://5bit.online --start 2026-06-01 --end 2026-06-08` с ключом в `VENA_API_KEY`.
+Для демонстрации потока на уже загруженном журнале задайте `VENA_STREAM_HISTORY_UNTIL=2026-06-01` и воспроизведите последующий период: `python ml/replay_journal.py --url https://5bit.online --start 2026-06-01 --end 2026-06-08` с JWT пользователя роли `dispatcher` в `VENA_TOKEN` (`access_token` из `POST /api/v1/auth/login`).
 
-SMTP включается переменными `SMTP_HOST`, `SMTP_PORT`, `SMTP_USERNAME`,
-`SMTP_PASSWORD`, `SMTP_FROM`, `SMTP_TLS` в серверном `.env`. Без SMTP почта
-не отправляется; внутренние уведомления сохраняются в БД.
+SMTP включается переменными `SMTP_HOST`, `SMTP_PORT`, `SMTP_USER`,
+`SMTP_PASSWORD`, `SMTP_FROM`, `SMTP_TLS`, `SMTP_SECURE` в серверном `.env`, подробно —
+[email-notifications.md](../docs/email-notifications.md). Без SMTP письма ждут в очереди,
+уведомления в интерфейсе работают.
 
 ## Резервные копии
 
@@ -117,7 +119,7 @@ sudo systemctl enable --now vena-backup.timer
 sudo systemctl start vena-backup.service
 ```
 
-Ежедневный дамп в 03:00 UTC, хранение 14 дней в `/opt/vena/shared/backups`.
+Ежедневно в 03:00 UTC `infra/scripts/backup.sh` сохраняет дамп PostgreSQL, каталог `dataset` и очередь `inbox` в `/opt/vena/shared/backups`, хранение 14 дней. `infra/scripts/verify-backup.sh <файл.sql.gz>` восстанавливает дамп во временную базу и проверяет число строк, не трогая рабочую.
 Это локальные копии; для защиты от потери VPS копируйте их на отдельный сервер.
 Перед восстановлением остановите backend, затем:
 
