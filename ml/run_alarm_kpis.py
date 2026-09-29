@@ -58,7 +58,8 @@ def chattering(active):
     return set(active.loc[burst, "channel_id"])
 
 
-def period_kpis(active, start, end):
+def period_kpis(active, start, end, names=None):
+    names = names or {}
     part = active.loc[(active["ts"] >= start) & (active["ts"] < end)]
     hours = pd.date_range(start, end, freq="h", inclusive="left")
     per_hour = part.set_index("ts").resample("h").size().reindex(hours, fill_value=0)
@@ -80,7 +81,10 @@ def period_kpis(active, start, end):
         "flood_share_of_time": round(len(floods) / max(len(per_window), 1), 4),
         "activations_in_floods": round(float(floods.sum() / max(len(part), 1)), 4),
         "top10_share": round(float(counts.head(10).sum() / max(len(part), 1)), 4),
-        "top10_channels": [{"channel_id": key, "activations": int(value)} for key, value in counts.head(10).items()],
+        "top10_channels": [{"channel_id": key, "name": names.get(key), "activations": int(value)}
+                           for key, value in counts.head(10).items()],
+        "chattering_top": [{"channel_id": key, "name": names.get(key), "activations": int(counts[key])}
+                           for key in sorted(chatter, key=lambda channel: -counts[channel])[:20]],
         "chattering_channels": len(chatter),
         "chattering_share": round(float(part["channel_id"].isin(chatter).mean()) if len(part) else 0.0, 4),
         "maintenance_share": round(float(part["maintenance"].mean()) if len(part) else 0.0, 4),
@@ -93,6 +97,8 @@ def main() -> None:
     active = activations(events)
     active["maintenance"] = alarm.maintenance_series(active, modules.object_by_channel())
     log(f"alarm messages {len(events)}, activations {len(active)}")
+    dictionary = extract.channel_dictionary()
+    names = dict(zip(dictionary["ид_канала_данных"].astype(str), dictionary["название_датчика"], strict=True))
     end = active["ts"].max().normalize() + pd.Timedelta(days=1)
     months = pd.date_range(SINCE, end, freq="MS")
     report = {
@@ -104,7 +110,7 @@ def main() -> None:
             "chattering": f"{CHATTER_ACTIVATIONS} и более активаций канала за {int(CHATTER_WINDOW.total_seconds())} с",
             "scope": "вся диспетчерская, без разделения по пультам",
         },
-        "recent": period_kpis(active, end - pd.Timedelta(days=RECENT_DAYS), end),
+        "recent": period_kpis(active, end - pd.Timedelta(days=RECENT_DAYS), end, names),
         "months": [period_kpis(active, start, min(start + pd.offsets.MonthBegin(1), end)) for start in months if start < end],
     }
     with open(OUTPUT, "w", encoding="utf-8") as handle:
