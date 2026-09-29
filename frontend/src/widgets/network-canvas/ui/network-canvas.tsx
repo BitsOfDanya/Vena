@@ -279,11 +279,11 @@ export function NetworkCanvas({ model, selectedId, dimmed, pulseAssetId, onSelec
         </Button>
       </div>
       <div className="pointer-events-none absolute right-4 bottom-4 flex flex-col gap-1.5 border-l bg-background/80 pl-3 text-[10px] font-medium tracking-[0.1em] text-muted-foreground uppercase">
-        <span className="text-faint">Legend</span>
-        <span className="flex items-center gap-2"><StatusMark status="normal" />Normal</span>
-        <span className="flex items-center gap-2"><StatusMark status="attention" />Attention</span>
-        <span className="flex items-center gap-2"><StatusMark status="critical" />Critical</span>
-        <span className="flex items-center gap-2"><StatusMark status="offline" />Offline</span>
+        <span className="text-faint">Легенда</span>
+        <span className="flex items-center gap-2"><StatusMark status="normal" />Норма</span>
+        <span className="flex items-center gap-2"><StatusMark status="attention" />Внимание</span>
+        <span className="flex items-center gap-2"><StatusMark status="critical" />Критично</span>
+        <span className="flex items-center gap-2"><StatusMark status="offline" />Офлайн</span>
         <span className="mt-1 max-w-44 normal-case tracking-normal text-faint">Линии: логическая группировка, не физические связи.</span>
       </div>
     </div>

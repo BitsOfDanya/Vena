@@ -27,15 +27,15 @@ const PRIORITY_MARK = { high: "critical", medium: "attention", low: "offline" } 
 
 const NEXT_STATUS: Partial<Record<ActionStatus, { status: ActionStatus; label: string }[]>> = {
   planned: [
-    { status: "assigned", label: "Assign" },
-    { status: "cancelled", label: "Cancel" },
+    { status: "assigned", label: "Назначить" },
+    { status: "cancelled", label: "Отменить" },
   ],
   assigned: [
-    { status: "in_progress", label: "Start work" },
-    { status: "waiting", label: "Mark waiting" },
+    { status: "in_progress", label: "Начать работу" },
+    { status: "waiting", label: "В ожидание" },
   ],
-  in_progress: [{ status: "waiting", label: "Mark waiting" }],
-  waiting: [{ status: "in_progress", label: "Resume" }],
+  in_progress: [{ status: "waiting", label: "В ожидание" }],
+  waiting: [{ status: "in_progress", label: "Продолжить" }],
 }
 
 function Field({ label, children }: { label: string; children: React.ReactNode }) {
@@ -55,54 +55,54 @@ export function ActionInspector({ action, onClose }: { action: MaintenanceAction
   const transitions = NEXT_STATUS[action.status] ?? []
 
   return (
-    <Inspector label="Action inspector">
-      <InspectorHeader eyebrow={`Action · ${action.id}`} title={action.assetId} onClose={onClose}>
+    <Inspector label="Карточка работы">
+      <InspectorHeader eyebrow={`Работа · ${action.id}`} title={action.assetId} onClose={onClose}>
         <p className="mt-1 flex items-center gap-2 text-[13px] text-muted-foreground">
           <StatusMark status={PRIORITY_MARK[action.priority]} />
-          {PRIORITY_LABEL[action.priority]} priority · {STATUS_LABEL[action.status]}
+          {PRIORITY_LABEL[action.priority]} приоритет · {STATUS_LABEL[action.status]}
         </p>
       </InspectorHeader>
       <InspectorBody>
         <InspectorSection>
           <p className="text-[14px]">{action.reason}</p>
           <dl className="mt-3 grid grid-cols-2 gap-x-4 gap-y-3">
-            <Field label="Action">{KIND_LABEL[action.kind]}</Field>
-            <Field label="Assignee">{action.assignee}</Field>
-            <Field label="Window from">
+            <Field label="Тип">{KIND_LABEL[action.kind]}</Field>
+            <Field label="Исполнитель">{action.assignee}</Field>
+            <Field label="Окно с">
               <span className="font-mono text-[12px] tabular-nums">{formatDateTime(action.windowStart)}</span>
             </Field>
-            <Field label="Recommended by">
+            <Field label="Рекомендовано к">
               <span className="font-mono text-[12px] tabular-nums">{formatDateTime(action.recommendedAt)}</span>
             </Field>
-            <Field label="Source">
+            <Field label="Источник">
               {SOURCE_LABEL[action.source]}
               {action.sourceDetail ? <span className="text-muted-foreground"> · {action.sourceDetail}</span> : null}
             </Field>
-            <Field label="Created by">
+            <Field label="Создал">
               {action.createdBy}
               <span className="block font-mono text-[12px] text-muted-foreground tabular-nums">{formatDateTime(action.createdAt)}</span>
             </Field>
           </dl>
           {action.note ? <p className="mt-3 text-[13px] text-muted-foreground">{action.note}</p> : null}
           <p className="mt-3 text-[12px] text-faint">
-            Notification channels: {action.notifyChannels.length > 0 ? action.notifyChannels.join(", ") : "none"}
+            Каналы уведомлений: {action.notifyChannels.length > 0 ? action.notifyChannels.join(", ") : "нет"}
           </p>
         </InspectorSection>
 
         {action.status === "suggested" ? (
-          <InspectorSection title="Suggested action">
+          <InspectorSection title="Предложенная работа">
             <p className="text-[13px] text-muted-foreground">
               Предложено системой по прогнозу риска. Подтвердите, чтобы поставить в план, или отклоните.
             </p>
             <div className="mt-3 flex gap-2">
               <Button size="sm" disabled={approve.isPending} onClick={() => approve.mutate(action.id)}>
-                Approve
+                Утвердить
               </Button>
               <DismissActionDialog
                 actionId={action.id}
                 trigger={
                   <Button variant="outline" size="sm">
-                    Dismiss
+                    Отклонить
                   </Button>
                 }
               />
@@ -111,15 +111,15 @@ export function ActionInspector({ action, onClose }: { action: MaintenanceAction
         ) : null}
 
         {action.result ? (
-          <InspectorSection title="Result">
+          <InspectorSection title="Результат">
             <p className="text-[14px] font-medium">{OUTCOME_LABEL[action.result.outcome]}</p>
             {action.result.note ? <p className="mt-1 text-[13px] text-muted-foreground">{action.result.note}</p> : null}
-            <p className="mt-2 font-mono text-[12px] text-faint tabular-nums">Closed {formatDateTime(action.result.closedAt)}</p>
+            <p className="mt-2 font-mono text-[12px] text-faint tabular-nums">Закрыто {formatDateTime(action.result.closedAt)}</p>
           </InspectorSection>
         ) : action.status !== "suggested" && action.status !== "cancelled" ? (
           <>
             {transitions.length > 0 ? (
-              <InspectorSection title="Status">
+              <InspectorSection title="Статус">
                 <div className="flex flex-wrap gap-2">
                   {transitions.map((item) => (
                     <Button
@@ -135,13 +135,13 @@ export function ActionInspector({ action, onClose }: { action: MaintenanceAction
                 </div>
               </InspectorSection>
             ) : null}
-            <InspectorSection title="Record result">
+            <InspectorSection title="Зафиксировать результат">
               <CloseActionForm actionId={action.id} onClosed={onClose} />
             </InspectorSection>
           </>
         ) : null}
 
-        <InspectorSection title="Activity history">
+        <InspectorSection title="История">
           <ol className="space-y-1.5">
             {action.history.map((item, index) => (
               <li key={`${item.at}-${index}`} className="flex gap-3 text-[13px]">
@@ -165,7 +165,7 @@ export function ActionInspector({ action, onClose }: { action: MaintenanceAction
             router.push("/timeline")
           }}
         >
-          Open in Timeline
+          Открыть в хронологии
         </Button>
       </InspectorFooter>
     </Inspector>

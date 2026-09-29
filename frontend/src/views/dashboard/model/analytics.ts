@@ -63,7 +63,7 @@ export function sortDashboardRows(rows: DashboardRow[], sort: DashboardSort, res
         difference = left.horizon - right.horizon
         break
       case "response":
-        difference = collator.compare(responses.get(left.assetId) ?? "No open action", responses.get(right.assetId) ?? "No open action")
+        difference = collator.compare(responses.get(left.assetId) ?? "Нет открытой работы", responses.get(right.assetId) ?? "Нет открытой работы")
         break
     }
     return difference * direction || collator.compare(left.assetId, right.assetId) || collator.compare(left.id, right.id)
@@ -124,10 +124,12 @@ export function dashboardRows(
 
 export function filterRows(rows: DashboardRow[], query: string, system: string, level: string) {
   const needle = query.trim().toLocaleLowerCase("ru-RU")
+  const focusLevels = new Set(["critical", "attention", "observe", "offline"])
   return rows.filter(
     (row) =>
       (system === "all" || row.type === system) &&
-      (level === "all" || row.level === level) &&
+      (level === "all" ||
+        (level === "focus" ? focusLevels.has(row.level) : row.level === level)) &&
       (!needle || [row.assetId, row.name, row.group, row.modelId].join(" ").toLocaleLowerCase("ru-RU").includes(needle))
   )
 }

@@ -9,7 +9,7 @@ import { Segmented } from "@/shared/ui/segmented"
 
 export type SystemFilter = "all" | AssetType
 export type RiskFilter = "all" | "attention" | "critical"
-export type NetworkMode = "network" | "assets" | "map"
+export type NetworkMode = "network" | "tree" | "assets" | "map"
 
 const SYSTEMS: SystemFilter[] = ["all", "pump", "fan", "smoke", "power"]
 
@@ -30,6 +30,7 @@ export function NetworkToolbar({
   onRisk,
   horizon,
   onHorizon,
+  showTree = false,
 }: {
   mode: NetworkMode
   onMode: (value: NetworkMode) => void
@@ -44,6 +45,7 @@ export function NetworkToolbar({
   onRisk: (value: RiskFilter) => void
   horizon: ForecastHorizon
   onHorizon: (value: ForecastHorizon) => void
+  showTree?: boolean
 }) {
   return (
     <div className="flex shrink-0 flex-wrap items-center gap-x-5 gap-y-3 px-6 pt-1 pb-3">
@@ -51,23 +53,38 @@ export function NetworkToolbar({
         <span className="text-[22px] font-semibold tracking-[-0.01em]">{title}</span>
         <span className="font-mono text-[12px] text-faint tabular-nums">{descriptor}</span>
       </h1>
-      <div role="group" aria-label="View mode" className="inline-flex h-7 items-stretch rounded-md border bg-surface">
+      <div role="group" aria-label="Режим просмотра" className="inline-flex h-7 items-stretch rounded-md border bg-surface">
         <button
           type="button"
           aria-current={mode === "network"}
           onClick={() => onMode("network")}
           className={cn(modeButton, "rounded-l-[5px]", mode === "network" ? "bg-elevated text-foreground" : "text-muted-foreground hover:text-foreground")}
         >
-          Network
+          Схема
           {mode === "network" ? <span aria-hidden className="absolute inset-x-2 bottom-0 h-px bg-vena" /> : null}
         </button>
+        {showTree ? (
+          <button
+            type="button"
+            aria-current={mode === "tree"}
+            onClick={() => onMode("tree")}
+            className={cn(modeButton, "border-x", mode === "tree" ? "bg-elevated text-foreground" : "text-muted-foreground hover:text-foreground")}
+          >
+            Дерево
+            {mode === "tree" ? <span aria-hidden className="absolute inset-x-2 bottom-0 h-px bg-vena" /> : null}
+          </button>
+        ) : null}
         <button
           type="button"
           aria-current={mode === "assets"}
           onClick={() => onMode("assets")}
-          className={cn(modeButton, "border-x", mode === "assets" ? "bg-elevated text-foreground" : "text-muted-foreground hover:text-foreground")}
+          className={cn(
+            modeButton,
+            showTree ? "border-r" : "border-x",
+            mode === "assets" ? "bg-elevated text-foreground" : "text-muted-foreground hover:text-foreground"
+          )}
         >
-          Assets
+          Объекты
           {mode === "assets" ? <span aria-hidden className="absolute inset-x-2 bottom-0 h-px bg-vena" /> : null}
         </button>
         <button
@@ -76,7 +93,7 @@ export function NetworkToolbar({
           onClick={() => onMode("map")}
           className={cn(modeButton, "rounded-r-[5px]", mode === "map" ? "bg-elevated text-foreground" : "text-muted-foreground hover:text-foreground")}
         >
-          Map
+          Карта
           {mode === "map" ? <span aria-hidden className="absolute inset-x-2 bottom-0 h-px bg-vena" /> : null}
         </button>
       </div>
@@ -99,28 +116,28 @@ export function NetworkToolbar({
       </form>
 
       <Segmented<SystemFilter>
-        label="System filter"
+        label="Фильтр системы"
         value={system}
         onChange={onSystem}
-        options={SYSTEMS.map((value) => ({ value, label: value === "all" ? "All" : TYPE_LABEL[value as AssetType] }))}
+        options={SYSTEMS.map((value) => ({ value, label: value === "all" ? "Все" : TYPE_LABEL[value as AssetType] }))}
       />
       <Segmented<RiskFilter>
-        label="Risk filter"
+        label="Фильтр риска"
         value={risk}
         onChange={onRisk}
         options={[
-          { value: "all", label: "All risk" },
-          { value: "attention", label: "Attention+" },
-          { value: "critical", label: "Critical" },
+          { value: "all", label: "Весь риск" },
+          { value: "attention", label: "Внимание+" },
+          { value: "critical", label: "Критично" },
         ]}
       />
       <Segmented<ForecastHorizon>
-        label="Forecast window"
+        label="Горизонт прогноза"
         value={horizon}
         onChange={onHorizon}
         options={[
-          { value: 24, label: "24h" },
-          { value: 72, label: "72h" },
+          { value: 24, label: "24ч" },
+          { value: 72, label: "72ч" },
         ]}
       />
     </div>

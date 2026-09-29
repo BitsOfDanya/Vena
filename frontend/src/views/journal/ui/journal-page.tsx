@@ -76,7 +76,7 @@ export function JournalPage() {
     return (
       <div className="flex size-full items-center justify-center p-6">
         <StateMessage
-          title="Journal requires the API"
+          title="Журнал требует API"
           description="Журнал прогнозов хранится в PostgreSQL. Запустите стенд с NEXT_PUBLIC_VENA_WORKFLOW_MODE=api."
         />
       </div>
@@ -87,14 +87,14 @@ export function JournalPage() {
     <div className="flex size-full min-h-0 flex-col">
       <div className="flex shrink-0 flex-wrap items-center justify-between gap-4 border-b border-border px-6 py-4">
         <div className="flex items-baseline gap-4">
-          <h1 className="text-[26px] font-semibold tracking-[-0.01em]">Forecast Journal</h1>
-          <span className="font-mono text-[12px] text-faint">forecast · decision · result</span>
+          <h1 className="text-[26px] font-semibold tracking-[-0.01em]">Журнал прогнозов</h1>
+          <span className="font-mono text-[12px] text-faint">прогноз · решение · результат</span>
         </div>
         <div className="flex items-center gap-3">
           <Button
             variant="outline"
             size="sm"
-            aria-label="Refresh journal"
+            aria-label="Обновить журнал"
             disabled={journal.isFetching}
             onClick={() => {
               void journal.refetch()
@@ -104,7 +104,7 @@ export function JournalPage() {
             <RefreshCw className={cn("size-3.5", journal.isFetching && "animate-spin")} />
           </Button>
           <Button variant="outline" size="sm" onClick={exportCsv} disabled={!rows.length}>
-            <ArrowDownToLine className="size-3.5" /> Export CSV
+            <ArrowDownToLine className="size-3.5" /> Экспорт CSV
           </Button>
         </div>
       </div>
@@ -118,27 +118,27 @@ export function JournalPage() {
         {journal.isError || summary.isError ? (
           <div className="p-6">
             <StateMessage
-              title="Journal unavailable"
+              title="Журнал недоступен"
               description="Бэкенд не ответил. Проверьте подключение к API."
               action={
                 <Button variant="outline" size="sm" onClick={() => journal.refetch()}>
-                  Retry
+                  Повторить
                 </Button>
               }
             />
           </div>
         ) : (
           <>
-            <section aria-label="Journal summary" className="mx-6 mt-5 grid grid-cols-2 border border-border md:grid-cols-4">
-              <Metric label="Forecasts" value={summary.data?.total ?? "—"} hint="Прогнозов в журнале" />
-              <Metric label="Awaiting decision" value={summary.data?.pending ?? "—"} hint="Нужна реакция диспетчера" />
-              <Metric label="Crew dispatched" value={summary.data?.inWork ?? "—"} hint="Работы в процессе" />
-              <Metric label="With feedback" value={summary.data?.decided ?? "—"} hint="Размечено для дообучения" />
+            <section aria-label="Сводка журнала" className="mx-6 mt-5 grid grid-cols-2 border border-border md:grid-cols-4">
+              <Metric label="Прогнозы" value={summary.data?.total ?? "—"} hint="Прогнозов в журнале" />
+              <Metric label="Ожидают решения" value={summary.data?.pending ?? "—"} hint="Нужна реакция диспетчера" />
+              <Metric label="Бригада выехала" value={summary.data?.inWork ?? "—"} hint="Работы в процессе" />
+              <Metric label="С обратной связью" value={summary.data?.decided ?? "—"} hint="Размечено для дообучения" />
             </section>
 
-            <section aria-label="Feedback by scenario" className="mx-6 mt-5 border border-border">
+            <section aria-label="Обратная связь по сценариям" className="mx-6 mt-5 border border-border">
               <div className="border-b border-border-soft px-5 py-3">
-                <h2 className="text-[11px] tracking-[0.08em] uppercase">Feedback by scenario</h2>
+                <h2 className="text-[11px] tracking-[0.08em] uppercase">Обратная связь по сценариям</h2>
                 <p className="mt-1 text-[12px] text-muted-foreground">
                   Доля подтверждённых среди решённых — обратная связь диспетчеров, а не метрика модели на отложенной
                   выборке.
@@ -151,12 +151,12 @@ export function JournalPage() {
                   <table className="w-full min-w-[560px] text-left text-[13px]">
                     <thead className="border-b border-border-soft text-[11px] tracking-[0.08em] text-faint uppercase">
                       <tr>
-                        <th className="px-5 py-2 font-medium">Scenario</th>
-                        <th className="px-5 py-2 text-right font-medium">Forecasts</th>
-                        <th className="px-5 py-2 text-right font-medium">Decided</th>
-                        <th className="px-5 py-2 text-right font-medium">Confirmed</th>
-                        <th className="px-5 py-2 text-right font-medium">Rejected</th>
-                        <th className="px-5 py-2 text-right font-medium">Confirmation</th>
+                        <th className="px-5 py-2 font-medium">Сценарий</th>
+                        <th className="px-5 py-2 text-right font-medium">Прогнозы</th>
+                        <th className="px-5 py-2 text-right font-medium">Решено</th>
+                        <th className="px-5 py-2 text-right font-medium">Подтверждено</th>
+                        <th className="px-5 py-2 text-right font-medium">Отклонено</th>
+                        <th className="px-5 py-2 text-right font-medium">Подтверждение</th>
                       </tr>
                     </thead>
                     <tbody>
@@ -178,11 +178,11 @@ export function JournalPage() {
               )}
             </section>
 
-            <section aria-label="Journal filters" className="flex flex-wrap items-center gap-3 px-6 pt-5 pb-3">
+            <section aria-label="Фильтры журнала" className="flex flex-wrap items-center gap-3 px-6 pt-5 pb-3">
               <div className="relative min-w-48 flex-1">
                 <Search className="pointer-events-none absolute top-2.5 left-2.5 size-3.5 text-faint" />
                 <Input
-                  aria-label="Search journal"
+                  aria-label="Поиск по журналу"
                   className="h-9 pl-8 text-[12px]"
                   placeholder="Объект, локация, модель, примечание…"
                   value={filter.query}
@@ -190,11 +190,11 @@ export function JournalPage() {
                 />
               </div>
               <NativeSelect
-                aria-label="Scenario filter"
+                aria-label="Фильтр по сценарию"
                 value={filter.scenario}
                 onChange={(event) => update({ scenario: event.target.value as JournalFilter["scenario"] })}
               >
-                <NativeSelectOption value="all">All scenarios</NativeSelectOption>
+                <NativeSelectOption value="all">Все сценарии</NativeSelectOption>
                 {SCENARIOS.map((value) => (
                   <NativeSelectOption key={value} value={value}>
                     {SCENARIO_LABEL[value]}
@@ -202,11 +202,11 @@ export function JournalPage() {
                 ))}
               </NativeSelect>
               <NativeSelect
-                aria-label="Decision filter"
+                aria-label="Фильтр по решению"
                 value={filter.decision}
                 onChange={(event) => update({ decision: event.target.value as JournalFilter["decision"] })}
               >
-                <NativeSelectOption value="all">All decisions</NativeSelectOption>
+                <NativeSelectOption value="all">Все решения</NativeSelectOption>
                 {DECISIONS.map((value) => (
                   <NativeSelectOption key={value} value={value}>
                     {DECISION_LABEL[value]}
@@ -215,7 +215,7 @@ export function JournalPage() {
               </NativeSelect>
             </section>
 
-            <section aria-label="Forecast register" className="px-6 pb-8">
+            <section aria-label="Реестр прогнозов" className="px-6 pb-8">
               {journal.isPending ? (
                 <p className="py-6 text-[13px] text-muted-foreground">Загрузка журнала…</p>
               ) : rows.length === 0 ? (
@@ -228,12 +228,12 @@ export function JournalPage() {
                     <table className="w-full min-w-[960px] text-left text-[13px]">
                       <thead className="border-b border-border text-[11px] tracking-[0.08em] text-faint uppercase">
                         <tr>
-                          <th className="px-4 py-2 font-medium">Forecast</th>
-                          <th className="px-4 py-2 font-medium">Object / location</th>
-                          <th className="px-4 py-2 font-medium">Scenario</th>
-                          <th className="px-4 py-2 font-medium">Model</th>
-                          <th className="px-4 py-2 font-medium">Decision</th>
-                          <th className="px-4 py-2 font-medium">Result</th>
+                          <th className="px-4 py-2 font-medium">Прогноз</th>
+                          <th className="px-4 py-2 font-medium">Объект / локация</th>
+                          <th className="px-4 py-2 font-medium">Сценарий</th>
+                          <th className="px-4 py-2 font-medium">Модель</th>
+                          <th className="px-4 py-2 font-medium">Решение</th>
+                          <th className="px-4 py-2 font-medium">Результат</th>
                         </tr>
                       </thead>
                       <tbody>
@@ -282,14 +282,14 @@ export function JournalPage() {
                   {pages > 1 ? (
                     <div className="flex items-center justify-between pt-3 text-[12px] text-muted-foreground">
                       <span className="font-mono tabular-nums">
-                        {page * PAGE_SIZE + 1}–{Math.min((page + 1) * PAGE_SIZE, rows.length)} of {rows.length}
+                        {page * PAGE_SIZE + 1}–{Math.min((page + 1) * PAGE_SIZE, rows.length)} из {rows.length}
                       </span>
                       <span className="flex gap-2">
                         <Button variant="outline" size="sm" disabled={page === 0} onClick={() => setPage(page - 1)}>
-                          Previous
+                          Назад
                         </Button>
                         <Button variant="outline" size="sm" disabled={page + 1 >= pages} onClick={() => setPage(page + 1)}>
-                          Next
+                          Далее
                         </Button>
                       </span>
                     </div>

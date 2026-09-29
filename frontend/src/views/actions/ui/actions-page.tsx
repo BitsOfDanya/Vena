@@ -24,9 +24,9 @@ import { ActionInspector } from "@/widgets/action-inspector"
 import { MaintenanceTimeline } from "@/widgets/maintenance-timeline"
 
 const HORIZONS = [
-  { value: 24, label: "24h" },
-  { value: 48, label: "48h" },
-  { value: 72, label: "72h" },
+  { value: 24, label: "24ч" },
+  { value: 48, label: "48ч" },
+  { value: 72, label: "72ч" },
 ]
 
 function SectionTitle({ children, count }: { children: React.ReactNode; count?: number }) {
@@ -60,28 +60,28 @@ export function ActionsPage() {
     <div className="flex size-full min-h-0 flex-col">
       <div className="flex shrink-0 flex-wrap items-center gap-x-8 gap-y-3 px-6 pt-4 pb-4">
         <h1 className="flex items-baseline gap-3">
-          <span className="text-[26px] font-semibold tracking-[-0.01em]">Action Plan</span>
-          <span className="font-mono text-[13px] text-faint">next {hours}h</span>
+          <span className="text-[26px] font-semibold tracking-[-0.01em]">План работ</span>
+          <span className="font-mono text-[13px] text-faint">след. {hours}ч</span>
         </h1>
         <p className="flex items-center gap-6 text-[13px] text-muted-foreground">
           <span>
-            Suggested <span className="ml-1 font-mono text-[15px] text-foreground tabular-nums">{String(suggested.length).padStart(2, "0")}</span>
+            Предложено <span className="ml-1 font-mono text-[15px] text-foreground tabular-nums">{String(suggested.length).padStart(2, "0")}</span>
           </span>
           <span>
-            Planned <span className="ml-1 font-mono text-[15px] text-foreground tabular-nums">{String(count("planned")).padStart(2, "0")}</span>
+            В плане <span className="ml-1 font-mono text-[15px] text-foreground tabular-nums">{String(count("planned")).padStart(2, "0")}</span>
           </span>
           <span>
-            Assigned <span className="ml-1 font-mono text-[15px] text-foreground tabular-nums">{String(count("assigned")).padStart(2, "0")}</span>
+            Назначено <span className="ml-1 font-mono text-[15px] text-foreground tabular-nums">{String(count("assigned")).padStart(2, "0")}</span>
           </span>
           <span>
-            In progress{" "}
+            В работе{" "}
             <span className="ml-1 font-mono text-[15px] text-foreground tabular-nums">{String(count("in_progress")).padStart(2, "0")}</span>
           </span>
         </p>
         <div className="ml-auto flex items-center gap-2.5">
-          <Segmented label="Planning horizon" value={hours} onChange={setHours} options={HORIZONS} />
+          <Segmented label="Горизонт планирования" value={hours} onChange={setHours} options={HORIZONS} />
           <Button size="sm" onClick={() => setSheetOpen(true)}>
-            <Plus data-icon="inline-start" /> New action
+            <Plus data-icon="inline-start" /> Создать работу
           </Button>
         </div>
       </div>
@@ -92,19 +92,19 @@ export function ActionsPage() {
             <LoadingBar />
           ) : actions.isError ? (
             <StateMessage
-              title="Actions unavailable"
+              title="Работы недоступны"
               description="Не удалось загрузить план обслуживания."
               action={
                 <Button variant="outline" size="sm" onClick={() => actions.refetch()}>
-                  Retry
+                  Повторить
                 </Button>
               }
             />
           ) : (
             <>
               {suggested.length > 0 ? (
-                <section aria-label="Suggested actions" className="px-6 pb-5">
-                  <SectionTitle count={suggested.length}>Suggested by VENA</SectionTitle>
+                <section aria-label="Предложенные работы" className="px-6 pb-5">
+                  <SectionTitle count={suggested.length}>Предложено VENA</SectionTitle>
                   <ul className="mt-2 border border-border bg-elevated">
                     {suggested.map((action) => (
                       <li key={action.id} className="flex flex-wrap items-center gap-x-4 gap-y-2 border-b border-border-soft px-5 py-3 last:border-b-0">
@@ -120,7 +120,7 @@ export function ActionsPage() {
                             onClick={() => setSelectedId(action.id)}
                             className="text-[13px] text-muted-foreground underline-offset-4 outline-none hover:text-foreground hover:underline focus-visible:ring-2 focus-visible:ring-ring/60"
                           >
-                            Review
+                            Открыть
                           </button>
                           <DismissActionDialog
                             actionId={action.id}
@@ -129,12 +129,12 @@ export function ActionsPage() {
                                 type="button"
                                 className="text-[13px] text-muted-foreground underline-offset-4 outline-none hover:text-foreground hover:underline focus-visible:ring-2 focus-visible:ring-ring/60"
                               >
-                                Dismiss
+                                Отклонить
                               </button>
                             }
                           />
                           <Button size="sm" disabled={approve.isPending} onClick={() => approve.mutate(action.id)}>
-                            Approve
+                            Утвердить
                           </Button>
                         </span>
                       </li>
@@ -143,8 +143,8 @@ export function ActionsPage() {
                 </section>
               ) : null}
 
-              <section aria-label="Intervention plan" className="px-6">
-                <SectionTitle count={planned.length}>Intervention plan</SectionTitle>
+              <section aria-label="План вмешательств" className="px-6">
+                <SectionTitle count={planned.length}>План вмешательств</SectionTitle>
                 <div className="mt-2 border border-border bg-elevated">
                   <MaintenanceTimeline
                     actions={planned}
@@ -156,8 +156,8 @@ export function ActionsPage() {
                 </div>
               </section>
 
-              <section aria-label="Closed actions" className="mt-6 px-6 pb-8">
-                <SectionTitle count={finished.length}>Recently closed</SectionTitle>
+              <section aria-label="Закрытые работы" className="mt-6 px-6 pb-8">
+                <SectionTitle count={finished.length}>Недавно закрытые</SectionTitle>
                 {finished.length === 0 ? (
                   <p className="mt-2 text-[13px] text-muted-foreground">Закрытых работ пока нет.</p>
                 ) : (

@@ -183,3 +183,16 @@
     opacity: 0.35;
   }
 }
+
+@media print {
+  header,
+  nav,
+  [data-slot="notification-center"],
+  .print\:hidden {
+    display: none !important;
+  }
+
+  body {
+    background: white !important;
+  }
+}

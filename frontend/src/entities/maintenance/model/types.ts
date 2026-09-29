@@ -115,55 +115,55 @@ export const DISMISS_REASON_OUTCOME: Record<DismissReason, ActionOutcome> = {
 }
 
 export const OUTCOME_LABEL: Record<ActionOutcome, string> = {
-  confirmed_issue: "Confirmed issue",
-  no_issue_found: "No issue found",
-  maintenance_performed: "Maintenance performed",
-  monitoring_required: "Monitoring required",
-  false_signal: "False or irrelevant signal",
-  other: "Other",
+  confirmed_issue: "Инцидент подтверждён",
+  no_issue_found: "Норма, замечаний нет",
+  maintenance_performed: "Обслуживание выполнено",
+  monitoring_required: "Требуется мониторинг",
+  false_signal: "Ложный или нерелевантный сигнал",
+  other: "Другое",
 }
 
 export const PRIORITY_LABEL: Record<ActionPriority, string> = {
-  high: "High",
-  medium: "Medium",
-  low: "Low",
+  high: "Высокий",
+  medium: "Средний",
+  low: "Низкий",
 }
 
 export const STATUS_LABEL: Record<ActionStatus, string> = {
-  suggested: "Suggested",
-  planned: "Planned",
-  assigned: "Assigned",
-  in_progress: "In progress",
-  waiting: "Waiting",
-  completed: "Completed",
-  cancelled: "Cancelled",
+  suggested: "Предложено",
+  planned: "В плане",
+  assigned: "Назначено",
+  in_progress: "В работе",
+  waiting: "Ожидание",
+  completed: "Завершено",
+  cancelled: "Отменено",
 }
 
 export const KIND_LABEL: Record<ActionKind, string> = {
-  inspect: "Inspect",
-  "electrical diagnostic": "Electrical diagnostic",
-  service: "Service",
-  verify: "Verify",
+  inspect: "Осмотр",
+  "electrical diagnostic": "Электродиагностика",
+  service: "Обслуживание",
+  verify: "Проверка",
 }
 
 export const SOURCE_LABEL: Record<ActionSource, string> = {
-  vena_forecast: "VENA forecast",
-  manual: "Manual",
-  external: "External request",
+  vena_forecast: "Прогноз VENA",
+  manual: "Вручную",
+  external: "Внешний запрос",
 }
 
 export const ACTION_EVENT_LABEL: Record<ActionEventType, string> = {
-  suggested: "Suggested by VENA",
-  created: "Created",
-  approved: "Approved",
-  planned: "Planned",
-  assigned: "Assigned",
-  started: "Started",
-  waiting: "Waiting",
-  completed: "Completed",
-  cancelled: "Cancelled",
-  dismissed: "Dismissed",
-  notified: "Notification requested",
+  suggested: "Предложено VENA",
+  created: "Создано",
+  approved: "Утверждено",
+  planned: "В плане",
+  assigned: "Назначено",
+  started: "Начато",
+  waiting: "Ожидание",
+  completed: "Завершено",
+  cancelled: "Отменено",
+  dismissed: "Отклонено",
+  notified: "Уведомление запрошено",
 }
 
 export const OPEN_STATUSES: ActionStatus[] = ["suggested", "planned", "assigned", "in_progress", "waiting"]

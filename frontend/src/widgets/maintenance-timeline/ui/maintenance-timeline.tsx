@@ -43,7 +43,7 @@ export function MaintenanceTimeline({
   return (
     <div className="relative min-w-[760px] bg-elevated">
       <div className="grid grid-cols-[minmax(280px,340px)_1fr] border-b border-border-soft">
-        <div className="px-6 py-2 text-[12px] font-medium tracking-[0.1em] text-muted-foreground uppercase">Intervention plan</div>
+        <div className="px-6 py-2 text-[12px] font-medium tracking-[0.1em] text-muted-foreground uppercase">План работ</div>
         <div className="relative h-9 pr-6">
           {marks.map((hour) => (
             <span
@@ -51,7 +51,7 @@ export function MaintenanceTimeline({
               className={cn("absolute top-2.5 text-[11px] font-medium tracking-[0.08em] uppercase", hour === 0 ? "text-foreground" : "text-faint")}
               style={{ left: `${(hour / horizonHours) * 100}%`, transform: hour === horizonHours ? "translateX(-100%)" : undefined }}
             >
-              {hour === 0 ? "Now" : `${hour}h`}
+              {hour === 0 ? "Сейчас" : `${hour}h`}
             </span>
           ))}
         </div>

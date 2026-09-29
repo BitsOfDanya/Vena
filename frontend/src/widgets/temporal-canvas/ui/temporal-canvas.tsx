@@ -75,11 +75,11 @@ export function TemporalCanvas({
 
   const tracks = React.useMemo(() => {
     const list: { key: keyof Layers; label: string; height: number }[] = []
-    if (layers.state) list.push({ key: "state", label: "State", height: compact ? 16 : 24 })
-    if (layers.events) list.push({ key: "events", label: "Events", height: compact ? 22 : 32 })
-    if (layers.alarms && !compact) list.push({ key: "alarms", label: "Alarms", height: 26 })
-    if (layers.failures && !compact) list.push({ key: "failures", label: "Failures", height: 26 })
-    if (layers.risk) list.push({ key: "risk", label: "Risk", height: compact ? 56 : clamp(size.height - HEADER - AXIS - 170, 110, 300) })
+    if (layers.state) list.push({ key: "state", label: "Состояние", height: compact ? 16 : 24 })
+    if (layers.events) list.push({ key: "events", label: "События", height: compact ? 22 : 32 })
+    if (layers.alarms && !compact) list.push({ key: "alarms", label: "Тревоги", height: 26 })
+    if (layers.failures && !compact) list.push({ key: "failures", label: "Отказы", height: 26 })
+    if (layers.risk) list.push({ key: "risk", label: "Риск", height: compact ? 56 : clamp(size.height - HEADER - AXIS - 170, 110, 300) })
     return list
   }, [layers, compact, size.height])
 

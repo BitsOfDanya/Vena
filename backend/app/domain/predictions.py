@@ -26,11 +26,11 @@ from app.schemas.predictions import (
 SNAPSHOT_NAME = "snapshot.json"
 
 FACTOR_LABELS = {
-    "events_24h": "Events, 24h",
-    "events_7d": "Events, 7d",
-    "alarms_24h": "Alarms, 24h",
-    "failures_30d": "Failures, 30d",
-    "time_since_last_failure_days": "Days since last failure",
+    "events_24h": "Событий за 24 ч",
+    "events_7d": "Событий за 7 сут",
+    "alarms_24h": "Тревог за 24 ч",
+    "failures_30d": "Эпизодов за 30 сут",
+    "time_since_last_failure_days": "Дней с последнего эпизода",
 }
 
 LEVEL_MAP: dict[str, RiskLevel] = {

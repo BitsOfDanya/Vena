@@ -60,26 +60,26 @@ export function SnapshotLine({ snapshot }: { snapshot: SnapshotStatus | undefine
   if (!snapshot) return null
   if (!snapshot.available) {
     return (
-      <p className="text-[12px] text-status-critical">Prediction snapshot unavailable · {snapshot.detail}</p>
+      <p className="text-[12px] text-status-critical">Снимок прогнозов недоступен · {snapshot.detail}</p>
     )
   }
   const days = snapshot.ageSeconds === null ? null : Math.floor(snapshot.ageSeconds / 86_400)
   return (
     <p className="flex flex-wrap items-baseline gap-x-4 gap-y-1 text-[12px] text-muted-foreground">
-      <span className="font-medium tracking-[0.1em] text-faint uppercase">Snapshot</span>
+      <span className="font-medium tracking-[0.1em] text-faint uppercase">Снимок</span>
       <span className="font-mono tabular-nums">{snapshot.snapshotId}</span>
       <span className="font-mono tabular-nums">
         {snapshot.predictionTime === null ? "" : formatDateTime(snapshot.predictionTime)}
       </span>
-      <span className="font-mono tabular-nums">{snapshot.predictionCount} predictions</span>
-      <span className="font-mono tabular-nums">{snapshot.models.length} models</span>
+      <span className="font-mono tabular-nums">{snapshot.predictionCount} прогнозов</span>
+      <span className="font-mono tabular-nums">{snapshot.models.length} моделей</span>
       {snapshot.stream ? (
         <span className="font-mono tabular-nums text-vena">
-          stream · {snapshot.stream.events} events · {Math.round(snapshot.stream.latencySeconds)} s
+          поток · {snapshot.stream.events} соб. · {Math.round(snapshot.stream.latencySeconds)} с
         </span>
       ) : null}
       {snapshot.stale && days !== null ? (
-        <span className="text-status-attention">outdated by {days} d</span>
+        <span className="text-vena">демо-снимок · {days} дн.</span>
       ) : null}
     </p>
   )
@@ -124,51 +124,51 @@ export function PulseSummaryModules({
     return (
       <div className="grid gap-2.5 md:grid-cols-2 xl:grid-cols-4">
         <Module
-          title="Critical"
+          title="Критично"
           value={predictionsUnavailable ? "—" : String(criticalCount).padStart(2, "0")}
-          unit={criticalCount === 1 ? "asset" : "assets"}
+          unit={criticalCount === 1 ? "объект" : "объектов"}
           tone={criticalCount > 0 ? "critical" : "neutral"}
           lines={
             predictionsUnavailable
-              ? ["Predictions unavailable."]
+              ? ["Прогнозы недоступны."]
               : criticalAssets.length > 0
                 ? criticalAssets
-                : ["No critical risks."]
+                : ["Нет критичных рисков."]
           }
-          actionLabel="Inspect"
+          actionLabel="Открыть"
           onAction={onInspectCritical}
         />
         <Module
-          title="Attention"
+          title="Внимание"
           value={predictionsUnavailable ? "—" : String(attentionCount).padStart(2, "0")}
-          unit={attentionCount === 1 ? "asset" : "assets"}
+          unit={attentionCount === 1 ? "объект" : "объектов"}
           tone={attentionCount > 0 ? "attention" : "neutral"}
-          lines={predictionsUnavailable ? ["Predictions unavailable."] : ["model risk level high"]}
-          actionLabel="Inspect"
+          lines={predictionsUnavailable ? ["Прогнозы недоступны."] : ["высокий уровень риска модели"]}
+          actionLabel="Открыть"
           onAction={onInspectCritical}
         />
         <Module
-          title="Risk rising"
+          title="Рост риска"
           value={predictionsUnavailable ? "—" : String(risingCount).padStart(2, "0")}
-          unit="assets"
+          unit="объектов"
           tone={risingCount > 0 ? "attention" : "neutral"}
           lines={
             predictionsUnavailable
-              ? ["Predictions unavailable."]
+              ? ["Прогнозы недоступны."]
               : risingTop
-                ? ["largest increase", risingTop]
-                : ["No change since the previous snapshot."]
+                ? ["наибольший прирост", risingTop]
+                : ["Без изменений относительно предыдущего снимка."]
           }
-          actionLabel="View changes"
+          actionLabel="Смотреть изменения"
           onAction={onViewChanges}
         />
         <Module
-          title="Actions due"
+          title="Работы к сроку"
           value={String(actionsDue).padStart(2, "0")}
-          unit="within 24h"
+          unit="за 24ч"
           tone={actionsOverdue > 0 ? "attention" : "neutral"}
-          lines={[`${String(actionsOverdue).padStart(2, "0")} overdue`]}
-          actionLabel="Open plan"
+          lines={[`${String(actionsOverdue).padStart(2, "0")} просрочено`]}
+          actionLabel="Открыть план"
           onAction={onOpenPlan}
         />
       </div>
@@ -178,47 +178,47 @@ export function PulseSummaryModules({
   return (
     <div className="grid gap-2.5 md:grid-cols-2 xl:grid-cols-4">
       <Module
-        title="Critical"
+        title="Критично"
         value={String(critical?.count ?? 0).padStart(2, "0")}
-        unit={critical && critical.count === 1 ? "asset" : "assets"}
+        unit={critical && critical.count === 1 ? "объект" : "объектов"}
         tone={critical && critical.count > 0 ? "critical" : "neutral"}
         lines={
           critical && critical.assets.length > 0
             ? critical.assets.map((asset) => `${asset.id} · ${asset.score}/100`)
-            : ["No critical risks."]
+            : ["Нет критичных рисков."]
         }
-        actionLabel="Inspect"
+        actionLabel="Осмотреть"
         onAction={onInspectCritical}
       />
       <Module
-        title="Risk rising"
+        title="Рост риска"
         value={String(rising?.count ?? 0).padStart(2, "0")}
-        unit={rising && rising.count === 1 ? "asset" : "assets"}
+        unit={rising && rising.count === 1 ? "объект" : "объектов"}
         tone={rising && rising.count > 0 ? "attention" : "neutral"}
-        lines={rising?.top ? [`largest increase`, `${rising.top.id} +${rising.top.delta}`] : ["No increases in 6 hours."]}
-        actionLabel="View changes"
+        lines={rising?.top ? [`наибольший прирост`, `${rising.top.id} +${rising.top.delta}`] : ["Без изменений за 6 часов."]}
+        actionLabel="Смотреть изменения"
         onAction={onViewChanges}
       />
       <Module
-        title="New patterns"
+        title="Новые паттерны"
         value={String(patterns?.count ?? 0).padStart(2, "0")}
-        unit="detected"
+        unit="обнаружено"
         tone={patterns && patterns.count > 0 ? "vena" : "neutral"}
         lines={
           patterns?.latest
-            ? [`latest`, `Pattern ${String(patterns.latest.number).padStart(3, "0")} · ${patterns.latest.systems} systems`]
-            : ["No correlated patterns."]
+            ? [`последний`, `Паттерн ${String(patterns.latest.number).padStart(3, "0")} · ${patterns.latest.systems} систем`]
+            : ["Коррелированных паттернов нет."]
         }
-        actionLabel="Investigate"
+        actionLabel="Исследовать"
         onAction={onInvestigatePattern}
       />
       <Module
-        title="Actions due"
+        title="Работы к сроку"
         value={String(actionsDue).padStart(2, "0")}
-        unit="within 24h"
+        unit="за 24ч"
         tone={actionsOverdue > 0 ? "attention" : "neutral"}
-        lines={[`${String(actionsOverdue).padStart(2, "0")} overdue`]}
-        actionLabel="Open plan"
+        lines={[`${String(actionsOverdue).padStart(2, "0")} просрочено`]}
+        actionLabel="Открыть план"
         onAction={onOpenPlan}
       />
     </div>
@@ -228,16 +228,16 @@ export function PulseSummaryModules({
 export function ShiftSummary({ summary, completed }: { summary: PulseSummary | undefined; completed: number }) {
   if (!summary) return null
   const parts = [
-    summary.shift.critical > 0 ? `+${summary.shift.critical} critical` : null,
-    summary.shift.patterns > 0 ? `+${summary.shift.patterns} pattern${summary.shift.patterns === 1 ? "" : "s"}` : null,
-    summary.shift.rising > 0 ? `+${summary.shift.rising} increased risk` : null,
-    completed > 0 ? `${completed} action${completed === 1 ? "" : "s"} completed` : null,
+    summary.shift.critical > 0 ? `+${summary.shift.critical} критичных` : null,
+    summary.shift.patterns > 0 ? `+${summary.shift.patterns} паттерн${summary.shift.patterns === 1 ? "" : summary.shift.patterns < 5 ? "а" : "ов"}` : null,
+    summary.shift.rising > 0 ? `+${summary.shift.rising} рост риска` : null,
+    completed > 0 ? `${completed} работ${completed === 1 ? "а" : completed < 5 ? "ы" : ""} завершено` : null,
   ].filter((part): part is string => part !== null)
 
   return (
     <p className="flex flex-wrap items-baseline gap-x-4 gap-y-1 text-[12px] text-muted-foreground">
-      <span className="font-medium tracking-[0.1em] text-faint uppercase">Since {formatClock(summary.shift.since)}</span>
-      {parts.length > 0 ? parts.map((part) => <span key={part}>{part}</span>) : <span>no changes this shift</span>}
+      <span className="font-medium tracking-[0.1em] text-faint uppercase">С {formatClock(summary.shift.since)}</span>
+      {parts.length > 0 ? parts.map((part) => <span key={part}>{part}</span>) : <span>за смену без изменений</span>}
     </p>
   )
 }

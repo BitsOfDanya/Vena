@@ -37,11 +37,11 @@ export function SettingsIntegrationsPage() {
   const smvuState = smvu.data?.configured ? (smvu.data.fresh ? "configured" : "not_configured") : "not_configured"
 
   return (
-    <SettingsShell title="Integrations" descriptor={`environment ${environmentLabel}`}>
-      <SettingsSection title="Data sources">
+    <SettingsShell title="Интеграции" descriptor={`среда ${environmentLabel}`}>
+      <SettingsSection title="Источники данных">
         <ul className="border border-border bg-elevated">
           <li className="flex items-center gap-4 border-b border-border-soft px-5 py-3">
-            <span className="w-48 text-[14px]">Event journal</span>
+            <span className="w-48 text-[14px]">Журнал событий</span>
             <span className="text-[13px] text-muted-foreground">
               {dataMode === "live" ? "Подключён источник событий" : "Демонстрационный снимок данных"}
             </span>
@@ -50,12 +50,12 @@ export function SettingsIntegrationsPage() {
             </span>
           </li>
           <li className="flex items-center gap-4 border-b border-border-soft px-5 py-3">
-            <span className="w-48 text-[14px]">SMVU feed</span>
+            <span className="w-48 text-[14px]">Поток SMVU</span>
             <span className="text-[13px] text-muted-foreground">
               {smvu.data?.configured
                 ? smvu.data.fresh
-                  ? `Свежий батч · ${smvu.data.last_event_count ?? 0} events`
-                  : `Последний батч устарел · age ${smvu.data.age_seconds ?? "—"}s`
+                  ? `Свежий батч · ${smvu.data.last_event_count ?? 0} событий`
+                  : `Последний батч устарел · возраст ${smvu.data.age_seconds ?? "—"} с`
                 : "POST /api/v1/smvu/events — хук свежести ≤5 мин"}
             </span>
             <span className="ml-auto">
@@ -72,10 +72,10 @@ export function SettingsIntegrationsPage() {
             </span>
           </li>
           <li className="flex items-center gap-4 px-5 py-3">
-            <span className="w-48 text-[14px]">Spatial data (GeoJSON/WKT)</span>
+            <span className="w-48 text-[14px]">Пространственные данные (GeoJSON/WKT)</span>
             <span className="text-[13px] text-muted-foreground">
               {spatial.data?.configured
-                ? `${spatial.data.source ?? "layer"} · ${spatial.data.asset_count} активов · Map mode`
+                ? `${spatial.data.source ?? "слой"} · ${spatial.data.asset_count} активов · режим карты`
                 : "Режим карты включится после подключения"}
             </span>
             <span className="ml-auto">
@@ -85,7 +85,7 @@ export function SettingsIntegrationsPage() {
         </ul>
       </SettingsSection>
 
-      <SettingsSection title="Delivery channels">
+      <SettingsSection title="Каналы доставки">
         <ul className="border border-border bg-elevated">
           {(settings.data?.channels ?? []).map((channel) => (
             <li key={channel.id} className="flex items-center gap-4 border-b border-border-soft px-5 py-3 last:border-b-0">

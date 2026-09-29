@@ -36,13 +36,13 @@ export function SystemNoticeBar() {
                 onClick={() => router.push(notice.href as string)}
                 className="text-[13px] underline-offset-4 outline-none hover:underline focus-visible:ring-2 focus-visible:ring-ring/60"
               >
-                Inspect
+                Открыть
               </button>
             ) : null}
             {notice.dismissible ? (
               <button
                 type="button"
-                aria-label="Dismiss"
+                aria-label="Скрыть"
                 onClick={() => setDismissed((current) => [...current, notice.id])}
                 className="text-muted-foreground outline-none hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring/60"
               >

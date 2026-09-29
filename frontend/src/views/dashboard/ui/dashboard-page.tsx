@@ -7,6 +7,7 @@ import * as React from "react"
 
 import { TYPE_LABEL, TYPE_ORDER, formatScore, useAssets, type ForecastHorizon } from "@/entities/infrastructure"
 import { OUTCOME_LABEL, useActions } from "@/entities/maintenance"
+import { useAssetTree, useEventTypes } from "@/entities/analytics"
 import { useDashboardPredictions, useSnapshotStatus } from "@/entities/prediction"
 import { CreateActionSheet, type ActionDraft } from "@/features/create-action"
 import { useWorkspace } from "@/features/workspace"
@@ -40,12 +41,13 @@ const HORIZONS: { value: ForecastHorizon; label: string }[] = [
   { value: 72, label: "72h" },
 ]
 const LEVELS: DashboardLevel[] = ["critical", "attention", "observe", "normal", "offline"]
+const FOCUS_LEVELS: DashboardLevel[] = ["critical", "attention", "observe", "offline"]
 const LABEL: Record<DashboardLevel, string> = {
-  critical: "Critical",
-  attention: "Attention",
-  observe: "Observe",
-  normal: "Normal",
-  offline: "Offline",
+  critical: "Критично",
+  attention: "Внимание",
+  observe: "Наблюдение",
+  normal: "Норма",
+  offline: "Офлайн",
 }
 const COLOR: Record<DashboardLevel, string> = {
   critical: "bg-status-critical",
@@ -64,12 +66,12 @@ const TONE: Record<DashboardLevel, string> = {
 const EMPTY_ROWS: DashboardRow[] = []
 const PAGE_SIZE = 20
 const COLUMNS: { key: DashboardSortKey; label: string }[] = [
-  { key: "asset", label: "Asset / group" },
-  { key: "system", label: "System" },
-  { key: "risk", label: "Risk" },
-  { key: "score", label: "Score" },
-  { key: "horizon", label: "Horizon" },
-  { key: "response", label: "Response" },
+  { key: "asset", label: "Объект / группа" },
+  { key: "system", label: "Система" },
+  { key: "risk", label: "Риск" },
+  { key: "score", label: "Скор" },
+  { key: "horizon", label: "Горизонт" },
+  { key: "response", label: "Ответ" },
 ]
 
 function SectionTitle({ children, description, action }: { children: React.ReactNode; description?: string; action?: React.ReactNode }) {
@@ -95,26 +97,27 @@ function Level({ level }: { level: DashboardLevel }) {
 
 function RiskDistribution({ rows, onLevel }: { rows: DashboardRow[]; onLevel: (level: DashboardLevel) => void }) {
   const counts = Object.fromEntries(LEVELS.map((level) => [level, rows.filter((row) => row.level === level).length]))
+  const focusTotal = FOCUS_LEVELS.reduce((sum, level) => sum + counts[level], 0) || 1
   return (
     <section className="border-b border-border p-5 lg:border-r lg:border-b-0">
-      <SectionTitle description="Число прогнозов по уровням риска">Risk distribution</SectionTitle>
+      <SectionTitle description="Фокус на отклонениях; норма не доминирует на шкале">Распределение риска</SectionTitle>
       <div
         className="my-7 flex h-7 w-full overflow-hidden bg-surface"
         role="img"
-        aria-label={LEVELS.map((level) => `${LABEL[level]}: ${counts[level]}`).join(", ")}
+        aria-label={FOCUS_LEVELS.map((level) => `${LABEL[level]}: ${counts[level]}`).join(", ")}
       >
-        {LEVELS.map((level) =>
+        {FOCUS_LEVELS.map((level) =>
           counts[level] ? (
             <div
               key={level}
               className={cn("border-r border-background/50 last:border-0", COLOR[level])}
-              style={{ width: `${(counts[level] / rows.length) * 100}%` }}
+              style={{ width: `${(counts[level] / focusTotal) * 100}%` }}
             />
           ) : null
         )}
       </div>
       <div className="space-y-1">
-        {LEVELS.map((level) => (
+        {FOCUS_LEVELS.map((level) => (
           <button
             key={level}
             type="button"
@@ -123,11 +126,19 @@ function RiskDistribution({ rows, onLevel }: { rows: DashboardRow[]; onLevel: (l
           >
             <Level level={level} />
             <span className="flex gap-5 font-mono text-[12px] tabular-nums">
-              <span className="w-9 text-right text-faint">{rows.length ? Math.round((counts[level] / rows.length) * 100) : 0}%</span>
+              <span className="w-9 text-right text-faint">{focusTotal ? Math.round((counts[level] / focusTotal) * 100) : 0}%</span>
               <span className="w-8 text-right">{counts[level]}</span>
             </span>
           </button>
         ))}
+        <button
+          type="button"
+          onClick={() => onLevel("normal")}
+          className="flex w-full items-center justify-between gap-4 px-1 py-2 text-left text-faint outline-none hover:bg-surface/40 focus-visible:ring-2 focus-visible:ring-ring"
+        >
+          <Level level="normal" />
+          <span className="font-mono text-[12px] tabular-nums">{counts.normal}</span>
+        </button>
       </div>
     </section>
   )
@@ -137,7 +148,7 @@ function SystemDistribution({ rows, onSystem }: { rows: DashboardRow[]; onSystem
   const max = Math.max(1, ...TYPE_ORDER.map((type) => rows.filter((row) => row.type === type).length))
   return (
     <section className="border-b border-border p-5 lg:border-r lg:border-b-0">
-      <SectionTitle description="Распределение прогнозов по системам">System exposure</SectionTitle>
+      <SectionTitle description="Распределение прогнозов по системам">Нагрузка по системам</SectionTitle>
       <div className="space-y-5 pt-2">
         {TYPE_ORDER.map((type) => {
           const systemRows = rows.filter((row) => row.type === type)
@@ -146,7 +157,7 @@ function SystemDistribution({ rows, onSystem }: { rows: DashboardRow[]; onSystem
               type="button"
               key={type}
               onClick={() => onSystem(type)}
-              aria-label={`Filter ${TYPE_LABEL[type]}: ${systemRows.length} predictions`}
+              aria-label={`Фильтр ${TYPE_LABEL[type]}: ${systemRows.length} прогнозов`}
               className="block w-full text-left outline-none focus-visible:ring-2 focus-visible:ring-ring"
             >
               <span className="mb-2 flex justify-between text-[12px]">
@@ -171,6 +182,92 @@ function SystemDistribution({ rows, onSystem }: { rows: DashboardRow[]; onSystem
   )
 }
 
+function ScenarioExposure() {
+  const eventTypes = useEventTypes()
+  if (workflowMode !== "api") return null
+  if (eventTypes.isPending) return <LoadingBar className="mx-6 mt-4 min-h-24" />
+  if (eventTypes.isError || !eventTypes.data?.length) return null
+  return (
+    <section className="mx-6 mt-4 border border-border bg-elevated p-5">
+      <SectionTitle description="Сценарии ТЗ: риск сейчас и объём за 30 дней">Сценарии инцидентов</SectionTitle>
+      <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
+        {eventTypes.data.map((item) => {
+          const critical = item.channelsAtRisk.critical ?? 0
+          const attention = item.channelsAtRisk.attention ?? 0
+          return (
+            <div key={item.eventType} className="border border-border-soft px-3 py-2.5">
+              <p className="text-[13px] font-medium">{item.title}</p>
+              <p className="mt-2 flex flex-wrap gap-x-4 font-mono text-[12px] tabular-nums">
+                <span className="text-status-critical">{critical} крит.</span>
+                <span className="text-status-attention">{attention} вним.</span>
+                <span className="text-faint">{item.episodes30d ?? "—"} / 30д</span>
+                {item.next7DaysExpected !== null ? (
+                  <span className="text-muted-foreground">~{item.next7DaysExpected.toFixed(1)} / 7д</span>
+                ) : null}
+                {item.episodes365d !== null ? (
+                  <span className="text-faint">{item.episodes365d} / год</span>
+                ) : null}
+              </p>
+            </div>
+          )
+        })}
+      </div>
+    </section>
+  )
+}
+
+function HealthStrip() {
+  const tree = useAssetTree()
+  if (workflowMode !== "api") return null
+  if (tree.isPending || tree.isError || !tree.data?.length) return null
+  const ranked = [...tree.data]
+    .filter((item) => item.healthIndex !== null)
+    .sort((a, b) => (a.healthIndex ?? 101) - (b.healthIndex ?? 101))
+  const worst = ranked.slice(0, 6)
+  if (worst.length === 0) return null
+  const minHi = worst[0]?.healthIndex ?? null
+  const criticalCount = ranked.filter((item) => (item.healthIndex ?? 100) < 40).length
+  return (
+    <section className="mx-6 mt-4 border border-border bg-elevated p-5">
+      <SectionTitle
+        description="Индекс 0–100 по объектам СМВУ (хуже — ниже). HI &lt;40 критично · &lt;70 внимание"
+        action={
+          <Link className="text-[13px] text-vena" href="/effect">
+            Эффект →
+          </Link>
+        }
+      >
+        Индекс здоровья
+      </SectionTitle>
+      <p className="mb-3 font-mono text-[22px] tabular-nums">
+        {minHi}
+        <span className="ml-2 text-[13px] text-muted-foreground">
+          минимум · {criticalCount} объект{criticalCount === 1 ? "" : criticalCount < 5 ? "а" : "ов"} &lt;40
+        </span>
+      </p>
+      <ul className="grid gap-2 sm:grid-cols-2 xl:grid-cols-3">
+        {worst.map((item) => (
+          <li key={item.objectId} className="flex items-baseline justify-between gap-3 text-[13px]">
+            <span className="truncate">{item.label}</span>
+            <span
+              className={cn(
+                "font-mono tabular-nums",
+                (item.healthIndex ?? 100) < 40
+                  ? "text-status-critical"
+                  : (item.healthIndex ?? 100) < 70
+                    ? "text-status-attention"
+                    : "text-status-normal"
+              )}
+            >
+              {item.healthIndex}
+            </span>
+          </li>
+        ))}
+      </ul>
+    </section>
+  )
+}
+
 function PredictionInspector({
   row,
   onClose,
@@ -183,14 +280,14 @@ function PredictionInspector({
   const { selectAsset, setCompare } = useWorkspace()
   const router = useRouter()
   return (
-    <Inspector label="Dashboard prediction inspector">
+    <Inspector label="Инспектор прогноза на сводке">
       <InspectorHeader title={row.assetId} eyebrow={`${TYPE_LABEL[row.type]} · ${row.group}`} onClose={onClose}>
         <div className="mt-2">
           <Level level={row.level} />
         </div>
       </InspectorHeader>
       <InspectorBody>
-        <InspectorSection title={row.scoreType === "calibrated_probability" ? "Estimated probability" : "Risk score"}>
+        <InspectorSection title={row.scoreType === "calibrated_probability" ? "Оценка вероятности" : "Оценка риска"}>
           <p className="font-mono text-4xl tabular-nums">{row.level === "offline" ? "—" : formatScore(row.score, row.scoreType)}</p>
           <p className="mt-2 text-[12px] text-muted-foreground">
             {row.scoreType === "risk_score"
@@ -199,21 +296,21 @@ function PredictionInspector({
           </p>
           <dl className="mt-5 space-y-2 text-[12px]">
             <div className="flex justify-between">
-              <dt className="text-muted-foreground">Forecast window</dt>
+              <dt className="text-muted-foreground">Окно прогноза</dt>
               <dd className="font-mono">{row.horizon}h</dd>
             </div>
             <div className="flex justify-between">
-              <dt className="text-muted-foreground">Prediction time</dt>
+              <dt className="text-muted-foreground">Время прогноза</dt>
               <dd className="font-mono">{formatDateTime(row.time)} MSK</dd>
             </div>
           </dl>
         </InspectorSection>
-        <InspectorSection title="Forecast context">
+        <InspectorSection title="Контекст прогноза">
           <p className="text-[13px]">{row.name}</p>
-          <p className="mt-2 text-[12px] text-muted-foreground">{row.modelId ?? "Demo telemetry"}</p>
+          <p className="mt-2 text-[12px] text-muted-foreground">{row.modelId ?? "Демо-телеметрия"}</p>
           <p className="mt-3 text-[11px] text-faint">Точное время до отказа в источнике не указано. Горизонт — окно прогноза.</p>
         </InspectorSection>
-        <InspectorSection title="Why this risk">
+        <InspectorSection title="Почему этот риск">
           {row.factors.length ? (
             <ul className="space-y-3">
               {row.factors.map((factor, index) => (
@@ -245,10 +342,10 @@ function PredictionInspector({
             router.push("/timeline")
           }}
         >
-          Timeline
+          Хронология
         </Button>
         <Button className="flex-1" disabled={!row.registered || row.level === "offline"} onClick={() => onCreate(row)}>
-          Create action
+          Создать работу
         </Button>
       </InspectorFooter>
     </Inspector>
@@ -263,7 +360,7 @@ export function DashboardPage() {
   const actions = useActions()
   const [query, setQuery] = React.useState("")
   const [system, setSystem] = React.useState("all")
-  const [level, setLevel] = React.useState("all")
+  const [level, setLevel] = React.useState("focus")
   const [page, setPage] = React.useState(0)
   const [sort, setSort] = React.useState<DashboardSort>({ key: "risk", direction: "desc" })
   const [selectedId, setSelectedId] = React.useState<string | null>(null)
@@ -308,7 +405,7 @@ export function DashboardPage() {
   const reset = () => {
     setQuery("")
     setSystem("all")
-    setLevel("all")
+    setLevel("focus")
     setPage(0)
   }
   const refresh = () => {
@@ -341,12 +438,12 @@ export function DashboardPage() {
     <div className="flex size-full min-h-0 flex-col">
       <div className="flex shrink-0 flex-wrap items-center justify-between gap-4 border-b border-border px-6 py-4">
         <div className="flex items-baseline gap-4">
-          <h1 className="text-[26px] font-semibold tracking-[-0.01em]">Dashboard</h1>
-          <span className="font-mono text-[12px] text-faint">next {horizon}h</span>
+          <h1 className="text-[26px] font-semibold tracking-[-0.01em]">Сводка</h1>
+          <span className="font-mono text-[12px] text-faint">горизонт {horizon}ч</span>
         </div>
         <div className="flex flex-wrap items-center gap-3">
           <Segmented
-            label="Forecast horizon"
+            label="Горизонт прогноза"
             options={HORIZONS}
             value={horizon}
             onChange={(value) => {
@@ -355,12 +452,17 @@ export function DashboardPage() {
               setSelectedId(null)
             }}
           />
-          <Button variant="outline" size="sm" onClick={refresh} disabled={source.isFetching} aria-label="Refresh dashboard">
+          <Button variant="outline" size="sm" onClick={refresh} disabled={source.isFetching} aria-label="Обновить сводку">
             <RefreshCw className={cn("size-3.5", source.isFetching && "animate-spin")} />
           </Button>
           <Button variant="outline" size="sm" onClick={exportCsv} disabled={sourceUnavailable || !filtered.length}>
-            <ArrowDownToLine className="size-3.5" /> Export CSV
+            <ArrowDownToLine className="size-3.5" /> CSV
           </Button>
+          {workflowMode === "api" ? (
+            <Button asChild variant="outline" size="sm">
+              <Link href="/effect">Эффект</Link>
+            </Button>
+          ) : null}
         </div>
       </div>
       <div className="relative flex min-h-0 flex-1">
@@ -372,23 +474,25 @@ export function DashboardPage() {
                 ? "DEMO · Детерминированные данные стенда, не результаты модели"
                 : "API · Все прогнозы выбранного горизонта, без демо-подстановки"}
             </span>
-            <span className="font-mono">{sampleTime ? `${formatDateTime(sampleTime)} MSK` : "No snapshot"}</span>
+            <span className="font-mono">{sampleTime ? `${formatDateTime(sampleTime)} MSK` : "Нет снимка"}</span>
           </div>
-          {workflowMode === "api" && (snapshot.isError || snapshot.data?.stale || snapshot.data?.available === false) ? (
+          {workflowMode === "api" && snapshot.data?.stale ? (
+            <p role="status" className="border-b border-vena/40 bg-vena/10 px-6 py-3 text-[12px] text-vena">
+              Демонстрационный снимок: аналитика показывает зафиксированный срез стенда, а не сбой сервиса.
+            </p>
+          ) : workflowMode === "api" && (snapshot.isError || snapshot.data?.available === false) ? (
             <p
               role="status"
               className="border-b border-status-attention/40 bg-status-attention/10 px-6 py-3 text-[12px] text-status-attention"
             >
-              {snapshot.data?.stale
-                ? "Снимок устарел. Аналитика показывает исторический срез, не текущее состояние оборудования."
-                : "Свежесть снимка не подтверждена. Проверьте источник прогнозов."}
+              Свежесть снимка не подтверждена. Проверьте источник прогнозов.
             </p>
           ) : null}
-          <section aria-label="Dashboard filters" className="flex flex-wrap items-center gap-3 px-6 py-4">
+          <section aria-label="Фильтры сводки" className="flex flex-wrap items-center gap-3 px-6 py-4">
             <div className="relative min-w-48 flex-1">
               <Search className="pointer-events-none absolute top-2.5 left-2.5 size-3.5 text-faint" />
               <Input
-                aria-label="Search forecasts"
+                aria-label="Поиск прогнозов"
                 className="h-9 pl-8 text-[12px]"
                 placeholder="Объект, группа или модель…"
                 value={query}
@@ -398,45 +502,46 @@ export function DashboardPage() {
                 }}
               />
             </div>
-            <NativeSelect aria-label="System filter" value={system} onChange={(event) => changeSystem(event.target.value)}>
-              <NativeSelectOption value="all">All systems</NativeSelectOption>
+            <NativeSelect aria-label="Фильтр по системе" value={system} onChange={(event) => changeSystem(event.target.value)}>
+              <NativeSelectOption value="all">Все системы</NativeSelectOption>
               {TYPE_ORDER.map((type) => (
                 <NativeSelectOption key={type} value={type}>
                   {TYPE_LABEL[type]}
                 </NativeSelectOption>
               ))}
             </NativeSelect>
-            <NativeSelect aria-label="Risk filter" value={level} onChange={(event) => changeLevel(event.target.value)}>
-              <NativeSelectOption value="all">All risk levels</NativeSelectOption>
+            <NativeSelect aria-label="Фильтр по риску" value={level} onChange={(event) => changeLevel(event.target.value)}>
+              <NativeSelectOption value="focus">Требуют внимания</NativeSelectOption>
+              <NativeSelectOption value="all">Все уровни риска</NativeSelectOption>
               {LEVELS.map((value) => (
                 <NativeSelectOption key={value} value={value}>
                   {LABEL[value]}
                 </NativeSelectOption>
               ))}
             </NativeSelect>
-            {query || system !== "all" || level !== "all" ? (
+            {query || system !== "all" || level !== "focus" ? (
               <Button variant="ghost" size="sm" onClick={reset}>
-                Reset
+                Сбросить
               </Button>
             ) : null}
           </section>
-          <section aria-label="Operational summary" className="mx-6 grid grid-cols-2 border-y border-border lg:grid-cols-4">
+          <section aria-label="Оперативная сводка" className="mx-6 grid grid-cols-2 border-y border-border lg:grid-cols-4">
             {[
-              { label: "Assets in view", value: summary.assets, hint: `${summary.forecasts} прогнозов`, tone: "text-foreground" },
+              { label: "Объектов в выборке", value: summary.assets, hint: `${summary.forecasts} прогнозов`, tone: "text-foreground" },
               {
-                label: "Critical forecasts",
+                label: "Критичных прогнозов",
                 value: summary.counts.critical,
                 hint: `${summary.counts.attention} требуют внимания`,
                 tone: "text-status-critical",
               },
               {
-                label: "Without an action",
+                label: "Без работы",
                 value: actionUnavailable ? null : summary.unassigned,
                 hint: "Объекты высокого риска без открытых работ",
                 tone: "text-status-attention",
               },
               {
-                label: "Open actions",
+                label: "Открытых работ",
                 value: actionUnavailable ? null : summary.open.length,
                 hint: "По объектам текущей выборки",
                 tone: "text-vena",
@@ -457,16 +562,18 @@ export function DashboardPage() {
             </div>
           ) : source.isError ? (
             <StateMessage
-              title="Forecasts unavailable"
+              title="Прогнозы недоступны"
               description="Не удалось получить полный набор прогнозов. Частичные данные не используются для сводки."
               action={
                 <Button size="sm" variant="outline" onClick={refresh}>
-                  Retry
+                  Повторить
                 </Button>
               }
             />
           ) : (
             <>
+              <ScenarioExposure />
+              <HealthStrip />
               <div className="mx-6 mt-6 grid border border-border bg-elevated lg:grid-cols-3">
                 <RiskDistribution rows={filtered} onLevel={changeLevel} />
                 <SystemDistribution rows={filtered} onSystem={changeSystem} />
@@ -474,20 +581,20 @@ export function DashboardPage() {
                   <SectionTitle
                     description="Статусы работ по выбранным объектам"
                     action={
-                      <Link className="text-vena" href="/actions" aria-label="Open action plan">
+                      <Link className="text-vena" href="/actions" aria-label="Открыть план работ">
                         <ArrowUpRight className="size-4" />
                       </Link>
                     }
                   >
-                    Response & outcomes
+                    Работы и исходы
                   </SectionTitle>
                   {actionUnavailable ? (
                     <StateMessage
-                      title="Actions unavailable"
+                      title="Работы недоступны"
                       description="Сводка работ недоступна."
                       action={
                         <Button size="sm" variant="outline" onClick={() => actions.refetch()}>
-                          Retry actions
+                          Повторить
                         </Button>
                       }
                     />
@@ -496,11 +603,11 @@ export function DashboardPage() {
                       <div className="grid grid-cols-2 gap-4 border-b border-border-soft pb-4">
                         <div>
                           <p className="font-mono text-3xl">{summary.open.length}</p>
-                          <p className="mt-2 text-[11px] text-faint">OPEN</p>
+                          <p className="mt-2 text-[11px] text-faint">ОТКРЫТЫ</p>
                         </div>
                         <div>
                           <p className="font-mono text-3xl">{summary.closed.length}</p>
-                          <p className="mt-2 text-[11px] text-faint">CLOSED</p>
+                          <p className="mt-2 text-[11px] text-faint">ЗАКРЫТЫ</p>
                         </div>
                       </div>
                       <div className="mt-4 space-y-3">
@@ -529,22 +636,22 @@ export function DashboardPage() {
                   description="Нажмите на заголовок столбца, чтобы изменить порядок. Повторное нажатие меняет направление."
                   action={
                     <Link href="/network" className="flex items-center gap-1 text-[12px] whitespace-nowrap text-vena">
-                      Network & map <ArrowUpRight className="size-3.5" />
+                      Сеть и карта <ArrowUpRight className="size-3.5" />
                     </Link>
                   }
                 >
-                  Forecast register <span className="ml-2 font-mono text-faint">{filtered.length}</span>
+                  Реестр прогнозов <span className="ml-2 font-mono text-faint">{filtered.length}</span>
                 </SectionTitle>
                 {!filtered.length ? (
                   <StateMessage
-                    title="No matching forecasts"
+                    title="Нет подходящих прогнозов"
                     description={
                       rows.length ? "Измените поиск, систему или уровень риска." : `В источнике нет прогнозов для горизонта ${horizon}h.`
                     }
                     action={
                       rows.length ? (
                         <Button variant="outline" size="sm" onClick={reset}>
-                          Reset filters
+                          Сбросить фильтры
                         </Button>
                       ) : undefined
                     }
@@ -569,7 +676,7 @@ export function DashboardPage() {
                                     type="button"
                                     onClick={() => changeSort(column.key)}
                                     disabled={column.key === "response" && actionUnavailable}
-                                    aria-label={`Sort by ${column.label}`}
+                                    aria-label={`Сортировать по ${column.label}`}
                                     className={cn(
                                       "flex w-full items-center gap-2 px-3 py-3 text-left tracking-[0.08em] uppercase outline-none hover:bg-surface/60 focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50",
                                       active && "text-vena"
@@ -582,7 +689,7 @@ export function DashboardPage() {
                               )
                             })}
                             <th scope="col" className="px-3 py-3">
-                              <span className="sr-only">Details</span>
+                              <span className="sr-only">Подробнее</span>
                             </th>
                           </tr>
                         </thead>
@@ -609,18 +716,18 @@ export function DashboardPage() {
                                 <td className="px-3 py-3">
                                   <span className="font-mono">{row.level === "offline" ? "—" : formatScore(row.score, row.scoreType)}</span>
                                   <p className="mt-1 text-[10px] text-faint">
-                                    {row.scoreType === "calibrated_probability" ? "Probability" : "Risk score"}
+                                    {row.scoreType === "calibrated_probability" ? "Вероятность" : "Скор риска"}
                                   </p>
                                 </td>
                                 <td className="px-3 py-3 font-mono">{row.horizon}h</td>
                                 <td className="px-3 py-3 text-muted-foreground">
-                                  {actionUnavailable ? "Unavailable" : (responses.get(row.assetId) ?? "No open action")}
+                                  {actionUnavailable ? "Недоступно" : (responses.get(row.assetId) ?? "Нет открытой работы")}
                                 </td>
                                 <td className="px-3 py-3">
                                   <Button
                                     variant="ghost"
                                     size="sm"
-                                    aria-label={`View forecast ${row.assetId}`}
+                                    aria-label={`Открыть прогноз ${row.assetId}`}
                                     onClick={() => setSelectedId(row.id)}
                                   >
                                     <ArrowUpRight className="size-4" />
@@ -638,13 +745,13 @@ export function DashboardPage() {
                       </span>
                       <div className="flex items-center gap-3">
                         <Button variant="ghost" size="sm" disabled={currentPage === 0} onClick={() => setPage(currentPage - 1)}>
-                          Previous
+                          Назад
                         </Button>
                         <span className="font-mono text-[11px] text-faint">
                           {currentPage + 1} / {totalPages}
                         </span>
                         <Button variant="ghost" size="sm" disabled={currentPage + 1 >= totalPages} onClick={() => setPage(currentPage + 1)}>
-                          Next
+                          Далее
                         </Button>
                       </div>
                     </div>
@@ -652,10 +759,15 @@ export function DashboardPage() {
                 )}
               </section>
               <div className="mx-6 mb-6 flex flex-wrap items-center justify-between gap-3 border-t border-border-soft pt-3 text-[11px] text-faint">
-                <span>VENA · Snapshot analytics · {workflowMode === "demo" ? "Демо-срез" : "Результаты моделей"}</span>
-                <Link href="/network" className="text-vena">
-                  Перейти к объектам и карте ↗
-                </Link>
+                <span>VENA · Аналитика снимка · {workflowMode === "demo" ? "Демо-срез" : "Результаты моделей"}</span>
+                <span className="flex gap-4">
+                  <Link href="/effect" className="text-vena">
+                    Эффект и XLSX ↗
+                  </Link>
+                  <Link href="/network" className="text-vena">
+                    Объекты и карта ↗
+                  </Link>
+                </span>
               </div>
             </>
           )}

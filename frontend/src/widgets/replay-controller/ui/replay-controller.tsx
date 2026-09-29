@@ -19,7 +19,7 @@ export function ReplayDock({ className }: { className?: string }) {
       className={cn("flex h-8 items-center gap-3 border border-status-attention/45 bg-status-attention/10 pr-1 pl-2.5", className)}
     >
       <span className="flex items-baseline gap-2 whitespace-nowrap text-status-attention">
-        <span className="text-[11px] font-semibold tracking-[0.12em] uppercase">Replay</span>
+        <span className="text-[11px] font-semibold tracking-[0.12em] uppercase">Запись</span>
         <span className="font-mono text-[11px] tabular-nums">
           {formatFullDay(time)} · {formatClockSeconds(time)}
         </span>

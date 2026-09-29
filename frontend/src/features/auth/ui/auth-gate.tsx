@@ -85,7 +85,7 @@ export function AuthGate({ children }: { children: React.ReactNode }) {
         </div>
         <label className="mb-2 block text-sm text-muted-foreground" htmlFor="vena-login">Email или логин</label>
         <Input id="vena-login" autoComplete="username" required maxLength={254} value={login}
-          onChange={(e) => { setLogin(e.target.value); setError(null) }} placeholder="user@example.com" />
+          onChange={(e) => { setLogin(e.target.value); setError(null) }} placeholder="user1" />
         <label className="mt-4 mb-2 block text-sm text-muted-foreground" htmlFor="vena-password">Пароль</label>
         <Input id="vena-password" type="password" autoComplete="current-password" required maxLength={1024}
           value={password} onChange={(e) => { setPassword(e.target.value); setError(null) }} />
@@ -93,6 +93,20 @@ export function AuthGate({ children }: { children: React.ReactNode }) {
         <Button type="submit" className="mt-6 w-full" disabled={pending || !login.trim() || !password}>
           {pending ? "Вход…" : "Войти"}
         </Button>
+        <div className="mt-6 border-t border-border-soft pt-4 text-[13px] text-muted-foreground">
+          <p className="font-medium text-foreground">Демо-доступ для жюри</p>
+          <p className="mt-1">
+            Логин <span className="font-mono text-foreground">user1</span>
+            {" · "}
+            пароль <span className="font-mono text-foreground">0987654321</span>
+          </p>
+          <p className="mt-1 text-[12px] text-faint">Также: user2–user20 / тот же пароль. Роль — диспетчер.</p>
+          <p className="mt-3 border-t border-border-soft pt-3 text-[12px] leading-relaxed text-muted-foreground">
+            После входа: <span className="text-foreground">Пульс</span> → карточка инцидента →{" "}
+            <span className="text-foreground">Создать работу</span>. Для руководства:{" "}
+            <span className="text-foreground">Сводка</span> и <span className="text-foreground">Эффект</span>.
+          </p>
+        </div>
       </form>
     </div>
   )

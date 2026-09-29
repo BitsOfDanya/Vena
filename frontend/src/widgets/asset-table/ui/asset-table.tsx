@@ -16,14 +16,14 @@ import { cn } from "@/shared/lib/utils"
 type SortKey = "risk" | "id" | "lastEvent"
 
 const COLUMNS: { key: SortKey | null; label: string; className: string }[] = [
-  { key: "id", label: "Asset", className: "w-[7rem]" },
-  { key: null, label: "Type", className: "w-[6rem]" },
-  { key: null, label: "Group", className: "w-[6rem]" },
-  { key: null, label: "State", className: "w-[8rem]" },
-  { key: "risk", label: "Risk", className: "w-[7rem]" },
-  { key: null, label: "Forecast", className: "w-[6rem]" },
-  { key: "lastEvent", label: "Last event", className: "w-[7rem]" },
-  { key: null, label: "Open action", className: "" },
+  { key: "id", label: "Объект", className: "w-[7rem]" },
+  { key: null, label: "Тип", className: "w-[6rem]" },
+  { key: null, label: "Группа", className: "w-[6rem]" },
+  { key: null, label: "Состояние", className: "w-[8rem]" },
+  { key: "risk", label: "Риск", className: "w-[7rem]" },
+  { key: null, label: "Прогноз", className: "w-[6rem]" },
+  { key: "lastEvent", label: "Последнее событие", className: "w-[7rem]" },
+  { key: null, label: "Открытая работа", className: "" },
 ]
 
 export function AssetTable({

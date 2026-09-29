@@ -16,11 +16,21 @@ def _catalogue(path: Path, mtime: float) -> dict[str, Any]:
     return data
 
 
-def recommend(settings: Settings, scenario: str, lead: Prediction) -> Recommendation | None:
+def load_catalogue(settings: Settings) -> dict[str, Any]:
     path = settings.ml_dir / "configs" / "recommendations.json"
     if not path.is_file():
-        return None
-    catalogue = _catalogue(path, path.stat().st_mtime)
+        return {}
+    return _catalogue(path, path.stat().st_mtime)
+
+
+def driver_hints(settings: Settings) -> dict[str, str]:
+    catalogue = load_catalogue(settings)
+    raw = catalogue.get("drivers", {})
+    return {str(key): str(value) for key, value in raw.items()}
+
+
+def recommend(settings: Settings, scenario: str, lead: Prediction) -> Recommendation | None:
+    catalogue = load_catalogue(settings)
     entry = catalogue.get("scenarios", {}).get(scenario)
     if entry is None:
         return None

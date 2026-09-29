@@ -6,11 +6,13 @@ import { useAssets, useNetwork, usePulse } from "@/entities/infrastructure"
 import { useActions } from "@/entities/maintenance"
 import { CreateActionSheet, type ActionDraft } from "@/features/create-action"
 import { useWorkspace } from "@/features/workspace"
+import { workflowMode } from "@/shared/config/env"
 import { useIsMobile } from "@/shared/lib/hooks/use-mobile"
 import { Button } from "@/shared/ui/button"
 import { LoadingBar, StateMessage } from "@/shared/ui/state-message"
 import { AssetDiagnostic } from "@/widgets/asset-diagnostic"
 import { AssetTable } from "@/widgets/asset-table"
+import { AssetTreePanel } from "@/widgets/asset-tree"
 import { NetworkCanvas } from "@/widgets/network-canvas"
 import { NetworkInspector } from "@/widgets/network-inspector"
 import { NetworkMap } from "@/widgets/network-map"
@@ -21,14 +23,15 @@ export function NetworkPage() {
   const isMobile = useIsMobile()
   const network = useNetwork(now, horizon)
   const pulse = usePulse(now)
+  const apiMode = workflowMode === "api"
   const [query, setQuery] = React.useState("")
   const [system, setSystem] = React.useState<SystemFilter>("all")
-  const [risk, setRisk] = React.useState<RiskFilter>("all")
+  const [risk, setRisk] = React.useState<RiskFilter>(apiMode ? "attention" : "all")
   const [diagnostic, setDiagnostic] = React.useState(false)
   const [sheetOpen, setSheetOpen] = React.useState(false)
   const [draft, setDraft] = React.useState<ActionDraft>({})
   const [focusId, setFocusId] = React.useState<string | null>(selectedAssetId)
-  const [mode, setMode] = React.useState<NetworkMode>("network")
+  const [mode, setMode] = React.useState<NetworkMode>(apiMode ? "tree" : "network")
   const assets = useAssets(now, horizon)
   const actions = useActions()
 
@@ -89,8 +92,14 @@ export function NetworkPage() {
       <NetworkToolbar
         mode={mode}
         onMode={setMode}
-        title="Infrastructure Network"
-        descriptor={network.data ? `${network.data.groups.length} групп · ${network.data.nodes.length} объектов` : ""}
+        title="Инфраструктурная сеть"
+        descriptor={
+          mode === "tree"
+            ? "объект → секция → канал · Health Index"
+            : network.data
+              ? `${network.data.groups.length} групп · ${network.data.nodes.length} объектов`
+              : ""
+        }
         query={query}
         onQuery={setQuery}
         onSubmitQuery={() => {
@@ -106,10 +115,22 @@ export function NetworkPage() {
         onRisk={setRisk}
         horizon={horizon}
         onHorizon={setHorizon}
+        showTree={apiMode}
       />
       <div className="relative flex min-h-0 flex-1">
         <div className="relative min-w-0 flex-1">
-          {network.isPending ? (
+          {mode === "tree" ? (
+            <AssetTreePanel
+              query={query}
+              selectedId={selectedAssetId}
+              system={system}
+              risk={risk}
+              onSelect={(id) => {
+                selectAsset(id)
+                setFocusId(null)
+              }}
+            />
+          ) : network.isPending ? (
             <LoadingBar />
           ) : network.isError ? (
             <StateMessage
@@ -117,7 +138,7 @@ export function NetworkPage() {
               description="Не удалось загрузить схему инфраструктуры."
               action={
                 <Button variant="outline" size="sm" onClick={() => network.refetch()}>
-                  Retry
+                  Повторить
                 </Button>
               }
             />

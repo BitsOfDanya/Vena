@@ -22,11 +22,11 @@ const AXIS = 26
 const LABEL_WIDTH = 230
 
 export const LEGEND = [
-  { kind: "event" as const, label: "event" },
-  { kind: "transition" as const, label: "state change" },
-  { kind: "attention" as const, label: "attention" },
-  { kind: "critical" as const, label: "critical" },
-  { kind: "sustained" as const, label: "sustained" },
+  { kind: "event" as const, label: "событие" },
+  { kind: "transition" as const, label: "смена состояния" },
+  { kind: "attention" as const, label: "внимание" },
+  { kind: "critical" as const, label: "критично" },
+  { kind: "sustained" as const, label: "устойчивое" },
 ]
 
 export type PulseSelection = { kind: "cluster" | "pattern"; id: string }
@@ -257,14 +257,14 @@ export function PulseSurface({
           >
             <span className="text-[13px] font-semibold tracking-[0.12em] text-vena uppercase">Pattern {patternLabel(item.pattern)}</span>
             <span className="font-mono text-[12px] text-muted-foreground tabular-nums">
-              {item.pattern.systems.length} systems · {item.pattern.events} events
+              {item.pattern.systems.length} систем · {item.pattern.events} событий
             </span>
             {showRange ? (
               <span className="font-mono text-[12px] text-faint tabular-nums">
                 {formatClock(item.pattern.start)}–{formatClock(item.pattern.end)}
               </span>
             ) : null}
-            <span className="text-[12px] text-foreground underline-offset-4 group-hover:underline">Inspect →</span>
+            <span className="text-[12px] text-foreground underline-offset-4 group-hover:underline">Открыть →</span>
           </button>
         )
       })}

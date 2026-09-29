@@ -18,12 +18,14 @@ import {
 import { OPEN_STATUSES, useActions } from "@/entities/maintenance"
 import { useAcknowledgeNotification, useNotifications } from "@/entities/notification"
 import {
+  SCENARIO_LABEL,
   formatProbability,
   formatProbabilityDelta,
   useBackendSituations,
   useCriticalPredictions,
   useRiskRising,
   useSnapshotStatus,
+  type PredictionScenario,
 } from "@/entities/prediction"
 import { CreateActionSheet, type ActionDraft } from "@/features/create-action"
 import { useWorkspace } from "@/features/workspace"
@@ -40,9 +42,17 @@ import { PulseSummaryModules, ShiftSummary, SnapshotLine } from "@/widgets/pulse
 import { SituationRail } from "@/widgets/situation-rail"
 
 const WINDOWS = [
-  { value: 1, label: "1h" },
-  { value: 6, label: "6h" },
-  { value: 24, label: "24h" },
+  { value: 1, label: "1ч" },
+  { value: 6, label: "6ч" },
+  { value: 24, label: "24ч" },
+]
+
+const SCENARIO_FILTERS: { value: "all" | PredictionScenario; label: string }[] = [
+  { value: "all", label: "Все" },
+  { value: "fire", label: SCENARIO_LABEL.fire },
+  { value: "flooding", label: SCENARIO_LABEL.flooding },
+  { value: "power_loss", label: SCENARIO_LABEL.power_loss },
+  { value: "ventilation", label: SCENARIO_LABEL.ventilation },
 ]
 
 const TAPE_PREVIEW = 4
@@ -65,13 +75,16 @@ export function PulsePage() {
   const router = useRouter()
   const { now, horizon, mode, selectAsset, setCompare } = useWorkspace()
   const [windowHours, setWindowHours] = React.useState(6)
+  const [scenarioFilter, setScenarioFilter] = React.useState<"all" | PredictionScenario>("all")
   const [selection, setSelection] = React.useState<PulseSelection | null>(null)
   const [tapeOpen, setTapeOpen] = React.useState(false)
+  const [demoTelemetryOpen, setDemoTelemetryOpen] = React.useState(false)
   const [acknowledged, setAcknowledged] = React.useState<string[]>([])
   const [sheetOpen, setSheetOpen] = React.useState(false)
   const [draft, setDraft] = React.useState<ActionDraft>({})
 
   const apiMode = workflowMode === "api"
+  const hideDemoTelemetry = apiMode && dataMode === "demo" && !demoTelemetryOpen
   const pulse = usePulse(now, windowHours)
   const demoSummary = usePulseSummary(now, horizon)
   const snapshot = useSnapshotStatus()
@@ -88,10 +101,10 @@ export function PulsePage() {
   const pattern = selection?.kind === "pattern" ? (data?.patterns.find((item) => item.id === selection.id) ?? null) : null
   const patternClusters = pattern && data ? data.clusters.filter((item) => pattern.clusterIds.includes(item.id)) : []
   const descriptor = data
-    ? `${mode === "replay" ? "REPLAY" : "LIVE"} · ${formatClock(data.from)}–${formatClock(data.now)}`
+    ? `${mode === "replay" ? "ПОВТОР" : "ЖИВОЙ"} · ${formatClock(data.from)}–${formatClock(data.now)}`
     : mode === "replay"
-      ? "REPLAY"
-      : "LIVE"
+      ? "ПОВТОР"
+      : "ЖИВОЙ"
 
   const summary = apiMode ? undefined : demoSummary.data
   const predictionsUnavailable = apiMode && (snapshot.isError || snapshot.data?.available === false)
@@ -110,6 +123,13 @@ export function PulsePage() {
     horizon: (item.forecastHorizon ?? null) as Situation["horizon"],
     primaryReason: item.primaryReason,
     status: item.status,
+    scenario: item.scenario,
+    location: item.location,
+    assetCount: item.assetCount,
+    incidentProbability: item.incidentProbability,
+    healthIndex: item.healthIndex,
+    recommendation: item.recommendation,
+    history: item.history,
   }))
 
   const openActions = (actions.data ?? []).filter((action) => OPEN_STATUSES.includes(action.status))
@@ -132,6 +152,9 @@ export function PulsePage() {
     }
     return situation
   })
+  const filtered = resolved.filter(
+    (situation) => scenarioFilter === "all" || situation.scenario === scenarioFilter || (!situation.scenario && scenarioFilter === "equipment")
+  )
 
   const clusterPatternOf = (assetType: AssetType | undefined, timestamp: number) => {
     if (!data || !assetType) return null
@@ -146,7 +169,7 @@ export function PulsePage() {
     }
     selectAsset(situation.assetIds[0])
     setCompare(situation.assetIds.slice(0, 5))
-    router.push("/timeline")
+    router.push("/network")
   }
 
   function acknowledgeSituation(situation: Situation) {
@@ -167,9 +190,12 @@ export function PulsePage() {
             (item) => item.assetId === assetId,
           )
         : undefined
+    const reason = situation.recommendation
+      ? `${situation.recommendation.title}${situation.recommendation.hint ? ` — ${situation.recommendation.hint}` : ""}`
+      : `${situation.title}: ${situation.primaryReason}`
     setDraft({
       assetId,
-      reason: `${situation.title}: ${situation.primaryReason}`,
+      reason,
       priority: situation.severity === "critical" ? "high" : "medium",
       sourcePredictionId: prediction?.id,
       sourceModelId: prediction?.modelId,
@@ -183,13 +209,13 @@ export function PulsePage() {
     <div className="flex size-full min-h-0 flex-col">
       <div className="flex shrink-0 flex-wrap items-center gap-x-8 gap-y-3 px-6 pt-4 pb-3">
         <h1 className="flex items-baseline gap-3">
-          <span className="text-[26px] font-semibold tracking-[-0.01em]">System Pulse</span>
+          <span className="text-[26px] font-semibold tracking-[-0.01em]">Пульс системы</span>
           <span className={cn("font-mono text-[13px] tabular-nums", mode === "replay" ? "text-status-attention" : "text-faint")}>
             {descriptor}
           </span>
         </h1>
         <div className="ml-auto flex flex-wrap items-center gap-2.5">
-          <Segmented label="Pulse window" value={windowHours} onChange={setWindowHours} options={WINDOWS} />
+          <Segmented label="Окно пульса" value={windowHours} onChange={setWindowHours} options={WINDOWS} />
           <ReplayEntry />
         </div>
       </div>
@@ -241,11 +267,25 @@ export function PulsePage() {
 
       <div className="flex min-h-0 flex-1">
         <div className="relative flex min-w-0 flex-1 flex-col">
-          <section aria-label="Needs attention" className="flex max-h-[32%] shrink-0 flex-col px-6 pb-3">
-            <SectionTitle count={resolved.length}>Needs attention</SectionTitle>
+          <section aria-label="Требуют внимания" className="flex max-h-[38%] shrink-0 flex-col px-6 pb-3">
+            <div className="mb-2 flex flex-wrap items-baseline gap-x-4 gap-y-2">
+              <SectionTitle count={filtered.length}>Требуют внимания</SectionTitle>
+              <Segmented
+                label="Сценарий"
+                value={scenarioFilter}
+                onChange={setScenarioFilter}
+                options={SCENARIO_FILTERS.map((item) => ({
+                  ...item,
+                  label:
+                    item.value === "all"
+                      ? `${item.label} (${resolved.length})`
+                      : `${item.label} (${resolved.filter((s) => s.scenario === item.value).length})`,
+                }))}
+              />
+            </div>
             {predictionsUnavailable ? (
               <StateMessage
-                title="Predictions unavailable"
+                title="Прогнозы недоступны"
                 description="Бэкенд не отдаёт снимок прогнозов, риски не рассчитываются. Демонстрационные значения в этом режиме не подставляются."
               />
             ) : (apiMode ? backendSituations.isPending : demoSituations.isPending) ? (
@@ -253,7 +293,7 @@ export function PulsePage() {
             ) : (
               <SituationRail
                 className="min-h-0 overflow-y-auto"
-                situations={resolved}
+                situations={filtered}
                 now={now}
                 onInspect={inspect}
                 onAcknowledge={acknowledgeSituation}
@@ -262,50 +302,69 @@ export function PulsePage() {
             )}
           </section>
 
-          <section aria-label="Activity" className="flex min-h-[200px] flex-1 flex-col border-t border-border-soft px-6 pt-2.5">
+          <section aria-label="Активность" className="flex min-h-[120px] flex-1 flex-col border-t border-border-soft px-6 pt-2.5">
             <div className="mb-2 flex items-baseline gap-4">
               <h2 className="flex items-baseline gap-2.5 text-[13px] font-medium tracking-[0.1em] text-muted-foreground uppercase">
-                Activity · last {windowHours} hours
+                Активность · последние {windowHours} ч
                 {apiMode && dataMode === "demo" ? (
-                  <span className="text-[11px] tracking-[0.06em] text-faint normal-case">demo telemetry</span>
+                  <span className="text-[11px] tracking-[0.06em] text-faint normal-case">демо-телеметрия</span>
                 ) : null}
               </h2>
-              <ul aria-label="Legend" className="ml-auto hidden items-center gap-3 text-[11px] text-faint lg:flex">
-                {LEGEND.map((item) => (
-                  <li key={item.label} className="flex items-center gap-1">
-                    <EventGlyph kind={item.kind} />
-                    {item.label}
-                  </li>
-                ))}
-              </ul>
+              {apiMode && dataMode === "demo" ? (
+                <button
+                  type="button"
+                  onClick={() => setDemoTelemetryOpen((open) => !open)}
+                  className="text-[12px] text-vena underline-offset-4 outline-none hover:underline focus-visible:ring-2 focus-visible:ring-ring/60"
+                >
+                  {demoTelemetryOpen ? "Скрыть демо" : "Показать демо"}
+                </button>
+              ) : null}
+              {!hideDemoTelemetry ? (
+                <ul aria-label="Легенда" className="ml-auto hidden items-center gap-3 text-[11px] text-faint lg:flex">
+                  {LEGEND.map((item) => (
+                    <li key={item.label} className="flex items-center gap-1">
+                      <EventGlyph kind={item.kind} />
+                      {item.label}
+                    </li>
+                  ))}
+                </ul>
+              ) : null}
             </div>
+            {hideDemoTelemetry ? (
+              <p className="mb-4 text-[13px] text-muted-foreground">
+                Демо-телеметрия свёрнута: риски и очередь выше — из снимка моделей. Схема событий стенда не смешивается с
+                прогнозами.
+              </p>
+            ) : (
             <div className="min-h-0 flex-1 px-1">
               {pulse.isPending ? (
                 <LoadingBar />
               ) : pulse.isError ? (
                 <StateMessage
-                  title="Pulse unavailable"
+                  title="Пульс недоступен"
                   description="Не удалось загрузить данные об активности."
                   action={
                     <Button variant="outline" size="sm" onClick={() => pulse.refetch()}>
-                      Retry
+                      Повторить
                     </Button>
                   }
                 />
               ) : data && data.lanes.every((lane) => lane.events.length === 0) ? (
-                <StateMessage title="No activity" description="В выбранном окне нет событий." />
+                <StateMessage title="Нет активности" description="В выбранном окне нет событий." />
               ) : data ? (
                 <PulseSurface data={data} selection={selection} onSelect={setSelection} />
               ) : null}
             </div>
+            )}
           </section>
 
-          <section aria-label="Recent events" className="mt-3 shrink-0 border-t border-border bg-surface">
+          {hideDemoTelemetry ? null : (
+          <section aria-label="Недавние события" className="mt-3 shrink-0 border-t border-border bg-surface">
             <div className="flex items-center gap-3 px-6 py-2">
               <h2 className="flex items-baseline gap-2.5 text-[13px] font-medium tracking-[0.1em] text-muted-foreground uppercase">
-                Recent events
+                Недавние события
                 {apiMode && dataMode === "demo" ? (
-                  <span className="text-[11px] tracking-[0.06em] text-faint normal-case">demo telemetry</span>
+                  <span className="text-[11px] tracking-[0.06em] text-faint normal-case">демо-телеметрия</span>
                 ) : null}
               </h2>
               <span className="font-mono text-[12px] text-faint tabular-nums">{data?.recent.length ?? 0}</span>
@@ -315,7 +374,7 @@ export function PulsePage() {
                 aria-expanded={tapeOpen}
                 className="ml-auto text-[13px] text-vena underline-offset-4 outline-none hover:underline focus-visible:ring-2 focus-visible:ring-ring/60"
               >
-                {tapeOpen ? "Show less" : "All events"} →
+                {tapeOpen ? "Свернуть" : "Все события"} →
               </button>
             </div>
             {data && data.recent.length > 0 ? (
@@ -335,12 +394,12 @@ export function PulsePage() {
                         >
                           <span className="font-mono text-muted-foreground tabular-nums">{formatClock(event.timestamp)}</span>
                           <span className="font-mono">{event.assetId}</span>
-                          <span className="text-muted-foreground">{type ? TYPE_LABEL[type] : "Sensor"}</span>
+                          <span className="text-muted-foreground">{type ? TYPE_LABEL[type] : "Датчик"}</span>
                           <span className="truncate">
                             <span className="text-foreground">{EVENT_TYPE_LABEL[event.type]}</span>
                             <span className="text-muted-foreground"> · {event.state}</span>
                           </span>
-                          <span className="text-[12px] text-vena">{linked ? `Pattern ${patternLabel(linked)}` : ""}</span>
+                          <span className="text-[12px] text-vena">{linked ? `Паттерн ${patternLabel(linked)}` : ""}</span>
                           <EventGlyph kind={glyphKind(event)} className="size-3.5" />
                         </button>
                       </li>
@@ -353,6 +412,7 @@ export function PulsePage() {
               </p>
             )}
           </section>
+          )}
         </div>
         {cluster ? <ClusterInspector cluster={cluster} onClose={() => setSelection(null)} /> : null}
         {pattern ? (

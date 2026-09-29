@@ -17,9 +17,9 @@ export function SettingsAuditPage() {
   })
 
   return (
-    <SettingsShell title="Audit" descriptor="RBAC journal">
+    <SettingsShell title="Аудит" descriptor="журнал RBAC">
       <SettingsSection
-        title="Recent entries"
+        title="Последние записи"
         description="Требуется роль admin при включённой аутентификации. Записи появляются при мутациях actions / settings / spatial / SMVU."
       >
         {audit.isPending ? (
@@ -30,7 +30,7 @@ export function SettingsAuditPage() {
             description="Нужна учётная запись администратора, либо сервис временно недоступен."
             action={
               <Button variant="outline" size="sm" onClick={() => audit.refetch()}>
-                Retry
+                Повторить
               </Button>
             }
           />
@@ -41,10 +41,10 @@ export function SettingsAuditPage() {
             <table className="w-full min-w-[640px] text-left text-[13px]">
               <thead className="border-b border-border text-[11px] tracking-[0.08em] text-faint uppercase">
                 <tr>
-                  <th className="px-4 py-2 font-medium">Time</th>
-                  <th className="px-4 py-2 font-medium">Actor</th>
-                  <th className="px-4 py-2 font-medium">Action</th>
-                  <th className="px-4 py-2 font-medium">Resource</th>
+                  <th className="px-4 py-2 font-medium">Время</th>
+                  <th className="px-4 py-2 font-medium">Исполнитель</th>
+                  <th className="px-4 py-2 font-medium">Действие</th>
+                  <th className="px-4 py-2 font-medium">Ресурс</th>
                 </tr>
               </thead>
               <tbody>

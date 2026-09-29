@@ -20,21 +20,26 @@ import {
   CommandShortcut,
 } from "@/shared/ui/command"
 
-const COMMANDS = [
-  { href: "/actions", label: "Create action", icon: ListChecks },
-  { href: "/settings/notifications", label: "Notification settings", icon: BellRing },
-  { href: "/settings/integrations", label: "Integrations", icon: Plug },
-  { href: "/settings/security", label: "Security / Password", icon: SlidersHorizontal },
-  { href: "/settings/audit", label: "Audit log", icon: ListChecks },
-  { href: "/settings", label: "Settings", icon: SlidersHorizontal },
+const NAVIGATION = [
+  { href: "/pulse", label: "Пульс", icon: Activity },
+  { href: "/network", label: "Сеть", icon: Network },
+  { href: "/timeline", label: "Хронология", icon: Waves },
+  { href: "/actions", label: "Работы", icon: ListChecks },
+  { href: "/alarms", label: "Алармы", icon: BellRing },
+  { href: "/journal", label: "Журнал", icon: ListChecks },
+  { href: "/dashboard", label: "Сводка", icon: LayoutDashboard },
+  { href: "/effect", label: "Эффект", icon: LayoutDashboard },
 ] as const
 
-const NAVIGATION = [
-  { href: "/pulse", label: "Open Pulse", icon: Activity },
-  { href: "/network", label: "Open Network", icon: Network },
-  { href: "/timeline", label: "Open Timeline", icon: Waves },
-  { href: "/actions", label: "Open Actions", icon: ListChecks },
-  { href: "/dashboard", label: "Open Dashboard", icon: LayoutDashboard },
+const COMMANDS = [
+  { href: "/actions", label: "Создать работу", icon: ListChecks },
+  { href: "/pulse", label: "Маршрут защиты: Пульс", icon: Activity },
+  { href: "/effect", label: "Отчёт для руководства", icon: LayoutDashboard },
+  { href: "/settings/notifications", label: "Настройки уведомлений", icon: BellRing },
+  { href: "/settings/integrations", label: "Интеграции", icon: Plug },
+  { href: "/settings/security", label: "Безопасность / пароль", icon: SlidersHorizontal },
+  { href: "/settings/audit", label: "Журнал аудита", icon: ListChecks },
+  { href: "/settings", label: "Настройки", icon: SlidersHorizontal },
 ] as const
 
 export function CommandPalette({ open, onOpenChange }: { open: boolean; onOpenChange: (open: boolean) => void }) {
@@ -80,7 +85,7 @@ export function CommandPalette({ open, onOpenChange }: { open: boolean; onOpenCh
         onOpenChange(next)
         if (!next) setQuery("")
       }}
-      title="Search"
+      title="Поиск"
       description="Найдите объект, ID канала или откройте раздел"
       className="max-w-lg"
     >
@@ -89,7 +94,7 @@ export function CommandPalette({ open, onOpenChange }: { open: boolean; onOpenCh
         <CommandList className="max-h-80">
           <CommandEmpty>Ничего не найдено по этому запросу.</CommandEmpty>
           {navigation.length > 0 ? (
-            <CommandGroup heading="Workspaces">
+            <CommandGroup heading="Разделы">
               {navigation.map(({ href, label, icon: Icon }) => (
                 <CommandItem
                   key={href}
@@ -105,7 +110,7 @@ export function CommandPalette({ open, onOpenChange }: { open: boolean; onOpenCh
             </CommandGroup>
           ) : null}
           {showReplay ? (
-            <CommandGroup heading="Replay">
+            <CommandGroup heading="Запись">
               <CommandItem
                 value="replay"
                 onSelect={() => {
@@ -114,13 +119,13 @@ export function CommandPalette({ open, onOpenChange }: { open: boolean; onOpenCh
                   close()
                 }}
               >
-                <Waves aria-hidden /> Replay {formatFullDay(episode.start)} · {episode.assetId}
+                <Waves aria-hidden /> Запись {formatFullDay(episode.start)} · {episode.assetId}
                 <CommandShortcut>{episode.label}</CommandShortcut>
               </CommandItem>
             </CommandGroup>
           ) : null}
           {commands.length > 0 ? (
-            <CommandGroup heading="Commands">
+            <CommandGroup heading="Команды">
               {commands.map(({ href, label, icon: Icon }) => (
                 <CommandItem
                   key={label}
@@ -136,7 +141,7 @@ export function CommandPalette({ open, onOpenChange }: { open: boolean; onOpenCh
             </CommandGroup>
           ) : null}
           {actions.length > 0 ? (
-            <CommandGroup heading="Actions">
+            <CommandGroup heading="Работы">
               {actions.slice(0, 6).map((action) => (
                 <CommandItem
                   key={action.id}
@@ -155,7 +160,7 @@ export function CommandPalette({ open, onOpenChange }: { open: boolean; onOpenCh
             </CommandGroup>
           ) : null}
           {navigation.length > 0 || showReplay || commands.length > 0 ? <CommandSeparator /> : null}
-          <CommandGroup heading={needle ? "Assets" : "Highest risk assets"}>
+          <CommandGroup heading={needle ? "Объекты" : "Объекты с наивысшим риском"}>
             {(search.data ?? []).map((asset) => (
               <CommandItem
                 key={asset.id}

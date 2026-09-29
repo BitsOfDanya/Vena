@@ -51,6 +51,20 @@ export type SnapshotStatus = {
   detail: string
 }
 
+export type SituationRecommendation = {
+  title: string
+  actions: string[]
+  hint: string | null
+  note: string
+}
+
+export type SituationHistory = {
+  episodes365d: number
+  channels: number
+  lastEpisodeAt: number | null
+  medianDurationMinutes: number | null
+}
+
 export type BackendSituation = {
   id: string
   type: "risk" | "pattern" | "action"
@@ -71,4 +85,7 @@ export type BackendSituation = {
   location: string | null
   assetCount: number
   incidentProbability: number | null
+  healthIndex: number | null
+  recommendation: SituationRecommendation | null
+  history: SituationHistory | null
 }

@@ -193,6 +193,19 @@ export async function getBackendSituations(): Promise<BackendSituation[]> {
       location?: string | null
       asset_count?: number
       incident_probability?: number | null
+      health_index?: number | null
+      recommendation?: {
+        title: string
+        actions: string[]
+        hint: string | null
+        note: string
+      } | null
+      history?: {
+        episodes_365d: number
+        channels: number
+        last_episode_at: string | null
+        median_duration_minutes: number | null
+      } | null
     }[]
   >("/api/v1/situations")
   return items.map((item) => ({
@@ -215,5 +228,22 @@ export async function getBackendSituations(): Promise<BackendSituation[]> {
     location: item.location ?? null,
     assetCount: item.asset_count ?? item.asset_ids.length,
     incidentProbability: item.incident_probability ?? null,
+    healthIndex: item.health_index ?? null,
+    recommendation: item.recommendation
+      ? {
+          title: item.recommendation.title,
+          actions: item.recommendation.actions,
+          hint: item.recommendation.hint,
+          note: item.recommendation.note,
+        }
+      : null,
+    history: item.history
+      ? {
+          episodes365d: item.history.episodes_365d,
+          channels: item.history.channels,
+          lastEpisodeAt: item.history.last_episode_at ? Date.parse(item.history.last_episode_at) : null,
+          medianDurationMinutes: item.history.median_duration_minutes,
+        }
+      : null,
   }))
 }

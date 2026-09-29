@@ -9,7 +9,7 @@ from app.domain.actions import OPEN_STATUSES
 from app.domain.health import load_calibration, location_health
 from app.domain.incidents import group_incidents, location_label, reason_text, score_text
 from app.domain.predictions import get_prediction_source
-from app.domain.recommendations import recommend
+from app.domain.recommendations import driver_hints, recommend
 from app.schemas.predictions import Prediction
 from app.schemas.system import HealthComponents, LocationHistory, Situation, SystemNotice
 
@@ -52,7 +52,7 @@ def system_notices(settings: Settings) -> list[SystemNotice]:
                 id="model-unavailable",
                 kind="model_unavailable",
                 severity="critical",
-                title="Model artifacts unavailable",
+                title="Артефакты моделей недоступны",
                 description="Прогнозы недоступны: каталог моделей не смонтирован.",
                 href="/settings/integrations",
                 dismissible=False,
@@ -65,7 +65,7 @@ def system_notices(settings: Settings) -> list[SystemNotice]:
                 id="predictions-unavailable",
                 kind="model_unavailable",
                 severity="critical",
-                title="ML predictions unavailable",
+                title="Прогнозы недоступны",
                 description="Снимок прогнозов не найден. Риски и ситуации не рассчитываются.",
                 href="/settings/integrations",
                 dismissible=False,
@@ -73,20 +73,39 @@ def system_notices(settings: Settings) -> list[SystemNotice]:
         )
     elif status.stale and status.age_seconds is not None:
         days = status.age_seconds // 86_400
-        notices.append(
-            SystemNotice(
-                id="predictions-stale",
-                kind="data_delayed",
-                severity="attention",
-                title="Prediction snapshot is outdated",
-                description=(
-                    f"Последний снимок прогнозов рассчитан {days} дн. назад: "
-                    "журнал событий не обновлялся."
-                ),
-                href="/settings/integrations",
-                dismissible=True,
+        # Local / seeded stands show a fixed journal snapshot on purpose —
+        # treat that as demo context, not a red failure banner.
+        demo_stand = settings.environment in ("local", "test") or settings.seed_demo
+        if demo_stand:
+            notices.append(
+                SystemNotice(
+                    id="predictions-stale",
+                    kind="data_delayed",
+                    severity="info",
+                    title="Демонстрационный режим",
+                    description=(
+                        f"Снимок прогнозов зафиксирован {days} дн. назад. "
+                        "Это демонстрационные данные стенда, а не сбой сервиса."
+                    ),
+                    href="/settings/integrations",
+                    dismissible=True,
+                )
             )
-        )
+        else:
+            notices.append(
+                SystemNotice(
+                    id="predictions-stale",
+                    kind="data_delayed",
+                    severity="attention",
+                    title="Снимок прогнозов устарел",
+                    description=(
+                        f"Последний снимок рассчитан {days} дн. назад: "
+                        "журнал событий не обновлялся."
+                    ),
+                    href="/settings/integrations",
+                    dismissible=True,
+                )
+            )
     return notices
 
 
@@ -122,6 +141,7 @@ def situations(session: Session, settings: Settings, limit: int = 6) -> list[Sit
     incident_probability = source.incident_probabilities()
     health = location_health(source.all(), incident_probability, load_calibration(settings.ml_dir))
     histories = source.location_history()
+    hints = driver_hints(settings)
     result: list[Situation] = []
     for incident in group_incidents(best.values()):
         lead = incident.lead
@@ -137,7 +157,10 @@ def situations(session: Session, settings: Settings, limit: int = 6) -> list[Sit
         elif notification is not None and notification.status == "acknowledged":
             status = "acknowledged"
         count = len(incident.asset_ids)
-        scope = f"{count} channels, lead {lead.asset_id}" if count > 1 else lead.asset_id
+        if count > 1:
+            scope = f"{count} каналов, ведущий {lead.asset_id}"
+        else:
+            scope = lead.asset_id
         location_probability = (
             incident_probability.get((incident.scenario, incident.location))
             if incident.location
@@ -146,9 +169,12 @@ def situations(session: Session, settings: Settings, limit: int = 6) -> list[Sit
         if location_probability is not None and lead.score_type == "calibrated_probability":
             location_probability = max(location_probability, lead.score)
         location_text = (
-            f" Location risk {location_probability:.0%} within 24h."
+            f" Риск локации {location_probability:.0%} на 24 ч."
             if location_probability is not None
             else ""
+        )
+        level_ru = {"critical": "критично", "attention": "внимание"}.get(
+            lead.risk_level, lead.risk_level
         )
         result.append(
             Situation(
@@ -158,14 +184,14 @@ def situations(session: Session, settings: Settings, limit: int = 6) -> list[Sit
                 title=incident.title,
                 summary=(
                     f"{scope}: {lead.model_id} {score_text(lead)} "
-                    f"({lead.risk_level}) for the next {lead.horizon_hours}h.{location_text}"
+                    f"({level_ru}) на ближайшие {lead.horizon_hours} ч.{location_text}"
                 ),
                 asset_ids=incident.asset_ids,
                 pattern_id=None,
                 risk_score=lead.score,
                 risk_delta=lead.score_delta,
                 forecast_horizon=lead.horizon_hours,
-                primary_reason=reason_text(lead),
+                primary_reason=reason_text(lead, hints),
                 status=status,  # type: ignore[arg-type]
                 updated_at=lead.prediction_time,
                 open_action_id=action.id if action else None,
@@ -189,7 +215,37 @@ def situations(session: Session, settings: Settings, limit: int = 6) -> list[Sit
             item.forecast_horizon or 0,
         )
     )
-    return result[:limit]
+    return _diversify_by_scenario(result, limit)
+
+
+def _diversify_by_scenario(items: list[Situation], limit: int) -> list[Situation]:
+    """Round-robin across scenarios so one type cannot fill the whole queue."""
+    if limit <= 0 or not items:
+        return []
+    buckets: dict[str, list[Situation]] = {}
+    order: list[str] = []
+    for item in items:
+        key = item.scenario or "equipment"
+        if key not in buckets:
+            buckets[key] = []
+            order.append(key)
+        buckets[key].append(item)
+    selected: list[Situation] = []
+    indexes = {key: 0 for key in order}
+    while len(selected) < limit:
+        progressed = False
+        for key in order:
+            index = indexes[key]
+            bucket = buckets[key]
+            if index < len(bucket):
+                selected.append(bucket[index])
+                indexes[key] = index + 1
+                progressed = True
+                if len(selected) >= limit:
+                    break
+        if not progressed:
+            break
+    return selected
 
 
 def _history(

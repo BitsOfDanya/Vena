@@ -21,30 +21,30 @@ export function isWatch(score: number) {
 }
 
 export const LEVEL_LABEL: Record<RiskLevel, string> = {
-  low: "Low",
-  medium: "Medium",
-  high: "High",
+  low: "Низкий",
+  medium: "Средний",
+  high: "Высокий",
 }
 
 export const STATUS_LABEL: Record<AssetStatus, string> = {
-  normal: "Normal",
-  attention: "Attention",
-  critical: "Critical",
-  offline: "Offline",
+  normal: "Норма",
+  attention: "Внимание",
+  critical: "Критично",
+  offline: "Офлайн",
 }
 
 export const TYPE_LABEL: Record<AssetType, string> = {
-  pump: "Pump",
-  fan: "Fan",
-  smoke: "Smoke",
-  power: "Power",
-  other: "Sensor",
+  pump: "Насос",
+  fan: "Вентилятор",
+  smoke: "Дым",
+  power: "Питание",
+  other: "Датчик",
 }
 
 export const TYPE_ORDER: AssetType[] = ["pump", "fan", "smoke", "power", "other"]
 
 export function scoreLabel(type: ScoreType) {
-  return type === "calibrated_probability" ? "Estimated probability" : "Risk score"
+  return type === "calibrated_probability" ? "Оценка вероятности" : "Оценка риска"
 }
 
 export function formatScore(score: number, type: ScoreType) {
@@ -58,10 +58,10 @@ export function formatDelta(delta: number) {
 }
 
 export const EVENT_TYPE_LABEL: Record<EventType, string> = {
-  transition: "Transition",
-  state_change: "State change",
-  alarm: "Alarm",
-  anomaly: "Anomaly",
-  failure: "Failure",
-  signal: "System signal",
+  transition: "Переход",
+  state_change: "Смена состояния",
+  alarm: "Тревога",
+  anomaly: "Аномалия",
+  failure: "Отказ",
+  signal: "Системный сигнал",
 }

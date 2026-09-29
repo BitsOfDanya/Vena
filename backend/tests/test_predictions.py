@@ -120,6 +120,9 @@ def test_stale_snapshot_raises_notice_but_keeps_api_healthy(
 
     assert status["stale"] is True
     assert "predictions-stale" in [notice["id"] for notice in notices]
+    stale = next(notice for notice in notices if notice["id"] == "predictions-stale")
+    assert stale["severity"] == "info"
+    assert "Демонстрационный" in stale["title"]
     assert components["api"] == "ok"
     assert components["ml"] == "stale"
     assert client.get("/api/v1/health").json()["status"] == "ok"
@@ -193,7 +196,7 @@ def test_situations_are_built_from_predictions(client: TestClient, ml_root: Path
     assert situations[0]["severity"] == "critical"
     assert situations[0]["risk_score"] == pytest.approx(0.995)
     assert situations[0]["forecast_horizon"] == 72
-    assert situations[0]["primary_reason"].startswith("Events, 24h")
+    assert situations[0]["primary_reason"].startswith("Событий за 24 ч")
 
 
 def test_prediction_detail_links_action_and_notification(client: TestClient, ml_root: Path) -> None:
@@ -403,7 +406,7 @@ def test_drivers_and_location_probability_reach_situations(
     path.write_text(json.dumps(payload), encoding="utf-8")
     assert client.get("/api/v1/situations").json()[0]["incident_probability"] == pytest.approx(0.95)
     assert "83%" in situation["summary"]
-    assert "Location risk 83%" in situation["summary"]
+    assert "Риск локации 83%" in situation["summary"]
 
 
 def test_ml_reports_are_whitelisted(client: TestClient, ml_root: Path) -> None:

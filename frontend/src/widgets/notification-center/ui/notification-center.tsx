@@ -25,11 +25,11 @@ const MARK: Record<NotificationSeverity, "critical" | "attention" | "normal"> = 
 }
 
 const FILTERS = [
-  { key: "all", label: "All" },
-  { key: "critical", label: "Critical" },
-  { key: "warning", label: "Attention" },
-  { key: "action", label: "Work" },
-  { key: "system", label: "System" },
+  { key: "all", label: "Все" },
+  { key: "critical", label: "Критично" },
+  { key: "warning", label: "Внимание" },
+  { key: "action", label: "Работы" },
+  { key: "system", label: "Система" },
 ] as const
 
 type FilterKey = (typeof FILTERS)[number]["key"]
@@ -60,7 +60,7 @@ export function NotificationCenter() {
   return (
     <Popover open={open} onOpenChange={openCenter}>
       <PopoverTrigger
-        aria-label={unread.length > 0 ? `Notifications, ${unread.length} unread` : "Notifications"}
+        aria-label={unread.length > 0 ? `Уведомления, ${unread.length} непрочитанных` : "Уведомления"}
         className="relative flex size-8 items-center justify-center text-muted-foreground outline-none hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring/60"
       >
         <Bell className="size-[18px]" aria-hidden />
@@ -72,7 +72,7 @@ export function NotificationCenter() {
       </PopoverTrigger>
       <PopoverContent align="end" className="w-[420px] p-0">
         <div className="flex items-center gap-3 border-b px-4 py-2.5">
-          <h2 className="text-[14px] font-semibold">Notifications</h2>
+          <h2 className="text-[14px] font-semibold">Уведомления</h2>
           <span className="font-mono text-[12px] text-faint tabular-nums">{list.length}</span>
         </div>
         <div className="flex items-center gap-1 border-b px-3 py-1.5">
@@ -106,7 +106,7 @@ export function NotificationCenter() {
                 <div className="mt-2 flex items-center gap-3 pl-5">
                   <span className="text-[11px] tracking-[0.06em] text-faint uppercase">{NOTIFICATION_TYPE_LABEL[item.type]}</span>
                   {item.status !== "new" ? (
-                    <span className="text-[11px] tracking-[0.06em] text-faint uppercase">{item.status === "resolved" ? "Resolved" : "Acknowledged"}</span>
+                    <span className="text-[11px] tracking-[0.06em] text-faint uppercase">{item.status === "resolved" ? "Закрыто" : "Принято"}</span>
                   ) : null}
                   <span className="ml-auto flex items-center gap-3">
                     {item.status === "new" ? (
@@ -115,7 +115,7 @@ export function NotificationCenter() {
                         onClick={() => acknowledge.mutate(item.id)}
                         className="text-[12px] text-muted-foreground underline-offset-4 outline-none hover:text-foreground hover:underline focus-visible:ring-2 focus-visible:ring-ring/60"
                       >
-                        Acknowledge
+                        Принять
                       </button>
                     ) : null}
                     {item.assetId ? (
@@ -128,7 +128,7 @@ export function NotificationCenter() {
                         }}
                         className="text-[12px] text-vena underline-offset-4 outline-none hover:underline focus-visible:ring-2 focus-visible:ring-ring/60"
                       >
-                        Inspect
+                        Открыть
                       </button>
                     ) : (
                       <button
@@ -139,7 +139,7 @@ export function NotificationCenter() {
                         }}
                         className="text-[12px] text-vena underline-offset-4 outline-none hover:underline focus-visible:ring-2 focus-visible:ring-ring/60"
                       >
-                        Inspect
+                        Открыть
                       </button>
                     )}
                   </span>
@@ -157,7 +157,7 @@ export function NotificationCenter() {
             }}
             className="text-[12px] text-muted-foreground underline-offset-4 outline-none hover:text-foreground hover:underline focus-visible:ring-2 focus-visible:ring-ring/60"
           >
-            Notification settings
+            Настройки уведомлений
           </button>
         </div>
       </PopoverContent>

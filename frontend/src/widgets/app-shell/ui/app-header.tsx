@@ -22,7 +22,7 @@ export function AppHeader({ onOpenSearch }: { onOpenSearch: () => void }) {
   const pathname = usePathname()
   const router = useRouter()
   const { me, authEnabled, signOut } = useAuthSession()
-  const title = me?.subject ?? "Duty engineer"
+  const title = me?.subject ?? "Дежурный инженер"
   const subtitle = me?.role ?? "…"
 
   return (
@@ -35,7 +35,7 @@ export function AppHeader({ onOpenSearch }: { onOpenSearch: () => void }) {
         <VenaMark className="text-vena" />
         <span className="text-[15px] font-semibold tracking-[0.2em]">VENA</span>
       </Link>
-      <nav aria-label="Primary" className="flex h-full min-w-0 items-stretch gap-1 overflow-x-auto">
+      <nav aria-label="Основная навигация" className="flex h-full min-w-0 items-stretch gap-1 overflow-x-auto">
         {NAV_ITEMS.map((item) => {
           const active = pathname === item.href || pathname.startsWith(`${item.href}/`)
           return (
@@ -59,7 +59,7 @@ export function AppHeader({ onOpenSearch }: { onOpenSearch: () => void }) {
         <button
           type="button"
           onClick={onOpenSearch}
-          aria-label="Search"
+          aria-label="Поиск"
           className="flex h-8 items-center gap-2 px-2 text-[13px] text-muted-foreground outline-none hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring/60"
         >
           <Search className="size-[18px]" aria-hidden />
@@ -67,7 +67,7 @@ export function AppHeader({ onOpenSearch }: { onOpenSearch: () => void }) {
         </button>
         <DropdownMenu>
           <DropdownMenuTrigger
-            aria-label="Account and settings"
+            aria-label="Аккаунт и настройки"
             className="flex size-8 items-center justify-center text-muted-foreground outline-none hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring/60"
           >
             <UserRound className="size-[18px]" aria-hidden />
@@ -78,11 +78,11 @@ export function AppHeader({ onOpenSearch }: { onOpenSearch: () => void }) {
               <span className="block font-mono text-[12px] text-muted-foreground">{subtitle}</span>
             </DropdownMenuLabel>
             <DropdownMenuSeparator />
-            <DropdownMenuItem onClick={() => router.push("/settings")}>Settings</DropdownMenuItem>
-            <DropdownMenuItem onClick={() => router.push("/settings/security")}>Security</DropdownMenuItem>
-            <DropdownMenuItem onClick={() => router.push("/settings/audit")}>Audit log</DropdownMenuItem>
-            <DropdownMenuItem onClick={() => router.push("/settings/notifications")}>Notification settings</DropdownMenuItem>
-            <DropdownMenuItem onClick={() => router.push("/settings/integrations")}>Integrations</DropdownMenuItem>
+            <DropdownMenuItem onClick={() => router.push("/settings")}>Настройки</DropdownMenuItem>
+            <DropdownMenuItem onClick={() => router.push("/settings/security")}>Безопасность</DropdownMenuItem>
+            <DropdownMenuItem onClick={() => router.push("/settings/audit")}>Журнал аудита</DropdownMenuItem>
+            <DropdownMenuItem onClick={() => router.push("/settings/notifications")}>Уведомления</DropdownMenuItem>
+            <DropdownMenuItem onClick={() => router.push("/settings/integrations")}>Интеграции</DropdownMenuItem>
             {authEnabled ? (
               <>
                 <DropdownMenuSeparator />
@@ -91,7 +91,7 @@ export function AppHeader({ onOpenSearch }: { onOpenSearch: () => void }) {
                     void signOut()
                   }}
                 >
-                  Sign out
+                  Выйти
                 </DropdownMenuItem>
               </>
             ) : null}

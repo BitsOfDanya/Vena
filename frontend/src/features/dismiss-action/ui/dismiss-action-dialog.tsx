@@ -29,7 +29,7 @@ export function DismissActionDialog({ actionId, trigger }: { actionId: string; t
   async function submit(event: React.FormEvent) {
     event.preventDefault()
     await dismiss.mutateAsync({ id: actionId, reason, note: note.trim() })
-    toast.success(`Action ${actionId} dismissed`, { description: DISMISS_REASON_LABEL[reason] })
+    toast.success(`Работа ${actionId} отклонена`, { description: DISMISS_REASON_LABEL[reason] })
     setOpen(false)
     setNote("")
   }
@@ -40,13 +40,13 @@ export function DismissActionDialog({ actionId, trigger }: { actionId: string; t
       <DialogContent>
         <form onSubmit={submit} className="flex flex-col gap-4">
           <DialogHeader>
-            <DialogTitle>Dismiss {actionId}</DialogTitle>
+            <DialogTitle>Отклонить {actionId}</DialogTitle>
             <DialogDescription>
               Решение без выезда бригады. Причина сохраняется в журнале прогнозов и используется для дообучения модели.
             </DialogDescription>
           </DialogHeader>
           <Field>
-            <FieldLabel htmlFor={`dismiss-reason-${actionId}`}>Reason</FieldLabel>
+            <FieldLabel htmlFor={`dismiss-reason-${actionId}`}>Причина</FieldLabel>
             <NativeSelect
               id={`dismiss-reason-${actionId}`}
               className="w-full"
@@ -61,7 +61,7 @@ export function DismissActionDialog({ actionId, trigger }: { actionId: string; t
             </NativeSelect>
           </Field>
           <Field>
-            <FieldLabel htmlFor={`dismiss-note-${actionId}`}>Note (optional)</FieldLabel>
+            <FieldLabel htmlFor={`dismiss-note-${actionId}`}>Примечание (необязательно)</FieldLabel>
             <Textarea
               id={`dismiss-note-${actionId}`}
               rows={3}
@@ -73,10 +73,10 @@ export function DismissActionDialog({ actionId, trigger }: { actionId: string; t
           </Field>
           <DialogFooter>
             <Button type="button" variant="outline" onClick={() => setOpen(false)}>
-              Cancel
+              Отмена
             </Button>
             <Button type="submit" disabled={dismiss.isPending}>
-              Dismiss
+              Отклонить
             </Button>
           </DialogFooter>
         </form>

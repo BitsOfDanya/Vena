@@ -37,17 +37,17 @@ export type NotificationRepository = {
 }
 
 export const NOTIFICATION_TYPE_LABEL: Record<NotificationType, string> = {
-  risk: "Risk",
-  pattern: "Pattern",
-  action: "Work",
-  system: "System",
-  integration: "Integration",
+  risk: "Риск",
+  pattern: "Паттерн",
+  action: "Работа",
+  system: "Система",
+  integration: "Интеграция",
 }
 
 export const NOTIFICATION_STATUS_LABEL: Record<NotificationStatus, string> = {
-  new: "New",
-  acknowledged: "Acknowledged",
-  resolved: "Resolved",
+  new: "Новое",
+  acknowledged: "Принято",
+  resolved: "Решено",
 }
 
 export type NotificationChannelId = "email" | "in_app" | "webhook" | "telegram" | "teams"
@@ -87,12 +87,12 @@ export type NotificationRule = {
 }
 
 export const RULE_TRIGGER_LABEL: Record<NotificationRuleTrigger, string> = {
-  critical_risk: "Critical risk detected",
-  risk_horizon_24h: "Risk horizon 24h or less",
-  new_pattern: "New correlated pattern",
-  action_overdue: "Action overdue",
-  action_assigned: "Action assigned",
-  data_source_unavailable: "Data source unavailable",
+  critical_risk: "Обнаружен критический риск",
+  risk_horizon_24h: "Горизонт риска 24 ч или меньше",
+  new_pattern: "Новый коррелированный паттерн",
+  action_overdue: "Работа просрочена",
+  action_assigned: "Работа назначена",
+  data_source_unavailable: "Источник данных недоступен",
 }
 
 export type DigestSection = "critical_risks" | "new_patterns" | "open_actions" | "overdue_actions" | "changes"
@@ -108,11 +108,11 @@ export type DigestSchedule = {
 }
 
 export const DIGEST_SECTION_LABEL: Record<DigestSection, string> = {
-  critical_risks: "Critical risks",
-  new_patterns: "New patterns",
-  open_actions: "Open actions",
-  overdue_actions: "Overdue actions",
-  changes: "Changes since previous digest",
+  critical_risks: "Критические риски",
+  new_patterns: "Новые паттерны",
+  open_actions: "Открытые работы",
+  overdue_actions: "Просроченные работы",
+  changes: "Изменения с прошлого дайджеста",
 }
 
 export type EmailSettings = {

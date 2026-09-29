@@ -199,6 +199,20 @@ export type TemporalBundle = {
 export type SituationType = "risk" | "pattern"
 export type SituationStatus = "new" | "acknowledged" | "action_created" | "resolved"
 
+export type SituationRecommendation = {
+  title: string
+  actions: string[]
+  hint: string | null
+  note: string
+}
+
+export type SituationHistory = {
+  episodes365d: number
+  channels: number
+  lastEpisodeAt: number | null
+  medianDurationMinutes: number | null
+}
+
 export type Situation = {
   id: string
   type: SituationType
@@ -214,6 +228,13 @@ export type Situation = {
   horizon: ForecastHorizon | null
   primaryReason: string
   status: SituationStatus
+  scenario?: string | null
+  location?: string | null
+  assetCount?: number
+  incidentProbability?: number | null
+  healthIndex?: number | null
+  recommendation?: SituationRecommendation | null
+  history?: SituationHistory | null
 }
 
 export type PulseSummary = {

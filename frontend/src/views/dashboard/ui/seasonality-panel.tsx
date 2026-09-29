@@ -15,10 +15,10 @@ export function SeasonalityPanel() {
   const rainCorrelation = weather["precipitation_lag0d"]
 
   return (
-    <section aria-label="Seasonality" className="mx-6 mb-6 border border-border bg-elevated">
+    <section aria-label="Сезонность" className="mx-6 mb-6 border border-border bg-elevated">
       <div className="flex flex-wrap items-baseline justify-between gap-2 border-b border-border-soft px-5 py-3">
         <div>
-          <h2 className="text-[11px] tracking-[0.08em] uppercase">Seasonality</h2>
+          <h2 className="text-[11px] tracking-[0.08em] uppercase">Сезонность</h2>
           <p className="mt-1 text-[12px] text-muted-foreground">
             Частота начала эпизодов по месяцам относительно среднего месяца сценария, 2019–2025. 1.0× — обычный месяц.
           </p>

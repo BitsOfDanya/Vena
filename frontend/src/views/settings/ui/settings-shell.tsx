@@ -6,11 +6,11 @@ import { usePathname } from "next/navigation"
 import { cn } from "@/shared/lib/utils"
 
 const TABS = [
-  { href: "/settings", label: "Overview" },
-  { href: "/settings/notifications", label: "Notifications" },
-  { href: "/settings/integrations", label: "Integrations" },
-  { href: "/settings/security", label: "Security" },
-  { href: "/settings/audit", label: "Audit" },
+  { href: "/settings", label: "Обзор" },
+  { href: "/settings/notifications", label: "Уведомления" },
+  { href: "/settings/integrations", label: "Интеграции" },
+  { href: "/settings/security", label: "Безопасность" },
+  { href: "/settings/audit", label: "Аудит" },
 ]
 
 export function SettingsShell({ title, descriptor, children }: { title: string; descriptor: string; children: React.ReactNode }) {
@@ -23,7 +23,7 @@ export function SettingsShell({ title, descriptor, children }: { title: string; 
           <span className="text-[26px] font-semibold tracking-[-0.01em]">{title}</span>
           <span className="font-mono text-[13px] text-faint">{descriptor}</span>
         </h1>
-        <nav aria-label="Settings" className="mt-3 flex gap-5 border-b border-border">
+        <nav aria-label="Настройки" className="mt-3 flex gap-5 border-b border-border">
           {TABS.map((tab) => {
             const active = pathname === tab.href
             return (
@@ -71,7 +71,7 @@ export function SettingsSection({
 }
 
 export function StateTag({ state }: { state: "configured" | "not_configured" | "disabled" }) {
-  const label = state === "configured" ? "Configured" : state === "disabled" ? "Disabled" : "Not configured"
+  const label = state === "configured" ? "Настроено" : state === "disabled" ? "Отключено" : "Не настроено"
   return (
     <span
       className={cn(

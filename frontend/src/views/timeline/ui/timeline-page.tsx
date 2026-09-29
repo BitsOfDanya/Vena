@@ -29,11 +29,11 @@ import { DEFAULT_LAYERS, TemporalCanvas, ZOOM_STEPS, type Layers } from "@/widge
 const MAX_ASSETS = 5
 
 const LAYER_LABELS: { key: keyof Layers; label: string }[] = [
-  { key: "state", label: "State" },
-  { key: "events", label: "Events" },
-  { key: "alarms", label: "Alarms" },
-  { key: "failures", label: "Failures" },
-  { key: "risk", label: "Risk" },
+  { key: "state", label: "Состояние" },
+  { key: "events", label: "События" },
+  { key: "alarms", label: "Тревоги" },
+  { key: "failures", label: "Отказы" },
+  { key: "risk", label: "Риск" },
 ]
 
 function AssetPicker({ chosen, onPick }: { chosen: string[]; onPick: (id: string) => void }) {
@@ -47,7 +47,7 @@ function AssetPicker({ chosen, onPick }: { chosen: string[]; onPick: (id: string
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
         <Button variant="outline" size="sm" disabled={disabled} title={disabled ? `Можно сравнивать до ${MAX_ASSETS} объектов` : undefined}>
-          <Plus data-icon="inline-start" /> Add asset
+          <Plus data-icon="inline-start" /> Добавить объект
         </Button>
       </PopoverTrigger>
       <PopoverContent align="start" className="w-72 p-0">
@@ -157,7 +157,7 @@ function Suggestions({ onPick }: { onPick: (id: string) => void }) {
     <div className="flex h-full flex-col items-start gap-6 overflow-y-auto px-3 pt-6 pb-8">
       <div className="w-full max-w-xl space-y-3">
         <div className="space-y-1.5">
-          <p className="text-[15px] font-medium">Select an asset to investigate.</p>
+          <p className="text-[15px] font-medium">Выберите объект для анализа.</p>
           <p className="text-[14px] text-muted-foreground">
             Выберите объект, чтобы увидеть историю состояния и прогноз вокруг текущего момента.
           </p>
@@ -168,7 +168,7 @@ function Suggestions({ onPick }: { onPick: (id: string) => void }) {
             value={query}
             onChange={(event) => setQuery(event.target.value)}
             placeholder="ID объекта, канал, группа"
-            aria-label="Search assets"
+            aria-label="Поиск объектов"
             className="h-9 pl-9 font-mono text-[13px]"
           />
         </div>
@@ -176,7 +176,7 @@ function Suggestions({ onPick }: { onPick: (id: string) => void }) {
 
       {needle.length > 0 ? (
         <div className="w-full max-w-xl">
-          <p className="mb-1 text-[12px] font-medium tracking-[0.1em] text-faint uppercase">Search results</p>
+          <p className="mb-1 text-[12px] font-medium tracking-[0.1em] text-faint uppercase">Результаты поиска</p>
           {(search.data ?? []).length === 0 ? (
             <p className="text-[13px] text-muted-foreground">Объекты не найдены.</p>
           ) : (
@@ -187,19 +187,19 @@ function Suggestions({ onPick }: { onPick: (id: string) => void }) {
         <>
           {recent.length > 0 ? (
             <div className="w-full max-w-xl">
-              <p className="mb-1 text-[12px] font-medium tracking-[0.1em] text-faint uppercase">Recently viewed</p>
+              <p className="mb-1 text-[12px] font-medium tracking-[0.1em] text-faint uppercase">Недавно просмотренные</p>
               <AssetRows assets={recent} onPick={onPick} />
             </div>
           ) : null}
           {top.length > 0 ? (
             <div className="w-full max-w-xl">
-              <p className="mb-1 text-[12px] font-medium tracking-[0.1em] text-faint uppercase">Highest risk now</p>
+              <p className="mb-1 text-[12px] font-medium tracking-[0.1em] text-faint uppercase">Наивысший риск сейчас</p>
               <AssetRows assets={top} onPick={onPick} />
             </div>
           ) : null}
           {changed.length > 0 ? (
             <div className="w-full max-w-xl">
-              <p className="mb-1 text-[12px] font-medium tracking-[0.1em] text-faint uppercase">Recently changed</p>
+              <p className="mb-1 text-[12px] font-medium tracking-[0.1em] text-faint uppercase">Недавно изменившиеся</p>
               <AssetRows assets={changed} onPick={onPick} />
             </div>
           ) : null}
@@ -249,8 +249,8 @@ export function TimelinePage() {
     <div className="flex size-full flex-col">
       <div className="flex shrink-0 flex-wrap items-center gap-x-6 gap-y-3 px-6 pt-1 pb-3">
         <div className="flex items-baseline gap-3">
-          <h1 className="text-[22px] font-semibold tracking-[-0.01em]">Timeline</h1>
-          <span className="font-mono text-[12px] text-faint">{mode === "replay" ? "replay" : "past · now · forecast"}</span>
+          <h1 className="text-[22px] font-semibold tracking-[-0.01em]">Хронология</h1>
+          <span className="font-mono text-[12px] text-faint">{mode === "replay" ? "запись" : "прошлое · сейчас · прогноз"}</span>
         </div>
         <ul aria-label="Объекты на хронологии" className="flex flex-wrap items-center gap-1.5">
           {ids.map((id) => (
@@ -271,7 +271,7 @@ export function TimelinePage() {
           </li>
         </ul>
         <div className="ml-auto flex flex-wrap items-center gap-3">
-          <div role="group" aria-label="Layers" className="flex items-center gap-1">
+          <div role="group" aria-label="Слои" className="flex items-center gap-1">
             {LAYER_LABELS.map((layer) => (
               <button
                 key={layer.key}
@@ -287,7 +287,7 @@ export function TimelinePage() {
               </button>
             ))}
           </div>
-          <Segmented label="Time span" value={halfSpan} onChange={setHalfSpan} options={ZOOM_STEPS.map((value) => ({ value, label: `±${value}h` }))} />
+          <Segmented label="Окно времени" value={halfSpan} onChange={setHalfSpan} options={ZOOM_STEPS.map((value) => ({ value, label: `±${value}h` }))} />
           <ReplayEntry />
         </div>
       </div>
@@ -299,15 +299,15 @@ export function TimelinePage() {
             <span className="text-[13px] text-muted-foreground">{TYPE_LABEL[primary.type]}</span>
           </span>
           <span className="text-[13px]">
-            <span className="text-faint">risk </span>
+            <span className="text-faint">риск </span>
             <span className="font-mono tabular-nums">{formatScore(primary.riskScore, primary.scoreType)}</span>
           </span>
           <span className="text-[13px]">
-            <span className="text-faint">forecast </span>
+            <span className="text-faint">прогноз </span>
             <span className="font-mono tabular-nums">{primary.forecastHorizon}h</span>
           </span>
           <span className="text-[13px]">
-            <span className="text-faint">open action </span>
+            <span className="text-faint">открытая работа </span>
             {primaryAction ? (
               <span className="text-vena">
                 {primaryAction.id} · {ACTION_STATUS_LABEL[primaryAction.status]}
@@ -318,14 +318,14 @@ export function TimelinePage() {
           </span>
           <span className="ml-auto flex items-center gap-3">
             {acknowledged.includes(primary.id) ? (
-              <span className="text-[12px] tracking-[0.06em] text-faint uppercase">Acknowledged</span>
+              <span className="text-[12px] tracking-[0.06em] text-faint uppercase">Принято</span>
             ) : (
               <Button variant="outline" size="sm" onClick={() => setAcknowledged((current) => [...current, primary.id])}>
-                Acknowledge risk
+                Подтвердить риск
               </Button>
             )}
             <Button size="sm" onClick={() => setSheetOpen(true)} disabled={Boolean(primaryAction)}>
-              Create action
+              Создать работу
             </Button>
           </span>
         </div>
@@ -342,7 +342,7 @@ export function TimelinePage() {
         ) : temporal.pending && temporal.bundles.length === 0 ? (
           <LoadingBar />
         ) : temporal.error && temporal.bundles.length === 0 ? (
-          <StateMessage title="Timeline unavailable" description="Не удалось загрузить историю и прогноз по выбранным объектам." />
+          <StateMessage title="Хронология недоступна" description="Не удалось загрузить историю и прогноз по выбранным объектам." />
         ) : (
           <TemporalCanvas
             now={now}

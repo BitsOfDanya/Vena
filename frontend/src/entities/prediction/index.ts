@@ -8,6 +8,7 @@ export type {
   PredictionRiskLevel,
   PredictionScenario,
   PredictionScoreType,
+  SituationRecommendation,
   SnapshotStatus,
 } from "./model/types"
 

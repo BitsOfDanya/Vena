@@ -19,7 +19,7 @@ export function CloseActionForm({ actionId, onClosed }: { actionId: string; onCl
   async function submit(event: React.FormEvent) {
     event.preventDefault()
     await close.mutateAsync({ id: actionId, outcome, note })
-    toast.success(`Action ${actionId} closed`, { description: OUTCOME_LABEL[outcome] })
+    toast.success(`Работа ${actionId} закрыта`, { description: OUTCOME_LABEL[outcome] })
     setNote("")
     onClosed?.()
   }
@@ -27,7 +27,7 @@ export function CloseActionForm({ actionId, onClosed }: { actionId: string; onCl
   return (
     <form onSubmit={submit} className="flex flex-col gap-3">
       <Field>
-        <FieldLabel htmlFor="close-outcome">Result</FieldLabel>
+        <FieldLabel htmlFor="close-outcome">Результат</FieldLabel>
         <NativeSelect id="close-outcome" className="w-full" value={outcome} onChange={(event) => setOutcome(event.target.value as ActionOutcome)}>
           {(Object.keys(OUTCOME_LABEL) as ActionOutcome[]).map((value) => (
             <NativeSelectOption key={value} value={value}>
@@ -37,11 +37,11 @@ export function CloseActionForm({ actionId, onClosed }: { actionId: string; onCl
         </NativeSelect>
       </Field>
       <Field>
-        <FieldLabel htmlFor="close-note">Note (optional)</FieldLabel>
+        <FieldLabel htmlFor="close-note">Примечание (необязательно)</FieldLabel>
         <Textarea id="close-note" rows={3} value={note} onChange={(event) => setNote(event.target.value)} />
       </Field>
       <Button type="submit" disabled={close.isPending}>
-        Close action
+        Закрыть работу
       </Button>
     </form>
   )

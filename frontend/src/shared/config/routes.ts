@@ -1,11 +1,12 @@
 export const NAV_ITEMS = [
-  { href: "/pulse", label: "Pulse" },
-  { href: "/network", label: "Network" },
-  { href: "/timeline", label: "Timeline" },
-  { href: "/actions", label: "Actions" },
-  { href: "/alarms", label: "Alarms" },
-  { href: "/journal", label: "Journal" },
-  { href: "/dashboard", label: "Dashboard" },
+  { href: "/pulse", label: "Пульс" },
+  { href: "/network", label: "Сеть" },
+  { href: "/timeline", label: "Таймлайн" },
+  { href: "/actions", label: "Работы" },
+  { href: "/alarms", label: "Алармы" },
+  { href: "/journal", label: "Журнал" },
+  { href: "/dashboard", label: "Сводка" },
+  { href: "/effect", label: "Эффект" },
 ] as const
 
 export type NavHref = (typeof NAV_ITEMS)[number]["href"]

@@ -32,31 +32,31 @@ export function AssetDiagnostic({
       <div className="flex min-w-0 flex-1 flex-col">
         <div className="flex shrink-0 items-center gap-4 border-b px-4 py-2.5">
           <h2 className="text-[13px] font-semibold tracking-[0.14em] uppercase">
-            {assetId} <span className="text-faint">/</span> Diagnostic
+            {assetId} <span className="text-faint">/</span> Диагностика
           </h2>
           <Segmented
-            label="History and forecast span"
+            label="Окно истории и прогноза"
             className="ml-auto"
             value={halfSpan}
             onChange={setHalfSpan}
-            options={[24, 48, 72].map((value) => ({ value, label: `${value}h` }))}
+            options={[24, 48, 72].map((value) => ({ value, label: `${value}ч` }))}
           />
           <Button variant="outline" size="sm" onClick={onBack}>
-            Back to network
+            К сети
           </Button>
         </div>
         <div className="min-h-0 flex-1">
           {temporal.pending && temporal.bundles.length === 0 ? (
             <LoadingBar />
           ) : temporal.bundles.length === 0 ? (
-            <StateMessage title="No history" description="По этому объекту история недоступна." />
+            <StateMessage title="Нет истории" description="По этому объекту история недоступна." />
           ) : (
             <TemporalCanvas now={now} halfSpanHours={halfSpan} bundles={temporal.bundles} layers={DEFAULT_LAYERS} onZoom={setHalfSpan} />
           )}
         </div>
       </div>
-      <Inspector label="Risk explanation">
-        <InspectorHeader eyebrow="Current risk" title={asset ? `${Math.round(asset.riskScore)}` : "—"}>
+      <Inspector label="Объяснение риска">
+        <InspectorHeader eyebrow="Текущий риск" title={asset ? `${Math.round(asset.riskScore)}` : "—"}>
           {asset ? (
             <div className="mt-1 flex items-center gap-3">
               <RiskLevelLabel level={asset.riskLevel} />
@@ -65,7 +65,7 @@ export function AssetDiagnostic({
           ) : null}
         </InspectorHeader>
         <InspectorBody>
-          <InspectorSection title="Risk factors">
+          <InspectorSection title="Факторы риска">
             {detail.data ? (
               <ul className="space-y-3">
                 {detail.data.factorGroups.map((group) => (
@@ -80,7 +80,7 @@ export function AssetDiagnostic({
                   </li>
                 ))}
                 <li className="flex items-baseline justify-between border-t pt-2 text-sm">
-                  <span className="text-[11px] font-medium tracking-[0.08em] text-faint uppercase">Risk</span>
+                  <span className="text-[11px] font-medium tracking-[0.08em] text-faint uppercase">Риск</span>
                   <span className="font-mono tabular-nums">{total}</span>
                 </li>
               </ul>
@@ -91,7 +91,7 @@ export function AssetDiagnostic({
               Группировка по правилам: история, активность и состояние. Это не атрибуция модели.
             </p>
           </InspectorSection>
-          <InspectorSection title="Signals">
+          <InspectorSection title="Сигналы">
             <ul className="divide-y">
               {(detail.data?.factors ?? []).map((factor) => (
                 <li key={factor.key} className="flex items-center justify-between py-1.5 text-sm">
@@ -104,7 +104,7 @@ export function AssetDiagnostic({
         </InspectorBody>
         <InspectorFooter>
           <Button className="flex-1" onClick={onCreateAction}>
-            Create action
+            Создать работу
           </Button>
         </InspectorFooter>
       </Inspector>

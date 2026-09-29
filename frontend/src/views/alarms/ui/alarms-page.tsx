@@ -13,8 +13,8 @@ import { StateMessage } from "@/shared/ui/state-message"
 type View = "alarms" | "access"
 
 const VIEWS: { value: View; label: string }[] = [
-  { value: "alarms", label: "Alarms" },
-  { value: "access", label: "Access" },
+  { value: "alarms", label: "Тревоги" },
+  { value: "access", label: "Доступ" },
 ]
 
 function Metric({ label, value, hint }: { label: string; value: React.ReactNode; hint: string }) {
@@ -44,11 +44,11 @@ function AlarmsTable({ alarms }: { alarms: AlarmAssessment[] }) {
   const flagged = alarms.filter((alarm) => alarm.needsVerification).length
   return (
     <>
-      <section aria-label="Alarm summary" className="mx-6 mt-5 grid grid-cols-1 border border-border sm:grid-cols-3">
-        <Metric label="Alarms, 30 days" value={alarms.length} hint="Тревоги дыма, газа и температуры" />
-        <Metric label="Verify first" value={flagged} hint="Низкая вероятность подтверждения" />
+      <section aria-label="Сводка по тревогам" className="mx-6 mt-5 grid grid-cols-1 border border-border sm:grid-cols-3">
+        <Metric label="Тревоги, 30 дней" value={alarms.length} hint="Тревоги дыма, газа и температуры" />
+        <Metric label="Сначала проверить" value={flagged} hint="Низкая вероятность подтверждения" />
         <Metric
-          label="Share"
+          label="Доля"
           value={alarms.length ? `${Math.round((flagged / alarms.length) * 100)}%` : "—"}
           hint="Доля тревог на проверку перед выездом"
         />
@@ -69,11 +69,11 @@ function AlarmsTable({ alarms }: { alarms: AlarmAssessment[] }) {
         <table className="w-full min-w-[760px] text-left text-[13px]">
           <thead className="border-b border-border text-[11px] tracking-[0.08em] text-faint uppercase">
             <tr>
-              <th className="px-4 py-2 font-medium">Time</th>
-              <th className="px-4 py-2 font-medium">Sensor / location</th>
-              <th className="px-4 py-2 font-medium">Type</th>
-              <th className="px-4 py-2 text-right font-medium">Confirmation</th>
-              <th className="px-4 py-2 font-medium">Decision support</th>
+              <th className="px-4 py-2 font-medium">Время</th>
+              <th className="px-4 py-2 font-medium">Датчик / локация</th>
+              <th className="px-4 py-2 font-medium">Тип</th>
+              <th className="px-4 py-2 text-right font-medium">Подтверждение</th>
+              <th className="px-4 py-2 font-medium">Подсказка</th>
             </tr>
           </thead>
           <tbody>
@@ -102,10 +102,10 @@ function AccessTable({ events }: { events: AccessEvent[] }) {
   const objects = new Set(events.map((event) => event.object)).size
   return (
     <>
-      <section aria-label="Access summary" className="mx-6 mt-5 grid grid-cols-1 border border-border sm:grid-cols-3">
-        <Metric label="To verify, 30 days" value={events.length} hint="Срабатывания точек входа на охране" />
-        <Metric label="Objects" value={objects} hint="Объекты с событиями" />
-        <Metric label="At night" value={events.filter((event) => event.night).length} hint="22:00–06:00" />
+      <section aria-label="Сводка по доступу" className="mx-6 mt-5 grid grid-cols-1 border border-border sm:grid-cols-3">
+        <Metric label="К проверке, 30 дней" value={events.length} hint="Срабатывания точек входа на охране" />
+        <Metric label="Объекты" value={objects} hint="Объекты с событиями" />
+        <Metric label="Ночью" value={events.filter((event) => event.night).length} hint="22:00–06:00" />
       </section>
       <p className="mx-6 mt-4 text-[12px] leading-relaxed text-muted-foreground">
         Открытие двери или люка и срабатывание датчика стекла, пока объект стоит на охране. Индекс 0–1 ранжирует события
@@ -116,11 +116,11 @@ function AccessTable({ events }: { events: AccessEvent[] }) {
         <table className="w-full min-w-[760px] text-left text-[13px]">
           <thead className="border-b border-border text-[11px] tracking-[0.08em] text-faint uppercase">
             <tr>
-              <th className="px-4 py-2 font-medium">Time</th>
-              <th className="px-4 py-2 font-medium">Entry point / location</th>
-              <th className="px-4 py-2 font-medium">Type</th>
-              <th className="px-4 py-2 text-right font-medium">Index</th>
-              <th className="px-4 py-2 font-medium">Signals</th>
+              <th className="px-4 py-2 font-medium">Время</th>
+              <th className="px-4 py-2 font-medium">Точка входа / локация</th>
+              <th className="px-4 py-2 font-medium">Тип</th>
+              <th className="px-4 py-2 text-right font-medium">Индекс</th>
+              <th className="px-4 py-2 font-medium">Признаки</th>
             </tr>
           </thead>
           <tbody>
@@ -155,7 +155,7 @@ export function AlarmsPage() {
   if (workflowMode !== "api") {
     return (
       <div className="flex size-full items-center justify-center p-6">
-        <StateMessage title="Alarms require the API" description="Оценки тревог и доступа приходят из снимка моделей через API." />
+        <StateMessage title="Алармы требуют API" description="Оценки тревог и доступа приходят из снимка моделей через API." />
       </div>
     )
   }
@@ -164,17 +164,23 @@ export function AlarmsPage() {
     <div className="flex size-full min-h-0 flex-col">
       <div className="flex shrink-0 flex-wrap items-center justify-between gap-4 border-b border-border px-6 py-4">
         <div className="flex items-baseline gap-4">
-          <h1 className="text-[26px] font-semibold tracking-[-0.01em]">Alarms</h1>
-          <span className="font-mono text-[12px] text-faint">verification support</span>
+          <h1 className="text-[26px] font-semibold tracking-[-0.01em]">Алармы</h1>
+          <span className="font-mono text-[12px] text-faint">поддержка проверки</span>
+          <a href="/pulse" className="text-[13px] text-vena underline-offset-4 hover:underline">
+            К пульсу →
+          </a>
+          <a href="/effect" className="text-[13px] text-vena underline-offset-4 hover:underline">
+            Эффект →
+          </a>
         </div>
-        <Segmented label="Alarm view" options={VIEWS} value={view} onChange={setView} />
+        <Segmented label="Вид алармов" options={VIEWS} value={view} onChange={setView} />
       </div>
       <div className="min-h-0 flex-1 overflow-y-auto">
         {query.isPending ? (
           <p className="px-6 py-6 text-[13px] text-muted-foreground">Загрузка…</p>
         ) : query.isError ? (
           <div className="p-6">
-            <StateMessage title="Data unavailable" description="Бэкенд не ответил или снимок прогнозов недоступен." />
+            <StateMessage title="Данные недоступны" description="Бэкенд не ответил или снимок прогнозов недоступен." />
           </div>
         ) : view === "alarms" ? (
           <AlarmsTable alarms={alarms.data ?? []} />

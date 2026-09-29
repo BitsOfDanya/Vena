@@ -26,6 +26,12 @@ const DIRECTION_ICON: Record<FactorDirection, typeof ArrowUpRight> = {
   flat: ArrowRight,
 }
 
+const DIRECTION_LABEL: Record<FactorDirection, string> = {
+  up: "рост",
+  down: "снижение",
+  flat: "без изменений",
+}
+
 export function NetworkInspector({
   assetId,
   onClose,
@@ -44,7 +50,7 @@ export function NetworkInspector({
 
   if (detail.isPending) {
     return (
-      <Inspector label="Asset inspector">
+      <Inspector label="Инспектор объекта">
         <InspectorHeader title={assetId} onClose={onClose} />
         <LoadingBar />
       </Inspector>
@@ -53,9 +59,9 @@ export function NetworkInspector({
 
   if (!data) {
     return (
-      <Inspector label="Asset inspector">
+      <Inspector label="Инспектор объекта">
         <InspectorHeader title={assetId} onClose={onClose} />
-        <StateMessage title="Asset not found" description="Этого объекта нет в текущем наборе данных." />
+        <StateMessage title="Объект не найден" description="Этого объекта нет в текущем наборе данных." />
       </Inspector>
     )
   }
@@ -68,7 +74,7 @@ export function NetworkInspector({
     .join(", ")
 
   return (
-    <Inspector label="Asset inspector">
+    <Inspector label="Инспектор объекта">
       <InspectorHeader eyebrow={`${TYPE_LABEL[asset.type]} · ${asset.group}`} title={asset.id} onClose={onClose}>
         <div className="mt-1 flex items-center gap-3">
           {asset.status === "offline" ? <StatusLabel status="offline" /> : <RiskLevelLabel level={asset.riskLevel} />}
@@ -82,22 +88,22 @@ export function NetworkInspector({
             <span className="font-mono text-sm text-muted-foreground">/ 100</span>
             <span className={cn("ml-auto font-mono text-sm tabular-nums", data.delta > 0 ? "text-status-attention" : "text-muted-foreground")}>
               {data.delta > 0 ? "↑" : data.delta < 0 ? "↓" : "→"}
-              {formatDelta(Math.abs(data.delta))} since {formatClock(data.deltaSince)}
+              {formatDelta(Math.abs(data.delta))} с {formatClock(data.deltaSince)}
             </span>
           </div>
           <dl className="mt-3 grid grid-cols-2 gap-3 text-xs">
             <div>
-              <dt className="text-[11px] font-medium tracking-[0.08em] text-faint uppercase">Forecast window</dt>
+              <dt className="text-[11px] font-medium tracking-[0.08em] text-faint uppercase">Окно прогноза</dt>
               <dd className="mt-0.5 font-mono text-sm tabular-nums">{asset.forecastHorizon} h</dd>
             </div>
             <div>
-              <dt className="text-[11px] font-medium tracking-[0.08em] text-faint uppercase">Last event</dt>
-              <dd className="mt-0.5 font-mono text-sm tabular-nums">{asset.lastEventAt ? formatAgo(asset.lastEventAt, now) : "none"}</dd>
+              <dt className="text-[11px] font-medium tracking-[0.08em] text-faint uppercase">Последнее событие</dt>
+              <dd className="mt-0.5 font-mono text-sm tabular-nums">{asset.lastEventAt ? formatAgo(asset.lastEventAt, now) : "нет"}</dd>
             </div>
           </dl>
         </InspectorSection>
 
-        <InspectorSection title="Risk factors">
+        <InspectorSection title="Факторы риска">
           <ul className="divide-y">
             {data.factors.map((factor) => {
               const Icon = DIRECTION_ICON[factor.direction]
@@ -105,7 +111,7 @@ export function NetworkInspector({
                 <li key={factor.key} className="flex items-center gap-3 py-1.5 text-sm">
                   <span className="text-muted-foreground">{factor.label}</span>
                   <span className={cn("ml-auto font-mono tabular-nums", factor.direction === "up" && "text-status-attention")}>{factor.value}</span>
-                  <Icon aria-label={factor.direction} className={cn("size-3.5", factor.direction === "up" ? "text-status-attention" : "text-faint")} />
+                  <Icon aria-label={DIRECTION_LABEL[factor.direction]} className={cn("size-3.5", factor.direction === "up" ? "text-status-attention" : "text-faint")} />
                 </li>
               )
             })}
@@ -115,7 +121,7 @@ export function NetworkInspector({
           </p>
         </InspectorSection>
 
-        <InspectorSection title="Recent activity">
+        <InspectorSection title="Недавняя активность">
           {data.recent.length === 0 ? (
             <p className="text-sm text-muted-foreground">За последние 48 часов значимых событий нет.</p>
           ) : (
@@ -142,19 +148,19 @@ export function NetworkInspector({
               router.push("/timeline")
             }}
           >
-            Open in Timeline
+            Открыть в хронологии
           </button>
         </InspectorSection>
       </InspectorBody>
       <InspectorFooter>
         <Button variant="outline" className="flex-1" onClick={onInspect}>
-          Inspect
+          Осмотреть
         </Button>
         <Button
           className="flex-1"
           onClick={() => onCreateAction({ assetId: asset.id, reason: reasons ? `Повышенный риск: ${reasons}` : "Проверить текущее состояние", priority })}
         >
-          Create action
+          Создать работу
         </Button>
       </InspectorFooter>
     </Inspector>

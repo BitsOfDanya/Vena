@@ -93,7 +93,7 @@ export function CreateActionSheet({
       assignee: values.assignee,
       note: values.note,
       source: fromPrediction ? "vena_forecast" : "manual",
-      sourceDetail: fromPrediction ? (draft.sourceModelId ?? "ML forecast") : "Диспетчер",
+      sourceDetail: fromPrediction ? (draft.sourceModelId ?? "Прогноз ML") : "Диспетчер",
       notifyChannels: notify ? ["in_app", "email"] : ["in_app"],
       sourcePredictionId: draft.sourcePredictionId,
       sourceModelId: draft.sourceModelId,
@@ -101,9 +101,9 @@ export function CreateActionSheet({
       sourceHorizonHours: draft.sourceHorizonHours,
     })
     onOpenChange(false)
-    toast.success(`Action ${action.id} created`, {
+    toast.success(`Работа ${action.id} создана`, {
       description: `${action.assetId} · ${KIND_LABEL[action.kind]} до ${formatDateTime(action.recommendedAt)}`,
-      action: { label: "Open Actions", onClick: () => router.push("/actions") },
+      action: { label: "Открыть работы", onClick: () => router.push("/actions") },
     })
   })
 
@@ -113,14 +113,14 @@ export function CreateActionSheet({
     <Sheet open={open} onOpenChange={onOpenChange}>
       <SheetContent side="right" className="w-full gap-0 sm:max-w-md">
         <SheetHeader className="border-b">
-          <SheetTitle className="text-sm font-medium tracking-[0.12em] uppercase">Create action</SheetTitle>
+          <SheetTitle className="text-sm font-medium tracking-[0.12em] uppercase">Создать работу</SheetTitle>
           <SheetDescription>Запланируйте работу по объекту. Она появится в плане обслуживания.</SheetDescription>
         </SheetHeader>
         <form onSubmit={submit} className="flex min-h-0 flex-1 flex-col">
           <div className="min-h-0 flex-1 overflow-y-auto px-4 py-4">
             <FieldGroup>
               <Field data-invalid={Boolean(errors.assetId)}>
-                <FieldLabel htmlFor="action-asset">Asset</FieldLabel>
+                <FieldLabel htmlFor="action-asset">Объект</FieldLabel>
                 <NativeSelect id="action-asset" className="w-full" aria-invalid={Boolean(errors.assetId)} {...register("assetId")}>
                   <NativeSelectOption value="">Выберите объект</NativeSelectOption>
                   {sorted.map((asset) => (
@@ -132,12 +132,12 @@ export function CreateActionSheet({
                 <FieldError errors={[errors.assetId]} />
               </Field>
               <Field data-invalid={Boolean(errors.reason)}>
-                <FieldLabel htmlFor="action-reason">Reason</FieldLabel>
+                <FieldLabel htmlFor="action-reason">Причина</FieldLabel>
                 <Textarea id="action-reason" rows={3} aria-invalid={Boolean(errors.reason)} {...register("reason")} />
                 <FieldError errors={[errors.reason]} />
               </Field>
               <Field>
-                <FieldLabel htmlFor="action-kind">Action type</FieldLabel>
+                <FieldLabel htmlFor="action-kind">Тип работы</FieldLabel>
                 <NativeSelect id="action-kind" className="w-full" {...register("kind")}>
                   {(Object.keys(KIND_LABEL) as ActionKind[]).map((kind) => (
                     <NativeSelectOption key={kind} value={kind}>
@@ -147,13 +147,13 @@ export function CreateActionSheet({
                 </NativeSelect>
               </Field>
               <Field>
-                <FieldLabel>Priority</FieldLabel>
+                <FieldLabel>Приоритет</FieldLabel>
                 <Controller
                   control={control}
                   name="priority"
                   render={({ field }) => (
                     <Segmented<ActionPriority>
-                      label="Priority"
+                      label="Приоритет"
                       value={field.value}
                       onChange={field.onChange}
                       options={(Object.keys(PRIORITY_LABEL) as ActionPriority[]).map((value) => ({ value, label: PRIORITY_LABEL[value] }))}
@@ -162,12 +162,12 @@ export function CreateActionSheet({
                 />
               </Field>
               <Field data-invalid={Boolean(errors.recommendedAt)}>
-                <FieldLabel htmlFor="action-date">Recommended date (MSK)</FieldLabel>
+                <FieldLabel htmlFor="action-date">Рекомендуемая дата (MSK)</FieldLabel>
                 <Input id="action-date" type="datetime-local" className="font-mono" {...register("recommendedAt")} />
                 <FieldError errors={[errors.recommendedAt]} />
               </Field>
               <Field>
-                <FieldLabel htmlFor="action-assignee">Assignee</FieldLabel>
+                <FieldLabel htmlFor="action-assignee">Исполнитель</FieldLabel>
                 <NativeSelect id="action-assignee" className="w-full" {...register("assignee")}>
                   {ASSIGNEES.map((name) => (
                     <NativeSelectOption key={name} value={name}>
@@ -177,7 +177,7 @@ export function CreateActionSheet({
                 </NativeSelect>
               </Field>
               <Field>
-                <FieldLabel htmlFor="action-note">Note</FieldLabel>
+                <FieldLabel htmlFor="action-note">Примечание</FieldLabel>
                 <Textarea id="action-note" rows={3} {...register("note")} />
               </Field>
               <Field>
@@ -189,7 +189,7 @@ export function CreateActionSheet({
                     className="mt-0.5 size-4 accent-[var(--vena)]"
                   />
                   <span>
-                    Notify assignee by email
+                    Уведомить исполнителя по Email
                     <span className="mt-0.5 block text-[12px] text-muted-foreground">
                       Канал записывается в работу. Отправка появится после подключения почтового шлюза.
                     </span>
@@ -200,10 +200,10 @@ export function CreateActionSheet({
           </div>
           <SheetFooter className="flex-row justify-end gap-2 border-t">
             <Button type="button" variant="ghost" onClick={() => onOpenChange(false)}>
-              Cancel
+              Отмена
             </Button>
             <Button type="submit" disabled={create.isPending}>
-              Create action
+              Создать работу
             </Button>
           </SheetFooter>
         </form>

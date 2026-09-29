@@ -15,24 +15,24 @@ export function SettingsOverviewPage() {
   const digest = settings.data?.digests[0]
 
   return (
-    <SettingsShell title="Settings" descriptor="workspace">
-      <SettingsSection title="Account">
+    <SettingsShell title="Настройки" descriptor="рабочая область">
+      <SettingsSection title="Учётная запись">
         <dl className="grid grid-cols-2 gap-x-6 gap-y-3 border border-border bg-elevated px-5 py-4 text-[14px]">
           <div>
-            <dt className="text-[12px] text-faint uppercase">User</dt>
-            <dd className="mt-0.5 font-mono text-[13px]">{me.data?.subject ?? "Duty engineer"}</dd>
+            <dt className="text-[12px] text-faint uppercase">Пользователь</dt>
+            <dd className="mt-0.5 font-mono text-[13px]">{me.data?.subject ?? "Дежурный инженер"}</dd>
           </div>
           <div>
-            <dt className="text-[12px] text-faint uppercase">Role</dt>
+            <dt className="text-[12px] text-faint uppercase">Роль</dt>
             <dd className="mt-0.5 font-mono text-[13px]">{me.data?.role ?? "dispatcher"}</dd>
           </div>
           <div>
-            <dt className="text-[12px] text-faint uppercase">Time zone</dt>
+            <dt className="text-[12px] text-faint uppercase">Часовой пояс</dt>
             <dd className="mt-0.5 font-mono text-[13px]">Europe/Moscow</dd>
           </div>
           <div>
-            <dt className="text-[12px] text-faint uppercase">Interface language</dt>
-            <dd className="mt-0.5">English</dd>
+            <dt className="text-[12px] text-faint uppercase">Язык интерфейса</dt>
+            <dd className="mt-0.5">Русский</dd>
           </div>
         </dl>
         <div className="flex flex-wrap gap-4">
@@ -40,18 +40,18 @@ export function SettingsOverviewPage() {
             href="/settings/security"
             className="text-[13px] text-vena underline-offset-4 hover:underline focus-visible:ring-2 focus-visible:ring-ring/60 focus-visible:outline-none"
           >
-            Open security
+            Открыть безопасность
           </Link>
           <Link
             href="/settings/audit"
             className="text-[13px] text-vena underline-offset-4 hover:underline focus-visible:ring-2 focus-visible:ring-ring/60 focus-visible:outline-none"
           >
-            Open audit log
+            Открыть журнал аудита
           </Link>
         </div>
       </SettingsSection>
 
-      <SettingsSection title="Notification channels" description="Каналы доставки настраиваются на странице Notifications.">
+      <SettingsSection title="Каналы уведомлений" description="Каналы доставки настраиваются на странице «Уведомления».">
         <ul className="border border-border bg-elevated">
           {channels.map((channel) => (
             <li key={channel.id} className="flex items-center gap-4 border-b border-border-soft px-5 py-3 last:border-b-0">
@@ -67,16 +67,16 @@ export function SettingsOverviewPage() {
           href="/settings/notifications"
           className="inline-block text-[13px] text-vena underline-offset-4 hover:underline focus-visible:ring-2 focus-visible:ring-ring/60 focus-visible:outline-none"
         >
-          Open notification settings
+          Открыть настройки уведомлений
         </Link>
       </SettingsSection>
 
       {digest ? (
-        <SettingsSection title="Scheduled digest">
+        <SettingsSection title="Ежедневная сводка">
           <div className="border border-border bg-elevated px-5 py-4">
             <p className="text-[14px] font-medium">{digest.name}</p>
             <p className="mt-1 font-mono text-[13px] text-muted-foreground tabular-nums">
-              every day · {String(digest.hour).padStart(2, "0")}:{String(digest.minute).padStart(2, "0")} МСК
+              каждый день · {String(digest.hour).padStart(2, "0")}:{String(digest.minute).padStart(2, "0")} МСК
             </p>
           </div>
         </SettingsSection>

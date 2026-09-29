@@ -65,7 +65,7 @@ export function OpenActions({ involved }: { involved: Asset[] }) {
           router.push("/network")
         }}
       >
-        Open in Network
+        Открыть в сети
       </Button>
       <Button
         className="flex-1"
@@ -75,7 +75,7 @@ export function OpenActions({ involved }: { involved: Asset[] }) {
           router.push("/timeline")
         }}
       >
-        Open in Timeline
+        Открыть в хронологии
       </Button>
     </InspectorFooter>
   )
@@ -85,23 +85,23 @@ export function ClusterInspector({ cluster, onClose }: { cluster: PulseCluster; 
   const involved = useInvolvedAssets(cluster.assetIds)
 
   return (
-    <Inspector label="Cluster inspector">
-      <InspectorHeader eyebrow={`Cluster · ${formatDay(cluster.start)}`} title={`${formatClock(cluster.start)}–${formatClock(cluster.end)}`} onClose={onClose}>
-        <p className="mt-0.5 text-xs text-muted-foreground">{TYPE_LABEL[cluster.systemType]} system</p>
+    <Inspector label="Инспектор кластера">
+      <InspectorHeader eyebrow={`Кластер · ${formatDay(cluster.start)}`} title={`${formatClock(cluster.start)}–${formatClock(cluster.end)}`} onClose={onClose}>
+        <p className="mt-0.5 text-xs text-muted-foreground">система · {TYPE_LABEL[cluster.systemType]}</p>
       </InspectorHeader>
       <InspectorBody>
         <InspectorSection>
           <dl className="grid grid-cols-3 gap-3">
             <div>
-              <dt className="text-[11px] font-medium tracking-[0.08em] text-faint uppercase">Transitions</dt>
+              <dt className="text-[11px] font-medium tracking-[0.08em] text-faint uppercase">Переходы</dt>
               <dd className="font-mono text-xl tabular-nums">{cluster.transitions}</dd>
             </div>
             <div>
-              <dt className="text-[11px] font-medium tracking-[0.08em] text-faint uppercase">Assets</dt>
+              <dt className="text-[11px] font-medium tracking-[0.08em] text-faint uppercase">Объекты</dt>
               <dd className="font-mono text-xl tabular-nums">{cluster.assetIds.length}</dd>
             </div>
             <div>
-              <dt className="text-[11px] font-medium tracking-[0.08em] text-faint uppercase">Risk change</dt>
+              <dt className="text-[11px] font-medium tracking-[0.08em] text-faint uppercase">Δ риска</dt>
               <dd className={cn("font-mono text-xl tabular-nums", cluster.riskDelta > 1 && "text-status-attention")}>
                 {formatDelta(cluster.riskDelta)}
               </dd>
@@ -109,7 +109,7 @@ export function ClusterInspector({ cluster, onClose }: { cluster: PulseCluster; 
           </dl>
           <p className="mt-3 text-sm text-muted-foreground">{cluster.summary} по затронутым объектам ({TYPE_LABEL[cluster.systemType].toLowerCase()}) в этом окне.</p>
         </InspectorSection>
-        <InspectorSection title="Assets involved">
+        <InspectorSection title="Затронутые объекты">
           <InvolvedAssets involved={involved} />
         </InspectorSection>
       </InspectorBody>
@@ -131,8 +131,8 @@ export function PatternInspector({
 }) {
   const involved = useInvolvedAssets(pattern.assetIds)
   return (
-    <Inspector label="Pattern inspector">
-      <InspectorHeader eyebrow={`Pattern · ${formatDay(pattern.start)}`} title={`Pattern ${String(pattern.number).padStart(3, "0")}`} onClose={onClose}>
+    <Inspector label="Инспектор паттерна">
+      <InspectorHeader eyebrow={`Паттерн · ${formatDay(pattern.start)}`} title={`Паттерн ${String(pattern.number).padStart(3, "0")}`} onClose={onClose}>
         <p className="mt-0.5 font-mono text-xs text-muted-foreground tabular-nums">
           {formatClock(pattern.start)}–{formatClock(pattern.end)}
         </p>
@@ -141,15 +141,15 @@ export function PatternInspector({
         <InspectorSection>
           <dl className="grid grid-cols-3 gap-3">
             <div>
-              <dt className="text-[11px] font-medium tracking-[0.08em] text-faint uppercase">Events</dt>
+              <dt className="text-[11px] font-medium tracking-[0.08em] text-faint uppercase">События</dt>
               <dd className="font-mono text-xl tabular-nums">{pattern.events}</dd>
             </div>
             <div>
-              <dt className="text-[11px] font-medium tracking-[0.08em] text-faint uppercase">Systems</dt>
+              <dt className="text-[11px] font-medium tracking-[0.08em] text-faint uppercase">Системы</dt>
               <dd className="font-mono text-xl tabular-nums">{pattern.systems.length}</dd>
             </div>
             <div>
-              <dt className="text-[11px] font-medium tracking-[0.08em] text-faint uppercase">Risk change</dt>
+              <dt className="text-[11px] font-medium tracking-[0.08em] text-faint uppercase">Δ риска</dt>
               <dd className={cn("font-mono text-xl tabular-nums", pattern.riskDelta > 1 && "text-status-attention")}>{formatDelta(pattern.riskDelta)}</dd>
             </div>
           </dl>
@@ -157,7 +157,7 @@ export function PatternInspector({
             Связанная активность: нетипичные переходы в системах ({pattern.systems.map((type) => TYPE_LABEL[type].toLowerCase()).join(", ")}) в пределах одного часа.
           </p>
         </InspectorSection>
-        <InspectorSection title="Clusters in pattern">
+        <InspectorSection title="Кластеры в паттерне">
           <ul className="divide-y">
             {clusters.map((cluster) => (
               <li key={cluster.id}>
@@ -171,13 +171,13 @@ export function PatternInspector({
                   <span className="font-mono text-xs text-muted-foreground tabular-nums">
                     {formatClock(cluster.start)}–{formatClock(cluster.end)}
                   </span>
-                  <span className="ml-auto font-mono text-xs tabular-nums">{cluster.transitions} ev</span>
+                  <span className="ml-auto font-mono text-xs tabular-nums">{cluster.transitions} соб.</span>
                 </button>
               </li>
             ))}
           </ul>
         </InspectorSection>
-        <InspectorSection title="Assets involved">
+        <InspectorSection title="Затронутые объекты">
           <InvolvedAssets involved={involved} />
         </InspectorSection>
       </InspectorBody>

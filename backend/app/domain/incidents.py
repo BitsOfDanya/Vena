@@ -29,12 +29,15 @@ LEVEL_RANK: dict[RiskLevel, int] = {"critical": 0, "attention": 1, "observe": 2,
 def score_text(prediction: Prediction) -> str:
     if prediction.score_type == "calibrated_probability":
         return f"{prediction.score:.0%}"
-    return f"score {prediction.score:.3f}"
+    return f"оценка {prediction.score:.3f}"
 
 
-def reason_text(prediction: Prediction) -> str:
+def reason_text(prediction: Prediction, hints: dict[str, str] | None = None) -> str:
+    """Human-readable cause: catalogue hint first, then labelled driver/factor."""
     if prediction.drivers:
         driver = prediction.drivers[0]
+        if hints and driver.feature in hints:
+            return hints[driver.feature]
         if driver.value is None:
             value = ""
         elif float(driver.value).is_integer():
@@ -44,8 +47,10 @@ def reason_text(prediction: Prediction) -> str:
         return f"{driver.label}{value}"
     if prediction.factors:
         factor = max(prediction.factors, key=lambda item: item.value)
+        if hints and factor.key in hints:
+            return hints[factor.key]
         return f"{factor.label} {factor.value:g}"
-    return "Model risk level"
+    return "Уровень риска по модели"
 
 
 def scenario_for(device_type: str, model_id: str = "") -> str:

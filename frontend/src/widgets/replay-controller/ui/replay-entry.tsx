@@ -17,7 +17,7 @@ export function ReplayEntry({ className }: { className?: string }) {
 
   return (
     <Button className={className} variant="outline" size="sm" disabled={!episode} onClick={() => episode && startReplay(episode)}>
-      <History data-icon="inline-start" /> Replay
+      <History data-icon="inline-start" /> Запись
     </Button>
   )
 }
