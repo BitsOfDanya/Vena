@@ -130,7 +130,12 @@ function RoutesTable({ routes }: { routes: AccessRoute[] }) {
               <tr key={`${route.object}-${route.start}`} className="border-b border-border-soft align-top last:border-b-0">
                 <td className="px-4 py-2.5 font-mono text-[12px] whitespace-nowrap tabular-nums">{formatDateTime(route.start)}</td>
                 <td className="px-4 py-2.5">{route.object}</td>
-                <td className="px-4 py-2.5 font-mono text-[12px]">{route.steps.map((step) => `ПК${step.picket}`).join(" → ")}</td>
+                <td className="px-4 py-2.5 font-mono text-[12px]">
+                  {route.steps
+                    .filter((step, index) => index === 0 || step.picket !== route.steps[index - 1].picket)
+                    .map((step) => `ПК${step.picket}`)
+                    .join(" → ")}
+                </td>
                 <td className="px-4 py-2.5 text-right font-mono tabular-nums">
                   {route.distanceM} м{route.speedMPerMin ? ` · ${route.speedMPerMin} м/мин` : ""}
                 </td>
