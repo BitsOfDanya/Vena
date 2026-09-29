@@ -17,6 +17,7 @@ class SectionNode(BaseModel):
     group: str
     label: str | None
     health_index: int | None
+    raw_risk: float | None = None
     main_scenario: str | None
     risk_by_scenario: dict[str, float]
     channels: list[ChannelNode]

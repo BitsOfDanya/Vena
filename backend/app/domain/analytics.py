@@ -37,6 +37,12 @@ def _strongest(predictions: list[Prediction]) -> dict[str, Prediction]:
     return best
 
 
+def _health_order(node: SectionNode) -> tuple[int, float]:
+    if node.health_index is None:
+        return (101, 0.0)
+    return (node.health_index, -(node.raw_risk or 0.0))
+
+
 def asset_tree(source: PredictionSource) -> list[ObjectNode]:
     predictions = source.all()
     health = location_health(
@@ -55,6 +61,7 @@ def asset_tree(source: PredictionSource) -> list[ObjectNode]:
                 group=group,
                 label=location_label(group),
                 health_index=state.index if state else None,
+                raw_risk=state.raw_risk if state else None,
                 main_scenario=state.main_scenario if state else None,
                 risk_by_scenario=state.risk_by_scenario if state else {},
                 channels=[
@@ -73,7 +80,7 @@ def asset_tree(source: PredictionSource) -> list[ObjectNode]:
         )
     result = []
     for object_id, nodes in objects.items():
-        nodes.sort(key=lambda item: item.health_index if item.health_index is not None else 101)
+        nodes.sort(key=_health_order)
         indexes = [item.health_index for item in nodes if item.health_index is not None]
         result.append(
             ObjectNode(
@@ -83,7 +90,7 @@ def asset_tree(source: PredictionSource) -> list[ObjectNode]:
                 sections=nodes,
             )
         )
-    result.sort(key=lambda item: item.health_index if item.health_index is not None else 101)
+    result.sort(key=lambda item: min(map(_health_order, item.sections), default=(101, 0.0)))
     return result
 
 

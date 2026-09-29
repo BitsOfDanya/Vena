@@ -14,6 +14,7 @@ class LocationHealth:
     group: str
     label: str | None
     index: int
+    raw_risk: float = 0.0
     risk_by_scenario: dict[str, float] = field(default_factory=dict)
     channels: int = 0
 
@@ -79,6 +80,7 @@ def location_health(
             group=group,
             label=location_label(group),
             index=round(100 * (1 - calibrate(1 - survive, points))),
+            raw_risk=round(1 - survive, 6),
             risk_by_scenario={key: round(value, 4) for key, value in scenario_risk.items()},
             channels=len(channels[group]),
         )
