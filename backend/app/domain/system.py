@@ -97,7 +97,23 @@ def system_notices(settings: Settings) -> list[SystemNotice]:
     elif status.stale and status.age_seconds is not None:
         days = status.age_seconds // 86_400
         demo_stand = settings.environment in ("local", "test") or settings.seed_demo
-        if demo_stand:
+        if status.data_source == "journal" and status.stream is None and status.prediction_time:
+            notices.append(
+                SystemNotice(
+                    id="predictions-historical",
+                    kind="data_delayed",
+                    severity="info",
+                    title="Исторический журнал",
+                    description=(
+                        "Журнал заказчика заканчивается "
+                        f"{status.prediction_time:%d.%m.%Y}, прогнозы рассчитаны на этот момент. "
+                        "Новые события СМВУ принимаются через API и пересчитываются автоматически."
+                    ),
+                    href="/settings/integrations",
+                    dismissible=True,
+                )
+            )
+        elif demo_stand:
             notices.append(
                 SystemNotice(
                     id="predictions-stale",

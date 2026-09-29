@@ -156,6 +156,24 @@ def test_stale_snapshot_raises_notice_but_keeps_api_healthy(
     assert client.get("/api/v1/health").json()["status"] == "ok"
 
 
+def test_historical_journal_snapshot_is_explained_not_alarmed(
+    client: TestClient, ml_root: Path
+) -> None:
+    write_snapshot(
+        ml_root, datetime(2026, 6, 30, 23, 59, tzinfo=UTC), [row("100", 0.9, "critical")]
+    )
+    path = ml_root / "results" / "predictions" / "snapshot.json"
+    payload = json.loads(path.read_text(encoding="utf-8"))
+    payload["data_source"] = "journal"
+    path.write_text(json.dumps(payload), encoding="utf-8")
+
+    notices = {notice["id"]: notice for notice in client.get("/api/v1/system/notices").json()}
+
+    assert "predictions-stale" not in notices
+    assert notices["predictions-historical"]["severity"] == "info"
+    assert "30.06.2026" in notices["predictions-historical"]["description"]
+
+
 def test_refresh_is_idempotent_and_creates_notifications(client: TestClient, ml_root: Path) -> None:
     write_snapshot(
         ml_root, datetime.now(tz=UTC), [row("100", 0.995, "critical"), row("200", 0.91, "high")]
