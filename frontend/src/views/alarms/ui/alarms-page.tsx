@@ -3,7 +3,7 @@
 import * as React from "react"
 
 import { formatProbability } from "@/entities/prediction"
-import { useAccessEvents, useAlarms, type AccessEvent, type AlarmAssessment } from "@/entities/signal"
+import { useAccessEvents, useAccessRoutes, useAlarms, type AccessEvent, type AccessRoute, type AlarmAssessment } from "@/entities/signal"
 import { workflowMode } from "@/shared/config/env"
 import { formatDateTime } from "@/shared/lib/time"
 import { cn } from "@/shared/lib/utils"
@@ -42,10 +42,12 @@ function AlarmsTable({ alarms }: { alarms: AlarmAssessment[] }) {
   const [onlyFlagged, setOnlyFlagged] = React.useState(true)
   const rows = onlyFlagged ? alarms.filter((alarm) => alarm.needsVerification) : alarms
   const flagged = alarms.filter((alarm) => alarm.needsVerification).length
+  const maintenance = alarms.filter((alarm) => alarm.maintenance).length
   return (
     <>
-      <section aria-label="Сводка по тревогам" className="mx-6 mt-5 grid grid-cols-1 border border-border sm:grid-cols-3">
+      <section aria-label="Сводка по тревогам" className="mx-6 mt-5 grid grid-cols-1 border border-border sm:grid-cols-4">
         <Metric label="Тревоги, 30 дней" value={alarms.length} hint="Тревоги дыма, газа и температуры" />
+        <Metric label="Серии ППР" value={maintenance} hint="Проверки извещателей в рабочее время" />
         <Metric label="Сначала проверить" value={flagged} hint="Низкая вероятность подтверждения" />
         <Metric
           label="Доля"
@@ -56,8 +58,9 @@ function AlarmsTable({ alarms }: { alarms: AlarmAssessment[] }) {
       <p className="mx-6 mt-4 text-[12px] leading-relaxed text-muted-foreground">
         Вероятность — шанс, что тревога подтвердится в течение 30 минут: повтором, срабатыванием соседнего датчика или
         продолжением тревожного состояния. Метка «проверить перед выездом» стоит у тревог, которые подтверждаются реже
-        обычного: среди них не подтвердились 45 % против 12 % в среднем. Это подсказка для проверки по камерам и
-        телеметрии, а не вывод о ложности.
+        обычного: в первом полугодии 2026 года среди них не подтвердились 48 % против 21 % в среднем. Серия ППР — 5 и
+        более дымовых датчиков объекта за 10 минут или 3 и более газоанализатора за 30 минут в рабочее время: это
+        плановая проверка, выезд не нужен. Метка — подсказка для проверки по камерам и телеметрии, а не вывод о ложности.
       </p>
       <div className="flex items-center gap-2 px-6 pt-4 pb-3 text-[12px]">
         <label className="flex items-center gap-2">
@@ -86,7 +89,7 @@ function AlarmsTable({ alarms }: { alarms: AlarmAssessment[] }) {
                 <td className="px-4 py-2.5">{alarm.sensorType}</td>
                 <td className="px-4 py-2.5 text-right font-mono tabular-nums">{formatProbability(alarm.corroborationProbability)}</td>
                 <td className={cn("px-4 py-2.5", alarm.needsVerification ? "text-status-attention" : "text-muted-foreground")}>
-                  {alarm.needsVerification ? "Проверить перед выездом" : "Типичная тревога"}
+                  {alarm.maintenance ? "Серия ППР" : alarm.needsVerification ? "Проверить перед выездом" : "Типичная тревога"}
                 </td>
               </tr>
             ))}
@@ -95,6 +98,53 @@ function AlarmsTable({ alarms }: { alarms: AlarmAssessment[] }) {
         {rows.length === 0 ? <p className="px-4 py-4 text-[13px] text-muted-foreground">Нет тревог.</p> : null}
       </div>
     </>
+  )
+}
+
+const DIRECTION: Record<AccessRoute["direction"], string> = {
+  increasing: "к большим пикетам",
+  decreasing: "к меньшим пикетам",
+  mixed: "с возвратами",
+}
+
+function RoutesTable({ routes }: { routes: AccessRoute[] }) {
+  return (
+    <section aria-label="Маршруты по пикетам" className="mx-6 mt-4 mb-2">
+      <h2 className="text-[11px] tracking-[0.08em] text-faint uppercase">Маршруты по пикетам, 30 дней</h2>
+      <p className="mt-1 text-[12px] text-muted-foreground">
+        Срабатывания точек входа одного объекта на охране с паузами до 30 минут, упорядоченные по пикетам (шаг около 10 м).
+      </p>
+      <div className="mt-2 overflow-x-auto border border-border">
+        <table className="w-full min-w-[760px] text-left text-[13px]">
+          <thead className="border-b border-border text-[11px] tracking-[0.08em] text-faint uppercase">
+            <tr>
+              <th className="px-4 py-2 font-medium">Начало</th>
+              <th className="px-4 py-2 font-medium">Объект</th>
+              <th className="px-4 py-2 font-medium">Пикеты</th>
+              <th className="px-4 py-2 text-right font-medium">Путь</th>
+              <th className="px-4 py-2 font-medium">Направление</th>
+            </tr>
+          </thead>
+          <tbody>
+            {routes.map((route) => (
+              <tr key={`${route.object}-${route.start}`} className="border-b border-border-soft align-top last:border-b-0">
+                <td className="px-4 py-2.5 font-mono text-[12px] whitespace-nowrap tabular-nums">{formatDateTime(route.start)}</td>
+                <td className="px-4 py-2.5">{route.object}</td>
+                <td className="px-4 py-2.5 font-mono text-[12px]">{route.steps.map((step) => `ПК${step.picket}`).join(" → ")}</td>
+                <td className="px-4 py-2.5 text-right font-mono tabular-nums">
+                  {route.distanceM} м{route.speedMPerMin ? ` · ${route.speedMPerMin} м/мин` : ""}
+                </td>
+                <td className="px-4 py-2.5 text-muted-foreground">
+                  {DIRECTION[route.direction]}
+                  {route.night ? ", ночью" : ""}
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+        {routes.length === 0 ? <p className="px-4 py-4 text-[13px] text-muted-foreground">Маршрутов нет.</p> : null}
+      </div>
+    </section>
   )
 }
 
@@ -150,6 +200,7 @@ export function AlarmsPage() {
   const [view, setView] = React.useState<View>("alarms")
   const alarms = useAlarms()
   const access = useAccessEvents()
+  const routes = useAccessRoutes()
   const query = view === "alarms" ? alarms : access
 
   if (workflowMode !== "api") {
@@ -185,7 +236,10 @@ export function AlarmsPage() {
         ) : view === "alarms" ? (
           <AlarmsTable alarms={alarms.data ?? []} />
         ) : (
-          <AccessTable events={access.data ?? []} />
+          <>
+            <RoutesTable routes={routes.data ?? []} />
+            <AccessTable events={access.data ?? []} />
+          </>
         )}
       </div>
     </div>
