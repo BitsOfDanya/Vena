@@ -16,7 +16,11 @@ RUN pip install --no-cache-dir \
     "psycopg[binary]>=3.2.0" \
     "openpyxl>=3.1" \
     "pyjwt>=2.10,<3" \
-    "pwdlib[argon2]>=0.3,<1"
+    "pwdlib[argon2]>=0.3,<1" \
+    "ldap3>=2.9.1,<3" \
+    "httpx>=0.28,<1" \
+    "defusedxml>=0.7,<1" \
+    "python-multipart>=0.0.20"
 
 COPY app ./app
 COPY migrations ./migrations

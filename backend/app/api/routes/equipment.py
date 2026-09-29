@@ -14,7 +14,7 @@ from app.core.config import Settings, get_settings
 from app.core.security import Principal, get_principal, require_min_role
 from app.db.models import Equipment, HistoricalEvent, ImportOutbox, IntegrationRun
 from app.db.session import get_session
-from app.domain import equipment, imports
+from app.domain import equipment, imports, journal_tail
 from app.schemas.equipment import EquipmentIn, EquipmentOut
 
 router = APIRouter(tags=["equipment", "imports"])
@@ -188,6 +188,7 @@ def template(kind: Literal["channels", "journal"], _: Admin) -> Response:
 @router.get("/events/recent")
 def recent_events(
     db: DB,
+    settings: Config,
     _: Reader,
     hours: int = Query(6, ge=1, le=168),
     limit: int = Query(100, ge=1, le=500),
@@ -202,6 +203,10 @@ def recent_events(
         query = query.where(HistoricalEvent.channel_id == channel_id)
     latest = db.scalar(latest_query)
     if latest is None:
+        if settings.dataset_dir is not None and settings.dataset_dir.is_dir():
+            return journal_tail.recent(
+                settings.dataset_dir, hours, limit, channel_id, settings.timezone
+            )
         return {"latest_at": None, "from": None, "items": [], "has_more": False}
     start = latest - timedelta(hours=hours)
     rows = list(

@@ -52,7 +52,7 @@ def list_predictions(
     horizon: int | None = None,
     model_id: str | None = None,
     sort: Annotated[str, Query(pattern="^(risk_desc|delta_desc|latest)$")] = "risk_desc",
-    limit: Annotated[int, Query(ge=1, le=500)] = 50,
+    limit: Annotated[int, Query(ge=1, le=5000)] = 50,
     offset: Annotated[int, Query(ge=0)] = 0,
 ) -> list[Prediction]:
     _require_snapshot(settings)
