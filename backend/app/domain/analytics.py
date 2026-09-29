@@ -1,4 +1,5 @@
 import json
+import re
 from datetime import datetime, timedelta
 from pathlib import Path
 from typing import Any
@@ -35,6 +36,18 @@ from app.schemas.analytics import (
 from app.schemas.predictions import Prediction
 
 AVOIDED = {"false_or_irrelevant_signal", "no_issue_found"}
+
+
+PICKET = re.compile(r"ПК\s*(\d+)(?:\s*\+\s*(\d+(?:[.,]\d+)?))?")
+PICKET_METERS = 10
+
+
+def picket_meters(name: str | None) -> float | None:
+    match = PICKET.search(name or "")
+    if not match:
+        return None
+    extra = float(match.group(2).replace(",", ".")) if match.group(2) else 0.0
+    return int(match.group(1)) * PICKET_METERS + extra
 
 
 def _strongest(predictions: list[Prediction]) -> dict[str, Prediction]:
@@ -85,6 +98,7 @@ def asset_tree(source: PredictionSource) -> list[ObjectNode]:
                         model_id=item.model_id,
                         probability=item.score,
                         risk_level=item.risk_level,
+                        picket_m=picket_meters(item.name),
                     )
                     for item in members
                 ],

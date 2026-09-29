@@ -11,6 +11,7 @@ class ChannelNode(BaseModel):
     model_id: str
     probability: float
     risk_level: str
+    picket_m: float | None = None
 
 
 class SectionNode(BaseModel):

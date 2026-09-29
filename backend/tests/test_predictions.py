@@ -6,6 +6,7 @@ import pytest
 from fastapi.testclient import TestClient
 
 from app.core.config import get_settings
+from app.domain.analytics import picket_meters
 from app.domain.predictions import reset_prediction_source
 
 CONFIG = {
@@ -541,6 +542,12 @@ def test_feeder_matches_without_channel_name(client: TestClient, ml_root: Path) 
     assert "ФАНС1" not in situation["summary"]
 
 
+def test_picket_meters() -> None:
+    assert picket_meters("Дым ПК263+3") == 2633
+    assert picket_meters("ТЕМП ПК176+6,5") == 1766.5
+    assert picket_meters("847-1.1.94.3.") is None
+
+
 def test_asset_tree_effect_and_report(client: TestClient, ml_root: Path) -> None:
     _snapshot_with_sections(ml_root)
 
@@ -552,6 +559,7 @@ def test_asset_tree_effect_and_report(client: TestClient, ml_root: Path) -> None
     assert tree[0]["label"] == "Объект 5567"
     assert tree[0]["health_index"] == 15
     assert tree[0]["sections"][0]["channels"][0]["name"] == "ФАНС1 ПК300"
+    assert tree[0]["sections"][0]["channels"][0]["picket_m"] == 3000
     assert tree[1]["health_index"] == 95
     assert effect["channels_at_risk"] == 1
     assert effect["incidents"] == 1

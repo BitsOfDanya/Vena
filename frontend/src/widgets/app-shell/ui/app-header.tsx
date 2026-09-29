@@ -5,7 +5,7 @@ import Link from "next/link"
 import { usePathname, useRouter } from "next/navigation"
 
 import { useAuthSession } from "@/features/auth"
-import { NAV_ITEMS } from "@/shared/config/routes"
+import { ACCOUNT_ITEMS, NAV_ITEMS } from "@/shared/config/routes"
 import { cn } from "@/shared/lib/utils"
 import {
   DropdownMenu,
@@ -77,6 +77,12 @@ export function AppHeader({ onOpenSearch }: { onOpenSearch: () => void }) {
               <span className="block text-[13px] font-medium">{title}</span>
               <span className="block font-mono text-[12px] text-muted-foreground">{subtitle}</span>
             </DropdownMenuLabel>
+            <DropdownMenuSeparator />
+            {ACCOUNT_ITEMS.map((item) => (
+              <DropdownMenuItem key={item.href} onClick={() => router.push(item.href)}>
+                {item.label}
+              </DropdownMenuItem>
+            ))}
             <DropdownMenuSeparator />
             <DropdownMenuItem onClick={() => router.push("/settings")}>Настройки</DropdownMenuItem>
             <DropdownMenuItem onClick={() => router.push("/settings/security")}>Безопасность</DropdownMenuItem>

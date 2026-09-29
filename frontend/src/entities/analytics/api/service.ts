@@ -145,6 +145,7 @@ export async function getAssetTree(): Promise<ObjectNode[]> {
           model_id: string
           probability: number
           risk_level: string
+          picket_m?: number | null
         }[]
       }[]
     }[]
@@ -167,6 +168,7 @@ export async function getAssetTree(): Promise<ObjectNode[]> {
         modelId: channel.model_id,
         probability: channel.probability,
         riskLevel: channel.risk_level,
+        picketM: channel.picket_m ?? null,
       })),
     })),
   }))

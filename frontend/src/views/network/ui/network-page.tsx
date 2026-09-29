@@ -16,6 +16,7 @@ import { AssetTreePanel } from "@/widgets/asset-tree"
 import { NetworkCanvas } from "@/widgets/network-canvas"
 import { NetworkInspector } from "@/widgets/network-inspector"
 import { NetworkMap } from "@/widgets/network-map"
+import { ObjectSchema } from "@/widgets/object-schema"
 import { NetworkToolbar, type NetworkMode, type RiskFilter, type SystemFilter } from "@/widgets/network-toolbar"
 
 export function NetworkPage() {
@@ -31,7 +32,7 @@ export function NetworkPage() {
   const [sheetOpen, setSheetOpen] = React.useState(false)
   const [draft, setDraft] = React.useState<ActionDraft>({})
   const [focusId, setFocusId] = React.useState<string | null>(selectedAssetId)
-  const [mode, setMode] = React.useState<NetworkMode>(apiMode ? "tree" : "network")
+  const [mode, setMode] = React.useState<NetworkMode>("network")
   const assets = useAssets(now, horizon)
   const actions = useActions()
 
@@ -96,6 +97,8 @@ export function NetworkPage() {
         descriptor={
           mode === "tree"
             ? "объект → секция → канал · Health Index"
+            : apiMode && mode === "network"
+              ? "объект → шкафы по пикетам · риск моделей"
             : network.data
               ? `${network.data.groups.length} групп · ${network.data.nodes.length} объектов`
               : ""
@@ -122,6 +125,17 @@ export function NetworkPage() {
         <div className="relative min-w-0 flex-1">
           {mode === "tree" ? (
             <AssetTreePanel
+              query={query}
+              selectedId={selectedAssetId}
+              system={system}
+              risk={risk}
+              onSelect={(id) => {
+                selectAsset(id)
+                setFocusId(null)
+              }}
+            />
+          ) : apiMode && mode === "network" ? (
+            <ObjectSchema
               query={query}
               selectedId={selectedAssetId}
               system={system}

@@ -7,6 +7,9 @@ export const NAV_ITEMS = [
   { href: "/journal", label: "Журнал" },
   { href: "/dashboard", label: "Дашборд" },
   { href: "/effect", label: "Эффект" },
+] as const
+
+export const ACCOUNT_ITEMS = [
   { href: "/models", label: "Модели" },
   { href: "/about", label: "О сервисе" },
 ] as const

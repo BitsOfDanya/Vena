@@ -57,6 +57,7 @@ export type ChannelNode = {
   modelId: string
   probability: number
   riskLevel: string
+  picketM: number | null
 }
 
 export type SectionNode = {
