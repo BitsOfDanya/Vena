@@ -52,6 +52,25 @@ def alarm_kpis(settings: SettingsDep, _: ReaderDep) -> dict[str, Any]:
     return report
 
 
+@router.get("/analytics/health-history")
+def health_history(settings: SettingsDep, _: ReaderDep) -> dict[str, Any]:
+    """Daily health index of every object over the recent half-year."""
+    report = analytics_service.read_report(settings, "health_history")
+    if report is None:
+        raise HTTPException(status_code=404, detail="health history has not been computed")
+    return {"period": report.get("period"), "objects": report.get("objects", {})}
+
+
+@router.get("/analytics/health-history/{group}")
+def section_health_history(group: str, settings: SettingsDep, _: ReaderDep) -> list[list[Any]]:
+    """Daily health index of one section (location group of the SMVU tag)."""
+    report = analytics_service.read_report(settings, "health_history") or {}
+    series = report.get("sections", {}).get(group)
+    if series is None:
+        raise HTTPException(status_code=404, detail="no history for this section")
+    return list(series)
+
+
 @router.get("/reports/management.xlsx")
 def management_report(session: SessionDep, settings: SettingsDep, _: ReaderDep) -> Response:
     content = report_service.management_report(session, settings, _source(settings))

@@ -639,3 +639,22 @@ def test_alarm_kpis_are_served_from_the_ml_report(client: TestClient, ml_root: P
     )
     body = client.get("/api/v1/analytics/alarm-kpis").json()
     assert body["recent"]["chattering_channels"] == 142
+
+
+def test_health_history_by_object_and_section(client: TestClient, ml_root: Path) -> None:
+    (ml_root / "results").mkdir(parents=True, exist_ok=True)
+    (ml_root / "results" / "health_history.json").write_text(
+        json.dumps(
+            {
+                "period": "2026-01-01 — 2026-06-30",
+                "objects": {"5218": [["2026-06-29", 60], ["2026-06-30", 55]]},
+                "sections": {"217-2.4.1": [["2026-06-30", 55]]},
+            }
+        ),
+        encoding="utf-8",
+    )
+    objects = client.get("/api/v1/analytics/health-history").json()
+    section = client.get("/api/v1/analytics/health-history/217-2.4.1").json()
+    assert objects["objects"]["5218"][-1] == ["2026-06-30", 55]
+    assert section == [["2026-06-30", 55]]
+    assert client.get("/api/v1/analytics/health-history/0-0").status_code == 404
