@@ -68,16 +68,14 @@ export function overlayFromPrediction(prediction: OverlayPrediction): Prediction
   }
 }
 
-export function indexPredictionsByAsset(
-  predictions: OverlayPrediction[],
-): Map<string, OverlayPrediction> {
+export function indexPredictionsByAsset<T extends OverlayPrediction>(predictions: T[]): Map<string, T> {
   const rank: Record<OverlayPrediction["riskLevel"], number> = {
     critical: 4,
     attention: 3,
     observe: 2,
     normal: 1,
   }
-  const best = new Map<string, OverlayPrediction>()
+  const best = new Map<string, T>()
   for (const prediction of predictions) {
     const current = best.get(prediction.assetId)
     if (!current) {

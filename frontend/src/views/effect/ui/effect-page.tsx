@@ -3,14 +3,16 @@
 import Link from "next/link"
 import * as React from "react"
 
-import { useEffectReport } from "@/entities/analytics"
+import { useAlarmKpis, useEffectReport } from "@/entities/analytics"
 import { OPEN_STATUSES, useActions } from "@/entities/maintenance"
-import { SCENARIO_LABEL, useBackendSituations, type PredictionScenario } from "@/entities/prediction"
+import { SCENARIO_LABEL, useBackendSituations, modelLabel, type PredictionScenario } from "@/entities/prediction"
 import { ApiError } from "@/shared/api/http"
 import { workflowMode } from "@/shared/config/env"
 import { cn } from "@/shared/lib/utils"
 import { Button } from "@/shared/ui/button"
 import { LoadingBar, StateMessage } from "@/shared/ui/state-message"
+
+import { ForecastVsFactPanel } from "./forecast-vs-fact-panel"
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8000"
 
@@ -49,33 +51,105 @@ function pct(value: number | null | undefined) {
   return `${Math.round(value * 100)}%`
 }
 
-function modelLabel(modelId: string) {
-  const prefix = modelId.split("_")[0]
-  const map: Record<string, string> = {
-    phase: "Питание",
-    power: "Питание",
-    pump: "Подтопление",
-    flood: "Подтопление",
-    smoke: "Пожар",
-    fan: "Вентиляция",
-    alarm: "Тревоги",
-  }
-  return map[prefix] ? `${map[prefix]} · ${modelId}` : modelId
-}
-
-async function downloadManagementReport() {
-  const response = await fetch(`${API_URL}/api/v1/reports/management.xlsx`, {
+async function downloadFile(path: string, filename: string, accept: string) {
+  const response = await fetch(`${API_URL}${path}`, {
     credentials: "include",
-    headers: { Accept: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" },
+    headers: { Accept: accept },
   })
   if (!response.ok) throw new ApiError(response.status, response.statusText)
   const blob = await response.blob()
   const url = URL.createObjectURL(blob)
   const link = document.createElement("a")
   link.href = url
-  link.download = "vena-management-report.xlsx"
+  link.download = filename
   link.click()
   window.setTimeout(() => URL.revokeObjectURL(url), 1000)
+}
+
+function monthLabel(start: string) {
+  if (!start) return "—"
+  const stamp = start.slice(0, 7)
+  const [year, month] = stamp.split("-")
+  if (!year || !month) return stamp
+  return `${month}.${year.slice(2)}`
+}
+
+function AlarmLoadBlock() {
+  const kpis = useAlarmKpis()
+  if (kpis.isPending) return <LoadingBar className="min-h-24" />
+  if (kpis.isError || !kpis.data?.recent) return null
+  const recent = kpis.data.recent
+  const over = recent.perHourMean > kpis.data.manageablePerHour
+  const manageable = kpis.data.manageablePerHour
+  const months = kpis.data.months.slice(-12)
+  const maxMonth = Math.max(manageable, ...months.map((item) => item.perHourMean), 1)
+  return (
+    <section className="border border-border bg-elevated">
+      <div className="border-b border-border-soft px-4 py-3">
+        <h2 className="text-[12px] font-medium tracking-[0.12em] uppercase">Нагрузка тревог · ISA-18.2</h2>
+        <p className="mt-1 text-[12px] text-muted-foreground">
+          {recent.start && recent.end ? `${recent.start} — ${recent.end}` : "Последний месяц"} · норма до {manageable}/ч
+        </p>
+      </div>
+      <div className="grid gap-3 px-4 py-3 sm:grid-cols-2 xl:grid-cols-4">
+        <div>
+          <p className="text-[11px] tracking-[0.08em] text-faint uppercase">Тревог в час</p>
+          <p className={cn("mt-1 font-mono text-[22px] tabular-nums", over && "text-status-attention")}>
+            {recent.perHourMean.toFixed(1)}
+          </p>
+        </div>
+        <div>
+          <p className="text-[11px] tracking-[0.08em] text-faint uppercase">Доля лавин</p>
+          <p className="mt-1 font-mono text-[22px] tabular-nums">{pct(recent.activationsInFloods)}</p>
+        </div>
+        <div>
+          <p className="text-[11px] tracking-[0.08em] text-faint uppercase">Топ-10 каналов</p>
+          <p className="mt-1 font-mono text-[22px] tabular-nums">{pct(recent.top10Share)}</p>
+        </div>
+        <div>
+          <p className="text-[11px] tracking-[0.08em] text-faint uppercase">Серии ППР</p>
+          <p className="mt-1 font-mono text-[22px] tabular-nums">{pct(recent.maintenanceShare)}</p>
+        </div>
+      </div>
+      {months.length > 0 ? (
+        <div className="border-t border-border-soft px-4 py-3">
+          <p className="text-[12px] font-medium">Тревог в час по месяцам</p>
+          <div className="mt-2 flex h-16 items-end gap-1">
+            {months.map((item) => {
+              const height = Math.max(4, Math.round((item.perHourMean / maxMonth) * 52))
+              const monthOver = item.perHourMean > manageable
+              return (
+                <div
+                  key={item.start}
+                  className="flex min-w-0 flex-1 flex-col items-center gap-1"
+                  title={`${monthLabel(item.start)}: ${item.perHourMean.toFixed(1)}/ч`}
+                >
+                  <div
+                    className={cn("w-full max-w-6", monthOver ? "bg-status-attention" : "bg-vena/70")}
+                    style={{ height }}
+                  />
+                  <span className="truncate font-mono text-[9px] text-faint">{monthLabel(item.start)}</span>
+                </div>
+              )
+            })}
+          </div>
+        </div>
+      ) : null}
+      {recent.chatteringTop.length > 0 ? (
+        <div className="border-t border-border-soft px-4 py-3">
+          <p className="text-[12px] font-medium">Дребезжащие каналы — на ремонт датчиков</p>
+          <ul className="mt-2 space-y-1">
+            {recent.chatteringTop.slice(0, 8).map((item) => (
+              <li key={item.channelId} className="flex justify-between gap-3 text-[13px]">
+                <span className="truncate">{item.name ?? item.channelId}</span>
+                <span className="font-mono tabular-nums text-muted-foreground">{item.activations}</span>
+              </li>
+            ))}
+          </ul>
+        </div>
+      ) : null}
+    </section>
+  )
 }
 
 export function EffectPage() {
@@ -83,7 +157,7 @@ export function EffectPage() {
   const situations = useBackendSituations()
   const actions = useActions()
   const apiMode = workflowMode === "api"
-  const [downloading, setDownloading] = React.useState(false)
+  const [downloading, setDownloading] = React.useState<string | null>(null)
   const [downloadError, setDownloadError] = React.useState<string | null>(null)
 
   const openActions = (actions.data ?? []).filter((action) => OPEN_STATUSES.includes(action.status))
@@ -95,6 +169,18 @@ export function EffectPage() {
       return (b.incidentProbability ?? b.riskScore ?? 0) - (a.incidentProbability ?? a.riskScore ?? 0)
     })
     .slice(0, 8)
+
+  function runDownload(kind: "xlsx" | "csv" | "xml") {
+    setDownloading(kind)
+    setDownloadError(null)
+    const job =
+      kind === "xlsx"
+        ? downloadFile("/api/v1/reports/management.xlsx", "vena-management-report.xlsx", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
+        : kind === "csv"
+          ? downloadFile("/api/v1/reports/predictions.csv", "vena-predictions.csv", "text/csv")
+          : downloadFile("/api/v1/reports/predictions.xml", "vena-predictions.xml", "application/xml")
+    void job.catch(() => setDownloadError("Не удалось скачать файл.")).finally(() => setDownloading(null))
+  }
 
   if (!apiMode) {
     return (
@@ -114,24 +200,22 @@ export function EffectPage() {
     <div className="flex size-full min-h-0 flex-col overflow-auto print:overflow-visible">
       <div className="flex shrink-0 flex-wrap items-center gap-x-6 gap-y-3 px-6 pt-4 pb-3 print:border-b print:pb-4">
         <h1 className="text-[26px] font-semibold tracking-[-0.01em]">Эффект</h1>
-        <p className="text-[13px] text-muted-foreground">Предсказано · опережение · решения · избежанные выезды</p>
-        <div className="ml-auto flex items-center gap-3 print:hidden">
-          <Button
-            variant="outline"
-            size="sm"
-            disabled={downloading}
-            onClick={() => {
-              setDownloading(true)
-              setDownloadError(null)
-              void downloadManagementReport()
-                .catch(() => setDownloadError("Не удалось скачать отчёт."))
-                .finally(() => setDownloading(false))
-            }}
-          >
-            {downloading ? "Скачивание…" : "Скачать XLSX"}
+        <p className="text-[13px] text-muted-foreground">Предсказано · опережение · прогноз против факта · решения</p>
+        <div className="ml-auto flex flex-wrap items-center gap-2 print:hidden">
+          <Button variant="outline" size="sm" disabled={downloading !== null} onClick={() => runDownload("xlsx")}>
+            {downloading === "xlsx" ? "…" : "XLSX"}
+          </Button>
+          <Button variant="outline" size="sm" disabled={downloading !== null} onClick={() => runDownload("csv")}>
+            {downloading === "csv" ? "…" : "CSV"}
+          </Button>
+          <Button variant="outline" size="sm" disabled={downloading !== null} onClick={() => runDownload("xml")}>
+            {downloading === "xml" ? "…" : "XML"}
           </Button>
           <Button variant="outline" size="sm" onClick={() => window.print()}>
             Печать / PDF
+          </Button>
+          <Button asChild variant="outline" size="sm">
+            <Link href="/models">Модели</Link>
           </Button>
           <Button asChild variant="outline" size="sm">
             <Link href="/dashboard">К дашборду</Link>
@@ -189,7 +273,12 @@ export function EffectPage() {
             <section className="border border-border bg-elevated">
               <div className="border-b border-border-soft px-4 py-3">
                 <h2 className="text-[12px] font-medium tracking-[0.12em] uppercase">Опережение по моделям</h2>
-                <p className="mt-1 text-[12px] text-muted-foreground">Медианный lead time, полнота эпизодов и точность алертов</p>
+                <p className="mt-1 text-[12px] text-muted-foreground">
+                  Медианный lead time, полнота эпизодов и точность алертов ·{" "}
+                  <Link href="/models" className="text-vena underline-offset-4 hover:underline">
+                    карточки моделей →
+                  </Link>
+                </p>
               </div>
               {effect.data.leadTime.length === 0 ? (
                 <p className="px-4 py-6 text-[13px] text-muted-foreground">Метрики lead time ещё не рассчитаны.</p>
@@ -200,7 +289,9 @@ export function EffectPage() {
                       key={`${row.modelId}-${row.level}`}
                       className="grid grid-cols-[1fr_5rem_5rem_5rem_5rem] gap-3 border-b border-border-soft px-4 py-2.5 text-[13px] last:border-b-0"
                     >
-                      <span className="truncate">{modelLabel(row.modelId)}</span>
+                      <Link href={`/models#${row.modelId}`} className="truncate text-vena underline-offset-4 hover:underline">
+                        {modelLabel(row.modelId)}
+                      </Link>
                       <span className="font-mono text-muted-foreground tabular-nums">
                         {row.level === "high" ? "высокий" : row.level === "critical" ? "критич." : row.level}
                       </span>
@@ -220,6 +311,9 @@ export function EffectPage() {
             </section>
           </>
         ) : null}
+
+        <ForecastVsFactPanel />
+        <AlarmLoadBlock />
 
         <section className="border border-border bg-elevated">
           <div className="border-b border-border-soft px-4 py-3">
@@ -253,7 +347,7 @@ export function EffectPage() {
                       {item.healthIndex === null ? "—" : `HI ${item.healthIndex}`}
                     </span>
                     <span className="truncate text-muted-foreground">
-                      {item.recommendation?.title ?? item.primaryReason}
+                      {item.recommendation?.consequence ?? item.recommendation?.title ?? item.primaryReason}
                     </span>
                     <span className={cn("text-[12px] tracking-[0.04em] uppercase", hasAction ? "text-vena" : "text-faint")}>
                       {hasAction ? "работа есть" : (STATUS_RU[item.status] ?? "нужна работа")}

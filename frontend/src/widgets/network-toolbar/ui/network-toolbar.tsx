@@ -31,6 +31,7 @@ export function NetworkToolbar({
   horizon,
   onHorizon,
   showTree = false,
+  realGeometryOnly = false,
 }: {
   mode: NetworkMode
   onMode: (value: NetworkMode) => void
@@ -46,6 +47,8 @@ export function NetworkToolbar({
   horizon: ForecastHorizon
   onHorizon: (value: ForecastHorizon) => void
   showTree?: boolean
+  /** Hide demo geometry modes (canvas / map) when real spatial is unavailable */
+  realGeometryOnly?: boolean
 }) {
   return (
     <div className="flex shrink-0 flex-wrap items-center gap-x-5 gap-y-3 px-6 pt-1 pb-3">
@@ -54,21 +57,27 @@ export function NetworkToolbar({
         <span className="font-mono text-[12px] text-faint tabular-nums">{descriptor}</span>
       </h1>
       <div role="group" aria-label="Режим просмотра" className="inline-flex h-7 items-stretch rounded-md border bg-surface">
-        <button
-          type="button"
-          aria-current={mode === "network"}
-          onClick={() => onMode("network")}
-          className={cn(modeButton, "rounded-l-[5px]", mode === "network" ? "bg-elevated text-foreground" : "text-muted-foreground hover:text-foreground")}
-        >
-          Схема
-          {mode === "network" ? <span aria-hidden className="absolute inset-x-2 bottom-0 h-px bg-vena" /> : null}
-        </button>
+        {!realGeometryOnly ? (
+          <button
+            type="button"
+            aria-current={mode === "network"}
+            onClick={() => onMode("network")}
+            className={cn(modeButton, "rounded-l-[5px]", mode === "network" ? "bg-elevated text-foreground" : "text-muted-foreground hover:text-foreground")}
+          >
+            Схема
+            {mode === "network" ? <span aria-hidden className="absolute inset-x-2 bottom-0 h-px bg-vena" /> : null}
+          </button>
+        ) : null}
         {showTree ? (
           <button
             type="button"
             aria-current={mode === "tree"}
             onClick={() => onMode("tree")}
-            className={cn(modeButton, "border-x", mode === "tree" ? "bg-elevated text-foreground" : "text-muted-foreground hover:text-foreground")}
+            className={cn(
+              modeButton,
+              realGeometryOnly ? "rounded-l-[5px] border-r" : "border-x",
+              mode === "tree" ? "bg-elevated text-foreground" : "text-muted-foreground hover:text-foreground"
+            )}
           >
             Дерево
             {mode === "tree" ? <span aria-hidden className="absolute inset-x-2 bottom-0 h-px bg-vena" /> : null}
@@ -80,22 +89,26 @@ export function NetworkToolbar({
           onClick={() => onMode("assets")}
           className={cn(
             modeButton,
-            showTree ? "border-r" : "border-x",
-            mode === "assets" ? "bg-elevated text-foreground" : "text-muted-foreground hover:text-foreground"
+            realGeometryOnly && !showTree ? "rounded-l-[5px] border-r" : showTree || !realGeometryOnly ? "border-r" : "border-x",
+            !realGeometryOnly && !showTree ? "border-x" : "",
+            mode === "assets" ? "bg-elevated text-foreground" : "text-muted-foreground hover:text-foreground",
+            realGeometryOnly ? "rounded-r-[5px]" : ""
           )}
         >
           Объекты
           {mode === "assets" ? <span aria-hidden className="absolute inset-x-2 bottom-0 h-px bg-vena" /> : null}
         </button>
-        <button
-          type="button"
-          aria-current={mode === "map"}
-          onClick={() => onMode("map")}
-          className={cn(modeButton, "rounded-r-[5px]", mode === "map" ? "bg-elevated text-foreground" : "text-muted-foreground hover:text-foreground")}
-        >
-          Карта
-          {mode === "map" ? <span aria-hidden className="absolute inset-x-2 bottom-0 h-px bg-vena" /> : null}
-        </button>
+        {!realGeometryOnly ? (
+          <button
+            type="button"
+            aria-current={mode === "map"}
+            onClick={() => onMode("map")}
+            className={cn(modeButton, "rounded-r-[5px]", mode === "map" ? "bg-elevated text-foreground" : "text-muted-foreground hover:text-foreground")}
+          >
+            Карта
+            {mode === "map" ? <span aria-hidden className="absolute inset-x-2 bottom-0 h-px bg-vena" /> : null}
+          </button>
+        ) : null}
       </div>
 
       <form

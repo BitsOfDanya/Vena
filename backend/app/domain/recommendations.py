@@ -37,22 +37,54 @@ def recommend(settings: Settings, scenario: str, lead: Prediction) -> Recommenda
     hints = catalogue.get("drivers", {})
     hint = next((hints[driver.feature] for driver in lead.drivers if driver.feature in hints), None)
     actions = list(entry["actions"])
-    feeder = _feeder(catalogue, lead) if scenario == "power_loss" else None
+    feeder = _feeder(catalogue, lead, scenario)
     if feeder:
         actions.insert(0, feeder["action"])
+    what = None
+    if feeder:
+        what = feeder.get("what") or _what_from_feeder(feeder, scenario)
+    if not what:
+        what = entry.get("what")
+    consequence = None
+    if feeder:
+        consequence = feeder.get("consequence")
+    if not consequence:
+        consequence = entry.get("consequence")
     return Recommendation(
         title=entry["title"],
         actions=actions,
         hint=hint,
         note=catalogue.get("note", ""),
+        what=str(what) if what else None,
         feeder=feeder["kind"] if feeder else None,
-        consequence=feeder["consequence"] if feeder else None,
+        consequence=str(consequence) if consequence else None,
     )
 
 
-def _feeder(catalogue: dict[str, Any], lead: Prediction) -> dict[str, str] | None:
-    name = lead.name or ""
+def _what_from_feeder(feeder: dict[str, str], scenario: str) -> str:
+    kind = feeder.get("kind") or "канал"
+    if scenario == "power_loss":
+        return f"Обесточится {kind[0].lower() + kind[1:]}" if kind else "Обесточится фидер"
+    return kind
+
+
+def _feeder(catalogue: dict[str, Any], lead: Prediction, scenario: str) -> dict[str, str] | None:
+    """Match by channel name, location tag, or asset id; prefer feeders for this scenario."""
+    haystack = " ".join(
+        part
+        for part in (lead.name, lead.location_tag, lead.location, lead.asset_id)
+        if part
+    )
+    exact: dict[str, str] | None = None
+    fallback: dict[str, str] | None = None
     for feeder in catalogue.get("feeders", []):
-        if re.search(feeder["pattern"], name):
-            return {key: str(value) for key, value in feeder.items()}
-    return None
+        if not re.search(str(feeder["pattern"]), haystack, flags=re.IGNORECASE):
+            continue
+        item = {key: str(value) for key, value in feeder.items()}
+        feeder_scenario = item.get("scenario") or ""
+        if feeder_scenario == scenario:
+            exact = item
+            break
+        if fallback is None:
+            fallback = item
+    return exact or fallback

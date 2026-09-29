@@ -8,6 +8,7 @@ import {
   getEvents,
   getForecast,
   getNetwork,
+  getPredictionAssets,
   getPulse,
   getPulseSummary,
   getReplayEpisodes,
@@ -18,6 +19,7 @@ import {
   searchAssets,
 } from "../api/service"
 import type { ForecastHorizon, TemporalBundle } from "./types"
+import { workflowMode } from "@/shared/config/env"
 
 export function bucketNow(now: number, minutes = 1) {
   const size = minutes * MINUTE
@@ -50,9 +52,27 @@ export function useAssets(now: number, horizon: ForecastHorizon) {
 
 export function useAssetSearch(query: string, now: number, horizon: ForecastHorizon) {
   return useQuery({
-    queryKey: ["asset-search", query, bucketNow(now, 5), horizon],
-    queryFn: () => searchAssets(query, { now, horizon }),
+    queryKey: ["asset-search", query, bucketNow(now, 5), horizon, workflowMode],
+    queryFn: async () => {
+      if (workflowMode !== "api") return searchAssets(query, { now, horizon })
+      const needle = query.trim().toLowerCase()
+      const assets = await getPredictionAssets(horizon)
+      if (!needle) return assets.slice(0, 12)
+      return assets
+        .filter((asset) => asset.id.toLowerCase().includes(needle) || asset.channelId.includes(needle))
+        .slice(0, 12)
+    },
     placeholderData: keepPreviousData,
+  })
+}
+
+export function usePredictionAssets(horizon: ForecastHorizon) {
+  return useQuery({
+    queryKey: ["prediction-assets", horizon],
+    queryFn: () => getPredictionAssets(horizon),
+    enabled: workflowMode === "api",
+    placeholderData: keepPreviousData,
+    staleTime: 30_000,
   })
 }
 

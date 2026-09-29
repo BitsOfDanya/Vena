@@ -116,6 +116,7 @@ export function NetworkPage() {
         horizon={horizon}
         onHorizon={setHorizon}
         showTree={apiMode}
+        realGeometryOnly={apiMode}
       />
       <div className="relative flex min-h-0 flex-1">
         <div className="relative min-w-0 flex-1">

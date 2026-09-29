@@ -47,7 +47,15 @@ function Field({ label, children }: { label: string; children: React.ReactNode }
   )
 }
 
-export function ActionInspector({ action, onClose }: { action: MaintenanceAction; onClose: () => void }) {
+export function ActionInspector({
+  action,
+  onClose,
+  className,
+}: {
+  action: MaintenanceAction
+  onClose: () => void
+  className?: string
+}) {
   const router = useRouter()
   const { now, selectAsset } = useWorkspace()
   const setStatus = useSetActionStatus(now)
@@ -55,7 +63,7 @@ export function ActionInspector({ action, onClose }: { action: MaintenanceAction
   const transitions = NEXT_STATUS[action.status] ?? []
 
   return (
-    <Inspector label="Карточка работы">
+    <Inspector label="Карточка работы" className={className}>
       <InspectorHeader eyebrow={`Работа · ${action.id}`} title={action.assetId} onClose={onClose}>
         <p className="mt-1 flex items-center gap-2 text-[13px] text-muted-foreground">
           <StatusMark status={PRIORITY_MARK[action.priority]} />

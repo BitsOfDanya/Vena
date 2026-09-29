@@ -523,6 +523,22 @@ def test_situation_explains_the_incident(client: TestClient, ml_root: Path) -> N
     assert situation["recommendation"]["consequence"] == "Насосы без питания"
     assert situation["recommendation"]["actions"][0] == "Проверить уровень в приямке"
     assert situation["location"] == "Объект 5567 · 16-2.1.1"
+    assert situation["location_group"] == "16-2.1.1"
+    assert situation["model_id"] == "phase_24h"
+
+
+def test_feeder_matches_without_channel_name(client: TestClient, ml_root: Path) -> None:
+    _snapshot_with_sections(ml_root)
+    path = ml_root / "results" / "predictions" / "snapshot.json"
+    payload = json.loads(path.read_text(encoding="utf-8"))
+    payload["predictions"][0]["name"] = None
+    payload["predictions"][0]["tag"] = "ФАНС-line-300"
+    path.write_text(json.dumps(payload), encoding="utf-8")
+
+    situation = client.get("/api/v1/situations").json()[0]
+
+    assert situation["recommendation"]["feeder"] == "Фидер насосной станции"
+    assert "ФАНС1" not in situation["summary"]
 
 
 def test_asset_tree_effect_and_report(client: TestClient, ml_root: Path) -> None:

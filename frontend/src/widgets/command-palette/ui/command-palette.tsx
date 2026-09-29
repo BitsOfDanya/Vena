@@ -1,6 +1,6 @@
 "use client"
 
-import { Activity, BellRing, LayoutDashboard, ListChecks, Network, Plug, SlidersHorizontal, Waves } from "lucide-react"
+import { Activity, BellRing, Boxes, LayoutDashboard, ListChecks, Network, Plug, SlidersHorizontal, Waves } from "lucide-react"
 import { useRouter } from "next/navigation"
 import * as React from "react"
 
@@ -29,12 +29,16 @@ const NAVIGATION = [
   { href: "/journal", label: "Журнал", icon: ListChecks },
   { href: "/dashboard", label: "Дашборд", icon: LayoutDashboard },
   { href: "/effect", label: "Эффект", icon: LayoutDashboard },
+  { href: "/models", label: "Модели", icon: Boxes },
+  { href: "/about", label: "Как работает VENA", icon: Activity },
 ] as const
 
 const COMMANDS = [
   { href: "/actions", label: "Создать работу", icon: ListChecks },
   { href: "/pulse", label: "Маршрут защиты: Пульс", icon: Activity },
   { href: "/effect", label: "Отчёт для руководства", icon: LayoutDashboard },
+  { href: "/models", label: "Карточки моделей", icon: Boxes },
+  { href: "/about", label: "Как работает VENA", icon: Activity },
   { href: "/settings/notifications", label: "Настройки уведомлений", icon: BellRing },
   { href: "/settings/integrations", label: "Интеграции", icon: Plug },
   { href: "/settings/security", label: "Безопасность / пароль", icon: SlidersHorizontal },

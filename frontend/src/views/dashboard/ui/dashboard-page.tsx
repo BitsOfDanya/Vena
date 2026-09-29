@@ -7,8 +7,8 @@ import * as React from "react"
 
 import { TYPE_LABEL, TYPE_ORDER, formatScore, useAssets, type ForecastHorizon } from "@/entities/infrastructure"
 import { OUTCOME_LABEL, useActions } from "@/entities/maintenance"
-import { useAssetTree, useEventTypes } from "@/entities/analytics"
-import { useDashboardPredictions, useSnapshotStatus } from "@/entities/prediction"
+import { useAssetTree, useEventTypes, useObjectHealthHistory } from "@/entities/analytics"
+import { useDashboardPredictions, useSnapshotStatus, modelLabel } from "@/entities/prediction"
 import { CreateActionSheet, type ActionDraft } from "@/features/create-action"
 import { useWorkspace } from "@/features/workspace"
 import { workflowMode } from "@/shared/config/env"
@@ -37,8 +37,8 @@ import { ProspectivePanel } from "./prospective-panel"
 import { SeasonalityPanel } from "./seasonality-panel"
 
 const HORIZONS: { value: ForecastHorizon; label: string }[] = [
-  { value: 24, label: "24h" },
-  { value: 72, label: "72h" },
+  { value: 24, label: "24ч" },
+  { value: 72, label: "72ч" },
 ]
 const LEVELS: DashboardLevel[] = ["critical", "attention", "observe", "normal", "offline"]
 const FOCUS_LEVELS: DashboardLevel[] = ["critical", "attention", "observe", "offline"]
@@ -201,8 +201,13 @@ function ScenarioExposure() {
                 <span className="text-status-critical">{critical} крит.</span>
                 <span className="text-status-attention">{attention} вним.</span>
                 <span className="text-faint">{item.episodes30d ?? "—"} / 30д</span>
-                {item.next7DaysExpected !== null ? (
-                  <span className="text-muted-foreground">~{item.next7DaysExpected.toFixed(1)} / 7д</span>
+                {item.next7Days !== null ? (
+                  <span className="text-muted-foreground">~{item.next7Days.expected.toFixed(1)} / 7д</span>
+                ) : null}
+                {item.weekError !== null ? (
+                  <span className="text-faint" title="Ошибка недельного прогноза vs факт">
+                    ош. нед. {item.weekError.toFixed(2)}
+                  </span>
                 ) : null}
                 {item.episodes365d !== null ? (
                   <span className="text-faint">{item.episodes365d} / год</span>
@@ -216,8 +221,17 @@ function ScenarioExposure() {
   )
 }
 
+function healthDelta(series: { day: string; value: number }[] | undefined) {
+  if (!series || series.length < 8) return null
+  const latest = series[series.length - 1]?.value
+  const weekAgo = series[series.length - 8]?.value
+  if (latest === undefined || weekAgo === undefined) return null
+  return latest - weekAgo
+}
+
 function HealthStrip() {
   const tree = useAssetTree()
+  const history = useObjectHealthHistory()
   if (workflowMode !== "api") return null
   if (tree.isPending || tree.isError || !tree.data?.length) return null
   const ranked = [...tree.data]
@@ -227,10 +241,15 @@ function HealthStrip() {
   if (worst.length === 0) return null
   const minHi = worst[0]?.healthIndex ?? null
   const criticalCount = ranked.filter((item) => (item.healthIndex ?? 100) < 40).length
+  const objects = history.data?.objects ?? {}
   return (
     <section className="mx-6 mt-4 border border-border bg-elevated p-5">
       <SectionTitle
-        description="Индекс 0–100 по объектам СМВУ (хуже — ниже). HI &lt;40 критично · &lt;70 внимание"
+        description={
+          history.data?.period
+            ? `Индекс 0–100 по объектам СМВУ · тренд за неделю · период ${history.data.period}`
+            : "Индекс 0–100 по объектам СМВУ (хуже — ниже). HI &lt;40 критично · &lt;70 внимание"
+        }
         action={
           <Link className="text-[13px] text-vena" href="/effect">
             Эффект →
@@ -246,23 +265,38 @@ function HealthStrip() {
         </span>
       </p>
       <ul className="grid gap-2 sm:grid-cols-2 xl:grid-cols-3">
-        {worst.map((item) => (
-          <li key={item.objectId} className="flex items-baseline justify-between gap-3 text-[13px]">
-            <span className="truncate">{item.label}</span>
-            <span
-              className={cn(
-                "font-mono tabular-nums",
-                (item.healthIndex ?? 100) < 40
-                  ? "text-status-critical"
-                  : (item.healthIndex ?? 100) < 70
-                    ? "text-status-attention"
-                    : "text-status-normal"
-              )}
-            >
-              {item.healthIndex}
-            </span>
-          </li>
-        ))}
+        {worst.map((item) => {
+          const delta = healthDelta(objects[item.objectId])
+          return (
+            <li key={item.objectId} className="flex items-baseline justify-between gap-3 text-[13px]">
+              <span className="truncate">{item.label}</span>
+              <span className="flex shrink-0 items-baseline gap-2 font-mono tabular-nums">
+                {delta !== null ? (
+                  <span
+                    className={cn(
+                      "text-[11px]",
+                      delta < 0 ? "text-status-critical" : delta > 0 ? "text-status-normal" : "text-faint"
+                    )}
+                    title="Изменение HI за 7 дней"
+                  >
+                    {delta > 0 ? `+${delta}` : delta}
+                  </span>
+                ) : null}
+                <span
+                  className={cn(
+                    (item.healthIndex ?? 100) < 40
+                      ? "text-status-critical"
+                      : (item.healthIndex ?? 100) < 70
+                        ? "text-status-attention"
+                        : "text-status-normal"
+                  )}
+                >
+                  {item.healthIndex}
+                </span>
+              </span>
+            </li>
+          )
+        })}
       </ul>
     </section>
   )
@@ -307,7 +341,7 @@ function PredictionInspector({
         </InspectorSection>
         <InspectorSection title="Контекст прогноза">
           <p className="text-[13px]">{row.name}</p>
-          <p className="mt-2 text-[12px] text-muted-foreground">{row.modelId ?? "Демо-телеметрия"}</p>
+          <p className="mt-2 text-[12px] text-muted-foreground">{row.modelId ? modelLabel(row.modelId) : "Демо-телеметрия"}</p>
           <p className="mt-3 text-[11px] text-faint">Точное время до отказа в источнике не указано. Горизонт — окно прогноза.</p>
         </InspectorSection>
         <InspectorSection title="Почему этот риск">
@@ -360,7 +394,7 @@ export function DashboardPage() {
   const actions = useActions()
   const [query, setQuery] = React.useState("")
   const [system, setSystem] = React.useState("all")
-  const [level, setLevel] = React.useState("focus")
+  const [level, setLevel] = React.useState("all")
   const [page, setPage] = React.useState(0)
   const [sort, setSort] = React.useState<DashboardSort>({ key: "risk", direction: "desc" })
   const [selectedId, setSelectedId] = React.useState<string | null>(null)
@@ -375,8 +409,8 @@ export function DashboardPage() {
   const availableRows = source.isError || loading ? EMPTY_ROWS : rows
   const filtered = React.useMemo(() => filterRows(availableRows, query, system, level), [availableRows, query, system, level])
   const summary = React.useMemo(
-    () => summarizeDashboard(filtered, actions.isError ? [] : (actions.data ?? [])),
-    [filtered, actions.data, actions.isError]
+    () => summarizeDashboard(availableRows, actions.isError ? [] : (actions.data ?? [])),
+    [availableRows, actions.data, actions.isError]
   )
   const selected = filtered.find((row) => row.id === selectedId) ?? null
   const responses = React.useMemo(() => responseLabels(summary.open), [summary.open])
@@ -405,7 +439,7 @@ export function DashboardPage() {
   const reset = () => {
     setQuery("")
     setSystem("all")
-    setLevel("focus")
+    setLevel("all")
     setPage(0)
   }
   const refresh = () => {
@@ -519,7 +553,7 @@ export function DashboardPage() {
                 </NativeSelectOption>
               ))}
             </NativeSelect>
-            {query || system !== "all" || level !== "focus" ? (
+            {query || system !== "all" || level !== "all" ? (
               <Button variant="ghost" size="sm" onClick={reset}>
                 Сбросить
               </Button>
@@ -531,7 +565,7 @@ export function DashboardPage() {
               {
                 label: "Критичных прогнозов",
                 value: summary.counts.critical,
-                hint: `${summary.counts.attention} требуют внимания`,
+                hint: `${summary.counts.attention} внимание · по всему снимку ${horizon}ч`,
                 tone: "text-status-critical",
               },
               {

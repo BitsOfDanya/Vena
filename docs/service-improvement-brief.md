@@ -42,7 +42,12 @@
 - Карточка: history эпизодов, чеклист РТЭК, «В дереве», prefill работы из recommendation.
 - Effect: сорт по HI, RU status, print CSS, заголовок-сводка.
 - Demo-телеметрия на Pulse свёрнута в api+demo; маршрут защиты на форме входа.
-- ⌘K: Эффект, Алармы, Журнал; Dashboard default «Требуют внимания»; HI = минимум + count&lt;40.
+- ⌘K: Эффект, Алармы, Журнал; Dashboard default 24ч + все объекты; HI = минимум + count&lt;40.
+- **P0 (защита 2026-09):** страница `/models` (язык диспетчера), карточка ситуации (что/где/когда/почему/последствие/делать/раньше/здоровье/модель + feeder), график прогноз×факт на Эффекте, CSV/XML рядом с XLSX, ISA-18.2 на Алармах/Эффекте, Таймлайн на реальных channel_id.
+- **Production harden:** Pulse counts = Dashboard snapshot+horizon; `location_group`/`what`/`model_id` в situations; `/about` «Как работает VENA»; picket-strip маршрутов; honesty-баннеры на Timeline/Network; ForecastVsFact через select.
+- **Поле / руководитель (дотяг):** мобильный наряд на `/actions` (принять → начать → закрыть); тренд тревог по месяцам ISA; HI объектов + Δ за 7 дней на Dashboard; RU aria/CSV.
+- **Production-ready (2026-09):** overlay с горизонтом+pagination; API assets/inspector через `/assets/{id}/prediction`+drivers; без синтетического forecast на Timeline; Pulse без demo-телеметрии по умолчанию; feeder match по tag/id; KPI Dashboard = полный снимок; rising с horizon.
+- **P0 план осмотров:** `GET /analytics/inspection-plan` (pump_72h + fan_72h) на Pulse и Actions · «Создать работу» · fans skip recent.
 
 ---
 

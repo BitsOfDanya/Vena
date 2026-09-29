@@ -4,6 +4,7 @@ import { Plus } from "lucide-react"
 import * as React from "react"
 
 import { StatusMark } from "@/entities/infrastructure"
+import type { InspectionPlanItem } from "@/entities/analytics"
 import {
   KIND_LABEL,
   OPEN_STATUSES,
@@ -12,15 +13,18 @@ import {
   STATUS_LABEL,
   useActions,
   useApproveAction,
+  useSetActionStatus,
 } from "@/entities/maintenance"
-import { CreateActionSheet } from "@/features/create-action"
+import { CreateActionSheet, type ActionDraft } from "@/features/create-action"
 import { DismissActionDialog } from "@/features/dismiss-action"
 import { useWorkspace } from "@/features/workspace"
+import { useIsMobile } from "@/shared/lib/hooks/use-mobile"
 import { HOUR, formatAgo, formatDateTime } from "@/shared/lib/time"
 import { Button } from "@/shared/ui/button"
 import { Segmented } from "@/shared/ui/segmented"
 import { LoadingBar, StateMessage } from "@/shared/ui/state-message"
 import { ActionInspector } from "@/widgets/action-inspector"
+import { InspectionPlanPanel } from "@/widgets/inspection-plan"
 import { MaintenanceTimeline } from "@/widgets/maintenance-timeline"
 
 const HORIZONS = [
@@ -40,11 +44,14 @@ function SectionTitle({ children, count }: { children: React.ReactNode; count?: 
 
 export function ActionsPage() {
   const { now } = useWorkspace()
+  const isMobile = useIsMobile()
   const actions = useActions()
   const approve = useApproveAction(now)
+  const setStatus = useSetActionStatus(now)
   const [hours, setHours] = React.useState(72)
   const [selectedId, setSelectedId] = React.useState<string | null>(null)
   const [sheetOpen, setSheetOpen] = React.useState(false)
+  const [draft, setDraft] = React.useState<ActionDraft>({})
 
   const list = React.useMemo(() => actions.data ?? [], [actions.data])
   const suggested = list.filter((action) => action.status === "suggested")
@@ -55,6 +62,101 @@ export function ActionsPage() {
     .sort((left, right) => (right.result?.closedAt ?? right.createdAt) - (left.result?.closedAt ?? left.createdAt))
   const selected = list.find((action) => action.id === selectedId) ?? null
   const count = (status: string) => scheduled.filter((action) => action.status === status).length
+  const brigadeQueue = [...suggested, ...planned].slice(0, 40)
+
+  function createFromInspection(item: InspectionPlanItem) {
+    setDraft({
+      assetId: item.assetId,
+      reason: item.reason
+        ? `Осмотр · ${item.reason}`
+        : `План осмотра · ${item.name?.trim() || item.assetId}`,
+      priority: item.riskLevel === "critical" || item.riskLevel === "attention" ? "high" : "medium",
+      kind: "inspect",
+      sourceModelId: item.modelId,
+      sourceScore: item.probability,
+      sourceHorizonHours: item.modelId.includes("72") ? 72 : 24,
+    })
+    setSheetOpen(true)
+  }
+
+  if (isMobile) {
+    return (
+      <div className="flex size-full min-h-0 flex-col overflow-auto">
+        <div className="shrink-0 space-y-2 px-4 pt-4 pb-3">
+          <h1 className="text-[22px] font-semibold tracking-[-0.01em]">Работы бригады</h1>
+          <p className="text-[13px] text-muted-foreground">Что сделать · где · отметить результат на месте</p>
+          <Segmented label="Горизонт" value={hours} onChange={setHours} options={HORIZONS} />
+        </div>
+        <InspectionPlanPanel className="px-4 pb-3" onCreate={createFromInspection} />
+        {actions.isPending ? (
+          <LoadingBar />
+        ) : actions.isError ? (
+          <StateMessage title="Работы недоступны" description="Не удалось загрузить план." />
+        ) : selected ? (
+          <div className="px-4 pb-8">
+            <ActionInspector
+              key={selected.id}
+              action={selected}
+              onClose={() => setSelectedId(null)}
+              className="static inset-auto h-auto w-full max-w-none border border-border"
+            />
+          </div>
+        ) : brigadeQueue.length === 0 ? (
+          <StateMessage title="Очередь пуста" description="Нет предложенных или запланированных работ в выбранном окне." />
+        ) : (
+          <ul className="space-y-3 px-4 pb-8">
+            {brigadeQueue.map((action) => (
+              <li key={action.id} className="border border-border bg-elevated px-4 py-3">
+                <div className="flex items-baseline gap-2">
+                  <StatusMark status={action.priority === "high" ? "critical" : "attention"} className="size-3" />
+                  <span className="font-mono text-[14px]">{action.assetId}</span>
+                  <span className="text-[12px] text-faint">{STATUS_LABEL[action.status]}</span>
+                </div>
+                <p className="mt-2 text-[14px]">{action.reason}</p>
+                <p className="mt-1 text-[12px] text-muted-foreground">
+                  {KIND_LABEL[action.kind]} · к {formatDateTime(action.recommendedAt)}
+                </p>
+                <div className="mt-3 flex flex-wrap gap-2">
+                  <Button size="sm" variant="outline" onClick={() => setSelectedId(action.id)}>
+                    Открыть
+                  </Button>
+                  {action.status === "suggested" ? (
+                    <Button size="sm" disabled={approve.isPending} onClick={() => approve.mutate(action.id)}>
+                      Принять
+                    </Button>
+                  ) : null}
+                  {action.status === "assigned" ? (
+                    <Button
+                      size="sm"
+                      disabled={setStatus.isPending}
+                      onClick={() => setStatus.mutate({ id: action.id, status: "in_progress" })}
+                    >
+                      Начать
+                    </Button>
+                  ) : null}
+                  {action.status === "planned" ? (
+                    <Button
+                      size="sm"
+                      disabled={setStatus.isPending}
+                      onClick={() => setStatus.mutate({ id: action.id, status: "assigned" })}
+                    >
+                      Назначить
+                    </Button>
+                  ) : null}
+                  {action.status === "in_progress" || action.status === "waiting" ? (
+                    <Button size="sm" onClick={() => setSelectedId(action.id)}>
+                      Закрыть с результатом
+                    </Button>
+                  ) : null}
+                </div>
+              </li>
+            ))}
+          </ul>
+        )}
+        <CreateActionSheet open={sheetOpen} onOpenChange={setSheetOpen} draft={draft} />
+      </div>
+    )
+  }
 
   return (
     <div className="flex size-full min-h-0 flex-col">
@@ -80,7 +182,13 @@ export function ActionsPage() {
         </p>
         <div className="ml-auto flex items-center gap-2.5">
           <Segmented label="Горизонт планирования" value={hours} onChange={setHours} options={HORIZONS} />
-          <Button size="sm" onClick={() => setSheetOpen(true)}>
+          <Button
+            size="sm"
+            onClick={() => {
+              setDraft({})
+              setSheetOpen(true)
+            }}
+          >
             <Plus data-icon="inline-start" /> Создать работу
           </Button>
         </div>
@@ -88,6 +196,7 @@ export function ActionsPage() {
 
       <div className="flex min-h-0 flex-1">
         <div className="min-w-0 flex-1 overflow-auto">
+          <InspectionPlanPanel className="px-6 pb-4" onCreate={createFromInspection} />
           {actions.isPending ? (
             <LoadingBar />
           ) : actions.isError ? (
@@ -190,7 +299,7 @@ export function ActionsPage() {
         </div>
         {selected ? <ActionInspector key={selected.id} action={selected} onClose={() => setSelectedId(null)} /> : null}
       </div>
-      <CreateActionSheet open={sheetOpen} onOpenChange={setSheetOpen} draft={{}} />
+      <CreateActionSheet open={sheetOpen} onOpenChange={setSheetOpen} draft={draft} />
     </div>
   )
 }

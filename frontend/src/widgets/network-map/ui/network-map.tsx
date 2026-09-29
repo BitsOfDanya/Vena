@@ -111,11 +111,11 @@ export function NetworkMap({
   return (
     <div className="relative size-full min-h-0 overflow-hidden bg-[linear-gradient(180deg,color-mix(in_oklab,var(--elevated)_88%,#d7e0ea),color-mix(in_oklab,var(--surface)_92%,#c9d4c4))]">
       <p className="pointer-events-none absolute top-3 left-4 z-10 font-mono text-[11px] tracking-[0.08em] text-faint uppercase">
-        Map · {spatial.data?.source === "demo_spatial" ? "demo spatial" : "GeoJSON"} · risk overlay
+        Карта · {spatial.data?.source === "demo_spatial" ? "демо" : "GeoJSON"} · риск
       </p>
       <svg
         role="img"
-        aria-label="Infrastructure map"
+        aria-label="Карта инфраструктуры"
         viewBox={`0 0 ${width} ${height}`}
         className="size-full cursor-grab active:cursor-grabbing"
         onWheel={(event) => {

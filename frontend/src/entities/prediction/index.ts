@@ -14,3 +14,4 @@ export type {
 
 export { SCENARIO_LABEL } from "./model/scenario"
 export { formatProbability, formatProbabilityDelta } from "./lib/format"
+export { modelLabel, modelLabelWithId } from "./lib/model-label"

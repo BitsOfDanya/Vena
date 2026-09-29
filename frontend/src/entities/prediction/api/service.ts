@@ -21,6 +21,7 @@ type ApiPrediction = {
   sensor_type: string | null
   system_type: string | null
   last_event_at: string | null
+  name?: string | null
   scenario?: string
   location?: string | null
   location_tag?: string | null
@@ -53,6 +54,7 @@ function toPrediction(item: ApiPrediction): Prediction {
     sensorType: item.sensor_type,
     systemType: item.system_type,
     lastEventAt: item.last_event_at ? Date.parse(item.last_event_at) : null,
+    name: item.name ?? null,
     scenario: toScenario(item.scenario),
     location: item.location ?? null,
     locationTag: item.location_tag ?? null,
@@ -191,14 +193,19 @@ export async function getBackendSituations(): Promise<BackendSituation[]> {
       notification_id: string | null
       scenario?: string | null
       location?: string | null
+      location_group?: string | null
       asset_count?: number
       incident_probability?: number | null
       health_index?: number | null
+      model_id?: string | null
       recommendation?: {
         title: string
         actions: string[]
         hint: string | null
         note: string
+        what?: string | null
+        feeder?: string | null
+        consequence?: string | null
       } | null
       history?: {
         episodes_365d: number
@@ -226,15 +233,20 @@ export async function getBackendSituations(): Promise<BackendSituation[]> {
     notificationId: item.notification_id,
     scenario: item.scenario ? toScenario(item.scenario) : null,
     location: item.location ?? null,
+    locationGroup: item.location_group ?? null,
     assetCount: item.asset_count ?? item.asset_ids.length,
     incidentProbability: item.incident_probability ?? null,
     healthIndex: item.health_index ?? null,
+    modelId: item.model_id ?? null,
     recommendation: item.recommendation
       ? {
           title: item.recommendation.title,
           actions: item.recommendation.actions,
           hint: item.recommendation.hint,
           note: item.recommendation.note,
+          what: item.recommendation.what ?? null,
+          feeder: item.recommendation.feeder ?? null,
+          consequence: item.recommendation.consequence ?? null,
         }
       : null,
     history: item.history

@@ -135,7 +135,7 @@ export function TemporalCanvas({
         width={width}
         height={totalHeight}
         role="img"
-        aria-label="Timeline: history on the left of NOW, forecast on the right"
+        aria-label="Хронология: слева история, справа прогноз"
         className="block select-none"
         onPointerMove={onMove}
         onPointerLeave={() => setTooltip(null)}
@@ -157,7 +157,7 @@ export function TemporalCanvas({
           Past
         </text>
         <text x={width - RIGHT - 6} y={12} textAnchor="end" className="fill-faint text-[11px] font-medium uppercase tracking-[0.1em]">
-          Future · forecast
+          Будущее · прогноз модели
         </text>
 
         {ticks.map((offset) => (

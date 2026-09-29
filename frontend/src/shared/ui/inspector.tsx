@@ -39,7 +39,7 @@ export function InspectorHeader({
         <button
           type="button"
           onClick={onClose}
-          aria-label="Close inspector"
+          aria-label="Закрыть карточку"
           className="mt-0.5 flex size-6 items-center justify-center rounded-sm text-muted-foreground outline-none hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring/60"
         >
           <X className="size-4" aria-hidden />

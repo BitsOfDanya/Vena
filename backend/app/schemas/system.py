@@ -29,6 +29,7 @@ class Recommendation(BaseModel):
     actions: list[str]
     hint: str | None = None
     note: str
+    what: str | None = None
     feeder: str | None = None
     consequence: str | None = None
 
@@ -58,8 +59,10 @@ class Situation(BaseModel):
     notification_id: str | None
     scenario: str | None = None
     location: str | None = None
+    location_group: str | None = None
     asset_count: int = 1
     incident_probability: float | None = None
     health_index: int | None = None
+    model_id: str | None = None
     recommendation: Recommendation | None = None
     history: LocationHistory | None = None

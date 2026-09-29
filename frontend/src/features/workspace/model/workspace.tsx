@@ -40,7 +40,7 @@ export type Action =
 export const INITIAL: State = {
   selectedAssetId: null,
   compareIds: [],
-  horizon: 72,
+  horizon: 24,
   replay: null,
 }
 

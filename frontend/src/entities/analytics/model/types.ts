@@ -75,12 +75,108 @@ export type ObjectNode = {
   sections: SectionNode[]
 }
 
+export type ForecastDay = { day: string; expected: number }
+export type BacktestDay = { day: string; actual: number; forecast: number }
+
 export type EventTypeStats = {
   eventType: string
   title: string
   scenario: string
+  models: string[]
   channelsAtRisk: Record<string, number>
   episodes30d: number | null
   episodes365d: number | null
-  next7DaysExpected: number | null
+  forecast: ForecastDay[]
+  next7Days: { expected: number; low: number | null; high: number | null } | null
+  weekError: number | null
+  weekErrorBaseline: number | null
+  backtest: BacktestDay[]
+}
+
+export type HealthPoint = { day: string; value: number }
+
+export type MlModelHeldOut = {
+  period: string
+  baseRate: number | null
+  avgPrecision: number | null
+  rocAuc: number | null
+  precisionTop5PerDay: number | null
+  ece: number | null
+}
+
+export type MlModelLeadTime = {
+  episodeRecall: number | null
+  alertPrecisionDedup: number | null
+  medianLeadTimeHours: number | null
+  alertsPerDay: number | null
+}
+
+export type MlModel = {
+  name: string
+  scenario: string
+  sensor: string | null
+  target: string | null
+  horizonHours: number
+  recipe: string | null
+  features: number | null
+  trainYears: string | null
+  version: string | null
+  heldOut: MlModelHeldOut | null
+  leadTime: MlModelLeadTime | null
+  dailyTopK: Record<string, number> | null
+}
+
+export type AlarmChannelStat = {
+  channelId: string
+  name: string | null
+  activations: number
+}
+
+export type AlarmKpisRecent = {
+  start: string | null
+  end: string | null
+  activations: number
+  perHourMean: number
+  perHourP95: number | null
+  floodShareOfTime: number | null
+  activationsInFloods: number | null
+  top10Share: number | null
+  chatteringTop: AlarmChannelStat[]
+  maintenanceShare: number | null
+}
+
+export type AlarmKpisMonth = {
+  start: string
+  end: string
+  perHourMean: number
+  activationsInFloods: number | null
+}
+
+export type AlarmKpis = {
+  acceptablePerHour: number
+  manageablePerHour: number
+  recent: AlarmKpisRecent | null
+  months: AlarmKpisMonth[]
+}
+
+export type InspectionPlanItem = {
+  assetId: string
+  name: string | null
+  location: string | null
+  modelId: string
+  probability: number
+  riskLevel: string
+  reason: string | null
+}
+
+export type InspectionPlan = {
+  modelId: string
+  count: number
+  skippedRecent: string[]
+  items: InspectionPlanItem[]
+}
+
+export type TodaysInspectionPlan = {
+  pumps: InspectionPlan
+  fans: InspectionPlan
 }

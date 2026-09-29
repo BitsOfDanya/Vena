@@ -1,7 +1,7 @@
 "use client"
 
 import { useProspective } from "@/entities/analytics"
-import { formatProbability } from "@/entities/prediction"
+import { formatProbability, modelLabel } from "@/entities/prediction"
 import { formatDateTime } from "@/shared/lib/time"
 
 function share(value: number | null) {
@@ -37,7 +37,9 @@ export function ProspectivePanel() {
           <tbody>
             {Object.entries(data.models).map(([name, model]) => (
               <tr key={name} className="border-b border-border-soft last:border-b-0">
-                <td className="px-5 py-2 font-mono text-[12px]">{name}</td>
+                <td className="px-5 py-2 text-[13px]" title={name}>
+                  {modelLabel(name)}
+                </td>
                 <td className="px-5 py-2 text-right font-mono tabular-nums">{model.forecasts}</td>
                 <td className="px-5 py-2 text-right font-mono tabular-nums">{formatProbability(model.meanProbability)}</td>
                 <td className="px-5 py-2 text-right font-mono tabular-nums">{formatProbability(model.eventRate)}</td>

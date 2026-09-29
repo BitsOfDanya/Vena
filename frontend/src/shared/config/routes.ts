@@ -7,6 +7,8 @@ export const NAV_ITEMS = [
   { href: "/journal", label: "Журнал" },
   { href: "/dashboard", label: "Дашборд" },
   { href: "/effect", label: "Эффект" },
+  { href: "/models", label: "Модели" },
+  { href: "/about", label: "О сервисе" },
 ] as const
 
 export type NavHref = (typeof NAV_ITEMS)[number]["href"]

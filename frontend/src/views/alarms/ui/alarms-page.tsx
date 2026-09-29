@@ -3,6 +3,7 @@
 import * as React from "react"
 
 import { formatProbability } from "@/entities/prediction"
+import { useAlarmKpis } from "@/entities/analytics"
 import { useAccessEvents, useAccessRoutes, useAlarms, type AccessEvent, type AccessRoute, type AlarmAssessment } from "@/entities/signal"
 import { workflowMode } from "@/shared/config/env"
 import { formatDateTime } from "@/shared/lib/time"
@@ -38,6 +39,80 @@ function Place({ name, location, channelId }: { name: string | null; location: s
   )
 }
 
+const CATEGORY_LABEL: Record<string, string> = {
+  fire: "Пожар",
+  gas: "Газ",
+  flooding: "Затопление",
+  flood: "Затопление",
+  intrusion: "Проникновение",
+  access: "Проникновение",
+  temperature: "Температура",
+}
+
+function monthLabel(start: string) {
+  if (!start) return "—"
+  const stamp = start.slice(0, 7)
+  const [year, month] = stamp.split("-")
+  if (!year || !month) return stamp
+  return `${month}.${year.slice(2)}`
+}
+
+function AlarmMonthsBars({
+  months,
+  manageable,
+}: {
+  months: { start: string; perHourMean: number }[]
+  manageable: number
+}) {
+  if (months.length === 0) return null
+  const recent = months.slice(-12)
+  const max = Math.max(manageable, ...recent.map((item) => item.perHourMean), 1)
+  return (
+    <div className="mt-3">
+      <p className="text-[11px] tracking-[0.08em] text-faint uppercase">Тревог /ч по месяцам</p>
+      <div className="mt-2 flex h-14 items-end gap-1">
+        {recent.map((item) => {
+          const height = Math.max(4, Math.round((item.perHourMean / max) * 48))
+          const over = item.perHourMean > manageable
+          return (
+            <div key={item.start} className="flex min-w-0 flex-1 flex-col items-center gap-1" title={`${monthLabel(item.start)}: ${item.perHourMean.toFixed(1)}/ч`}>
+              <div
+                className={cn("w-full max-w-5", over ? "bg-status-attention" : "bg-vena/70")}
+                style={{ height }}
+              />
+              <span className="truncate font-mono text-[9px] text-faint">{monthLabel(item.start)}</span>
+            </div>
+          )
+        })}
+      </div>
+    </div>
+  )
+}
+
+function AlarmLoadStrip() {
+  const kpis = useAlarmKpis()
+  if (workflowMode !== "api" || kpis.isPending || kpis.isError || !kpis.data?.recent) return null
+  const recent = kpis.data.recent
+  return (
+    <section aria-label="Нагрузка тревог ISA-18.2" className="mx-6 mt-4 border border-border bg-elevated px-4 py-3">
+      <p className="text-[11px] tracking-[0.08em] text-faint uppercase">Нагрузка тревог · ISA-18.2</p>
+      <p className="mt-2 flex flex-wrap gap-x-6 gap-y-1 text-[13px]">
+        <span>
+          <span className="font-mono text-[18px] tabular-nums">{recent.perHourMean.toFixed(1)}</span>
+          <span className="ml-1 text-muted-foreground">/ч · норма {kpis.data.manageablePerHour}</span>
+        </span>
+        <span className="text-muted-foreground">
+          лавины {recent.activationsInFloods == null ? "—" : `${Math.round(recent.activationsInFloods * 100)} %`}
+        </span>
+        <span className="text-muted-foreground">
+          дребезг: {recent.chatteringTop.slice(0, 3).map((item) => item.name ?? item.channelId).join(", ") || "—"}
+        </span>
+      </p>
+      <AlarmMonthsBars months={kpis.data.months} manageable={kpis.data.manageablePerHour} />
+    </section>
+  )
+}
+
 function AlarmsTable({ alarms }: { alarms: AlarmAssessment[] }) {
   const [onlyFlagged, setOnlyFlagged] = React.useState(true)
   const rows = onlyFlagged ? alarms.filter((alarm) => alarm.needsVerification) : alarms
@@ -45,6 +120,7 @@ function AlarmsTable({ alarms }: { alarms: AlarmAssessment[] }) {
   const maintenance = alarms.filter((alarm) => alarm.maintenance).length
   return (
     <>
+      <AlarmLoadStrip />
       <section aria-label="Сводка по тревогам" className="mx-6 mt-5 grid grid-cols-1 border border-border sm:grid-cols-4">
         <Metric label="Тревоги, 30 дней" value={alarms.length} hint="Тревоги дыма, газа и температуры" />
         <Metric label="Серии ППР" value={maintenance} hint="Проверки извещателей в рабочее время" />
@@ -74,22 +150,45 @@ function AlarmsTable({ alarms }: { alarms: AlarmAssessment[] }) {
             <tr>
               <th className="px-4 py-2 font-medium">Время</th>
               <th className="px-4 py-2 font-medium">Датчик / локация</th>
-              <th className="px-4 py-2 font-medium">Тип</th>
+              <th className="px-4 py-2 font-medium">Категория</th>
               <th className="px-4 py-2 text-right font-medium">Подтверждение</th>
               <th className="px-4 py-2 font-medium">Подсказка</th>
             </tr>
           </thead>
           <tbody>
             {rows.slice(0, 300).map((alarm) => (
-              <tr key={`${alarm.channelId}-${alarm.ts}`} className="border-b border-border-soft align-top last:border-b-0">
+              <tr
+                key={`${alarm.channelId}-${alarm.ts}`}
+                className={cn(
+                  "border-b border-border-soft align-top last:border-b-0",
+                  alarm.maintenance && "text-faint"
+                )}
+              >
                 <td className="px-4 py-2.5 font-mono text-[12px] whitespace-nowrap tabular-nums">{formatDateTime(alarm.ts)}</td>
                 <td className="px-4 py-2.5">
                   <Place name={alarm.name} location={alarm.location} channelId={alarm.channelId} />
                 </td>
-                <td className="px-4 py-2.5">{alarm.sensorType}</td>
+                <td className="px-4 py-2.5">
+                  <span className={cn("text-[12px]", alarm.maintenance ? "text-faint" : "text-muted-foreground")}>
+                    {CATEGORY_LABEL[alarm.category] ?? alarm.sensorType}
+                  </span>
+                </td>
                 <td className="px-4 py-2.5 text-right font-mono tabular-nums">{formatProbability(alarm.corroborationProbability)}</td>
-                <td className={cn("px-4 py-2.5", alarm.needsVerification ? "text-status-attention" : "text-muted-foreground")}>
-                  {alarm.maintenance ? "Серия ППР" : alarm.needsVerification ? "Проверить перед выездом" : "Типичная тревога"}
+                <td
+                  className={cn(
+                    "px-4 py-2.5",
+                    alarm.maintenance
+                      ? "text-faint"
+                      : alarm.needsVerification
+                        ? "text-status-attention"
+                        : "text-muted-foreground"
+                  )}
+                >
+                  {alarm.maintenance
+                    ? "Серия ППР — плановая проверка, выезд не нужен"
+                    : alarm.needsVerification
+                      ? "Проверить по камерам перед выездом"
+                      : "Типичная тревога"}
                 </td>
               </tr>
             ))}
@@ -107,12 +206,48 @@ const DIRECTION: Record<AccessRoute["direction"], string> = {
   mixed: "с возвратами",
 }
 
+function PicketStrip({ route }: { route: AccessRoute }) {
+  const pickets = route.steps
+    .filter((step, index) => index === 0 || step.picket !== route.steps[index - 1].picket)
+    .map((step) => step.picket)
+  if (pickets.length === 0) return null
+  const min = Math.min(...pickets)
+  const max = Math.max(...pickets)
+  const span = Math.max(1, max - min)
+  const width = 280
+  const height = 28
+  return (
+    <svg width={width} height={height} viewBox={`0 0 ${width} ${height}`} className="mt-1 text-vena" aria-hidden>
+      <line x1={8} y1={14} x2={width - 8} y2={14} stroke="currentColor" strokeOpacity={0.25} strokeWidth={1} />
+      {pickets.map((picket, index) => {
+        const x = 8 + ((picket - min) / span) * (width - 16)
+        return (
+          <g key={`${picket}-${index}`}>
+            <circle cx={x} cy={14} r={3.5} fill="currentColor" />
+            {index < pickets.length - 1 ? (
+              <line
+                x1={x}
+                y1={14}
+                x2={8 + ((pickets[index + 1]! - min) / span) * (width - 16)}
+                y2={14}
+                stroke="currentColor"
+                strokeWidth={1.5}
+              />
+            ) : null}
+          </g>
+        )
+      })}
+    </svg>
+  )
+}
+
 function RoutesTable({ routes }: { routes: AccessRoute[] }) {
   return (
     <section aria-label="Маршруты по пикетам" className="mx-6 mt-4 mb-2">
       <h2 className="text-[11px] tracking-[0.08em] text-faint uppercase">Маршруты по пикетам, 30 дней</h2>
       <p className="mt-1 text-[12px] text-muted-foreground">
         Срабатывания точек входа одного объекта на охране с паузами до 30 минут, упорядоченные по пикетам (шаг около 10 м).
+        Ниже — схема участка по пикетам, не только таблица.
       </p>
       <div className="mt-2 overflow-x-auto border border-border">
         <table className="w-full min-w-[760px] text-left text-[13px]">
@@ -120,7 +255,7 @@ function RoutesTable({ routes }: { routes: AccessRoute[] }) {
             <tr>
               <th className="px-4 py-2 font-medium">Начало</th>
               <th className="px-4 py-2 font-medium">Объект</th>
-              <th className="px-4 py-2 font-medium">Пикеты</th>
+              <th className="px-4 py-2 font-medium">Схема пикетов</th>
               <th className="px-4 py-2 text-right font-medium">Путь</th>
               <th className="px-4 py-2 font-medium">Направление</th>
             </tr>
@@ -130,11 +265,14 @@ function RoutesTable({ routes }: { routes: AccessRoute[] }) {
               <tr key={`${route.object}-${route.start}`} className="border-b border-border-soft align-top last:border-b-0">
                 <td className="px-4 py-2.5 font-mono text-[12px] whitespace-nowrap tabular-nums">{formatDateTime(route.start)}</td>
                 <td className="px-4 py-2.5">{route.object}</td>
-                <td className="px-4 py-2.5 font-mono text-[12px]">
-                  {route.steps
-                    .filter((step, index) => index === 0 || step.picket !== route.steps[index - 1].picket)
-                    .map((step) => `ПК${step.picket}`)
-                    .join(" → ")}
+                <td className="px-4 py-2.5">
+                  <div className="font-mono text-[12px]">
+                    {route.steps
+                      .filter((step, index) => index === 0 || step.picket !== route.steps[index - 1].picket)
+                      .map((step) => `ПК${step.picket}`)
+                      .join(" → ")}
+                  </div>
+                  <PicketStrip route={route} />
                 </td>
                 <td className="px-4 py-2.5 text-right font-mono tabular-nums">
                   {route.distanceM} м{route.speedMPerMin ? ` · ${route.speedMPerMin} м/мин` : ""}

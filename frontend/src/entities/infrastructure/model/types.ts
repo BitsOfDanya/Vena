@@ -204,6 +204,9 @@ export type SituationRecommendation = {
   actions: string[]
   hint: string | null
   note: string
+  what?: string | null
+  feeder?: string | null
+  consequence?: string | null
 }
 
 export type SituationHistory = {
@@ -230,9 +233,11 @@ export type Situation = {
   status: SituationStatus
   scenario?: string | null
   location?: string | null
+  locationGroup?: string | null
   assetCount?: number
   incidentProbability?: number | null
   healthIndex?: number | null
+  modelId?: string | null
   recommendation?: SituationRecommendation | null
   history?: SituationHistory | null
 }

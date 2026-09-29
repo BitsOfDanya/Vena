@@ -7,7 +7,7 @@ from app.core.config import Settings
 from app.db.models import Action, Notification
 from app.domain.actions import OPEN_STATUSES
 from app.domain.health import load_calibration, location_health
-from app.domain.incidents import group_incidents, location_label, reason_text, score_text
+from app.domain.incidents import SCENARIO_LABELS, group_incidents, location_label, reason_text, score_text
 from app.domain.predictions import get_prediction_source
 from app.domain.recommendations import driver_hints, recommend
 from app.schemas.predictions import Prediction
@@ -155,7 +155,8 @@ def situations(session: Session, settings: Settings, limit: int = 6) -> list[Sit
         elif notification is not None and notification.status == "acknowledged":
             status = "acknowledged"
         count = len(incident.asset_ids)
-        scope = f"{count} каналов, ведущий {lead.asset_id}" if count > 1 else lead.asset_id
+        lead_label = lead.name or lead.asset_id
+        scope = f"{count} каналов, ведущий {lead_label}" if count > 1 else lead_label
         location_probability = (
             incident_probability.get((incident.scenario, incident.location))
             if incident.location
@@ -178,8 +179,9 @@ def situations(session: Session, settings: Settings, limit: int = 6) -> list[Sit
                 severity="critical" if incident.risk_level == "critical" else "attention",
                 title=incident.title,
                 summary=(
-                    f"{scope}: {lead.model_id} {score_text(lead)} "
-                    f"({level_ru}) на ближайшие {lead.horizon_hours} ч.{location_text}"
+                    f"{scope}: {SCENARIO_LABELS.get(incident.scenario, incident.scenario)} "
+                    f"{score_text(lead)} ({level_ru}) на ближайшие {lead.horizon_hours} ч."
+                    f"{location_text}"
                 ),
                 asset_ids=incident.asset_ids,
                 pattern_id=None,
@@ -193,11 +195,13 @@ def situations(session: Session, settings: Settings, limit: int = 6) -> list[Sit
                 notification_id=notification.id if notification else None,
                 scenario=incident.scenario,
                 location=location_label(incident.location),
+                location_group=incident.location,
                 asset_count=count,
                 incident_probability=location_probability,
                 health_index=health[incident.location].index
                 if incident.location in health
                 else None,
+                model_id=lead.model_id,
                 recommendation=recommend(settings, incident.scenario, lead),
                 history=_history(histories, incident.location, lead.device_type),
             )

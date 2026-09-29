@@ -27,26 +27,22 @@ export function useBackendSituations() {
   return useQuery({ queryKey: ["backend-situations"], queryFn: getBackendSituations, enabled, staleTime: 30_000 })
 }
 
-export function useRiskRising(limit = 20) {
+export function useRiskRising(horizon: 24 | 72, limit = 20) {
   return useQuery({
-    queryKey: ["predictions", "delta", limit],
-    queryFn: () => getPredictions({ sort: "delta_desc", limit }),
+    queryKey: ["predictions", "delta", horizon, limit],
+    queryFn: () => getPredictions({ sort: "delta_desc", limit, horizon }),
     enabled,
     staleTime: 60_000,
   })
 }
 
-export function useCriticalPredictions(limit = 20) {
-  return useQuery({
-    queryKey: ["predictions", "critical", limit],
-    queryFn: async () => {
-      const [critical, attention] = await Promise.all([
-        getPredictions({ riskLevel: "critical", limit }),
-        getPredictions({ riskLevel: "attention", limit }),
-      ])
-      return { critical, attention }
-    },
-    enabled,
-    staleTime: 60_000,
-  })
+/** Same snapshot as Dashboard — counts critical/attention for the workspace horizon. */
+export function useCriticalPredictions(horizon: 24 | 72) {
+  const predictions = useDashboardPredictions(horizon)
+  const critical = (predictions.data ?? []).filter((item) => item.riskLevel === "critical")
+  const attention = (predictions.data ?? []).filter((item) => item.riskLevel === "attention")
+  return {
+    ...predictions,
+    data: predictions.data ? { critical, attention } : undefined,
+  }
 }

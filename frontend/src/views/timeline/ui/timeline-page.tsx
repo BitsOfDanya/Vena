@@ -9,12 +9,14 @@ import {
   formatScore,
   useAssetSearch,
   useAssets,
+  usePredictionAssets,
   useTemporalBundles,
   type Asset,
 } from "@/entities/infrastructure"
 import { OPEN_STATUSES, STATUS_LABEL as ACTION_STATUS_LABEL, useActions } from "@/entities/maintenance"
 import { CreateActionSheet } from "@/features/create-action"
 import { useWorkspace } from "@/features/workspace"
+import { workflowMode } from "@/shared/config/env"
 import { useIsMobile } from "@/shared/lib/hooks/use-mobile"
 import { cn } from "@/shared/lib/utils"
 import { Button } from "@/shared/ui/button"
@@ -114,7 +116,8 @@ function AssetRows({ assets, onPick }: { assets: Asset[]; onPick: (id: string) =
             className="flex h-9 w-full items-center gap-4 text-left outline-none hover:bg-elevated focus-visible:ring-2 focus-visible:ring-ring/60"
           >
             <StatusMark status={asset.status} className="ml-1 size-3" />
-            <span className="font-mono text-[14px]">{asset.id}</span>
+            <span className="min-w-0 truncate text-[14px]">{asset.name !== asset.id ? asset.name : asset.id}</span>
+            {asset.name !== asset.id ? <span className="font-mono text-[11px] text-faint">{asset.id}</span> : null}
             <span className="text-[13px] text-muted-foreground">{TYPE_LABEL[asset.type]}</span>
             <span className="ml-auto flex items-center gap-3 pr-2">
               <span aria-hidden className="h-1 w-24 bg-grid">
@@ -138,9 +141,10 @@ function AssetRows({ assets, onPick }: { assets: Asset[]; onPick: (id: string) =
 function Suggestions({ onPick }: { onPick: (id: string) => void }) {
   const { now, horizon } = useWorkspace()
   const [query, setQuery] = React.useState("")
-  const assets = useAssets(now, horizon)
+  const demoAssets = useAssets(now, horizon)
+  const predictionAssets = usePredictionAssets(horizon)
   const search = useAssetSearch(query, now, horizon)
-  const all = assets.data ?? []
+  const all = workflowMode === "api" ? (predictionAssets.data ?? []) : (demoAssets.data ?? [])
   const recentIds = React.useMemo(() => readRecent(), [])
   const recent = recentIds.map((id) => all.find((asset) => asset.id === id)).filter((asset): asset is Asset => Boolean(asset))
   const top = all
@@ -159,7 +163,9 @@ function Suggestions({ onPick }: { onPick: (id: string) => void }) {
         <div className="space-y-1.5">
           <p className="text-[15px] font-medium">Выберите объект для анализа.</p>
           <p className="text-[14px] text-muted-foreground">
-            Выберите объект, чтобы увидеть историю состояния и прогноз вокруг текущего момента.
+            {workflowMode === "api"
+              ? "Каналы из текущих прогнозов СМВУ. История риска строится по снимку модели."
+              : "Выберите объект, чтобы увидеть историю состояния и прогноз вокруг текущего момента."}
           </p>
         </div>
         <div className="relative">
@@ -216,7 +222,9 @@ export function TimelinePage() {
   const [layers, setLayers] = React.useState<Layers>(DEFAULT_LAYERS)
   const ids = compareIds.length > 0 ? compareIds : selectedAssetId ? [selectedAssetId] : []
   const temporal = useTemporalBundles(ids, now, halfSpan, horizon)
-  const assets = useAssets(now, horizon)
+  const demoAssets = useAssets(now, horizon)
+  const predictionAssets = usePredictionAssets(horizon)
+  const assets = workflowMode === "api" ? predictionAssets : demoAssets
   const actions = useActions()
   const [acknowledged, setAcknowledged] = React.useState<string[]>([])
   const [sheetOpen, setSheetOpen] = React.useState(false)
@@ -298,13 +306,18 @@ export function TimelinePage() {
             <span className="font-mono text-[16px]">{primary.id}</span>
             <span className="text-[13px] text-muted-foreground">{TYPE_LABEL[primary.type]}</span>
           </span>
+          {workflowMode === "api" ? (
+            <span className="text-[12px] text-status-attention">
+              Ряд риска по снимку модели; полная телеметрия журнала на канале пока не подключена к хронологии
+            </span>
+          ) : null}
           <span className="text-[13px]">
             <span className="text-faint">риск </span>
             <span className="font-mono tabular-nums">{formatScore(primary.riskScore, primary.scoreType)}</span>
           </span>
           <span className="text-[13px]">
             <span className="text-faint">прогноз </span>
-            <span className="font-mono tabular-nums">{primary.forecastHorizon}h</span>
+            <span className="font-mono tabular-nums">{primary.forecastHorizon}ч</span>
           </span>
           <span className="text-[13px]">
             <span className="text-faint">открытая работа </span>

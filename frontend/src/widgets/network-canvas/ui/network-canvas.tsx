@@ -260,16 +260,16 @@ export function NetworkCanvas({ model, selectedId, dimmed, pulseAssetId, onSelec
         </g>
       </svg>
       <div className="absolute bottom-3 left-3 flex flex-col gap-1">
-        <Button variant="outline" size="icon-sm" aria-label="Zoom in" onClick={() => zoomBy(1.3)}>
+        <Button variant="outline" size="icon-sm" aria-label="Увеличить" onClick={() => zoomBy(1.3)}>
           <Plus />
         </Button>
-        <Button variant="outline" size="icon-sm" aria-label="Zoom out" onClick={() => zoomBy(1 / 1.3)}>
+        <Button variant="outline" size="icon-sm" aria-label="Уменьшить" onClick={() => zoomBy(1 / 1.3)}>
           <Minus />
         </Button>
         <Button
           variant="outline"
           size="icon-sm"
-          aria-label="Fit to view"
+          aria-label="Вписать в экран"
           onClick={() => {
             touched.current = false
             fit()

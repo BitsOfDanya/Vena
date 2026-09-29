@@ -176,10 +176,6 @@ export async function getSpatialCollection(): Promise<SpatialCollection> {
   if (workflowMode !== "api") {
     return buildDemoSpatialCollection()
   }
-  try {
-    const raw = await apiFetch<unknown>("/api/v1/spatial")
-    return CollectionSchema.parse(raw)
-  } catch {
-    return buildDemoSpatialCollection()
-  }
+  const raw = await apiFetch<unknown>("/api/v1/spatial")
+  return CollectionSchema.parse(raw)
 }

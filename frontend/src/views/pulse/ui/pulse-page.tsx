@@ -17,6 +17,7 @@ import {
 } from "@/entities/infrastructure"
 import { OPEN_STATUSES, useActions } from "@/entities/maintenance"
 import { useAcknowledgeNotification, useNotifications } from "@/entities/notification"
+import type { InspectionPlanItem } from "@/entities/analytics"
 import {
   SCENARIO_LABEL,
   formatProbability,
@@ -40,6 +41,7 @@ import { LEGEND, PulseSurface, patternLabel, type PulseSelection } from "@/widge
 import { ReplayEntry } from "@/widgets/replay-controller"
 import { PulseSummaryModules, ShiftSummary, SnapshotLine } from "@/widgets/pulse-summary"
 import { SituationRail } from "@/widgets/situation-rail"
+import { InspectionPlanPanel } from "@/widgets/inspection-plan"
 
 const WINDOWS = [
   { value: 1, label: "1ч" },
@@ -84,13 +86,13 @@ export function PulsePage() {
   const [draft, setDraft] = React.useState<ActionDraft>({})
 
   const apiMode = workflowMode === "api"
-  const hideDemoTelemetry = apiMode && dataMode === "demo" && !demoTelemetryOpen
+  const hideDemoTelemetry = apiMode ? !demoTelemetryOpen : false
   const pulse = usePulse(now, windowHours)
   const demoSummary = usePulseSummary(now, horizon)
   const snapshot = useSnapshotStatus()
   const backendSituations = useBackendSituations()
-  const riskRising = useRiskRising()
-  const criticalPredictions = useCriticalPredictions()
+  const riskRising = useRiskRising(horizon)
+  const criticalPredictions = useCriticalPredictions(horizon)
   const demoSituations = useSituations(now, horizon)
   const actions = useActions()
   const notifications = useNotifications()
@@ -125,9 +127,11 @@ export function PulsePage() {
     status: item.status,
     scenario: item.scenario,
     location: item.location,
+    locationGroup: item.locationGroup,
     assetCount: item.assetCount,
     incidentProbability: item.incidentProbability,
     healthIndex: item.healthIndex,
+    modelId: item.modelId,
     recommendation: item.recommendation,
     history: item.history,
   }))
@@ -205,6 +209,21 @@ export function PulsePage() {
     setSheetOpen(true)
   }
 
+  function createFromInspection(item: InspectionPlanItem) {
+    setDraft({
+      assetId: item.assetId,
+      reason: item.reason
+        ? `Осмотр · ${item.reason}`
+        : `План осмотра · ${item.name?.trim() || item.assetId}`,
+      priority: item.riskLevel === "critical" || item.riskLevel === "attention" ? "high" : "medium",
+      kind: "inspect",
+      sourceModelId: item.modelId,
+      sourceScore: item.probability,
+      sourceHorizonHours: item.modelId.includes("72") ? 72 : 24,
+    })
+    setSheetOpen(true)
+  }
+
   return (
     <div className="flex size-full min-h-0 flex-col">
       <div className="flex shrink-0 flex-wrap items-center gap-x-8 gap-y-3 px-6 pt-4 pb-3">
@@ -263,6 +282,9 @@ export function PulsePage() {
         ) : (
           <ShiftSummary summary={summary} completed={completedThisShift} />
         )}
+        {apiMode && !predictionsUnavailable ? (
+          <InspectionPlanPanel className="pt-2" onCreate={createFromInspection} />
+        ) : null}
       </div>
 
       <div className="flex min-h-0 flex-1">
@@ -270,6 +292,15 @@ export function PulsePage() {
           <section aria-label="Требуют внимания" className="flex max-h-[38%] shrink-0 flex-col px-6 pb-3">
             <div className="mb-2 flex flex-wrap items-baseline gap-x-4 gap-y-2">
               <SectionTitle count={filtered.length}>Требуют внимания</SectionTitle>
+              {apiMode && !predictionsUnavailable ? (
+                <span className="text-[12px] text-muted-foreground">
+                  в очереди {filtered.length}
+                  {(criticalPredictions.data?.critical.length ?? 0) + (criticalPredictions.data?.attention.length ?? 0) >
+                  filtered.length
+                    ? ` · критичных/внимание в снимке: ${(criticalPredictions.data?.critical.length ?? 0) + (criticalPredictions.data?.attention.length ?? 0)}`
+                    : null}
+                </span>
+              ) : null}
               <Segmented
                 label="Сценарий"
                 value={scenarioFilter}
@@ -306,11 +337,11 @@ export function PulsePage() {
             <div className="mb-2 flex items-baseline gap-4">
               <h2 className="flex items-baseline gap-2.5 text-[13px] font-medium tracking-[0.1em] text-muted-foreground uppercase">
                 Активность · последние {windowHours} ч
-                {apiMode && dataMode === "demo" ? (
-                  <span className="text-[11px] tracking-[0.06em] text-faint normal-case">демо-телеметрия</span>
+                {apiMode && demoTelemetryOpen ? (
+                  <span className="text-[11px] tracking-[0.06em] text-status-attention normal-case">демо-телеметрия</span>
                 ) : null}
               </h2>
-              {apiMode && dataMode === "demo" ? (
+              {apiMode ? (
                 <button
                   type="button"
                   onClick={() => setDemoTelemetryOpen((open) => !open)}
@@ -332,8 +363,14 @@ export function PulsePage() {
             </div>
             {hideDemoTelemetry ? (
               <p className="mb-4 text-[13px] text-muted-foreground">
-                Демо-телеметрия свёрнута: риски и очередь выше — из снимка моделей. Схема событий стенда не смешивается с
-                прогнозами.
+                Лента событий стенда отключена в API-режиме: риски и очередь — только из снимка моделей.{" "}
+                <button
+                  type="button"
+                  onClick={() => setDemoTelemetryOpen(true)}
+                  className="text-vena underline-offset-4 hover:underline"
+                >
+                  Показать демо-телеметрию
+                </button>
               </p>
             ) : (
             <div className="min-h-0 flex-1 px-1">

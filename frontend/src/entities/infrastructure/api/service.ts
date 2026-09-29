@@ -1,4 +1,6 @@
 import { HOUR, MINUTE } from "@/shared/lib/time"
+import { apiFetch } from "@/shared/api/http"
+import { workflowMode } from "@/shared/config/env"
 
 import {
   DEMO_NOW,
@@ -13,6 +15,7 @@ import {
 import { CANVAS_HEIGHT, CANVAS_WIDTH } from "../lib/layout"
 import { TYPE_LABEL, isWatch, levelFromScore, statusFromScore } from "../lib/risk"
 import type { PredictionOverlay } from "../lib/prediction-overlay"
+import { overlayFromPrediction } from "../lib/prediction-overlay"
 import { lowerBound } from "../lib/prng"
 import type {
   Asset,
@@ -37,7 +40,7 @@ import type {
   StateSegment,
   TemporalBundle,
 } from "../model/types"
-import { predictionOverlays } from "./predictions-client"
+import { predictionOverlays, listLivePredictions, type LivePrediction } from "./predictions-client"
 
 type View = { now: number; horizon: ForecastHorizon }
 
@@ -98,14 +101,15 @@ function toAsset(
 }
 
 export async function getAssets(view: View): Promise<Asset[]> {
-  const overlays = await predictionOverlays()
+  if (workflowMode === "api") return getPredictionAssets(view.horizon)
+  const overlays = await predictionOverlays(view.horizon)
   return getDataset().assets.map((record) => toAsset(record, view, overlays))
 }
 
 export async function searchAssets(query: string, view: View, limit = 12): Promise<Asset[]> {
   const needle = query.trim().toLowerCase()
   const dataset = getDataset()
-  const overlays = await predictionOverlays()
+  const overlays = await predictionOverlays(view.horizon)
   const matches = dataset.assets.filter((record) => {
     if (!needle) return true
     return (
@@ -123,7 +127,7 @@ export async function searchAssets(query: string, view: View, limit = 12): Promi
 
 export async function getNetwork(view: View): Promise<NetworkModel> {
   const dataset = getDataset()
-  const overlays = await predictionOverlays()
+  const overlays = await predictionOverlays(view.horizon)
   const nodes = dataset.assets.map((record) => {
     const asset = toAsset(record, view, overlays)
     const position = dataset.layout.positions.get(record.id) ?? { x: 0, y: 0 }
@@ -177,29 +181,29 @@ function factorsFor(record: AssetRecord, now: number, score: number) {
   const factors: RiskFactor[] = [
     {
       key: "event-rate",
-      label: "Event rate",
+      label: "Интенсивность событий",
       value: `${rateChange >= 0 ? "+" : ""}${rateChange}%`,
       direction: rateChange > 10 ? "up" : rateChange < -10 ? "down" : "flat",
       basis: "rule_based",
     },
     {
       key: "recurrence",
-      label: "Recurrence",
-      value: failures.length >= 2 ? "high" : failures.length === 1 ? "medium" : "low",
+      label: "Повторяемость",
+      value: failures.length >= 2 ? "высокая" : failures.length === 1 ? "средняя" : "низкая",
       direction: failures.length >= 2 ? "up" : "flat",
       basis: "rule_based",
     },
     {
       key: "last-failure",
-      label: "Last failure",
-      value: sinceFailure === null ? "none in 7 d" : `${sinceFailure.toFixed(1)} d`,
+      label: "Последний отказ",
+      value: sinceFailure === null ? "нет за 7 сут." : `${sinceFailure.toFixed(1)} сут.`,
       direction: sinceFailure !== null && sinceFailure < 3 ? "up" : "flat",
       basis: "rule_based",
     },
     {
       key: "state-changes",
-      label: "State changes",
-      value: abnormalNow ? "abnormal" : abnormalRecent > 0 ? "unstable" : "stable",
+      label: "Смены состояния",
+      value: abnormalNow ? "аварийное" : abnormalRecent > 0 ? "нестабильное" : "стабильное",
       direction: abnormalNow || abnormalRecent > 0 ? "up" : "flat",
       basis: "rule_based",
     },
@@ -214,18 +218,87 @@ function factorsFor(record: AssetRecord, now: number, score: number) {
   const parts = [history, activity, state].map((raw) => Math.round((raw / total) * budget))
   parts[0] += budget - parts.reduce((sum, value) => sum + value, 0)
   const groups: FactorGroup[] = [
-    { key: "baseline", label: "Baseline", points: baselinePoints },
-    { key: "history", label: "History", points: parts[0] },
-    { key: "activity", label: "Activity", points: parts[1] },
-    { key: "state", label: "State", points: parts[2] },
+    { key: "baseline", label: "База", points: baselinePoints },
+    { key: "history", label: "История", points: parts[0] },
+    { key: "activity", label: "Активность", points: parts[1] },
+    { key: "state", label: "Состояние", points: parts[2] },
   ]
   return { factors, groups }
 }
 
+type ApiAssetPrediction = {
+  id: string
+  asset_id: string
+  model_id: string
+  horizon_hours: number | null
+  score: number
+  score_type: "risk_score" | "calibrated_probability"
+  risk_level: "critical" | "attention" | "observe" | "normal"
+  score_delta: number | null
+  last_event_at: string | null
+  name?: string | null
+  location?: string | null
+  drivers?: { feature: string; label: string; value: number | null; contribution: number }[]
+}
+
+function driversToFactors(
+  drivers: { feature: string; label: string; value: number | null; contribution: number }[],
+): RiskFactor[] {
+  return drivers.slice(0, 6).map((driver) => ({
+    key: driver.feature,
+    label: driver.label,
+    value: driver.value === null ? "—" : String(Math.round(driver.value * 100) / 100),
+    direction: driver.contribution > 0.05 ? "up" : driver.contribution < -0.05 ? "down" : "flat",
+    basis: "model_contribution" as const,
+  }))
+}
+
+async function getApiAssetDetail(id: string, view: View): Promise<AssetDetail | null> {
+  try {
+    const item = await apiFetch<ApiAssetPrediction>(`/api/v1/assets/${encodeURIComponent(id)}/prediction`)
+    const live = mapItem(item)
+    const asset = assetFromLive(live, view.horizon)
+    const delta =
+      item.score_delta === null || item.score_delta === undefined
+        ? 0
+        : Math.abs(item.score_delta) <= 1
+          ? Math.round(item.score_delta * 100)
+          : Math.round(item.score_delta)
+    const factors = driversToFactors(item.drivers ?? [])
+    return {
+      asset,
+      delta,
+      deltaSince: view.now - 6 * HOUR,
+      factors,
+      factorGroups: [],
+      recent: [],
+    }
+  } catch {
+    return null
+  }
+}
+
+function mapItem(item: ApiAssetPrediction): LivePrediction {
+  return {
+    id: item.id,
+    assetId: item.asset_id,
+    modelId: item.model_id,
+    horizonHours: item.horizon_hours,
+    score: item.score,
+    scoreType: item.score_type,
+    riskLevel: item.risk_level,
+    scoreDelta: item.score_delta,
+    lastEventAt: item.last_event_at ? Date.parse(item.last_event_at) : null,
+    name: item.name ?? null,
+    location: item.location ?? null,
+  }
+}
+
 export async function getAsset(id: string, view: View): Promise<AssetDetail | null> {
+  if (workflowMode === "api") return getApiAssetDetail(id, view)
   const record = getDataset().byId.get(id)
   if (!record) return null
-  const overlays = await predictionOverlays()
+  const overlays = await predictionOverlays(view.horizon)
   const asset = toAsset(record, view, overlays)
   const overlay = overlays.get(id)
   const deltaSince = Math.ceil((view.now - 6 * HOUR) / HOUR) * HOUR
@@ -461,11 +534,105 @@ export async function getPulse(view: { now: number; windowHours: number }): Prom
   }
 }
 
+function typeFromModel(modelId: string): AssetType {
+  const prefix = modelId.split("_")[0]
+  if (prefix === "pump" || prefix === "flood") return "pump"
+  if (prefix === "fan") return "fan"
+  if (prefix === "smoke" || prefix === "alarm") return "smoke"
+  if (prefix === "phase" || prefix === "power") return "power"
+  return "other"
+}
+
+function assetFromLive(prediction: LivePrediction, _horizon: ForecastHorizon): Asset {
+  const overlay = overlayFromPrediction(prediction)
+  return {
+    id: prediction.assetId,
+    name: prediction.name?.trim() || prediction.assetId,
+    type: typeFromModel(prediction.modelId),
+    group: prediction.location?.trim() || "СМВУ",
+    channelId: prediction.assetId,
+    status: overlay.status,
+    riskLevel: overlay.riskLevel,
+    riskScore: overlay.riskScore,
+    scoreType: overlay.scoreType,
+    forecastHorizon: overlay.forecastHorizon,
+    lastEventAt: overlay.lastEventAt,
+    predictionId: overlay.predictionId,
+    predictionModelId: overlay.modelId,
+  }
+}
+
+export async function getPredictionAssets(horizon: ForecastHorizon): Promise<Asset[]> {
+  const predictions = await listLivePredictions(horizon)
+  return predictions
+    .filter((item) => item.horizonHours === null || item.horizonHours === horizon)
+    .map((item) => assetFromLive(item, horizon))
+}
+
 export async function getTemporal(id: string, view: View, halfSpanHours: number): Promise<TemporalBundle | null> {
   const record = getDataset().byId.get(id)
-  if (!record) return null
-  const overlays = await predictionOverlays()
+  const overlays = await predictionOverlays(view.horizon)
   const from = view.now - halfSpanHours * HOUR
+
+  if (!record) {
+    const prediction = (await listLivePredictions(view.horizon)).find((item) => item.assetId === id)
+    if (!prediction) return null
+    const asset = assetFromLive(prediction, view.horizon)
+    const score = asset.riskScore
+    let history: RiskSnapshot[] = []
+    try {
+      const points = await apiFetch<
+        {
+          score: number
+          score_type: "risk_score" | "calibrated_probability"
+          risk_level: "critical" | "attention" | "observe" | "normal"
+          prediction_time: string
+          horizon_hours: number | null
+        }[]
+      >(
+        `/api/v1/assets/${encodeURIComponent(id)}/predictions?from=${new Date(from).toISOString()}&to=${new Date(view.now).toISOString()}&limit=200`
+      )
+      history = points.map((point) => {
+        const raw = point.score
+        const display =
+          point.score_type === "calibrated_probability"
+            ? Math.round(Math.min(100, Math.max(0, raw <= 1 ? raw * 100 : raw)))
+            : Math.round(Math.min(100, Math.max(0, raw <= 1 ? raw * 100 : raw)))
+        return {
+          assetId: id,
+          timestamp: Date.parse(point.prediction_time),
+          score: display,
+          level: point.risk_level === "critical" || point.risk_level === "attention" ? "high" : point.risk_level === "observe" ? "medium" : "low",
+          horizon: (point.horizon_hours === 72 ? 72 : 24) as ForecastHorizon,
+          scoreType: point.score_type,
+        }
+      })
+    } catch {
+      history = []
+    }
+    if (history.length === 0) {
+      history = [
+        {
+          assetId: id,
+          timestamp: view.now,
+          score,
+          level: asset.riskLevel,
+          horizon: asset.forecastHorizon,
+          scoreType: asset.scoreType,
+        },
+      ]
+    } else {
+      history[history.length - 1] = {
+        ...history[history.length - 1],
+        score,
+        level: asset.riskLevel,
+        scoreType: asset.scoreType,
+        horizon: asset.forecastHorizon,
+      }
+    }
+    return { asset, events: [], states: [], history, forecast: [] }
+  }
+
   const [events, states, history, forecast] = await Promise.all([
     getEvents(id, from, view.now),
     getStateHistory(id, from, view.now),
@@ -512,7 +679,7 @@ export async function getSituations(view: View, limit = 4): Promise<Situation[]>
     })
   }
 
-  const overlays = await predictionOverlays()
+  const overlays = await predictionOverlays(view.horizon)
   const ranked = dataset.assets
     .filter((record) => !isOffline(record))
     .map((record) => {

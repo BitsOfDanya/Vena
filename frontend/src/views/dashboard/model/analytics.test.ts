@@ -37,6 +37,7 @@ const prediction: Prediction = {
   systemType: null,
   lastEventAt: null,
   scenario: "flooding",
+  name: null,
   location: null,
   locationTag: null,
   drivers: [],

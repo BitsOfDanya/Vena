@@ -23,6 +23,7 @@ export {
   useAssets,
   useForecast,
   useNetwork,
+  usePredictionAssets,
   usePulse,
   usePulseSummary,
   useSituations,

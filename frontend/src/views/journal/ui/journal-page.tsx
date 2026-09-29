@@ -12,7 +12,7 @@ import {
   type JournalDecision,
   type JournalEntry,
 } from "@/entities/journal"
-import { SCENARIO_LABEL, formatProbability, type PredictionScenario } from "@/entities/prediction"
+import { SCENARIO_LABEL, formatProbability, modelLabel, type PredictionScenario } from "@/entities/prediction"
 import { workflowMode } from "@/shared/config/env"
 import { formatDateTime } from "@/shared/lib/time"
 import { cn } from "@/shared/lib/utils"
@@ -256,7 +256,9 @@ export function JournalPage() {
                             </td>
                             <td className="px-4 py-2.5">{SCENARIO_LABEL[row.scenario]}</td>
                             <td className="px-4 py-2.5">
-                              <div className="font-mono text-[12px]">{row.modelId ?? "—"}</div>
+                              <div className="text-[12px]" title={row.modelId ?? undefined}>
+                                {modelLabel(row.modelId)}
+                              </div>
                               <div className="font-mono text-[11px] text-faint tabular-nums">
                                 {scoreText(row)}
                                 {row.horizonHours ? ` · ${row.horizonHours}h` : ""}
