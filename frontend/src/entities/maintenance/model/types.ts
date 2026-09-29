@@ -92,7 +92,6 @@ export type ActionRepository = {
   dismiss(input: DismissActionInput, now: number): Promise<MaintenanceAction>
 }
 
-/** Dispatcher decision catalogue; mirrors DISMISS_REASONS in the backend. */
 export type DismissReason = "false_alarm" | "planned_works" | "verified_normal" | "monitoring" | "duplicate" | "other"
 
 export type DismissActionInput = { id: string; reason: DismissReason; note: string }
@@ -106,7 +105,6 @@ export const DISMISS_REASON_LABEL: Record<DismissReason, string> = {
   other: "Другое",
 }
 
-/** Feedback outcome each decision gives the model, matching the backend catalogue. */
 export const DISMISS_REASON_OUTCOME: Record<DismissReason, ActionOutcome> = {
   false_alarm: "false_signal",
   planned_works: "false_signal",

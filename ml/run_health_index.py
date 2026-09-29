@@ -1,20 +1,3 @@
-"""Validate the location health index on daily cuts of 2025.
-
-The API computes a location's health index from the 24-hour forecasts: for each
-scenario the highest calibrated probability among the location's channels,
-combined as 100 * prod(1 - risk). At every midnight of 2025 this script takes
-each channel's latest forecast from the previous 24 hours, computes the index
-per location and checks whether any modelled event (fault, power loss,
-flooding, smoke detection) started at the location within the next 24 hours. The report gives
-the event rate by index band and the ranking quality of the index.
-
-Combining channel probabilities overstates the risk of large, busy locations,
-so the raw location risk is calibrated on these daily cuts (isotonic, checked by
-two-fold cross-fitting over alternate months). The calibration points go to
-configs/health_index.json, which the API interpolates:
-index = 100 * (1 - calibrated risk).
-"""
-
 import json
 import os
 import time

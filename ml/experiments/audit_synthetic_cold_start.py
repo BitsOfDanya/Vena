@@ -1,5 +1,3 @@
-"""Simulate first-month pump history on held-out 2024 channels."""
-
 import argparse
 import json
 import time
@@ -22,7 +20,6 @@ SENSOR = "Состояние насоса"
 
 
 def synthetic_first_month(events, held):
-    """Reset channel histories at 2024-01-01 and rebuild January candidates."""
     start = pd.Timestamp("2024-01-01")
     end = pd.Timestamp("2024-02-01")
     selected = events.loc[events["channel_id"].isin(held) & (events["ts"] >= start)]
@@ -38,7 +35,6 @@ def synthetic_first_month(events, held):
 
 
 def main():
-    """Compare baseline and blend on the same simulated cold-start rows."""
     parser = argparse.ArgumentParser()
     parser.add_argument("--seed", type=int, default=42)
     parser.add_argument("--fraction", type=float, default=0.2)

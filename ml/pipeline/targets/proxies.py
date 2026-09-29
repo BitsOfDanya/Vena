@@ -1,5 +1,4 @@
 import numpy as np
-import pandas as pd
 
 FIRE_PROXY_WEIGHTS = {"channel_repeat_1h": 0.4, "group_neighbors_1h": 0.4, "group_burst_24h": 0.2}
 HYDRAULIC_WEIGHTS = {"load_z": 0.5, "rapid_switching": 0.3, "burst_share": 0.2}

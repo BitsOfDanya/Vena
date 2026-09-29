@@ -1,5 +1,3 @@
-"""Test a 24-hour auxiliary model for 72-hour pump risk ranking."""
-
 import argparse
 import time
 
@@ -20,7 +18,6 @@ from pipeline.targets.model_zoo import LightGBMModel
 
 
 def main():
-    """Compare fixed 24h/72h blends on a future calendar year."""
     parser = argparse.ArgumentParser()
     parser.add_argument("--valid-year", type=int, choices=(2024, 2025), required=True)
     args = parser.parse_args()

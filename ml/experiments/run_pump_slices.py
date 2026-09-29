@@ -1,5 +1,3 @@
-"""Audit the selected pump blend across 2025 quarters and trigger types."""
-
 import json
 
 import pandas as pd
@@ -14,7 +12,6 @@ from pipeline.training import feature_columns
 
 
 def threshold_from(path, variant):
-    """Read a development-year threshold from an aggregate record."""
     with open(path, encoding="utf-8") as source:
         for line in source:
             record = json.loads(line)
@@ -24,7 +21,6 @@ def threshold_from(path, variant):
 
 
 def score_baseline(frame, valid_frame):
-    """Fit the original full-history logistic model with a 168h embargo."""
     train = frame["ts"] < pd.Timestamp("2025-01-01") - pd.Timedelta(hours=168)
     columns = feature_columns()
     model = LogisticRegressionModel().fit(
@@ -34,7 +30,6 @@ def score_baseline(frame, valid_frame):
 
 
 def report_slices(valid_frame, baseline, blend, baseline_threshold, blend_threshold):
-    """Emit aggregate ranking and frozen-threshold metrics by known slice."""
     groups = {
         "quarter": valid_frame["ts"].dt.quarter.astype(str),
         "trigger": valid_frame["trigger"],
@@ -66,7 +61,6 @@ def report_slices(valid_frame, baseline, blend, baseline_threshold, blend_thresh
 
 
 def main():
-    """Reproduce one 2025 diagnostic audit without model selection."""
     frame = pd.read_parquet("analysis/ml_ready/pump72_features.parquet")
     valid_frame, (linear, tree), _ = fit_scores(frame, 2025)
     trained_channels = set(

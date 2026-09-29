@@ -1,5 +1,3 @@
-"""Compare fixed probability and log-odds fusion of pump models."""
-
 import argparse
 import json
 import time
@@ -16,7 +14,6 @@ from pipeline.formal.metrics import eval_at_threshold, frontier_metrics
 
 
 def fused_scores(linear, tree):
-    """Return a small prespecified set of calibration-free fusions."""
     safe_linear = np.clip(linear, 1e-6, 1 - 1e-6)
     safe_tree = np.clip(tree, 1e-6, 1 - 1e-6)
     linear_logit = logit(safe_linear)
@@ -31,7 +28,6 @@ def fused_scores(linear, tree):
 
 
 def main():
-    """Evaluate fixed score transforms on a chronological holdout."""
     parser = argparse.ArgumentParser()
     parser.add_argument("--valid-year", type=int, choices=(2024, 2025, 2026), required=True)
     parser.add_argument("--variants", default="arithmetic_50,logit_50,logit_25,logit_75,geometric_probability")

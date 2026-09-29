@@ -1,5 +1,3 @@
-"""Test fixed blends of recent-window linear and compact tree models."""
-
 import time
 
 import pandas as pd
@@ -19,7 +17,6 @@ from pipeline.targets.model_zoo import LightGBMModel
 
 
 def fit_models(frame, year, window_years=3):
-    """Fit both models on the same embargoed training history."""
     valid_start = pd.Timestamp(f"{year}-01-01")
     train = frame["ts"] < valid_start - pd.Timedelta(hours=168)
     if window_years:
@@ -33,7 +30,6 @@ def fit_models(frame, year, window_years=3):
 
 
 def fit_scores(frame, year, window_years=3):
-    """Score the future calendar year with the two fixed component models."""
     valid = validation_mask(frame, year)
     started = time.monotonic()
     linear, tree = fit_models(frame, year, window_years)
@@ -43,7 +39,6 @@ def fit_scores(frame, year, window_years=3):
 
 
 def evaluate_blend(y, score, weight):
-    """Report ranking metrics and two thresholds selected on this year."""
     result = frontier_metrics(y, score)
     result.update({
         "linear_weight": weight,
@@ -54,7 +49,6 @@ def evaluate_blend(y, score, weight):
 
 
 def main():
-    """Run a predeclared weight grid on one chronological validation year."""
     parser = model_parser()
     parser.add_argument("--sensor", choices=("pump", "fan"), default="pump")
     parser.add_argument("--window-years", type=int, choices=(0, 1, 2, 3, 4), default=3)

@@ -1,12 +1,3 @@
-"""Unauthorized-access analytics over the full journal.
-
-Writes results/access_analysis.json: how often entry points fire while the
-object is armed, the flag threshold that yields about FLAGS_PER_DAY events for
-dispatcher verification, and what distinguishes flagged events. Without
-intrusion labels these numbers describe the index; they do not measure
-detection precision.
-"""
-
 import json
 import os
 import time
@@ -18,7 +9,6 @@ from pipeline import config, extract
 from pipeline.targets import access
 
 OUTPUT = os.path.join(config.ROOT, "results", "access_analysis.json")
-# The scorer reads the threshold from configs, which ship with the ML image.
 CONFIG = os.path.join(config.ROOT, "configs", "access.json")
 FLAGS_PER_DAY = 5
 

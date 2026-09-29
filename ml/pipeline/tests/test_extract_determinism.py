@@ -1,5 +1,3 @@
-"""Regression check for journal rows sharing a channel and timestamp."""
-
 import hashlib
 from pathlib import Path
 
@@ -7,7 +5,6 @@ from pipeline import config, extract
 
 
 def test_extract_orders_tied_events_by_event_id(tmp_path, monkeypatch):
-    """Repeated extraction keeps the same state sequence and cache bytes."""
     journal = tmp_path / "journal.csv"
     journal.write_text(
         "ид_события,ид_канала_данных,дата,время,тревожное,значение_датчика\n"

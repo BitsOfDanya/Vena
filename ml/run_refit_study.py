@@ -1,22 +1,3 @@
-"""Refit study: a newer training window and other model families.
-
-The frozen models are trained through 2023 (phase through 2024), and the event
-rates of several devices changed since then (results/model_report.json). For
-each model the study:
-1. fits every recipe (model family x training window) on data before 2025 and
-   measures average precision on 2025;
-2. refits two candidates on data through 2025: the recipe that was best on 2025
-   and the recipe of the current artifact. Each refit is calibrated by the
-   isotonic map of its pre-2025 counterpart on 2025, a year that counterpart has not seen;
-3. compares the refits with the current artifact on the first half of 2026, which
-   none of them has seen, and with --promote replaces the artifact by the better
-   refit when it gains more than MIN_GAIN of average precision.
-The best recipe on 2025 is not always the best on 2026H1 (linear models lose
-most under the fan drift), hence the second candidate. Risk bands of a promoted
-model keep the alert volume of the current one on 2026H1.
-Results go to results/refit_study.json.
-"""
-
 import argparse
 import json
 import os
@@ -45,7 +26,6 @@ def log(message):
 
 
 def frames(names):
-    """Candidate frame and horizon of every studied model."""
     ctx = None
     for name, (device, horizon) in DEVICE_MODELS.items():
         if name not in names:

@@ -1,5 +1,3 @@
-"""Package aggregate-only local follow-up outputs for versioned review."""
-
 import hashlib
 import json
 from pathlib import Path
@@ -113,7 +111,6 @@ FORBIDDEN_KEYS = {"channel_id", "event_id", "raw_value", "tag", "ts", "score"}
 
 
 def reject_row_fields(value):
-    """Fail closed if a source unexpectedly contains row-level identifiers."""
     if isinstance(value, dict):
         if FORBIDDEN_KEYS.intersection(value):
             raise ValueError("Aggregate output unexpectedly contains row-level fields")
@@ -125,7 +122,6 @@ def reject_row_fields(value):
 
 
 def read_aggregate(path):
-    """Read one JSON record or a JSONL list from an ignored local output."""
     source = Path(path)
     if source.suffix == ".jsonl":
         return [json.loads(line) for line in source.read_text(encoding="utf-8").splitlines()]
@@ -133,7 +129,6 @@ def read_aggregate(path):
 
 
 def main():
-    """Write one reviewable report containing only aggregate experiment output."""
     manifest = Path("experiments/dataset_manifest.sha256").read_bytes()
     result = {
         "run_id": "followup-20260924-1016utc",

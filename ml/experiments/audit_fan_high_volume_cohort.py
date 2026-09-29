@@ -1,5 +1,3 @@
-"""Summarize May 2026 high-volume fan channels without their identifiers."""
-
 import json
 
 import pandas as pd
@@ -11,7 +9,6 @@ EVENT_CACHE = "analysis/ml_ready/cache/events_Состояние_вентиля�
 
 
 def main():
-    """Describe the ten busiest May channels across historical years."""
     cache, episodes_cache, _ = cache_paths("fan", False)
     frame = pd.read_parquet(cache, columns=["channel_id", "ts", "target", "trigger"])
     episodes = pd.read_parquet(episodes_cache, columns=["channel_id", "episode_start"])

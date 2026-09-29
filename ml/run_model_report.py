@@ -1,18 +1,3 @@
-"""Operational report of the production models: drift, recalibration, lead time, daily top-K.
-
-For every forecasting model on its held-out periods:
-- drift: base rate of the target and population stability of the raw score
-  between the validation year and the first half of 2026;
-- recalibration: the calibrator is refitted on the two most recent full years
-  (2024 and 2025), which smooths year-to-year swings of the event rate, and
-  both the old (2024) and the new calibrator are measured on 2026H1;
-- lead time: at the model's "high" and "medium" bands, how many episodes were
-  warned, how precise the alerts were and how many hours ahead they came;
-- daily top-K: precision of the K highest-risk channels per day, the rule for
-  planning inspections of pumps and fans.
-Results go to results/model_report.json; the pooled calibrators replace the 2024 ones.
-"""
-
 import json
 import os
 import time
@@ -34,7 +19,6 @@ def log(message):
 
 
 def psi(expected, actual, bins=10):
-    """Population stability index of a score between two periods."""
     edges = np.unique(np.quantile(expected, np.linspace(0, 1, bins + 1)))
     edges[0], edges[-1] = -np.inf, np.inf
     left = np.histogram(expected, edges)[0] / len(expected)
@@ -56,7 +40,6 @@ def study(name, frame, episodes, horizon, recent_mask, fit_mask, reference_mask)
 
     pooled = fit_mask | reference_mask
     new = calibration.fit_isotonic(raw[pooled], target[pooled])
-    # A model trained on a calibration year keeps its own calibrator.
     in_sample = int(meta["training_period"]["train_years"].split("-")[-1]) >= 2024
     if in_sample:
         new = old

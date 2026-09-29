@@ -1,5 +1,3 @@
-"""Time a retrospective pump inference batch from events to local output."""
-
 import argparse
 import json
 import os
@@ -18,7 +16,6 @@ OUTPUT_PATH = Path("analysis/pump_runtime_predictions.parquet")
 
 
 def main():
-    """Report each stage and remove private candidate-level output afterward."""
     parser = argparse.ArgumentParser()
     parser.add_argument("--force-extract", action="store_true")
     args = parser.parse_args()

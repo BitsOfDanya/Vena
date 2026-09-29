@@ -1,5 +1,3 @@
-"""Test train-only channel score centering for pump risk ranking."""
-
 import argparse
 import time
 
@@ -20,7 +18,6 @@ from pipeline.formal.metrics import frontier_metrics
 
 
 def centered_scores(train_frame, valid_frame, models, strengths):
-    """Estimate channel baselines on training scores and center future logits."""
     linear, tree = models
     columns = training.feature_columns()
     train_score = (
@@ -44,7 +41,6 @@ def centered_scores(train_frame, valid_frame, models, strengths):
 
 
 def main():
-    """Report candidate and episode metrics for a fixed normalization grid."""
     parser = argparse.ArgumentParser()
     parser.add_argument("--valid-year", type=int, choices=(2024, 2025), required=True)
     parser.add_argument("--strengths", default="0,0.25,0.5,1")

@@ -1,5 +1,3 @@
-"""Test whether learned channel effects improve fan failure ranking."""
-
 import argparse
 import time
 
@@ -14,7 +12,6 @@ from pipeline.training import feature_columns
 
 
 def design_matrices(frame, train, valid, use_channel):
-    """Fit numeric scaling and optional channel vocabulary on train only."""
     columns = feature_columns()
     scaler = StandardScaler()
     x_train = scaler.fit_transform(frame.loc[train, columns].fillna(-1))
@@ -32,7 +29,6 @@ def design_matrices(frame, train, valid, use_channel):
 
 
 def main() -> None:
-    """Evaluate fixed effects on a future calendar year with a 168h embargo."""
     parser = argparse.ArgumentParser()
     parser.add_argument("--valid-year", type=int, choices=(2024, 2025), required=True)
     parser.add_argument("--with-channel", action="store_true")

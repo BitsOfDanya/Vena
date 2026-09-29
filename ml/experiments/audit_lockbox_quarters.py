@@ -1,5 +1,3 @@
-"""Inspect fixed pump scores by 2026 quarter without selecting a new model."""
-
 import json
 
 import pandas as pd
@@ -12,7 +10,6 @@ from pipeline.formal.metrics import eval_at_threshold
 
 
 def saved_threshold(path, key, value):
-    """Read a threshold fixed on 2025 from tracked aggregate results."""
     with open(path, encoding="utf-8") as source:
         for row in map(json.loads, source):
             if row[key] == value:
@@ -21,7 +18,6 @@ def saved_threshold(path, key, value):
 
 
 def main():
-    """Score the unchanged models and emit quarterly aggregate metrics."""
     frame = pd.read_parquet("analysis/ml_ready/pump72_features.parquet")
     _, baseline = fit_and_score(frame, 2026, "baseline", 168)
     valid_frame, (linear, tree), _ = fit_scores(frame, 2026)

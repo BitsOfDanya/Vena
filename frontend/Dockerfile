@@ -1,5 +1,3 @@
-# The app is built inside the image: NEXT_PUBLIC_* values are inlined at build
-# time, so they come from compose build args, and native packages match Linux.
 FROM node:22-alpine AS base
 WORKDIR /srv/app
 RUN npm install --global pnpm@10.9.0
@@ -28,7 +26,6 @@ ENV NODE_ENV=production \
     NEXT_TELEMETRY_DISABLED=1 \
     HOSTNAME=0.0.0.0 \
     PORT=3000
-# next.config.ts builds a standalone server with only the runtime dependencies.
 COPY --from=build --chown=node:node /srv/app/.next/standalone ./
 COPY --from=build --chown=node:node /srv/app/.next/static ./.next/static
 USER node

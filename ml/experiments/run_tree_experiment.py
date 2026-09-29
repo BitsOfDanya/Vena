@@ -1,5 +1,3 @@
-"""Test fixed tree-model hypotheses on equipment 72-hour targets."""
-
 import time
 
 import pandas as pd
@@ -36,7 +34,6 @@ VARIANTS = {
 
 
 def run_one(frame, year, name, embargo_hours=168):
-    """Fit a prespecified model and return only aggregate validation metrics."""
     window, family, params = VARIANTS[name]
     train = frame["ts"] < pd.Timestamp(f"{year}-01-01") - pd.Timedelta(hours=embargo_hours)
     if window is not None:
@@ -65,7 +62,6 @@ def run_one(frame, year, name, embargo_hours=168):
 
 
 def main():
-    """Run a development year or a prespecified final-year check."""
     parser = model_parser()
     parser.add_argument("--sensor", choices=("pump", "fan"), default="pump")
     parser.add_argument("--variants", default=",".join(VARIANTS))

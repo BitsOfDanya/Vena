@@ -1,5 +1,3 @@
-"""Audit causal score-quantile thresholds for fan alert budgets."""
-
 import argparse
 import json
 
@@ -12,7 +10,6 @@ from pipeline import alerts
 
 
 def prior_score_thresholds(timestamps, scores, initial_threshold, lookback_days, quantile=0.95):
-    """Use only scores from prior calendar days for each day's threshold."""
     dates = np.asarray(timestamps).astype("datetime64[D]")
     thresholds = np.full(len(scores), initial_threshold, dtype=float)
     for day in np.unique(dates):
@@ -24,7 +21,6 @@ def prior_score_thresholds(timestamps, scores, initial_threshold, lookback_days,
 
 
 def summarize(frame, episodes, scores, thresholds):
-    """Apply one causal threshold per candidate and summarize alerts."""
     scored = frame[["channel_id", "ts", "target"]].copy()
     scored["excess"] = scores - thresholds
     selected = alerts.select_alerts_by_threshold(scored, "excess", 0, 24)
@@ -40,7 +36,6 @@ def summarize(frame, episodes, scores, thresholds):
 
 
 def main():
-    """Compare static and past-only 30/90-day score quantiles."""
     parser = argparse.ArgumentParser()
     parser.add_argument("--valid-year", type=int, choices=(2025, 2026), required=True)
     parser.add_argument("--linear-initial", type=float, required=True)

@@ -1,11 +1,3 @@
-"""Per-prediction feature contributions for the frozen models.
-
-Contributions are additive in log-odds: exact SHAP values for CatBoost and
-LightGBM, and coefficient times standardised value for logistic regression. A
-blend of probabilities is approximated by the same weighting of its components'
-contributions, which keeps the sign and the order of the drivers.
-"""
-
 import numpy as np
 import pandas as pd
 
@@ -88,13 +80,10 @@ LABELS = {
 }
 
 
-# Calendar features adjust the base rate by season and time of day; they stay in
-# the models but are not shown to the dispatcher as a reason.
 CALENDAR = {"weekday", "hour", "month", "is_weekend", "hour_sin", "hour_cos", "weekday_sin", "weekday_cos"}
 
 
 def contributions(model, features):
-    """Log-odds contribution of each feature to each row's score, or None."""
     if isinstance(model, ProbabilityBlend):
         linear = contributions(model.linear_model, features)
         tree = contributions(model.tree_model, features)
@@ -114,12 +103,10 @@ def contributions(model, features):
 
 
 def drivers(model, row, limit=3):
-    """Features that raise the risk of a single-row prediction the most."""
     contribution = contributions(model, row)
     if contribution is None:
         return []
     series = contribution.iloc[0].drop(labels=[name for name in CALENDAR if name in contribution.columns])
-    # Cyclic calendar encodings describe one quantity, so they are merged by label.
     by_label = series.groupby(lambda name: LABELS.get(name, name)).sum()
     top = by_label[by_label > 0].sort_values(ascending=False).head(limit)
     result = []

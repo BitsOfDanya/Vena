@@ -1,5 +1,3 @@
-"""Compare ranking by first observed channel year without exporting IDs."""
-
 import argparse
 
 import pandas as pd
@@ -16,14 +14,12 @@ EVENT_CACHES = {
 
 
 def subgroup_ap(labels, scores):
-    """Only define AP when both classes occur in the subgroup."""
     if labels.sum() in (0, len(labels)):
         return None
     return float(average_precision_score(labels, scores))
 
 
 def main():
-    """Use raw first-seen time only to audit the fixed validation scores."""
     parser = argparse.ArgumentParser()
     parser.add_argument("--sensor", choices=tuple(EVENT_CACHES), required=True)
     parser.add_argument("--valid-year", type=int, choices=(2025, 2026), default=2025)

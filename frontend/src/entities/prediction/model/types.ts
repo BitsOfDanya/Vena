@@ -1,10 +1,8 @@
 export type PredictionRiskLevel = "critical" | "attention" | "observe" | "normal"
 export type PredictionScoreType = "risk_score" | "calibrated_probability"
 
-/** Incident scenario a device model forecasts; `equipment` covers unknown devices. */
 export type PredictionScenario = "flooding" | "fire" | "power_loss" | "ventilation" | "equipment"
 
-/** Feature that raised this forecast the most, with its log-odds contribution. */
 export type PredictionDriver = {
   feature: string
   label: string
@@ -49,7 +47,6 @@ export type SnapshotStatus = {
   stale: boolean
   predictionCount: number
   models: { modelId: string; modelVersion: string | null; horizonHours: number | null; calibrated: boolean }[]
-  /** Last stream batch: events, channels rescored and seconds from the API to the published snapshot. */
   stream: { events: number; channelsRescored: number; publishedAt: number; latencySeconds: number } | null
   detail: string
 }

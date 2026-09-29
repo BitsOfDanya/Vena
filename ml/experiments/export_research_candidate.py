@@ -1,5 +1,3 @@
-"""Save the fixed pump 72-hour blend as an ignored research artifact."""
-
 import hashlib
 import json
 from pathlib import Path
@@ -19,7 +17,6 @@ VALIDATION = Path("experiments/pump_blend_validation_2025.jsonl")
 
 
 def sha256_file(path):
-    """Return a streaming digest for the model or data manifest."""
     digest = hashlib.sha256()
     with path.open("rb") as source:
         for block in iter(lambda: source.read(1024 * 1024), b""):
@@ -28,7 +25,6 @@ def sha256_file(path):
 
 
 def main():
-    """Fit through 2025, serialize, and verify a small historical score sample."""
     cache, _, _ = cache_paths("pump", False)
     frame = pd.read_parquet(cache)
     linear, tree = fit_models(frame, 2026)

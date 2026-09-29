@@ -1,5 +1,3 @@
-"""Count validation candidates affected by same-second event batching."""
-
 import argparse
 
 import pandas as pd
@@ -14,7 +12,6 @@ EVENT_CACHES = {
 
 
 def main():
-    """Report only aggregate counts for the batch-per-second assumption."""
     parser = argparse.ArgumentParser()
     parser.add_argument("--sensor", choices=tuple(EVENT_CACHES), required=True)
     args = parser.parse_args()

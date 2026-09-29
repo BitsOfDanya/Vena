@@ -1,5 +1,3 @@
-"""Test elapsed failure-cycle phase from existing causal features."""
-
 import argparse
 import json
 import time
@@ -28,7 +26,6 @@ PHASE_COLUMNS = (
 
 
 def attach_phase(frame):
-    """Use only prior failure intervals and time elapsed since the last failure."""
     result = frame.copy()
     elapsed = result["time_since_last_failure_days"].to_numpy()
     median = result["median_time_between_failures_days"].to_numpy()
@@ -43,7 +40,6 @@ def attach_phase(frame):
 
 
 def main():
-    """Compare the fixed blend with and without recurrence phase."""
     parser = argparse.ArgumentParser()
     parser.add_argument("--valid-year", type=int, choices=(2024, 2025, 2026), required=True)
     parser.add_argument("--sensor", choices=("pump", "fan"), default="pump")

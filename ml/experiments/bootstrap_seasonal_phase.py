@@ -1,5 +1,3 @@
-"""Block uncertainty for the 2025 first-half recurrence-phase policy."""
-
 import argparse
 import json
 
@@ -14,14 +12,12 @@ from pipeline import training
 
 
 def precision_recall(y, score, threshold):
-    """Compute candidate precision and recall at an unchanged threshold."""
     selected = score >= threshold
     tp = (selected & (y == 1)).sum()
     return tp / max(selected.sum(), 1), tp / max((y == 1).sum(), 1)
 
 
 def main():
-    """Emit aggregate paired intervals over full weeks or channels."""
     parser = argparse.ArgumentParser()
     parser.add_argument("--block", choices=("calendar_week", "channel"), default="calendar_week")
     parser.add_argument("--repeats", type=int, default=300)
@@ -31,7 +27,6 @@ def main():
     frame = attach_phase(pd.read_parquet(cache))
     start = pd.Timestamp("2025-01-01")
     train = (frame["ts"] < start - pd.Timedelta(hours=168)) & (frame["ts"].dt.year >= 2022)
-    # The 2024 threshold labels can use the first 72 hours of 2025.
     full_valid = frame["ts"].dt.year == 2025
     valid = full_valid & (frame["ts"] >= start + pd.Timedelta(hours=72))
     train_frame = frame.loc[train]

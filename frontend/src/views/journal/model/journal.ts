@@ -23,12 +23,10 @@ export function filterJournal(rows: JournalEntry[], filter: JournalFilter): Jour
 
 function cell(value: unknown): string {
   const text = value === null || value === undefined ? "" : String(value)
-  // Spreadsheet apps execute cells starting with these characters as formulas.
   const safe = /^[\s]*[=+@-]/u.test(text) ? "'" + text : text
   return `"${safe.replaceAll('"', '""')}"`
 }
 
-/** Labelled forecast feedback; decided rows are the retraining dataset. */
 export function exportJournalCsv(rows: JournalEntry[]): string {
   const header = [
     "Action",

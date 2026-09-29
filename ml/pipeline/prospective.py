@@ -1,12 +1,3 @@
-"""Prospective check of published forecasts against events that arrive later.
-
-Every forecast issued after the history used for training is kept with its
-channel, time, horizon, probability and level. Once the horizon has passed on
-the incoming events, the forecast gets an outcome: did the target state start on
-that channel within the horizon. On data after the training journal this is an
-independent check that runs by itself as new events arrive.
-"""
-
 import numpy as np
 import pandas as pd
 
@@ -18,7 +9,6 @@ COLUMNS = ["model_id", "channel_id", "scored_at", "horizon_hours", "probability"
 
 
 def onsets(events, target_state):
-    """Starts of target-state episodes in an event frame."""
     if events.empty:
         return pd.DataFrame(columns=["channel_id", "episode_start"])
     if target_state == config.FAULT_LITERAL:
@@ -52,7 +42,6 @@ class ProspectiveMonitor:
             self.parts.append(pd.DataFrame(fresh, columns=COLUMNS))
 
     def evaluate(self, events_by_sensor, now):
-        """Metrics of every model whose forecasts have a complete horizon by `now`."""
         if not self.parts:
             return {"start": self.start.isoformat(), "now": pd.Timestamp(now).isoformat(), "models": {}}
         issued = pd.concat(self.parts, ignore_index=True)
@@ -83,7 +72,6 @@ class ProspectiveMonitor:
 
             matured["outcome"] = [happened(row) for row in matured.itertuples()]
             alerts = matured.loc[matured["level"].isin(ALERT_LEVELS)]
-            # Recall counts episodes whose full look-back window lies after the start.
             eligible = starts.loc[starts["episode_start"] - window >= self.start]
             alert_times = {key: np.sort(part["scored_at"].values) for key, part in alerts.groupby("channel_id")}
             warned = 0

@@ -1,12 +1,3 @@
-"""Flooding forecast: onset of the pump chamber state "Затоплен".
-
-The ТЗ flooding scenario compares pump activity with the weather forecast. Pump
-duty-cycle features describe how often the pumps switch on; weather features use
-only days before the candidate, and the forecast block adds the precipitation of
-the candidate day and the next day. In backtests the forecast block is filled
-with observed precipitation, which is an upper bound of a real forecast.
-"""
-
 import numpy as np
 import pandas as pd
 
@@ -20,11 +11,9 @@ FORECAST_WEATHER = ["precip_forecast_0d", "precip_forecast_1d"]
 
 
 def weather_features(ts, weather):
-    """Weather known at `ts` plus the precipitation forecast for today and tomorrow."""
     daily = weather.set_index("day").sort_index()
     precip = daily["precipitation"].fillna(0.0)
     temp = daily["temp_mean"]
-    # Snow melt: days with mean temperature above zero after a frost.
     thaw = ((temp > 0) & (daily["temp_min"] < 0)).astype(float)
     table = pd.DataFrame({
         "precip_prev_1d": precip.shift(1),

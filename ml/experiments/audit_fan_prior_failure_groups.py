@@ -1,5 +1,3 @@
-"""Compare fan AP by strictly prior failure history of each channel."""
-
 import argparse
 
 import pandas as pd
@@ -11,14 +9,12 @@ from experiments.run_recency_experiment import cache_paths
 
 
 def subgroup_ap(labels, scores):
-    """Avoid reporting AP when a subgroup has only one target class."""
     if labels.sum() in (0, len(labels)):
         return None
     return float(average_precision_score(labels, scores))
 
 
 def main():
-    """Use episodes before the 168-hour cutoff to define prior history."""
     parser = argparse.ArgumentParser()
     parser.add_argument("--valid-year", type=int, choices=(2025, 2026), required=True)
     args = parser.parse_args()

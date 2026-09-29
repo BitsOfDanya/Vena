@@ -1,5 +1,3 @@
-"""Remove the first 72 hours where prior-year labels touch evaluation data."""
-
 import argparse
 import json
 
@@ -12,7 +10,6 @@ from pipeline.formal.metrics import eval_at_threshold
 
 
 def main():
-    """Compare full-year and boundary-disjoint fixed-threshold metrics."""
     parser = argparse.ArgumentParser()
     parser.add_argument("--sensor", choices=("pump", "fan"), required=True)
     parser.add_argument("--valid-year", type=int, choices=(2025, 2026), required=True)

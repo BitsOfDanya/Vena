@@ -12,7 +12,6 @@ export type OverlayPrediction = {
   lastEventAt: number | null
 }
 
-/** Map API prediction risk levels onto the UI asset status vocabulary. */
 export function statusFromPredictionLevel(level: OverlayPrediction["riskLevel"]): AssetStatus {
   if (level === "critical") return "critical"
   if (level === "attention" || level === "observe") return "attention"
@@ -25,7 +24,6 @@ export function riskLevelFromPrediction(level: OverlayPrediction["riskLevel"]): 
   return "low"
 }
 
-/** Network/Timeline bars use 0–100; API scores are typically 0–1 risk_score. */
 export function displayScoreFromPrediction(prediction: OverlayPrediction): number {
   const raw = prediction.score
   if (prediction.scoreType === "calibrated_probability") {
@@ -70,7 +68,6 @@ export function overlayFromPrediction(prediction: OverlayPrediction): Prediction
   }
 }
 
-/** Prefer the highest-severity / highest-score prediction per asset. */
 export function indexPredictionsByAsset(
   predictions: OverlayPrediction[],
 ): Map<string, OverlayPrediction> {

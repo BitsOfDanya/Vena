@@ -1,18 +1,3 @@
-"""Fire alarm risk: will a smoke detector report smoke within 24 hours.
-
-The fire scenario (ТЗ, section 12) needs the risk of a smoke detection, while
-smoke_24h forecasts the detector's own fault state. The target here is the start
-of a "Обнаружен дым" episode on the detector within 24 hours. It is the state of
-the detector, not a confirmed fire: the journal has no fire labels, and part of
-the detections are tests or dust (alarm_30m ranks which of them get corroborated).
-
-Protocol as in run_refit_study.py: the recipe is selected on 2025 among
-candidates trained before 2025, refitted through 2025, calibrated on 2025 by the
-selected candidate and checked on 2026H1. The channel's smoothed detection rate
-(`channel_failure_prior`) is the baseline a model has to beat. With --freeze the
-refit becomes the smoke_alarm_24h artifact when it beats that baseline. Results go to results/detection_study.json.
-"""
-
 import argparse
 import json
 import os
@@ -48,7 +33,6 @@ def main() -> None:
     events = extract.extract_events(SENSOR)
     frame, episodes = state_target.build_frame(events, STATE, horizons=(HORIZON,), include_lockbox=True)
     frame = frame.rename(columns={f"y{HORIZON}": "target"}).reset_index(drop=True)
-    # The same smoothing constants as the candidate features of build_frame.
     rates = state_target.global_rates(events, STATE, config.TRAIN_YEARS[1])
     columns = training.feature_columns()
     year = frame["ts"].dt.year

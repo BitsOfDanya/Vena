@@ -1,4 +1,3 @@
-import numpy as np
 import pandas as pd
 
 from pipeline import alerts as alerts_mod

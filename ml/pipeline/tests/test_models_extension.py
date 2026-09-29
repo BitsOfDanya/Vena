@@ -1,5 +1,3 @@
-"""Regression checks for flooding, access analytics, calibration and retraining."""
-
 import json
 
 import numpy as np
@@ -80,8 +78,6 @@ def test_retraining_keeps_the_better_champion(tmp_path, monkeypatch):
     assert json.loads((tmp_path / "artifacts" / "models" / "m" / "meta.json").read_text())["version"] == "0.4"
     refresh.challenge(["m"], lambda: freeze(0.45))
     assert json.loads((tmp_path / "artifacts" / "models" / "m" / "meta.json").read_text())["version"] == "0.45"
-    # A model promoted by the refit study is measured on another period, so the new
-    # reference replaces it and the refit study decides again.
     artifacts.save_artifact("m", {"ap": 0.9}, [], {}, {"train_years": "2019-2025"}, {"test": {"avg_precision": 0.9}}, version="refit")
     refresh.challenge(["m"], lambda: freeze(0.41))
     assert json.loads((tmp_path / "artifacts" / "models" / "m" / "meta.json").read_text())["version"] == "0.41"
@@ -100,7 +96,6 @@ def test_contributions_add_up_to_the_model_logit():
         score = model.predict_proba(features)
         logit = np.log(score / (1 - score))
         summed = explain.contributions(model, features).sum(axis=1).to_numpy()
-        # The remaining difference is the constant bias term.
         assert np.allclose(logit - summed, (logit - summed)[0], atol=1e-6)
     drivers = explain.drivers(model, features.iloc[[int(np.argmax(score))]])
     assert "hour" not in {item["feature"] for item in drivers}
@@ -165,7 +160,6 @@ def test_population_stability_flags_a_shifted_score():
 def test_every_recipe_fits_and_scores(monkeypatch):
     from pipeline import recipes
 
-    # A multi-threaded LightGBM before torch hangs the later sequence tests on macOS.
     monkeypatch.setattr(recipes, "LIGHTGBM_PARAMS", {**recipes.LIGHTGBM_PARAMS, "n_jobs": 1})
     monkeypatch.setattr(recipes, "BLEND_TREE_PARAMS", {**recipes.BLEND_TREE_PARAMS, "n_jobs": 1})
     rng = np.random.default_rng(3)

@@ -1,5 +1,3 @@
-"""Summarize fan blend gains across channels and calendar weeks."""
-
 import argparse
 
 import numpy as np
@@ -12,7 +10,6 @@ from experiments.run_recency_experiment import cache_paths
 
 
 def summarize_groups(labels, baseline, blend, group_values, min_rows):
-    """Report distribution of within-group AP changes, never group IDs."""
     groups = pd.Series(group_values).groupby(group_values, sort=False).indices
     differences = []
     sizes = []
@@ -41,7 +38,6 @@ def summarize_groups(labels, baseline, blend, group_values, min_rows):
 
 
 def main():
-    """Evaluate a single year without exposing channel or week identifiers."""
     parser = argparse.ArgumentParser()
     parser.add_argument("--valid-year", type=int, choices=(2024, 2025, 2026), required=True)
     args = parser.parse_args()

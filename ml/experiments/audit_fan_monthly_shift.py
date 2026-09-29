@@ -1,5 +1,3 @@
-"""Audit monthly fan candidate mix and AP without exporting channel IDs."""
-
 import argparse
 
 import numpy as np
@@ -12,7 +10,6 @@ from experiments.run_recency_experiment import cache_paths
 
 
 def main():
-    """Score one year and report aggregate monthly composition and quality."""
     parser = argparse.ArgumentParser()
     parser.add_argument("--valid-year", type=int, choices=(2025, 2026), required=True)
     args = parser.parse_args()

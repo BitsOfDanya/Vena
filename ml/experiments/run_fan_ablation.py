@@ -1,5 +1,3 @@
-"""Check whether historical failure features cause fan ranking drift."""
-
 import argparse
 import time
 
@@ -30,7 +28,6 @@ DROP_SETS = {
 
 
 def main():
-    """Fit predeclared feature subsets on a chronological holdout."""
     parser = argparse.ArgumentParser()
     parser.add_argument("--valid-year", type=int, choices=(2024, 2025), required=True)
     parser.add_argument("--variants", default=",".join(DROP_SETS))

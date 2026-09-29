@@ -1,5 +1,3 @@
-"""Measure how often the fixed candidate generator can observe a future failure."""
-
 import argparse
 
 import pandas as pd
@@ -10,7 +8,6 @@ from pipeline.alerts import candidate_coverage
 
 
 def main():
-    """Report aggregate reachability before any model or alert threshold."""
     parser = argparse.ArgumentParser()
     parser.add_argument("--sensor", choices=("pump", "fan"), default="pump")
     parser.add_argument("--years", default="2024,2025")

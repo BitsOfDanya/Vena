@@ -1,5 +1,3 @@
-"""Test the last strictly earlier sensor state as a causal model feature."""
-
 import argparse
 import time
 
@@ -25,7 +23,6 @@ EVENT_CACHES = {
 
 
 def attach_prior_state(frame, sensor):
-    """Use only events with timestamps strictly earlier than each candidate."""
     events = pd.read_parquet(EVENT_CACHES[sensor], columns=["channel_id", "ts", "raw_value"])
     result = frame.copy()
     states = np.full(len(result), "missing", dtype=object)
@@ -47,7 +44,6 @@ def attach_prior_state(frame, sensor):
 
 
 def model_frame(frame, columns, state_columns):
-    """Append one-hot flags with vocabulary fixed from training data."""
     x = frame[columns]
     if not state_columns:
         return x
@@ -57,7 +53,6 @@ def model_frame(frame, columns, state_columns):
 
 
 def main():
-    """Evaluate base blend and strict-prior-state blend chronologically."""
     parser = argparse.ArgumentParser()
     parser.add_argument("--valid-year", type=int, choices=(2024, 2025), required=True)
     parser.add_argument("--sensor", choices=tuple(EVENT_CACHES), default="pump")

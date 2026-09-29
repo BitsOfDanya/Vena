@@ -1,5 +1,3 @@
-"""Blend full-history and recent-window logistic models for fan failures."""
-
 import argparse
 import time
 
@@ -19,7 +17,6 @@ from pipeline.models import LogisticRegressionModel
 
 
 def half_aps(frame, score):
-    """Expose seasonal variation before choosing a blend weight."""
     h1 = frame["ts"].dt.month.to_numpy() <= 6
     labels = frame["target"].to_numpy()
     return {
@@ -29,7 +26,6 @@ def half_aps(frame, score):
 
 
 def main():
-    """Score fixed temporal mixtures with an embargoed chronological split."""
     parser = argparse.ArgumentParser()
     parser.add_argument("--valid-year", type=int, choices=(2024, 2025), required=True)
     parser.add_argument("--recent-years", type=int, choices=(1, 2, 3), default=1)

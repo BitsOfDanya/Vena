@@ -1,5 +1,3 @@
-"""Compare a small regularized LightGBM grid on 2024 temporal halves."""
-
 import argparse
 import json
 import time
@@ -31,7 +29,6 @@ GRID = (
 
 
 def slice_metrics(frame, score):
-    """Report AP and recall at candidate precision 0.70 for each half-year."""
     months = frame["ts"].dt.month.to_numpy()
     masks = {"full": months > 0, "h1": months <= 6, "h2": months > 6}
     result = {}
@@ -50,7 +47,6 @@ def slice_metrics(frame, score):
 
 
 def main():
-    """Fit shared logistic component and one tree per grid point."""
     parser = argparse.ArgumentParser()
     parser.add_argument("--valid-year", type=int, choices=(2024, 2025, 2026), required=True)
     parser.add_argument("--variants", default=",".join(row[0] for row in GRID))

@@ -1,5 +1,3 @@
-"""Test the known observation age of a pump channel as a causal feature."""
-
 import argparse
 import time
 
@@ -22,7 +20,6 @@ EVENT_CACHE = "analysis/ml_ready/cache/events_Состояние_насоса.pa
 
 
 def attach_channel_age(frame):
-    """Measure days since the first observed event, using no future events."""
     events = pd.read_parquet(EVENT_CACHE, columns=["channel_id", "ts"])
     first = events.groupby("channel_id", observed=True)["ts"].min()
     age_days = (frame["ts"] - frame["channel_id"].map(first)).dt.total_seconds() / 86400
@@ -34,7 +31,6 @@ def attach_channel_age(frame):
 
 
 def main():
-    """Evaluate a predeclared age feature against the fixed blend."""
     parser = argparse.ArgumentParser()
     parser.add_argument("--valid-year", type=int, choices=(2024, 2025), required=True)
     parser.add_argument("--variants", default="base,age")

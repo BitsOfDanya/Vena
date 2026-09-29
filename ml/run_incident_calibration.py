@@ -1,13 +1,3 @@
-"""Location-level power-loss probability for incidents.
-
-A substation outage de-energises many channels of one location at once, so the
-dispatcher needs the probability that at least one channel of a location loses
-power within 24 hours. At every midnight of 2025 each channel contributes its
-latest phase_24h score from the previous 24 hours; the location score is the
-maximum over its channels, and isotonic regression maps it to the observed
-frequency. Quality is measured by two-fold cross-fitting over alternate months.
-"""
-
 import json
 import os
 import time
@@ -32,7 +22,6 @@ def log(message):
 
 
 def daily_locations(scored, starts, groups):
-    """Location score and target at each midnight."""
     scored = scored.assign(group=scored["channel_id"].map(groups)).dropna(subset=["group"])
     scored = scored.sort_values("ts")
     starts = starts.assign(group=starts["channel_id"].map(groups)).dropna(subset=["group"])
@@ -54,7 +43,6 @@ def main() -> None:
     meta = artifacts.load_artifact(NAME)[1]
     events = extract.extract_events(modules.PHASE_SENSOR)
     frame, episodes, _ = modules.build_phase_frame(events, horizons=(24,))
-    # A phase model refitted through YEAR is replaced by its recipe trained before YEAR.
     model, _ = recipes.out_of_sample(NAME, frame.rename(columns={"any_y24": "target"}), YEAR)
     valid = frame.loc[frame["ts"].dt.year == YEAR, ["channel_id", "ts"] + meta["feature_columns"]]
     scored = valid[["channel_id", "ts"]].assign(score=model.predict_proba(valid[meta["feature_columns"]]))

@@ -1,5 +1,3 @@
-"""Audit full-history fan blend gains across calendar quarters."""
-
 import argparse
 
 import numpy as np
@@ -12,7 +10,6 @@ from experiments.run_recency_experiment import cache_paths
 
 
 def main():
-    """Emit aggregate quarter AP without exporting candidate-level predictions."""
     parser = argparse.ArgumentParser()
     parser.add_argument("--valid-year", type=int, choices=(2024, 2025, 2026), required=True)
     args = parser.parse_args()

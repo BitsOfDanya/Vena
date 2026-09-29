@@ -1,13 +1,3 @@
-"""Dispatcher feedback on forecasts: confirmation rate against predicted probability.
-
-Reads the forecast journal from the API (`--url` with an API key in
-VENA_API_KEY) or from the CSV exported on the Journal page (`--csv`). Decided
-forecasts become labels: confirmed_issue and maintenance_performed are positive,
-no_issue_found and false_or_irrelevant_signal are negative, the rest carry no
-label. The report compares each model's mean predicted probability with the
-confirmed share and writes the labelled rows for retraining.
-"""
-
 import argparse
 import csv
 import json
@@ -47,7 +37,6 @@ def from_csv(path):
     with open(path, encoding="utf-8-sig", newline="") as handle:
         rows = list(csv.DictReader(handle, delimiter=";"))
     frame = pd.DataFrame(rows).rename(columns=CSV_COLUMNS)
-    # The export prefixes formula-like cells with an apostrophe.
     for column in frame.columns:
         frame[column] = frame[column].astype(str).str.lstrip("'").replace({"": None})
     frame["score"] = pd.to_numeric(frame["score"], errors="coerce")

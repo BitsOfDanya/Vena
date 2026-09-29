@@ -1,5 +1,3 @@
-"""Estimate paired AP uncertainty for the full-history fan blend."""
-
 import argparse
 import json
 
@@ -13,7 +11,6 @@ from experiments.run_recency_experiment import cache_paths
 
 
 def main():
-    """Resample dependent candidate blocks without exporting row data."""
     parser = argparse.ArgumentParser()
     parser.add_argument("--block", choices=("calendar_week", "channel"), default="calendar_week")
     parser.add_argument("--valid-year", type=int, choices=(2025, 2026), default=2025)

@@ -1,5 +1,3 @@
-"""Monthly causal fan alerts using fixed previous-year score thresholds."""
-
 import argparse
 
 import pandas as pd
@@ -11,7 +9,6 @@ from pipeline import alerts
 
 
 def summarize_months(frame, episodes, score, threshold, model):
-    """Apply one fixed threshold and 24-hour cooldown before monthly grouping."""
     scored = frame[["channel_id", "ts", "target"]].copy()
     scored["score"] = score
     selected = alerts.select_alerts_by_threshold(scored, "score", threshold, 24)
@@ -43,7 +40,6 @@ def summarize_months(frame, episodes, score, threshold, model):
 
 
 def main():
-    """Score one future period using thresholds fixed in the preceding year."""
     parser = argparse.ArgumentParser()
     parser.add_argument("--valid-year", type=int, choices=(2025, 2026), required=True)
     parser.add_argument("--linear-threshold", type=float, required=True)

@@ -8,7 +8,6 @@ COPY ml/pipeline ./pipeline
 COPY ml/artifacts ./artifacts
 COPY ml/configs ./configs
 COPY ml/score_snapshot.py ml/stream_scoring.py ./
-# The API (uid 10001) writes event batches into this shared volume.
 RUN mkdir -p /srv/ml/inbox && chown 10001:10001 /srv/ml/inbox
 COPY infra/scripts/ml-worker.py ./worker.py
 CMD ["python", "worker.py"]

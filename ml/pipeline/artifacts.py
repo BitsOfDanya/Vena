@@ -35,6 +35,5 @@ def load_artifact(name):
 
 
 def load_calibrator(name):
-    """Isotonic calibrator of a frozen model, or None when the model is not calibrated."""
     path = os.path.join(artifact_dir(name), "calibrator.joblib")
     return joblib.load(path) if os.path.exists(path) else None

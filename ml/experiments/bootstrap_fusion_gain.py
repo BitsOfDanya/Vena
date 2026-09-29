@@ -1,5 +1,3 @@
-"""Estimate paired block uncertainty for the 2025 score-fusion AP gain."""
-
 import argparse
 import json
 
@@ -14,7 +12,6 @@ from experiments.run_recency_experiment import cache_paths
 
 
 def main():
-    """Bootstrap 2025 weeks or channels while keeping candidate rows together."""
     parser = argparse.ArgumentParser()
     parser.add_argument("--block", choices=("calendar_week", "channel"), default="calendar_week")
     parser.add_argument("--repeats", type=int, default=300)

@@ -1,5 +1,3 @@
-"""Apply recurrence-phase features only in the first calendar half."""
-
 import argparse
 import json
 import time
@@ -23,7 +21,6 @@ from pipeline.targets.model_zoo import LightGBMModel
 
 
 def fit_blend(train_frame, valid_frame, columns):
-    """Fit the existing linear and compact tree recipe."""
     linear = LogisticRegressionModel().fit(train_frame[columns], train_frame["target"])
     tree = LightGBMModel({"num_leaves": 7, "min_child_samples": 500}).fit(
         train_frame[columns], train_frame["target"],
@@ -32,7 +29,6 @@ def fit_blend(train_frame, valid_frame, columns):
 
 
 def main():
-    """Test the 2024-selected first-half phase rule on future years."""
     parser = argparse.ArgumentParser()
     parser.add_argument("--valid-year", type=int, choices=(2024, 2025, 2026), required=True)
     parser.add_argument("--frozen-from")

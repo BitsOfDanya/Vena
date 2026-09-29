@@ -1,5 +1,3 @@
-"""Render aggregate PR frontiers without saving candidate-level scores."""
-
 from pathlib import Path
 
 import matplotlib.pyplot as plt
@@ -16,7 +14,6 @@ DESTINATION = Path("experiments/metric-frontiers-followup-2026-09-24.png")
 
 
 def main():
-    """Plot the unchanged model families on 2025 and diagnostic 2026H1."""
     plt.switch_backend("Agg")
     fig, axes = plt.subplots(1, 2, figsize=(11.8, 4.8), sharex=True, sharey=True)
     for axis, sensor, title, window in (

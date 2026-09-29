@@ -17,11 +17,9 @@ compose() { docker compose --env-file "$VENA_ENV_FILE" -f "$release/infra/compos
 compose config --quiet
 compose build --pull
 compose run --rm --no-deps caddy caddy validate --config /etc/caddy/Caddyfile --adapter caddyfile
-# Verify files as the unprivileged runtime user before replacing any containers.
 compose run --rm --no-deps backend python -c \
   'from alembic.config import Config; from app.main import app; assert Config("alembic.ini").get_main_option("script_location"); print("Backend image preflight passed")'
 
-# Back up before migrations. Failed migrations are not automatically downgraded.
 if [[ -n $(compose ps -q db) ]]; then
   compose exec -T db pg_dump --clean --if-exists -U vena vena | gzip > "$root/shared/backups/pre-$revision.sql.gz.tmp"
   mv "$root/shared/backups/pre-$revision.sql.gz.tmp" "$root/shared/backups/pre-$revision.sql.gz"

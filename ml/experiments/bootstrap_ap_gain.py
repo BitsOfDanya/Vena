@@ -1,5 +1,3 @@
-"""Estimate paired block intervals for the 2025 pump AP improvement."""
-
 import argparse
 import json
 
@@ -12,7 +10,6 @@ from experiments.run_recency_experiment import cache_paths, fit_and_score
 
 
 def paired_bootstrap(y, scores, blocks, repeats, seed):
-    """Resample whole weeks or channels, preserving candidate dependence."""
     baseline, candidate = scores
     _, inverse = np.unique(blocks, return_inverse=True)
     groups = [np.flatnonzero(inverse == group) for group in range(inverse.max() + 1)]
@@ -31,7 +28,6 @@ def paired_bootstrap(y, scores, blocks, repeats, seed):
 
 
 def main():
-    """Fit the fixed 2025 candidates and emit only aggregate bootstrap results."""
     parser = argparse.ArgumentParser()
     parser.add_argument("--repeats", type=int, default=300)
     parser.add_argument("--seed", type=int, default=42)

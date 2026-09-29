@@ -1,11 +1,3 @@
-"""ML worker: demo snapshots on a timer, or the journal stream scorer.
-
-demo    — synthetic stand channels are scored by the frozen models every
-          VENA_ML_REFRESH_SECONDS and published with an atomic rename.
-journal — the SMVU journal in /srv/ml/dataset is scored once, then event batches
-          posted to the API are rescored within seconds (stream_scoring.py).
-Both modes touch results/predictions/heartbeat, which the healthcheck reads.
-"""
 import os
 from pathlib import Path
 import subprocess

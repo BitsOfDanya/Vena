@@ -40,7 +40,6 @@ const ProspectiveSchema = z.object({
   ),
 })
 
-/** Null until the stream has produced forecasts after the training journal. */
 export async function getProspective(): Promise<Prospective | null> {
   try {
     const raw = ProspectiveSchema.parse(await apiFetch<unknown>("/api/v1/ml/prospective"))

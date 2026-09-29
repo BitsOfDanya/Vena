@@ -1,22 +1,3 @@
-"""Seasonal forecast of daily incident counts for planning crews.
-
-For every scenario the number of new episodes per day over the whole network is
-forecast 1-14 days ahead from the forecast day: calendar (weekday, season, public
-holidays), recent level (last 7, 28 and 91 days), the same weekday over the last
-four weeks and the same days a year earlier. A variant adds past Moscow weather
-(precipitation and thaw days before the forecast day). The model is a gradient
-boosting regressor with a Poisson loss.
-
-Protocol: the two variants and the mean of the last 28 days are compared on
-2025, the variants trained on target days before 2025; the method with the
-lowest error of 7-day totals is refitted through 2025 and checked on 2026H1
-together with the other methods and the same weekday of the last four weeks.
-The error is WAPE = sum |forecast - actual| / sum actual, for single days and
-for 7-day totals. The 80 % interval of the 7-day total comes from the ratios
-actual / forecast of 7-day totals on 2025. Results, the next-day forecasts of 2026H1 against the actual
-counts and the forecast after the end of the journal go to results/workload_forecast.json.
-"""
-
 import json
 import os
 import time
@@ -33,7 +14,6 @@ LEADS = range(1, 15)
 START = pd.Timestamp("2019-04-01")
 SELECTION_YEAR = 2025
 RECENT_YEAR = 2026
-# Fixed public holidays of the Russian Federation; weekend transfers are not modelled.
 HOLIDAYS = {(1, day) for day in range(1, 9)} | {(2, 23), (3, 8), (5, 1), (5, 9), (6, 12), (11, 4)}
 OUTPUT = os.path.join(config.ROOT, "results", "workload_forecast.json")
 
@@ -56,7 +36,6 @@ def is_holiday(days):
 
 
 def rows(series, weather, origins):
-    """One row per forecast day (known through origin - 1 day) and lead."""
     values = series.to_numpy(dtype=float)
     index = {day: position for position, day in enumerate(series.index)}
     cumulative = np.concatenate([[0.0], np.cumsum(values)])
@@ -67,7 +46,7 @@ def rows(series, weather, origins):
 
     records = []
     for origin in origins:
-        end = index[origin]  # values[:end] are known
+        end = index[origin]
         level7, level28, level91 = mean(end, 7), mean(end, 28), mean(end, 91)
         past = weather.loc[:origin - pd.Timedelta(days=1)].tail(7)
         for lead in LEADS:
@@ -107,14 +86,12 @@ METHODS = [*VARIANTS, "last_28_days"]
 
 
 def predict(method, models, frame):
-    """Daily forecast of a fitted variant, or the mean of the last 28 days."""
     if method == "last_28_days":
         return frame["level28"].to_numpy()
     return models[method].predict(frame[VARIANTS[method]])
 
 
 def weekly(frame, forecast):
-    """Actual and forecast totals of the 7 days after each forecast day."""
     scored = frame.assign(forecast=forecast)
     return scored.loc[scored["lead"] <= 7].groupby("origin")[["target", "forecast"]].sum()
 
@@ -124,7 +101,6 @@ def wape(actual, forecast):
 
 
 def errors(frame, forecast):
-    """WAPE for single days and for 7-day totals from the same forecast day."""
     week = weekly(frame, forecast)
     return {"day": wape(frame["target"].to_numpy(), np.asarray(forecast)), "week": wape(week["target"], week["forecast"])}
 
@@ -162,13 +138,11 @@ def study(scenario, series, weather):
             "last_30_days": int(series.iloc[-30:].sum()),
             "last_365_days": int(series.iloc[-365:].sum()),
         },
-        # Forecast for the next day against the actual count, the check the dispatcher can see.
         "backtest": [
             {"day": day.date().isoformat(), "actual": int(actual), "forecast": round(float(value), 1)}
             for day, actual, value in zip(next_day["day"], next_day["target"], predict(best, fitted, next_day), strict=True)
         ],
     }
-    # Forecast after the end of the journal: the selected method refitted on everything.
     final = {variant: fit(frame, columns) for variant, columns in VARIANTS.items()}
     ahead = rows(series.reindex(pd.date_range(days.min(), last + pd.Timedelta(days=max(LEADS)), freq="D")),
                  weather, [last + pd.Timedelta(days=1)])

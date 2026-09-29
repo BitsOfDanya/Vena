@@ -41,8 +41,6 @@ services:
       - predictions:/srv/ml/results/predictions
       - inbox:/srv/ml/inbox
       - ${VENA_DATASET_DIR:-/opt/vena/shared/dataset}:/srv/ml/dataset:ro
-    # The stream publishes on events and the first journal pass is long, so the
-    # worker is alive while its heartbeat is fresh rather than its snapshot.
     healthcheck:
       test: [CMD, python, -c, "import time; assert time.time()-float(open('/srv/ml/results/predictions/heartbeat').read())<7200"]
       interval: 30s

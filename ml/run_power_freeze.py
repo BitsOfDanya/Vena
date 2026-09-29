@@ -15,9 +15,6 @@ TRAIN_END_YEAR = 2024
 VALID_YEAR = 2025
 TARGET_COLUMN = "any_y24"
 RISK_PERCENTILES = {"critical": 0.001, "high": 0.005, "medium": 0.02}
-# Power loss has a 29% base rate, so tail quantiles land far above any operating
-# point: the threshold that reaches precision 0.70 is around 0.47 while the top 2%
-# quantile is above 0.99. Bands are therefore anchored to measured precision.
 RISK_PRECISIONS = {"critical": 0.9, "high": 0.7, "medium": 0.5}
 
 

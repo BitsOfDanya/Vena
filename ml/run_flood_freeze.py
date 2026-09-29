@@ -1,12 +1,3 @@
-"""Freeze the flooding model: pump chamber "Затоплен" within 24 hours.
-
-Four feature sets are compared on the same split (train 2019-2023, valid 2024,
-test 2025-2026H1): base event features, plus pump duty cycle, plus past weather,
-plus the precipitation forecast. The set with the best validation AP is frozen
-and calibrated on 2024. Risk bands are anchored to validation precision when it
-is reachable, otherwise to score quantiles.
-"""
-
 import json
 import os
 import time
@@ -59,7 +50,6 @@ def risk_bands(target, score):
         else:
             bands[level] = float(np.quantile(score, 1 - RISK_PERCENTILES[level]))
             basis[level] = f"top {RISK_PERCENTILES[level]:.1%}"
-    # Bands must stay ordered even when they come from different rules.
     bands["high"] = min(bands["high"], bands["critical"])
     bands["medium"] = min(bands["medium"], bands["high"])
     return bands, basis

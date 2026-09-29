@@ -1,4 +1,3 @@
-/** Monthly onsets per 100 channels for one scenario; index 0 is January. */
 export type SeasonalityRow = { scenario: string; months: number[] }
 
 export type Seasonality = { rows: SeasonalityRow[]; weather: Record<string, number> }
@@ -24,5 +23,4 @@ export type ProspectiveModel = {
   episodeRecall: number | null
 }
 
-/** Forecasts issued after the training journal, checked against events that arrived later. */
 export type Prospective = { start: number; now: number; models: Record<string, ProspectiveModel> }

@@ -1,14 +1,3 @@
-"""Freeze the pump 72-hour blend as the production pump_72h artifact.
-
-The blend (logistic regression + compact LightGBM, 50/50, three-year window)
-is refit on the production split (train through 2023, valid 2024, test 2025-2026H1) so
-its metrics are comparable with the other frozen artifacts, and it is only
-promoted when it beats the refrozen single-model baseline on the test period.
-
-The blend is weaker on channels with a short history, so the snapshot scorer falls back to ``pump_baseline_72h`` for channels whose
-history is shorter than ``min_history_days``.
-"""
-
 import json
 import os
 import time
@@ -42,13 +31,10 @@ def main() -> None:
     columns = training.feature_columns()
 
     valid_start = pd.Timestamp(f"{config.VALID_YEAR}-01-01")
-    # Labels of the last week before validation can see validation-period
-    # failures, so they are dropped from training.
     train = (frame["split"] == "train") & (frame["ts"] < valid_start - pd.Timedelta(hours=EMBARGO_HOURS))
     train &= frame["ts"].dt.year > config.TRAIN_YEARS[1] - WINDOW_YEARS
     valid = frame["split"] == "valid"
     test = frame["split"] == "test"
-    # The final horizon of the export has no complete future window.
     test &= frame["ts"] <= frame["ts"].max() - pd.Timedelta(hours=HORIZON_HOURS)
 
     log(f"fit on {int(train.sum())} rows")

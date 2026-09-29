@@ -1,11 +1,3 @@
-"""Registry of the production models for the API (GET /api/v1/ml/models).
-
-One card per artifact: what it forecasts, recipe, training years, calibration and
-quality on the first half of 2026, which no model has been trained or tuned on
-(results/refit_study.json, results/model_report.json and the artifact metadata).
-Writes results/models.json.
-"""
-
 import json
 import os
 
@@ -35,7 +27,6 @@ def read(name):
 
 
 def held_out(name, meta, refit, detection):
-    """Quality on 2026H1 of the artifact that is in production now."""
     study = refit.get(name)
     if study:
         side = study["refit"] if study.get("promoted") else study["current"]
@@ -47,7 +38,6 @@ def held_out(name, meta, refit, detection):
     metrics = meta["metrics_snapshot"]
     test = metrics.get("test", {})
     calibrated = meta["model_config"].get("calibration") or metrics.get("calibration") or {}
-    # alarm_30m is tested on 2026H1; the other frozen references on 2025-2026H1.
     period = test.get("period") or ("2026H1" if name == "alarm_30m" else "2025-2026H1")
     return {"period": period,
             **{key: round(float(value), 4) if value is not None else None for key, value in (

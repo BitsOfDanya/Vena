@@ -1,16 +1,3 @@
-"""Calibrate the frozen production models into event probabilities.
-
-Isotonic regression maps a model score to the observed frequency of the target
-on the validation period and is checked on the held-out test period, so the API
-can report "probability of the event within the horizon" instead of a rank.
-Risk levels keep using the raw score: isotonic steps can tie neighbouring scores.
-
-Power Health is trained through 2024, so its calibrator is fitted on 2025 and
-evaluated by two-fold cross-fitting over alternate months. Models refitted on
-data that includes the calibration year keep the calibrator run_refit_study.py
-gave them.
-"""
-
 import json
 import os
 import time
@@ -74,7 +61,6 @@ def attach(name, calibrator, summary):
 
 
 def seen(name, meta, fit_year, report):
-    """A model trained through the calibration year keeps its own calibrator."""
     if recipes.train_end_year(meta) < fit_year:
         return False
     report[name] = {"skipped": f"trained through {recipes.train_end_year(meta)}",

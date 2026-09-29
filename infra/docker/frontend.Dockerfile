@@ -6,7 +6,6 @@ RUN pnpm install --frozen-lockfile
 COPY frontend/ ./
 ARG NEXT_PUBLIC_VENA_ENVIRONMENT=production
 ENV NEXT_TELEMETRY_DISABLED=1 NEXT_PUBLIC_API_URL="" NEXT_PUBLIC_VENA_DATA_MODE=demo NEXT_PUBLIC_VENA_WORKFLOW_MODE=api NEXT_PUBLIC_VENA_ENVIRONMENT=$NEXT_PUBLIC_VENA_ENVIRONMENT
-# public may be absent in a clean checkout.
 RUN mkdir -p public && pnpm build
 
 FROM node:22-alpine

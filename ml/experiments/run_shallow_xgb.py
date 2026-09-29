@@ -1,5 +1,3 @@
-"""Evaluate one regularized shallow XGBoost family for pump failures."""
-
 import argparse
 import json
 import time
@@ -15,7 +13,6 @@ from pipeline.models import LogisticRegressionModel
 
 
 def main():
-    """Blend a fixed shallow tree with the prior three-year linear model."""
     parser = argparse.ArgumentParser()
     parser.add_argument("--valid-year", type=int, choices=(2024, 2025, 2026), required=True)
     parser.add_argument("--weights", default="0,0.25,0.5,0.75,1")

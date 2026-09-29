@@ -1,5 +1,3 @@
-"""Check whether stronger L2 regularization improves fan 72-hour ranking."""
-
 import argparse
 import time
 
@@ -13,7 +11,6 @@ from pipeline.training import feature_columns
 
 
 def prepare_arrays(frame, year):
-    """Scale training features without using future rows."""
     valid_start = pd.Timestamp(f"{year}-01-01")
     train = frame["ts"] < valid_start - pd.Timedelta(hours=168)
     valid = validation_mask(frame, year)
@@ -27,7 +24,6 @@ def prepare_arrays(frame, year):
 
 
 def main() -> None:
-    """Fit fixed C values on a chronological fan holdout."""
     parser = argparse.ArgumentParser()
     parser.add_argument("--valid-year", type=int, choices=(2024, 2025), required=True)
     parser.add_argument("--c-values", default="0.01,0.1,1,10")

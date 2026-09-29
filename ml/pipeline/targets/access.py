@@ -1,16 +1,3 @@
-"""Unauthorized-access analytics for the security subsystem.
-
-The journal has no intrusion labels, so this is a triage index for dispatcher
-verification, not a probability. Entry-point triggers (a door or hatch opens, a
-glass-break sensor fires) that happen while their object is armed are ranked by
-how unusual the hour of the week is for the sensor, whether the entry point is a
-hatch or a window, night time, and a chain of triggers across the object.
-
-Disarming does not confirm an entry in this data: after an armed-time door
-opening the object is disarmed within 15 minutes in only about 3% of cases, so
-the index does not use it.
-"""
-
 import numpy as np
 import pandas as pd
 
@@ -28,7 +15,6 @@ def object_of(tag):
 
 
 def triggers(events, sensor_type, tag_by_channel):
-    """Onsets of the triggered state: a door or hatch opens, a glass sensor fires."""
     ev = events.sort_values(["channel_id", "ts"], kind="stable")
     triggered = ev["raw_value"].isin(TRIGGER_STATES)
     previous = triggered.groupby(ev["channel_id"], observed=True).shift(1, fill_value=False)
@@ -47,7 +33,6 @@ def guard_states(events, tag_by_channel):
 
 
 def _rarity(frame):
-    """How rare a trigger at this hour of the week is for the channel, from earlier triggers only."""
     bucket = frame["ts"].dt.dayofweek * 24 + frame["ts"].dt.hour
     prior_total = frame.groupby("channel_id", observed=True).cumcount()
     prior_bucket = frame.groupby([frame["channel_id"], bucket], observed=True).cumcount()
@@ -57,7 +42,6 @@ def _rarity(frame):
 
 
 def assess(access_events, guard):
-    """Score entry-point triggers that happen while their object is armed."""
     frame = access_events.sort_values("ts", kind="stable").reset_index(drop=True)
     state = pd.merge_asof(frame, guard, on="ts", by="object", direction="backward")
     armed = state.loc[state["guard_state"] == ARMED].drop(columns="guard_state")

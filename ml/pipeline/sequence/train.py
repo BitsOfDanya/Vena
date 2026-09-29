@@ -5,7 +5,6 @@ import torch
 from torch.utils.data import DataLoader
 
 from pipeline import config
-from pipeline.sequence import model as model_mod
 from pipeline.sequence.dataset import balanced_indices
 
 

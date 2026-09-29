@@ -36,14 +36,14 @@ def test_sample_ranking_batch_never_mixes_days_within_a_boundary_group():
 
 
 def test_pairwise_ranking_loss_ignores_cross_day_comparisons():
-    scores = torch.tensor([-5.0, 5.0, 100.0, -100.0])  # A-pos, A-neg, B-pos, B-neg
+    scores = torch.tensor([-5.0, 5.0, 100.0, -100.0])
     targets = torch.tensor([1.0, 0.0, 1.0, 0.0])
     boundaries = [(0, 2), (2, 4)]
     loss = pairwise_ranking_loss(scores, targets, boundaries, F.logsigmoid)
 
-    loss_a = -F.logsigmoid(scores[0] - scores[1])  # A: pos(-5) vs neg(5), bad ordering
-    loss_b = -F.logsigmoid(scores[2] - scores[3])  # B: pos(100) vs neg(-100), good ordering
-    expected = (loss_a + loss_b) / 2  # 1 pair per day, equal weight
+    loss_a = -F.logsigmoid(scores[0] - scores[1])
+    loss_b = -F.logsigmoid(scores[2] - scores[3])
+    expected = (loss_a + loss_b) / 2
     torch.testing.assert_close(loss, expected)
 
 

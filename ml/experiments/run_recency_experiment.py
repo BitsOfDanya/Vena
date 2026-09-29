@@ -1,9 +1,3 @@
-"""Compare temporal training policies for equipment 72-hour targets.
-
-The feature cache and all model scores stay in ignored ``analysis/``. This
-script prints only aggregate metrics, so no journal rows enter Git.
-"""
-
 import argparse
 import math
 import time
@@ -40,7 +34,6 @@ VARIANTS = (
 
 
 def cache_paths(sensor: str, with_duty_cycle: bool) -> tuple[Path, Path, Path]:
-    """Return ignored feature, episode and near-label cache locations."""
     prefix = Path("analysis/ml_ready") / f"{sensor}72"
     suffix = "_duty_features.parquet" if with_duty_cycle else "_features.parquet"
     return (
@@ -51,7 +44,6 @@ def cache_paths(sensor: str, with_duty_cycle: bool) -> tuple[Path, Path, Path]:
 
 
 def prepare(cache: Path, episodes_cache: Path, sensor: str, with_duty_cycle: bool) -> None:
-    """Build the causal feature cache once from the private local dataset."""
     if cache.exists():
         return
     cache.parent.mkdir(parents=True, exist_ok=True)
@@ -62,7 +54,6 @@ def prepare(cache: Path, episodes_cache: Path, sensor: str, with_duty_cycle: boo
 
 
 def prepare_near(frame: pd.DataFrame, episodes_cache: Path, near_cache: Path) -> np.ndarray:
-    """Cache labels for events occurring within 168 hours after a candidate."""
     if not near_cache.exists():
         episodes = pd.read_parquet(episodes_cache)
         labeled = episodes_mod.assign_targets(
@@ -76,7 +67,6 @@ def prepare_near(frame: pd.DataFrame, episodes_cache: Path, near_cache: Path) ->
 
 
 def select_training_rows(frame, valid_year, variant, embargo_hours):
-    """Apply a chronological holdout, embargo and optional trailing window."""
     valid_start = pd.Timestamp(f"{valid_year}-01-01")
     train_mask = frame["ts"] < valid_start - pd.Timedelta(hours=embargo_hours)
     if variant.startswith("recent_"):
@@ -88,7 +78,6 @@ def select_training_rows(frame, valid_year, variant, embargo_hours):
 
 
 def variant_weights(frame, train_mask, variant, valid_year, embargo_hours):
-    """Weight recent rows or near misses using training-period labels only."""
     if variant == "decay_2y":
         valid_start = pd.Timestamp(f"{valid_year}-01-01")
         age_days = (
@@ -107,7 +96,6 @@ def variant_weights(frame, train_mask, variant, valid_year, embargo_hours):
 
 
 def predict_linear(frame, train_mask, valid_mask, cols, weights):
-    """Fit the repository's baseline logistic model and score the holdout."""
     scaler = StandardScaler()
     x_train = scaler.fit_transform(frame.loc[train_mask, cols].fillna(-1))
     x_valid = scaler.transform(frame.loc[valid_mask, cols].fillna(-1))
@@ -124,7 +112,6 @@ def fit_and_score(
     frame: pd.DataFrame, valid_year: int, variant: str,
     embargo_hours: int = 168, with_duty_cycle: bool = False,
 ) -> tuple[dict, np.ndarray]:
-    """Fit a temporal policy and score one future calendar year."""
     train_mask = select_training_rows(frame, valid_year, variant, embargo_hours)
     valid_mask = validation_mask(frame, valid_year)
     cols = training.feature_columns(with_duty_cycle=with_duty_cycle)
@@ -157,7 +144,6 @@ def fit_and_score(
 
 
 def main() -> None:
-    """Run optional feature preparation and the requested model variants."""
     parser = argparse.ArgumentParser()
     parser.add_argument("--prepare", action="store_true")
     parser.add_argument("--sensor", choices=tuple(SENSOR_TYPES), default="pump")

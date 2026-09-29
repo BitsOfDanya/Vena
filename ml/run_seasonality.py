@@ -1,10 +1,3 @@
-"""Seasonal analytics of incident states and their link to the weather.
-
-For every scenario the monthly onset rate per 100 channels shows the seasonal
-profile; the daily flooding onsets are correlated with Moscow precipitation and
-thaw days with lags of 0-2 days. Results go to results/seasonality.json.
-"""
-
 import json
 import os
 import time
@@ -41,7 +34,6 @@ def main() -> None:
         episodes = discovery.state_episodes(events, state)
         channels = max(events["channel_id"].nunique(), 1)
         starts = episodes["episode_start"]
-        # 2026 holds only the first half of the year, so full years define the profile.
         full = starts[starts.dt.year < 2026]
         years = max(full.dt.year.nunique(), 1)
         monthly = full.dt.month.value_counts().sort_index() / years / channels * 100

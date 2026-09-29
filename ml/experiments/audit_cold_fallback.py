@@ -1,5 +1,3 @@
-"""Audit a 30-day linear fallback on newly observed pump channels."""
-
 import argparse
 
 import numpy as np
@@ -16,7 +14,6 @@ FROZEN_THRESHOLD_2024 = 0.7572332851137136
 
 
 def subgroup_ap(labels, scores, mask):
-    """Return AP only when the subgroup contains both target classes."""
     selected = labels[mask]
     if len(selected) == 0 or selected.sum() in (0, len(selected)):
         return None
@@ -24,7 +21,6 @@ def subgroup_ap(labels, scores, mask):
 
 
 def main():
-    """Compare fixed base, blend and short-history fallback on one year."""
     parser = argparse.ArgumentParser()
     parser.add_argument("--valid-year", type=int, choices=(2024, 2025, 2026), required=True)
     args = parser.parse_args()

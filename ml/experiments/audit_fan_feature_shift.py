@@ -1,5 +1,3 @@
-"""Explain aggregate changes in fan logistic score scale."""
-
 import argparse
 import json
 
@@ -13,7 +11,6 @@ from pipeline.models import LogisticRegressionModel
 
 
 def main():
-    """Compare mean standardized feature contributions across time."""
     parser = argparse.ArgumentParser()
     parser.add_argument("--valid-year", type=int, choices=(2025, 2026), required=True)
     args = parser.parse_args()

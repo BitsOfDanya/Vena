@@ -1,5 +1,3 @@
-"""Paired channel bootstrap for causal fan alerts at frozen thresholds."""
-
 import argparse
 import json
 
@@ -12,7 +10,6 @@ from pipeline import alerts
 
 
 def channel_counts(frame, episodes, score, threshold):
-    """Count alerts and detected episodes by channel without exporting rows."""
     scored = frame[["channel_id", "ts", "target"]].copy()
     scored["score"] = score
     selected = alerts.select_alerts_by_threshold(scored, "score", threshold, 24)
@@ -30,7 +27,6 @@ def channel_counts(frame, episodes, score, threshold):
 
 
 def rates(counts):
-    """Return alert precision and episode recall from channel counts."""
     summed = counts.sum(axis=0)
     return np.array([
         summed[1] / summed[0] if summed[0] else np.nan,
@@ -39,7 +35,6 @@ def rates(counts):
 
 
 def main():
-    """Compare fixed thresholds with 1000 paired channel resamples."""
     parser = argparse.ArgumentParser()
     parser.add_argument("--valid-year", type=int, choices=(2025, 2026), required=True)
     parser.add_argument("--linear-threshold", type=float, required=True)

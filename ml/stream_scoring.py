@@ -1,12 +1,3 @@
-"""Near-real-time scoring of SMVU events.
-
-The full snapshot rescans the journal and takes tens of minutes. The stream
-scorer keeps each channel's history in memory, appends incoming events and
-rescores only the channels that received them, so a batch of events reaches the
-published snapshot within seconds. Alarm and access sections are carried over
-from the last full snapshot.
-"""
-
 import json
 import os
 import time
@@ -48,11 +39,9 @@ class StreamScorer:
         self.history = None
 
     def refresh_history(self):
-        """Location history is recomputed with each full pass, not per batch."""
         self.history = score_snapshot.location_history(self.events, self.reference, self.now)
 
     def score(self, channels_by_sensor=None):
-        """Score every channel, or only the given channels of each sensor type."""
         rows = []
         for device, model_names, target_state in score_snapshot.DEVICES:
             sensor = score_snapshot.sensor_of(device)
@@ -71,13 +60,11 @@ class StreamScorer:
         return rows
 
     def ingest(self, batch):
-        """Append new events; return the channels of each sensor type that changed."""
         batch = batch.assign(sensor=batch["channel_id"].map(self.sensor_of_channel)).dropna(subset=["sensor"])
         affected = {}
         for sensor, part in batch.groupby("sensor"):
             part = part[EVENT_COLUMNS]
             merged = pd.concat([self.events[sensor], part], ignore_index=True)
-            # Replayed or re-sent events must not count twice.
             merged = merged.drop_duplicates(["channel_id", "ts", "raw_value", "alarm_flag"])
             self.events[sensor] = merged.sort_values(["channel_id", "ts"], kind="stable").reset_index(drop=True)
             affected[sensor] = set(part["channel_id"])
@@ -86,7 +73,6 @@ class StreamScorer:
         return affected
 
     def publish(self, output, carried, stream=None):
-        """Write the snapshot next to the output and swap it in atomically."""
         predictions = list(self.predictions.values())
         temporary = f"{output}.tmp"
         score_snapshot.write_snapshot(
@@ -108,7 +94,6 @@ class StreamScorer:
 
 
 def read_inbox(inbox):
-    """Load pending JSON Lines batches written by the API, oldest first."""
     files = sorted(name for name in os.listdir(inbox) if name.endswith(".jsonl"))
     records = []
     for name in files:
@@ -119,7 +104,6 @@ def read_inbox(inbox):
     frame = pd.DataFrame(records)
     batch = pd.DataFrame({
         "channel_id": frame["channel_id"].astype(str),
-        # The API writes the journal's local time without an offset.
         "ts": pd.to_datetime(frame["ts"]),
         "alarm_flag": frame["alarm"].astype(bool).astype("int8"),
         "raw_value": frame["value"].astype(str),
@@ -128,7 +112,6 @@ def read_inbox(inbox):
 
 
 def full_sections(reference, until, output):
-    """Alarm and access sections from the journal; the last published ones if it fails."""
     try:
         return {
             "alarms": score_snapshot.assess_alarms(reference, until),
@@ -140,7 +123,6 @@ def full_sections(reference, until, output):
 
 
 def heartbeat(path, interval=30):
-    """Touch `path` from a background thread so a long scoring pass stays visibly alive."""
     import threading
 
     def beat():
@@ -161,7 +143,6 @@ def carried_sections(path):
 
 
 def run(output, inbox, poll_seconds=30, full_refresh_hours=24, history_until=None):
-    """Score the journal once, then rescore channels as event batches arrive."""
     os.makedirs(inbox, exist_ok=True)
     processed = os.path.join(inbox, "processed")
     os.makedirs(processed, exist_ok=True)

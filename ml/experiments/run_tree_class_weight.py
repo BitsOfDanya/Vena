@@ -1,5 +1,3 @@
-"""Test whether tree class balancing helps temporal transfer."""
-
 import argparse
 import json
 import time
@@ -16,7 +14,6 @@ from pipeline.models import LogisticRegressionModel
 
 
 def main():
-    """Score balanced and unweighted compact trees on one future period."""
     parser = argparse.ArgumentParser()
     parser.add_argument("--sensor", choices=("pump", "fan"), required=True)
     parser.add_argument("--valid-year", type=int, choices=(2022, 2023, 2024, 2025, 2026), required=True)

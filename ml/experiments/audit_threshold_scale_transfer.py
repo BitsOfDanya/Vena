@@ -1,5 +1,3 @@
-"""Test unlabeled train-score scale adjustment of yearly fan thresholds."""
-
 import argparse
 import json
 
@@ -15,7 +13,6 @@ from pipeline.formal.metrics import eval_at_threshold
 
 
 def yearly_scores(frame, year):
-    """Fit only before a year and score train plus future holdout."""
     start = pd.Timestamp(f"{year}-01-01")
     train = frame["ts"] < start - pd.Timedelta(hours=168)
     valid = validation_mask(frame, year)
@@ -34,7 +31,6 @@ def yearly_scores(frame, year):
 
 
 def score_quantiles(values):
-    """Summarize score scale without retaining candidate-level output."""
     return {
         "p50": float(np.quantile(values, 0.5)),
         "p90": float(np.quantile(values, 0.9)),
@@ -44,7 +40,6 @@ def score_quantiles(values):
 
 
 def main():
-    """Compare raw, train-quantile and train-median threshold transfer."""
     parser = argparse.ArgumentParser()
     parser.add_argument("--sensor", choices=("fan",), default="fan")
     args = parser.parse_args()

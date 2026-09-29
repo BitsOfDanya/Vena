@@ -19,10 +19,6 @@ import { Field, FieldLabel } from "@/shared/ui/field"
 import { NativeSelect, NativeSelectOption } from "@/shared/ui/native-select"
 import { Textarea } from "@/shared/ui/textarea"
 
-/**
- * Records the dispatcher's "no dispatch" decision with a catalogue reason, so the
- * forecast journal keeps labelled feedback for retraining instead of a bare dismiss.
- */
 export function DismissActionDialog({ actionId, trigger }: { actionId: string; trigger: React.ReactElement }) {
   const { now } = useWorkspace()
   const dismiss = useDismissAction(now)

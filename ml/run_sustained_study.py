@@ -1,14 +1,3 @@
-"""Sustained-fault target for pumps and fans.
-
-More than half of the "Неисправен" episodes are a single event, which caps the
-formal precision/recall target. This study relabels the 72-hour target with two
-definitions of a lasting fault and compares, on the production split, the
-current production model with a LightGBM trained on each new label:
-- continuous: the channel stays in the fault state at least SUSTAINED_MINUTES;
-- episode: the fault episode (repeats within 6 hours) spans at least SUSTAINED_MINUTES. Operational quality is the precision of the daily top 1% of
-candidates. Results go to results/sustained_study.json.
-"""
-
 import json
 import os
 import time

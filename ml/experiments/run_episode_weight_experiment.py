@@ -1,5 +1,3 @@
-"""Compare equal-per-episode training weights on chronological pump holdouts."""
-
 import argparse
 import time
 
@@ -21,7 +19,6 @@ from pipeline.formal.metrics import frontier_metrics
 
 
 def positive_episode_weights(train_frame, episodes, strength):
-    """Give each future failure a similar total positive weight in training."""
     y = train_frame["target"].to_numpy()
     weights = np.ones(len(train_frame), dtype=float)
     if strength == 0:
@@ -48,7 +45,6 @@ def positive_episode_weights(train_frame, episodes, strength):
 
 
 def fit_scores(train_frame, valid_frame, weights):
-    """Fit the fixed compact blend, changing only positive sample weights."""
     columns = training.feature_columns()
     x_train = train_frame[columns].fillna(-1)
     x_valid = valid_frame[columns].fillna(-1)
@@ -68,7 +64,6 @@ def fit_scores(train_frame, valid_frame, weights):
 
 
 def main():
-    """Print aggregate results; source rows and scores stay in local memory."""
     parser = argparse.ArgumentParser()
     parser.add_argument("--valid-year", type=int, choices=(2024, 2025), required=True)
     parser.add_argument("--strengths", default="0,0.5,1")

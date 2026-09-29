@@ -1,5 +1,3 @@
-"""Retrospective 2022-2023 check of fixed pump/fan model families."""
-
 import argparse
 
 import numpy as np
@@ -12,7 +10,6 @@ from pipeline.formal.metrics import eval_at_threshold, frontier_metrics
 
 
 def main():
-    """Train chronologically and transfer each 2022 threshold to 2023."""
     parser = argparse.ArgumentParser()
     parser.add_argument("--sensor", choices=("pump", "fan"), required=True)
     args = parser.parse_args()
@@ -39,7 +36,6 @@ def main():
                 "fit_score_seconds": seconds,
             }
             if name in previous and previous[name] is not None:
-                # Prior-year labels can extend 72 hours into this year.
                 safe = valid["ts"].to_numpy() >= np.datetime64(f"{year}-01-04")
                 result["n_transfer_rows"] = int(safe.sum())
                 result["at_previous_p70"] = eval_at_threshold(

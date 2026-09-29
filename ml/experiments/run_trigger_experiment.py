@@ -1,5 +1,3 @@
-"""Test causal candidate trigger indicators in the fixed pump blend."""
-
 import argparse
 import time
 
@@ -19,7 +17,6 @@ from pipeline.targets.model_zoo import LightGBMModel
 
 
 def trigger_features(frame, enabled):
-    """Add a fixed set of one-hot flags available when each candidate is made."""
     columns = training.feature_columns()
     if not enabled:
         return frame[columns]
@@ -30,7 +27,6 @@ def trigger_features(frame, enabled):
 
 
 def main():
-    """Evaluate baseline features and trigger flags on a chronological year."""
     parser = argparse.ArgumentParser()
     parser.add_argument("--valid-year", type=int, choices=(2024, 2025), required=True)
     parser.add_argument("--variants", default="base,trigger")

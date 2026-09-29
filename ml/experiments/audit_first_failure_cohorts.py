@@ -1,5 +1,3 @@
-"""Summarize first recorded failures by channel entry year."""
-
 import argparse
 
 import pandas as pd
@@ -14,7 +12,6 @@ EVENT_CACHES = {
 
 
 def main():
-    """Count raw event exposure and first episodes without exporting IDs."""
     parser = argparse.ArgumentParser()
     parser.add_argument("--sensor", choices=tuple(EVENT_CACHES), required=True)
     args = parser.parse_args()

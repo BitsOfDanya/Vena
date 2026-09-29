@@ -33,8 +33,6 @@ function toScenario(value: string | null | undefined): PredictionScenario {
   return value && SCENARIOS.has(value as PredictionScenario) ? (value as PredictionScenario) : "equipment"
 }
 
-// ML names models after the sensor they read: phase monitors belong to power supply,
-// the flooding model reads the pump chamber state, the fire alarm model the smoke detectors.
 const DEVICE_ALIASES: Record<string, string> = { phase: "power", flood: "pump", smoke_alarm: "smoke" }
 
 function toPrediction(item: ApiPrediction): Prediction {
@@ -106,7 +104,6 @@ const PredictionSchema = z.object({
     .optional(),
 })
 
-/** A complete horizon-specific snapshot; a failed page never becomes a partial total. */
 export async function getDashboardPredictions(horizon: 24 | 72): Promise<Prediction[]> {
   const before = await getSnapshotStatus()
   if (!before.available || !before.snapshotId) throw new Error("Predictions unavailable")

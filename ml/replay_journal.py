@@ -1,15 +1,3 @@
-"""Replay a period of the SMVU journal into the API as a live event stream.
-
-Events of the modelled sensor types are read from the journal CSV files and
-posted to POST /api/v1/smvu/events in time order. The data clock runs `speed`
-times faster than real time. After each batch the tool waits until the API
-publishes a snapshot that includes the batch and records the delay, so the run
-measures the end-to-end latency of the stream (ТЗ: at most 300 seconds).
-
-The stream worker must start with history cut at the replay start
-(VENA_STREAM_HISTORY_UNTIL), otherwise the replayed events are already known.
-"""
-
 import argparse
 import json
 import os

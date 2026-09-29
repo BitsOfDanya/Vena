@@ -94,7 +94,6 @@ export function extractMapGeometry(collection: SpatialCollection): {
   return { assets, corridor, collectors }
 }
 
-/** Deterministic stand geometry matching backend demo_spatial (not survey data). */
 export function buildDemoSpatialCollection(): SpatialCollection {
   const ORIGIN_LON = 37.635
   const ORIGIN_LAT = 55.748

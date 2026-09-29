@@ -1,5 +1,3 @@
-"""Test strictly past categorical state counts for equipment failure ranking."""
-
 import argparse
 import time
 
@@ -32,7 +30,6 @@ WINDOWS = {"24h": np.timedelta64(24, "h"), "7d": np.timedelta64(7, "D")}
 
 
 def attach_state_counts(frame, sensor):
-    """Count state events in [t-window, t), excluding all events at t."""
     events = pd.read_parquet(EVENT_CACHES[sensor], columns=["channel_id", "ts", "raw_value"])
     by_channel = {
         cid: group.sort_values("ts", kind="stable")
@@ -64,7 +61,6 @@ def attach_state_counts(frame, sensor):
 
 
 def main():
-    """Evaluate fixed 24-hour and seven-day state-count features."""
     parser = argparse.ArgumentParser()
     parser.add_argument("--valid-year", type=int, choices=(2024, 2025), required=True)
     parser.add_argument("--sensor", choices=tuple(EVENT_CACHES), default="pump")

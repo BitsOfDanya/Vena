@@ -1,5 +1,3 @@
-"""Audit ranking on pump channels held out from supervised training."""
-
 import argparse
 import json
 
@@ -14,7 +12,6 @@ from pipeline.training import feature_columns
 
 
 def score_models(frame, train_mask, valid_mask):
-    """Fit the fixed baseline and recent-window blend on other channels."""
     columns = feature_columns()
     x_valid = frame.loc[valid_mask, columns]
     baseline = LogisticRegressionModel().fit(
@@ -33,7 +30,6 @@ def score_models(frame, train_mask, valid_mask):
 
 
 def main():
-    """Emit only aggregate AP for a reproducible channel group holdout."""
     parser = argparse.ArgumentParser()
     parser.add_argument("--seed", type=int, default=42)
     parser.add_argument("--fraction", type=float, default=0.2)

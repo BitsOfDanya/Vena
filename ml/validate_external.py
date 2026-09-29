@@ -1,14 +1,3 @@
-"""Validate the candidate-generation and feature pipeline on MetroPT-3.
-
-MetroPT-3 records an air production unit with verified failure reports, so it is
-the only available dataset where the same event-driven pipeline can be checked
-against ground truth that was not produced by this project. The binary signals of
-the unit are treated as event channels; the documented failure windows are the
-episodes. Four failures are not enough for a precision estimate, so the check is
-whether the pipeline ranks the pre-failure windows above routine operation and
-how much lead time it leaves.
-"""
-
 import json
 import os
 
@@ -24,15 +13,11 @@ OUTPUT = os.path.join(config.ROOT, "results", "external", "metropt3_validation.j
 
 BINARY_SIGNALS = ["COMP", "DV_eletric", "Towers", "MPG", "LPS", "Pressure_switch", "Oil_level", "Caudal_impulses"]
 ALARM_SIGNALS = {"LPS", "Oil_level"}
-# The unit is mostly described by analog telemetry, so the signals are discretised
-# into excursion events the same way a SCADA journal would record them. Bands come
-# from the training period only.
 ANALOG_SIGNALS = ["TP2", "TP3", "Oil_temperature", "Motor_current", "DV_pressure", "H1"]
 ANALOG_RESAMPLE = "1min"
 LOW_QUANTILE = 0.1
 HIGH_QUANTILE = 0.9
 
-# Failure reports from the dataset description (Data Description_Metro.pdf).
 FAILURES = [
     ("2020-04-18 00:00", "2020-04-18 23:59"),
     ("2020-05-29 23:30", "2020-05-30 06:00"),

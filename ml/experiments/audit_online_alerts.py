@@ -1,5 +1,3 @@
-"""Audit chronological threshold alerts with a fixed cooldown."""
-
 import argparse
 
 import numpy as np
@@ -12,7 +10,6 @@ from pipeline import alerts
 
 
 def summarize_threshold(frame, episodes, threshold, cooldown_hours=24):
-    """Evaluate alerts in timestamp order without using future observations."""
     raw = frame.loc[frame["score"] >= threshold]
     selected = alerts.select_alerts_by_threshold(frame, "score", threshold, cooldown_hours)
     period_start = frame["ts"].min()
@@ -36,7 +33,6 @@ def summarize_threshold(frame, episodes, threshold, cooldown_hours=24):
 
 
 def main():
-    """Report a development grid or transfer thresholds from a prior year."""
     parser = argparse.ArgumentParser()
     parser.add_argument("--sensor", choices=("pump", "fan"), default="pump")
     parser.add_argument("--valid-year", type=int, choices=(2024, 2025, 2026), required=True)

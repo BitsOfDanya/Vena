@@ -41,7 +41,6 @@ export function responseLabels(actions: MaintenanceAction[]): Map<string, string
   return new Map([...grouped].map(([id, list]) => [id, `${STATUS_LABEL[list[0].status]}${list.length > 1 ? ` +${list.length - 1}` : ""}`]))
 }
 
-/** Sort the complete filtered set before pagination; unavailable scores always go last. */
 export function sortDashboardRows(rows: DashboardRow[], sort: DashboardSort, responses: Map<string, string> = new Map()) {
   const direction = sort.direction === "asc" ? 1 : -1
   return [...rows].sort((left, right) => {
@@ -89,7 +88,6 @@ export function dashboardRows(
               id: item.id,
               assetId: item.assetId,
               name: asset?.name ?? item.assetId,
-              // Channels outside the demo registry are placed by their SMVU tag location.
               group: asset?.group ?? item.location ?? "Not in registry",
               type: types.has(item.deviceType) ? (item.deviceType as AssetType) : "other",
               level: item.riskLevel,
@@ -97,7 +95,6 @@ export function dashboardRows(
               scoreType: item.scoreType,
               horizon,
               time: item.predictionTime,
-              // Drivers explain the forecast; raw factors remain for snapshots without them.
               factors: item.drivers.length
                 ? item.drivers.map((driver) => (driver.value === null ? driver.label : `${driver.label}: ${formatValue(driver.value)}`))
                 : item.factors.map((factor) => `${factor.label}: ${factor.value}`),

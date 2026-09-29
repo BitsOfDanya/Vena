@@ -1,16 +1,3 @@
-"""Retrain every production model on the current journal and publish a snapshot.
-
-This is the retraining module: when new journal data arrives it re-extracts the
-events and rebuilds the models in two steps.
-1. Reference models: each frozen recipe is refitted on its fixed split and
-   calibrated. A refit replaces the reference artifact only when its reported
-   quality is not worse by more than TOLERANCE, otherwise the previous one is restored.
-2. run_refit_study.py refits the reference and the best recipe on the latest
-   full year and promotes a refit that is better on the most recent half-year.
-Then the reports, the fire alarm model, the health index calibration and the
-snapshot are rebuilt.
-"""
-
 import json
 import os
 import shutil
@@ -51,14 +38,11 @@ def run(*args):
 
 
 def quality(name):
-    """Primary held-out metric each freeze script records for its artifact."""
     path = os.path.join(artifacts.artifact_dir(name), "meta.json")
     if not os.path.exists(path):
         return None
     with open(path, encoding="utf-8") as handle:
         meta = json.load(handle)
-    # A model promoted by the refit study is measured on another period; the
-    # study compares it with the new reference again.
     years = (meta.get("training_period") or {}).get("train_years")
     if years and int(years.split("-")[-1]) > config.TRAIN_YEARS[1] + 1:
         return None
@@ -73,7 +57,6 @@ def quality(name):
 
 
 def challenge(names, refit):
-    """Refit `names`; restore the previous artifacts of any model that got worse."""
     backup = tempfile.mkdtemp(prefix="vena-champion-")
     before = {}
     for name in names:
@@ -110,7 +93,6 @@ def main() -> None:
             [f"{device}_{horizon}h"],
             lambda d=device, h=horizon, m=model: run_final_freeze.run_final_for_device(config.SENSOR_ALIASES[d], d, h, m),
         )
-    # The single-model pump_72h recipe is kept as the short-history fallback of the blend.
     challenge(
         ["pump_baseline_72h"],
         lambda: run_final_freeze.run_final_for_device(config.SENSOR_ALIASES["pump"], "pump_baseline", 72, "logistic_regression"),
