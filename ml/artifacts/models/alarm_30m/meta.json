@@ -68,46 +68,56 @@
       "Датчик дыма",
       "Датчик температуры"
     ],
+    "excludes": "alarms of planned maintenance series (alarm.maintenance_series)",
     "calibrated": true,
-    "isolated_threshold": 0.41844110391813566,
+    "isolated_threshold": 0.3089645412019572,
     "isolated_threshold_basis": "keeps 90% of corroborated alarms in 2025"
   },
   "training_period": {
     "train_years": "2019-2024"
   },
-  "version": "2026-09-28",
+  "version": "2026-09-29",
   "metrics_snapshot": {
     "valid": {
-      "pr_auc": 0.9671354124588973,
-      "roc_auc": 0.889795359319649
+      "pr_auc": 0.9404066782605138,
+      "roc_auc": 0.8019566470069825
     },
     "test": {
-      "pr_auc": 0.9716904309153778,
-      "roc_auc": 0.8480915619690353
+      "pr_auc": 0.9087536978660228,
+      "roc_auc": 0.7392577945286702
     },
-    "test_base_rate": 0.8771544440689422,
+    "test_base_rate": 0.7922352488948683,
+    "maintenance_share": {
+      "train": 0.3939,
+      "valid": 0.4911,
+      "test": 0.7069
+    },
+    "previous_model_test": {
+      "pr_auc": 0.8946340250057669,
+      "roc_auc": 0.7043035475355947
+    },
     "operating_valid": {
-      "threshold": 0.4184,
+      "threshold": 0.309,
       "kept_corroborated": 0.9001,
-      "filtered_uncorroborated": 0.6814,
-      "flagged_share": 0.2018,
-      "precision_of_flag": 0.5915
+      "filtered_uncorroborated": 0.415,
+      "flagged_share": 0.1617,
+      "precision_of_flag": 0.5035
     },
     "operating_test": {
-      "threshold": 0.4184,
-      "kept_corroborated": 0.8996,
-      "filtered_uncorroborated": 0.5956,
-      "flagged_share": 0.1612,
-      "precision_of_flag": 0.4539
+      "threshold": 0.309,
+      "kept_corroborated": 0.8964,
+      "filtered_uncorroborated": 0.3626,
+      "flagged_share": 0.1574,
+      "precision_of_flag": 0.4786
     },
     "calibration": {
       "method": "isotonic",
       "fit_period": "2025",
       "evaluated_on": "test 2026H1",
-      "brier_raw": 0.1208,
-      "brier_calibrated": 0.0794,
-      "ece_raw": 0.1549,
-      "ece_calibrated": 0.0352
+      "brier_raw": 0.1865,
+      "brier_calibrated": 0.1443,
+      "ece_raw": 0.1658,
+      "ece_calibrated": 0.0211
     }
   }
 }

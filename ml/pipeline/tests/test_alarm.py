@@ -57,3 +57,19 @@ def test_detection_alarms_pick_only_flagged_detection_events():
     assert len(out) == 2
     assert out.loc[0, "dwell_minutes"] == 80.0
     assert out.loc[1, "dwell_minutes"] == 70.0
+
+
+def test_maintenance_series_needs_many_detectors_of_one_object_in_working_hours():
+    def alarms(start, channels, step_minutes=1):
+        times = pd.date_range(start, periods=len(channels), freq=f"{step_minutes}min")
+        return pd.DataFrame({"channel_id": channels, "ts": times, "sensor_type": "Датчик дыма"})
+
+    objects = {str(c): "7" for c in range(1, 20)}
+    working = alarms("2025-03-04 10:00", ["1", "2", "3", "4", "5"])
+    night = alarms("2025-03-04 23:00", ["1", "2", "3", "4", "5"])
+    repeated = alarms("2025-03-04 11:00", ["1", "1", "1", "2", "2"])
+    slow = alarms("2025-03-04 12:00", ["1", "2", "3", "4", "5"], step_minutes=5)
+    frame = pd.concat([working, night, repeated, slow], ignore_index=True)
+    flag = alarm.maintenance_series(frame, objects)
+    assert flag[:5].all()
+    assert not flag[5:].any()

@@ -9,6 +9,8 @@ DETECTION_STATES = {
     "Датчик температуры": ["Температура ниже 3ºC", "Температура выше 40ºC"],
 }
 WINDOWS_MINUTES = (15, 30, 60)
+MAINTENANCE_SERIES = {"Датчик дыма": (5, 10), "Газовый датчик": (3, 30)}
+WORK_HOURS = (8, 18)
 
 
 def detection_alarms(events, sensor_type, tag_by_channel):
@@ -78,3 +80,23 @@ def group_history_features(alarms):
         out[f"alarm_ch_prev_{name}"] = cc
         out[f"alarm_grp_prev_{name}"] = gc - cc
     return pd.DataFrame(out, index=alarms.index)
+
+
+def maintenance_series(alarms, object_by_channel):
+    objects = alarms["channel_id"].astype(str).map(object_by_channel)
+    work = ((alarms["ts"].dt.weekday < 5) & alarms["ts"].dt.hour.between(WORK_HOURS[0], WORK_HOURS[1] - 1)).values
+    flag = np.zeros(len(alarms), dtype=bool)
+    for (sensor, _), group in alarms.assign(_object=objects).dropna(subset=["_object"]).groupby(["sensor_type", "_object"]):
+        if sensor not in MAINTENANCE_SERIES:
+            continue
+        count, minutes = MAINTENANCE_SERIES[sensor]
+        group = group.sort_values("ts", kind="stable")
+        ts = group["ts"].values
+        channels = group["channel_id"].astype(str).values
+        ends = np.searchsorted(ts, ts + np.timedelta64(minutes, "m"), side="right")
+        series = np.zeros(len(group), dtype=bool)
+        for start, end in enumerate(ends):
+            if end - start >= count and len(set(channels[start:end])) >= count:
+                series[start:end] = True
+        flag[alarms.index.get_indexer(group.index)] = series
+    return flag & work

@@ -2,7 +2,6 @@ import json
 import os
 
 import joblib
-import numpy as np
 import pandas as pd
 
 from pipeline import config, episodes as episodes_mod, extract, features as features_mod, training
@@ -45,6 +44,7 @@ def build_alarm_frame(con=None, windows=alarm.WINDOWS_MINUTES, include_lockbox=F
     frame = pd.concat(parts, ignore_index=True).sort_values(["ts", "channel_id"], kind="stable").reset_index(drop=True)
     frame["sensor_code"] = frame["sensor_type"].astype("category").cat.codes
     frame = pd.concat([frame, alarm.group_history_features(frame)], axis=1)
+    frame["maintenance"] = alarm.maintenance_series(frame, object_by_channel())
     for w in windows:
         labels = alarm.corroboration_labels(frame, w)
         for col in labels.columns:
@@ -52,6 +52,13 @@ def build_alarm_frame(con=None, windows=alarm.WINDOWS_MINUTES, include_lockbox=F
     if include_lockbox:
         return frame
     return frame.loc[frame["ts"] < state_target.LOCKBOX_START].reset_index(drop=True)
+
+
+def object_by_channel():
+    dictionary = extract.channel_dictionary()
+    if "ид_объект" not in dictionary:
+        return {}
+    return dict(zip(dictionary["ид_канала_данных"].astype(str), dictionary["ид_объект"], strict=True))
 
 
 def alarm_feature_columns(frame):

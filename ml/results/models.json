@@ -321,16 +321,16 @@
   "recipe": "lightgbm",
   "features": 58,
   "train_years": "2019-2024",
-  "version": "2026-09-28",
+  "version": "2026-09-29",
   "calibration": {
    "method": "isotonic",
    "fit_period": "2025"
   },
   "held_out": {
    "period": "2026H1",
-   "avg_precision": 0.9717,
-   "roc_auc": 0.8481,
-   "ece": 0.0352
+   "avg_precision": 0.9088,
+   "roc_auc": 0.7393,
+   "ece": 0.0211
   },
   "lead_time": null,
   "daily_top_k": null,

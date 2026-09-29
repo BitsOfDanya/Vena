@@ -11,8 +11,6 @@ from pipeline import artifacts, calibration, config, episodes as episodes_mod, e
 from pipeline.locations import location_group
 from pipeline.targets import access, discovery, flood
 
-# Each device carries the state literal its models were trained to predict, so
-# failure-history features are built from the matching episodes.
 DEVICES = [
     ("pump", ["pump_24h", "pump_72h"], config.FAULT_LITERAL),
     ("fan", ["fan_24h", "fan_72h"], config.FAULT_LITERAL),
@@ -21,16 +19,11 @@ DEVICES = [
     ("flood", ["flood_24h"], flood.FLOOD_STATE),
 ]
 
-# The fire alarm model is frozen only when it beats the detector's own detection
-# rate (run_detection_study.py).
 if os.path.exists(os.path.join(artifacts.artifact_dir("smoke_alarm_24h"), "meta.json")):
     DEVICES.append(("smoke_alarm", ["smoke_alarm_24h"], "Обнаружен дым"))
 
-# The flooding model reads the pump chamber state of the pump channels, the fire
-# alarm model the smoke detectors.
 DEVICE_SENSOR = {"flood": "pump", "smoke_alarm": "smoke"}
 
-# Incident scenario each device model forecasts (ТЗ, section 6: incident types).
 SCENARIOS = {
     "pump": "flooding",
     "fan": "ventilation",
@@ -42,15 +35,12 @@ SCENARIOS = {
 
 RECENT_DAYS = 30
 INCIDENT_MODEL = "phase_24h"
-# The top isotonic step can be a small all-positive bin, so the published
-# probability never claims certainty.
 PROBABILITY_RANGE = (0.001, 0.99)
 ALARM_MODEL = "alarm_30m"
 ACCESS_CONFIG = os.path.join(config.ROOT, "configs", "access.json")
 
 OUTPUT = os.path.join(config.ROOT, "results", "predictions", "snapshot.json")
 
-# Asset IDs match frontend/src/entities/infrastructure/fixtures/demo.ts
 DEMO_CHANNELS = {
     "pump": [
         ("P-0142", "critical"),
@@ -101,8 +91,11 @@ def channel_reference():
             "тип_датчика": "sensor_type",
             "тег_инженерной_системы": "tag",
             "название_датчика": "name",
+            "ид_объект": "object_id",
         }
     )
+    if "object_id" not in reference:
+        reference["object_id"] = None
     lookup = {}
     for row in reference.itertuples():
         lookup[str(row.channel_id)] = {
@@ -110,6 +103,7 @@ def channel_reference():
             "system_type": row.system_type,
             "name": row.name,
             "tag": row.tag,
+            "object_id": row.object_id,
         }
     return lookup
 
@@ -128,7 +122,6 @@ def _synthetic_channel_events(channel_id, prediction_time, profile, seed):
     start = end - pd.Timedelta(days=90)
     span_hours = max((end - start) / pd.Timedelta(hours=1), 1.0)
     offsets = np.sort(rng.uniform(0, span_hours, size=params["events"]))
-    # denser activity near the end for higher-risk profiles
     burst_start = span_hours - params["burst_hours"]
     if profile != "low":
         extra = rng.uniform(burst_start, span_hours, size=max(params["events"] // 3, 8))
@@ -165,7 +158,7 @@ def _synthetic_channel_events(channel_id, prediction_time, profile, seed):
 def build_demo_events(prediction_time):
     frames = []
     seed = 0
-    for device, channels in DEMO_CHANNELS.items():
+    for channels in DEMO_CHANNELS.values():
         for channel_id, profile in channels:
             frames.append(_synthetic_channel_events(channel_id, prediction_time, profile, seed))
             seed += 1
@@ -218,15 +211,10 @@ def score_rows(device, model_names, target_state, events, reference):
             continue
         channel_episodes = episode_groups.get(channel_id, all_episodes.iloc[0:0])
         info = reference.get(str(channel_id), fallback)
-        # Models are trained on candidate moments, so each channel is scored at its
-        # own latest event instead of one global timestamp: a fixed instant would
-        # push quiet channels far outside the training distribution.
         channel_time = channel_events["ts"].max()
         history_days = (channel_time - channel_events["ts"].min()) / pd.Timedelta(days=1)
         for name, (primary, primary_meta) in models.items():
             model, meta, variant, source = primary, primary_meta, "primary", name
-            # Blends were weaker on channels with a short history, so those
-            # channels are scored by the single-model fallback and its own bands.
             if name in fallbacks and history_days < primary_meta["model_config"].get("min_history_days", 0):
                 model, meta = fallbacks[name]
                 variant, source = "fallback", primary_meta["model_config"]["fallback_artifact"]
@@ -237,7 +225,6 @@ def score_rows(device, model_names, target_state, events, reference):
             if model_config.get("weather_features"):
                 feature_row = flood.attach_to_row(feature_row, channel_time, weather)
             raw = float(model.predict_proba(feature_row[meta["feature_columns"]])[0])
-            # Risk levels use the raw score: isotonic steps can tie neighbouring scores.
             probability = calibrated(calibrators.get(source), raw)
             drivers = explain.drivers(model, feature_row[meta["feature_columns"]])
             thresholds = model_config.get("risk_level_thresholds", {})
@@ -287,6 +274,7 @@ def score_rows(device, model_names, target_state, events, reference):
                     "sensor_type": info.get("sensor_type"),
                     "system_type": info.get("system_type"),
                     "tag": info.get("tag"),
+                    "object_id": info.get("object_id"),
                     "name": info.get("name"),
                     "drivers": drivers,
                 }
@@ -305,7 +293,6 @@ def score_device(device, model_names, target_state, limit, reference):
 
 
 def location_history(events_by_sensor, reference, until):
-    """Past episodes of each device's target state per location, for the incident card."""
     tags = {key: value.get("tag") for key, value in reference.items()}
     history = {}
     for device, _, target_state in DEVICES:
@@ -330,7 +317,6 @@ def location_history(events_by_sensor, reference, until):
 
 
 def incident_probabilities(predictions):
-    """Probability that at least one channel of a location loses power within 24 hours."""
     path = os.path.join(artifacts.artifact_dir(INCIDENT_MODEL), "incident_calibrator.joblib")
     if not os.path.exists(path):
         return []
@@ -359,7 +345,6 @@ def incident_probabilities(predictions):
 
 
 def assess_alarms(reference, until):
-    """Probability that each recent detection alarm is corroborated within 30 minutes."""
     from pipeline.targets import modules
 
     model, meta = artifacts.load_artifact(ALARM_MODEL)
@@ -377,7 +362,8 @@ def assess_alarms(reference, until):
             "ts": item.ts.isoformat(),
             "sensor_type": item.sensor_type,
             "corroboration_probability": round(float(prob), 4),
-            "needs_verification": bool(score < threshold),
+            "needs_verification": bool(score < threshold) and not bool(item.maintenance),
+            "maintenance": bool(item.maintenance),
             "tag": info.get("tag"),
             "name": info.get("name"),
         })
@@ -385,7 +371,6 @@ def assess_alarms(reference, until):
 
 
 def assess_access(reference, until):
-    """Entry-point triggers at armed objects above the verification threshold."""
     from pipeline import extract
 
     with open(ACCESS_CONFIG, encoding="utf-8") as handle:

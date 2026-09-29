@@ -1,14 +1,3 @@
-"""Freeze the alarm corroboration model that flags alarms to verify before dispatch.
-
-A detection alarm (smoke, gas, temperature) is corroborated when within 30
-minutes it repeats on the channel, another channel of the same tag group alarms,
-or the channel stays in the detection state. There is no operator label of true
-and false alarms, so an uncorroborated alarm is treated as a candidate false
-alarm, not a confirmed one. The operating threshold keeps 90% of corroborated
-alarms on the validation year and reports how many uncorroborated alarms it
-filters on the held-out first half of 2026.
-"""
-
 import json
 import os
 import time
@@ -36,7 +25,6 @@ def log(message):
 
 
 def threshold_keeping(target, score, share):
-    """Highest score threshold that still keeps `share` of corroborated alarms."""
     positives = np.sort(score[target == 1])
     return float(positives[int(np.floor((1 - share) * len(positives)))])
 
@@ -57,10 +45,13 @@ def main() -> None:
     frame = modules.build_alarm_frame(include_lockbox=True)
     columns = modules.alarm_feature_columns(frame)
     year = frame["ts"].dt.year
-    # Labels need the full corroboration window after the alarm.
     complete = frame["ts"] <= frame["ts"].max() - np.timedelta64(WINDOW, "m")
+    maintenance = frame["maintenance"].values
     train, valid, test = (year <= TRAIN_END_YEAR), (year == VALID_YEAR), (year == TEST_YEAR) & complete
-    log(f"alarms: train {int(train.sum())}, valid {int(valid.sum())}, test {int(test.sum())}")
+    shares = {name: round(float(maintenance[mask].mean()), 4) for name, mask in (("train", train), ("valid", valid), ("test", test))}
+    train, valid, test = train & ~maintenance, valid & ~maintenance, test & ~maintenance
+    log(f"alarms: train {int(train.sum())}, valid {int(valid.sum())}, test {int(test.sum())}, maintenance share {shares}")
+    previous = artifacts.load_artifact(NAME)[0] if os.path.exists(os.path.join(artifacts.artifact_dir(NAME), "meta.json")) else None
 
     model = LightGBMModel({"n_estimators": 300, "num_leaves": 63})
     model.fit(frame.loc[train, columns], frame.loc[train, TARGET].values)
@@ -80,6 +71,9 @@ def main() -> None:
         "valid": {k: v for k, v in fm.frontier_metrics(y_valid, valid_raw).items() if k in ("pr_auc", "roc_auc")},
         "test": {k: v for k, v in fm.frontier_metrics(y_test, test_raw).items() if k in ("pr_auc", "roc_auc")},
         "test_base_rate": float(y_test.mean()),
+        "maintenance_share": shares,
+        "previous_model_test": {k: v for k, v in fm.frontier_metrics(y_test, previous.predict_proba(frame.loc[test, columns])).items()
+                                if k in ("pr_auc", "roc_auc")} if previous is not None else None,
         "operating_valid": operating(y_valid, valid_raw, threshold),
         "operating_test": operating(y_test, test_raw, threshold),
         "calibration": {
@@ -97,6 +91,7 @@ def main() -> None:
         "target": TARGET,
         "window_minutes": WINDOW,
         "sensor_types": sorted(frame["sensor_type"].unique().tolist()),
+        "excludes": "alarms of planned maintenance series (alarm.maintenance_series)",
         "calibrated": True,
         "isolated_threshold": threshold,
         "isolated_threshold_basis": f"keeps {KEEP_CORROBORATED:.0%} of corroborated alarms in {VALID_YEAR}",

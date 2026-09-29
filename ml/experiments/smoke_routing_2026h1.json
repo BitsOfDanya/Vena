@@ -1,0 +1,39 @@
+{
+ "chronic_share_of_candidates_2026h1": 0.1957,
+ "base_rate_chronic_2026h1": 0.0226,
+ "base_rate_other_2026h1": 0.0054,
+ "stage1_2025": {
+  "single_catboost": {
+   "avg_precision": 0.3153,
+   "roc_auc": 0.9288,
+   "top5_per_day": 0.1797,
+   "top10_per_day": 0.1485
+  },
+  "routed": {
+   "avg_precision": 0.273,
+   "roc_auc": 0.9107,
+   "top5_per_day": 0.171,
+   "top10_per_day": 0.1427
+  }
+ },
+ "stage2_2026h1": {
+  "single_catboost": {
+   "avg_precision": 0.2712,
+   "roc_auc": 0.9304,
+   "top5_per_day": 0.2389,
+   "top10_per_day": 0.2067
+  },
+  "routed": {
+   "avg_precision": 0.274,
+   "roc_auc": 0.9249,
+   "top5_per_day": 0.2267,
+   "top10_per_day": 0.1939
+  },
+  "production_smoke_24h": {
+   "avg_precision": 0.2712,
+   "roc_auc": 0.9304,
+   "top5_per_day": 0.2389,
+   "top10_per_day": 0.2067
+  }
+ }
+}

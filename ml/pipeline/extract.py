@@ -37,10 +37,7 @@ def _build_views(con):
     """)
     con.execute(f"""
         CREATE OR REPLACE VIEW channels AS
-        SELECT * FROM read_csv('{config.CHANNELS_FILE}', header=True, columns={{
-            'ид_канала_данных':'VARCHAR','тип_инж_системы':'VARCHAR','тип_датчика':'VARCHAR',
-            'тег_инженерной_системы':'VARCHAR','название_датчика':'VARCHAR'
-        }})
+        SELECT * FROM read_csv('{config.CHANNELS_FILE}', header=True, all_varchar=True)
     """)
 
 
@@ -110,10 +107,7 @@ def extract_events(sensor_type, force=False, batch_rows=config.EXTRACT_BATCH_ROW
 def channel_dictionary():
     con = _connect()
     df = con.execute(f"""
-        SELECT * FROM read_csv('{config.CHANNELS_FILE}', header=True, columns={{
-            'ид_канала_данных':'VARCHAR','тип_инж_системы':'VARCHAR','тип_датчика':'VARCHAR',
-            'тег_инженерной_системы':'VARCHAR','название_датчика':'VARCHAR'
-        }})
+        SELECT * FROM read_csv('{config.CHANNELS_FILE}', header=True, all_varchar=True)
     """).df()
     con.close()
     return df
