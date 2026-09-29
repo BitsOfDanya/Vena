@@ -109,6 +109,7 @@ def main() -> None:
     run("run_access_analysis.py")
     run("run_seasonality.py")
     run("run_workload_forecast.py")
+    run("run_alarm_kpis.py")
     run("build_model_registry.py")
     run("score_snapshot.py")
     log("production refresh done")

@@ -1,0 +1,1323 @@
+{
+ "definitions": {
+  "activation": "тревожное сообщение канала после паузы больше 10 мин или смены значения",
+  "acceptable_per_hour": 6,
+  "manageable_per_hour": 12,
+  "flood": "больше 10 активаций за 10 мин",
+  "chattering": "3 и более активаций канала за 60 с",
+  "scope": "вся диспетчерская, без разделения по пультам"
+ },
+ "recent": {
+  "start": "2026-06-01",
+  "end": "2026-06-30",
+  "activations": 12393,
+  "per_hour_mean": 17.21,
+  "per_hour_p95": 70.0,
+  "per_hour_max": 671,
+  "hours_over_acceptable": 0.3014,
+  "hours_over_manageable": 0.2069,
+  "flood_windows": 208,
+  "flood_share_of_time": 0.0499,
+  "activations_in_floods": 0.7532,
+  "top10_share": 0.1227,
+  "top10_channels": [
+   {
+    "channel_id": "144830",
+    "activations": 181
+   },
+   {
+    "channel_id": "179209",
+    "activations": 162
+   },
+   {
+    "channel_id": "179211",
+    "activations": 162
+   },
+   {
+    "channel_id": "179210",
+    "activations": 162
+   },
+   {
+    "channel_id": "179212",
+    "activations": 154
+   },
+   {
+    "channel_id": "179213",
+    "activations": 153
+   },
+   {
+    "channel_id": "179214",
+    "activations": 153
+   },
+   {
+    "channel_id": "77836",
+    "activations": 149
+   },
+   {
+    "channel_id": "229501",
+    "activations": 131
+   },
+   {
+    "channel_id": "179218",
+    "activations": 114
+   }
+  ],
+  "chattering_channels": 142,
+  "chattering_share": 0.2944,
+  "maintenance_share": 0.2338,
+  "by_sensor_type": {
+   "Состояние насоса": 3630,
+   "Датчик дыма": 3583,
+   "КД АВ": 1665,
+   "Состояние вентилятора": 1430,
+   "Состояние УИР-Р": 470,
+   "Состояние фазы": 383,
+   "КД Дверь": 273,
+   "Датчик движения": 200
+  }
+ },
+ "months": [
+  {
+   "start": "2025-01-01",
+   "end": "2025-01-31",
+   "activations": 7994,
+   "per_hour_mean": 10.74,
+   "per_hour_p95": 38.0,
+   "per_hour_max": 682,
+   "hours_over_acceptable": 0.2312,
+   "hours_over_manageable": 0.1546,
+   "flood_windows": 120,
+   "flood_share_of_time": 0.0269,
+   "activations_in_floods": 0.6058,
+   "top10_share": 0.2797,
+   "top10_channels": [
+    {
+     "channel_id": "196625",
+     "activations": 664
+    },
+    {
+     "channel_id": "196672",
+     "activations": 417
+    },
+    {
+     "channel_id": "288021",
+     "activations": 302
+    },
+    {
+     "channel_id": "196627",
+     "activations": 219
+    },
+    {
+     "channel_id": "77836",
+     "activations": 201
+    },
+    {
+     "channel_id": "268881",
+     "activations": 126
+    },
+    {
+     "channel_id": "121145",
+     "activations": 80
+    },
+    {
+     "channel_id": "121146",
+     "activations": 77
+    },
+    {
+     "channel_id": "121148",
+     "activations": 76
+    },
+    {
+     "channel_id": "121147",
+     "activations": 74
+    }
+   ],
+   "chattering_channels": 221,
+   "chattering_share": 0.5395,
+   "maintenance_share": 0.0,
+   "by_sensor_type": {
+    "Состояние насоса": 3514,
+    "Состояние вентилятора": 2372,
+    "КД АВ": 1071,
+    "Состояние фазы": 216,
+    "Состояние охраны": 175,
+    "Датчик температуры": 132,
+    "ИБП": 122,
+    "Датчик движения": 110
+   }
+  },
+  {
+   "start": "2025-02-01",
+   "end": "2025-02-28",
+   "activations": 8250,
+   "per_hour_mean": 12.28,
+   "per_hour_p95": 42.0,
+   "per_hour_max": 1614,
+   "hours_over_acceptable": 0.2485,
+   "hours_over_manageable": 0.1771,
+   "flood_windows": 133,
+   "flood_share_of_time": 0.033,
+   "activations_in_floods": 0.6976,
+   "top10_share": 0.3008,
+   "top10_channels": [
+    {
+     "channel_id": "278039",
+     "activations": 670
+    },
+    {
+     "channel_id": "278040",
+     "activations": 670
+    },
+    {
+     "channel_id": "77836",
+     "activations": 204
+    },
+    {
+     "channel_id": "196627",
+     "activations": 169
+    },
+    {
+     "channel_id": "212474",
+     "activations": 169
+    },
+    {
+     "channel_id": "196672",
+     "activations": 161
+    },
+    {
+     "channel_id": "196625",
+     "activations": 139
+    },
+    {
+     "channel_id": "267083",
+     "activations": 100
+    },
+    {
+     "channel_id": "267079",
+     "activations": 100
+    },
+    {
+     "channel_id": "267091",
+     "activations": 100
+    }
+   ],
+   "chattering_channels": 145,
+   "chattering_share": 0.547,
+   "maintenance_share": 0.011,
+   "by_sensor_type": {
+    "Состояние вентилятора": 4156,
+    "Состояние насоса": 1592,
+    "КД АВ": 1382,
+    "Датчик дыма": 339,
+    "Датчик температуры": 207,
+    "Состояние фазы": 158,
+    "Датчик движения": 100,
+    "ИБП": 92
+   }
+  },
+  {
+   "start": "2025-03-01",
+   "end": "2025-03-31",
+   "activations": 10160,
+   "per_hour_mean": 13.66,
+   "per_hour_p95": 49.0,
+   "per_hour_max": 735,
+   "hours_over_acceptable": 0.2352,
+   "hours_over_manageable": 0.1546,
+   "flood_windows": 166,
+   "flood_share_of_time": 0.0374,
+   "activations_in_floods": 0.7287,
+   "top10_share": 0.2579,
+   "top10_channels": [
+    {
+     "channel_id": "196625",
+     "activations": 601
+    },
+    {
+     "channel_id": "93670",
+     "activations": 376
+    },
+    {
+     "channel_id": "95478",
+     "activations": 207
+    },
+    {
+     "channel_id": "95475",
+     "activations": 207
+    },
+    {
+     "channel_id": "95476",
+     "activations": 207
+    },
+    {
+     "channel_id": "95477",
+     "activations": 207
+    },
+    {
+     "channel_id": "95473",
+     "activations": 207
+    },
+    {
+     "channel_id": "95474",
+     "activations": 206
+    },
+    {
+     "channel_id": "95379",
+     "activations": 201
+    },
+    {
+     "channel_id": "95376",
+     "activations": 201
+    }
+   ],
+   "chattering_channels": 141,
+   "chattering_share": 0.652,
+   "maintenance_share": 0.0005,
+   "by_sensor_type": {
+    "Состояние насоса": 5678,
+    "Состояние вентилятора": 1569,
+    "КД АВ": 1397,
+    "Датчик температуры": 550,
+    "Состояние фазы": 328,
+    "Датчик дыма": 130,
+    "ИБП": 126,
+    "Датчик движения": 83
+   }
+  },
+  {
+   "start": "2025-04-01",
+   "end": "2025-04-30",
+   "activations": 8734,
+   "per_hour_mean": 12.13,
+   "per_hour_p95": 49.0,
+   "per_hour_max": 616,
+   "hours_over_acceptable": 0.2625,
+   "hours_over_manageable": 0.1847,
+   "flood_windows": 159,
+   "flood_share_of_time": 0.0368,
+   "activations_in_floods": 0.6353,
+   "top10_share": 0.272,
+   "top10_channels": [
+    {
+     "channel_id": "196625",
+     "activations": 738
+    },
+    {
+     "channel_id": "196672",
+     "activations": 348
+    },
+    {
+     "channel_id": "196627",
+     "activations": 259
+    },
+    {
+     "channel_id": "77836",
+     "activations": 219
+    },
+    {
+     "channel_id": "215839",
+     "activations": 149
+    },
+    {
+     "channel_id": "215838",
+     "activations": 149
+    },
+    {
+     "channel_id": "215894",
+     "activations": 129
+    },
+    {
+     "channel_id": "215905",
+     "activations": 129
+    },
+    {
+     "channel_id": "215892",
+     "activations": 128
+    },
+    {
+     "channel_id": "215914",
+     "activations": 128
+    }
+   ],
+   "chattering_channels": 163,
+   "chattering_share": 0.5974,
+   "maintenance_share": 0.0049,
+   "by_sensor_type": {
+    "Состояние насоса": 4744,
+    "Состояние вентилятора": 1581,
+    "КД АВ": 1272,
+    "Состояние фазы": 316,
+    "Датчик температуры": 172,
+    "ИБП": 137,
+    "Состояние охраны": 109,
+    "Стекло": 102
+   }
+  },
+  {
+   "start": "2025-05-01",
+   "end": "2025-05-31",
+   "activations": 7119,
+   "per_hour_mean": 9.57,
+   "per_hour_p95": 43.0,
+   "per_hour_max": 325,
+   "hours_over_acceptable": 0.2285,
+   "hours_over_manageable": 0.1761,
+   "flood_windows": 152,
+   "flood_share_of_time": 0.0341,
+   "activations_in_floods": 0.6702,
+   "top10_share": 0.2065,
+   "top10_channels": [
+    {
+     "channel_id": "196627",
+     "activations": 315
+    },
+    {
+     "channel_id": "196625",
+     "activations": 180
+    },
+    {
+     "channel_id": "196672",
+     "activations": 171
+    },
+    {
+     "channel_id": "288116",
+     "activations": 164
+    },
+    {
+     "channel_id": "288021",
+     "activations": 112
+    },
+    {
+     "channel_id": "288117",
+     "activations": 112
+    },
+    {
+     "channel_id": "288022",
+     "activations": 110
+    },
+    {
+     "channel_id": "288125",
+     "activations": 110
+    },
+    {
+     "channel_id": "288126",
+     "activations": 108
+    },
+    {
+     "channel_id": "229629",
+     "activations": 88
+    }
+   ],
+   "chattering_channels": 191,
+   "chattering_share": 0.5692,
+   "maintenance_share": 0.0096,
+   "by_sensor_type": {
+    "Состояние насоса": 2668,
+    "Состояние вентилятора": 2208,
+    "КД АВ": 1004,
+    "Состояние фазы": 283,
+    "Датчик дыма": 281,
+    "ИБП": 140,
+    "Датчик движения": 140,
+    "Датчик температуры": 94
+   }
+  },
+  {
+   "start": "2025-06-01",
+   "end": "2025-06-30",
+   "activations": 8059,
+   "per_hour_mean": 11.19,
+   "per_hour_p95": 45.1,
+   "per_hour_max": 258,
+   "hours_over_acceptable": 0.2917,
+   "hours_over_manageable": 0.1958,
+   "flood_windows": 141,
+   "flood_share_of_time": 0.0326,
+   "activations_in_floods": 0.573,
+   "top10_share": 0.1693,
+   "top10_channels": [
+    {
+     "channel_id": "196625",
+     "activations": 421
+    },
+    {
+     "channel_id": "196627",
+     "activations": 313
+    },
+    {
+     "channel_id": "330460",
+     "activations": 146
+    },
+    {
+     "channel_id": "266983",
+     "activations": 88
+    },
+    {
+     "channel_id": "77836",
+     "activations": 76
+    },
+    {
+     "channel_id": "231861",
+     "activations": 74
+    },
+    {
+     "channel_id": "266984",
+     "activations": 70
+    },
+    {
+     "channel_id": "196672",
+     "activations": 66
+    },
+    {
+     "channel_id": "288116",
+     "activations": 62
+    },
+    {
+     "channel_id": "103955",
+     "activations": 48
+    }
+   ],
+   "chattering_channels": 177,
+   "chattering_share": 0.4061,
+   "maintenance_share": 0.0216,
+   "by_sensor_type": {
+    "Состояние насоса": 2399,
+    "Состояние вентилятора": 1590,
+    "КД АВ": 1346,
+    "Датчик дыма": 675,
+    "Датчик движения": 558,
+    "КД Дверь": 465,
+    "Состояние фазы": 288,
+    "Тепловой датчик": 227
+   }
+  },
+  {
+   "start": "2025-07-01",
+   "end": "2025-07-31",
+   "activations": 11298,
+   "per_hour_mean": 15.19,
+   "per_hour_p95": 58.0,
+   "per_hour_max": 1350,
+   "hours_over_acceptable": 0.3535,
+   "hours_over_manageable": 0.211,
+   "flood_windows": 173,
+   "flood_share_of_time": 0.0388,
+   "activations_in_floods": 0.6601,
+   "top10_share": 0.1742,
+   "top10_channels": [
+    {
+     "channel_id": "196627",
+     "activations": 430
+    },
+    {
+     "channel_id": "196625",
+     "activations": 379
+    },
+    {
+     "channel_id": "196672",
+     "activations": 233
+    },
+    {
+     "channel_id": "77836",
+     "activations": 164
+    },
+    {
+     "channel_id": "103955",
+     "activations": 162
+    },
+    {
+     "channel_id": "103952",
+     "activations": 143
+    },
+    {
+     "channel_id": "103926",
+     "activations": 117
+    },
+    {
+     "channel_id": "103911",
+     "activations": 114
+    },
+    {
+     "channel_id": "103951",
+     "activations": 114
+    },
+    {
+     "channel_id": "103910",
+     "activations": 112
+    }
+   ],
+   "chattering_channels": 181,
+   "chattering_share": 0.464,
+   "maintenance_share": 0.0128,
+   "by_sensor_type": {
+    "Состояние насоса": 4814,
+    "Состояние вентилятора": 3156,
+    "КД АВ": 1433,
+    "Датчик движения": 337,
+    "Состояние фазы": 327,
+    "Датчик дыма": 290,
+    "КД Дверь": 251,
+    "ИБП": 176
+   }
+  },
+  {
+   "start": "2025-08-01",
+   "end": "2025-08-31",
+   "activations": 10895,
+   "per_hour_mean": 14.64,
+   "per_hour_p95": 43.0,
+   "per_hour_max": 783,
+   "hours_over_acceptable": 0.2984,
+   "hours_over_manageable": 0.164,
+   "flood_windows": 134,
+   "flood_share_of_time": 0.03,
+   "activations_in_floods": 0.6444,
+   "top10_share": 0.3853,
+   "top10_channels": [
+    {
+     "channel_id": "196627",
+     "activations": 1527
+    },
+    {
+     "channel_id": "179214",
+     "activations": 329
+    },
+    {
+     "channel_id": "179213",
+     "activations": 324
+    },
+    {
+     "channel_id": "179212",
+     "activations": 324
+    },
+    {
+     "channel_id": "179211",
+     "activations": 309
+    },
+    {
+     "channel_id": "179210",
+     "activations": 308
+    },
+    {
+     "channel_id": "179209",
+     "activations": 308
+    },
+    {
+     "channel_id": "196625",
+     "activations": 282
+    },
+    {
+     "channel_id": "179222",
+     "activations": 244
+    },
+    {
+     "channel_id": "179218",
+     "activations": 243
+    }
+   ],
+   "chattering_channels": 166,
+   "chattering_share": 0.7225,
+   "maintenance_share": 0.0,
+   "by_sensor_type": {
+    "Состояние насоса": 7042,
+    "Состояние вентилятора": 1746,
+    "КД АВ": 1016,
+    "Состояние фазы": 278,
+    "Датчик движения": 192,
+    "ИБП": 166,
+    "КД Дверь": 156,
+    "Датчик дыма": 94
+   }
+  },
+  {
+   "start": "2025-09-01",
+   "end": "2025-09-30",
+   "activations": 7816,
+   "per_hour_mean": 10.86,
+   "per_hour_p95": 47.1,
+   "per_hour_max": 311,
+   "hours_over_acceptable": 0.2889,
+   "hours_over_manageable": 0.1917,
+   "flood_windows": 132,
+   "flood_share_of_time": 0.0306,
+   "activations_in_floods": 0.5083,
+   "top10_share": 0.2476,
+   "top10_channels": [
+    {
+     "channel_id": "196627",
+     "activations": 962
+    },
+    {
+     "channel_id": "93670",
+     "activations": 336
+    },
+    {
+     "channel_id": "77836",
+     "activations": 192
+    },
+    {
+     "channel_id": "197148",
+     "activations": 87
+    },
+    {
+     "channel_id": "288116",
+     "activations": 74
+    },
+    {
+     "channel_id": "196625",
+     "activations": 71
+    },
+    {
+     "channel_id": "197150",
+     "activations": 56
+    },
+    {
+     "channel_id": "197149",
+     "activations": 53
+    },
+    {
+     "channel_id": "213447",
+     "activations": 52
+    },
+    {
+     "channel_id": "213449",
+     "activations": 52
+    }
+   ],
+   "chattering_channels": 134,
+   "chattering_share": 0.3032,
+   "maintenance_share": 0.0131,
+   "by_sensor_type": {
+    "Состояние насоса": 2371,
+    "КД АВ": 1639,
+    "Состояние вентилятора": 1298,
+    "Датчик температуры": 536,
+    "КД Дверь": 459,
+    "Датчик движения": 348,
+    "Состояние охраны": 250,
+    "Состояние фазы": 243
+   }
+  },
+  {
+   "start": "2025-10-01",
+   "end": "2025-10-31",
+   "activations": 9833,
+   "per_hour_mean": 13.22,
+   "per_hour_p95": 61.0,
+   "per_hour_max": 359,
+   "hours_over_acceptable": 0.2782,
+   "hours_over_manageable": 0.2043,
+   "flood_windows": 204,
+   "flood_share_of_time": 0.0458,
+   "activations_in_floods": 0.5947,
+   "top10_share": 0.2288,
+   "top10_channels": [
+    {
+     "channel_id": "196627",
+     "activations": 886
+    },
+    {
+     "channel_id": "77836",
+     "activations": 221
+    },
+    {
+     "channel_id": "197149",
+     "activations": 162
+    },
+    {
+     "channel_id": "197148",
+     "activations": 160
+    },
+    {
+     "channel_id": "197150",
+     "activations": 159
+    },
+    {
+     "channel_id": "196625",
+     "activations": 156
+    },
+    {
+     "channel_id": "197147",
+     "activations": 150
+    },
+    {
+     "channel_id": "197146",
+     "activations": 150
+    },
+    {
+     "channel_id": "115812",
+     "activations": 104
+    },
+    {
+     "channel_id": "115813",
+     "activations": 102
+    }
+   ],
+   "chattering_channels": 113,
+   "chattering_share": 0.2705,
+   "maintenance_share": 0.014,
+   "by_sensor_type": {
+    "Состояние насоса": 4376,
+    "КД АВ": 1845,
+    "Состояние вентилятора": 1056,
+    "КД Дверь": 930,
+    "Датчик движения": 577,
+    "Состояние охраны": 266,
+    "Состояние фазы": 176,
+    "Газовый датчик": 133
+   }
+  },
+  {
+   "start": "2025-11-01",
+   "end": "2025-11-30",
+   "activations": 7998,
+   "per_hour_mean": 11.11,
+   "per_hour_p95": 53.0,
+   "per_hour_max": 494,
+   "hours_over_acceptable": 0.2264,
+   "hours_over_manageable": 0.1653,
+   "flood_windows": 166,
+   "flood_share_of_time": 0.0387,
+   "activations_in_floods": 0.6854,
+   "top10_share": 0.2304,
+   "top10_channels": [
+    {
+     "channel_id": "196627",
+     "activations": 249
+    },
+    {
+     "channel_id": "196672",
+     "activations": 239
+    },
+    {
+     "channel_id": "210644",
+     "activations": 225
+    },
+    {
+     "channel_id": "210643",
+     "activations": 223
+    },
+    {
+     "channel_id": "77836",
+     "activations": 213
+    },
+    {
+     "channel_id": "196625",
+     "activations": 195
+    },
+    {
+     "channel_id": "196623",
+     "activations": 183
+    },
+    {
+     "channel_id": "196624",
+     "activations": 183
+    },
+    {
+     "channel_id": "330542",
+     "activations": 84
+    },
+    {
+     "channel_id": "330531",
+     "activations": 49
+    }
+   ],
+   "chattering_channels": 112,
+   "chattering_share": 0.3876,
+   "maintenance_share": 0.0983,
+   "by_sensor_type": {
+    "Состояние насоса": 2460,
+    "Состояние вентилятора": 1250,
+    "КД АВ": 1100,
+    "КД Дверь": 795,
+    "Датчик дыма": 771,
+    "Датчик движения": 429,
+    "Состояние УИР-Р": 342,
+    "Газовый датчик": 225
+   }
+  },
+  {
+   "start": "2025-12-01",
+   "end": "2025-12-31",
+   "activations": 18166,
+   "per_hour_mean": 24.42,
+   "per_hour_p95": 149.7,
+   "per_hour_max": 637,
+   "hours_over_acceptable": 0.3038,
+   "hours_over_manageable": 0.2419,
+   "flood_windows": 422,
+   "flood_share_of_time": 0.0951,
+   "activations_in_floods": 0.8247,
+   "top10_share": 0.0746,
+   "top10_channels": [
+    {
+     "channel_id": "77836",
+     "activations": 243
+    },
+    {
+     "channel_id": "228571",
+     "activations": 227
+    },
+    {
+     "channel_id": "93670",
+     "activations": 127
+    },
+    {
+     "channel_id": "333439",
+     "activations": 116
+    },
+    {
+     "channel_id": "229629",
+     "activations": 114
+    },
+    {
+     "channel_id": "333436",
+     "activations": 114
+    },
+    {
+     "channel_id": "229634",
+     "activations": 112
+    },
+    {
+     "channel_id": "333435",
+     "activations": 110
+    },
+    {
+     "channel_id": "229624",
+     "activations": 99
+    },
+    {
+     "channel_id": "334388",
+     "activations": 93
+    }
+   ],
+   "chattering_channels": 189,
+   "chattering_share": 0.2566,
+   "maintenance_share": 0.2743,
+   "by_sensor_type": {
+    "Датчик дыма": 4965,
+    "Состояние вентилятора": 3193,
+    "Состояние насоса": 2427,
+    "КД АВ": 1427,
+    "КД Дверь": 1328,
+    "Газовый датчик": 1142,
+    "Датчик движения": 1082,
+    "Датчик температуры": 691
+   }
+  },
+  {
+   "start": "2026-01-01",
+   "end": "2026-01-31",
+   "activations": 11562,
+   "per_hour_mean": 15.54,
+   "per_hour_p95": 70.9,
+   "per_hour_max": 683,
+   "hours_over_acceptable": 0.3118,
+   "hours_over_manageable": 0.2258,
+   "flood_windows": 245,
+   "flood_share_of_time": 0.0552,
+   "activations_in_floods": 0.7639,
+   "top10_share": 0.1508,
+   "top10_channels": [
+    {
+     "channel_id": "215839",
+     "activations": 286
+    },
+    {
+     "channel_id": "215838",
+     "activations": 281
+    },
+    {
+     "channel_id": "77836",
+     "activations": 172
+    },
+    {
+     "channel_id": "210644",
+     "activations": 171
+    },
+    {
+     "channel_id": "333781",
+     "activations": 164
+    },
+    {
+     "channel_id": "334292",
+     "activations": 153
+    },
+    {
+     "channel_id": "333782",
+     "activations": 145
+    },
+    {
+     "channel_id": "229624",
+     "activations": 124
+    },
+    {
+     "channel_id": "229629",
+     "activations": 124
+    },
+    {
+     "channel_id": "229634",
+     "activations": 124
+    }
+   ],
+   "chattering_channels": 144,
+   "chattering_share": 0.3915,
+   "maintenance_share": 0.0707,
+   "by_sensor_type": {
+    "Состояние вентилятора": 3787,
+    "Состояние насоса": 3494,
+    "Датчик дыма": 1241,
+    "КД АВ": 909,
+    "КД Дверь": 595,
+    "Состояние УИР-Р": 334,
+    "Состояние фазы": 274,
+    "Датчик движения": 271
+   }
+  },
+  {
+   "start": "2026-02-01",
+   "end": "2026-02-28",
+   "activations": 17827,
+   "per_hour_mean": 26.53,
+   "per_hour_p95": 93.4,
+   "per_hour_max": 545,
+   "hours_over_acceptable": 0.7202,
+   "hours_over_manageable": 0.5804,
+   "flood_windows": 257,
+   "flood_share_of_time": 0.0638,
+   "activations_in_floods": 0.5252,
+   "top10_share": 0.4868,
+   "top10_channels": [
+    {
+     "channel_id": "210644",
+     "activations": 7296
+    },
+    {
+     "channel_id": "77836",
+     "activations": 242
+    },
+    {
+     "channel_id": "215838",
+     "activations": 215
+    },
+    {
+     "channel_id": "215839",
+     "activations": 213
+    },
+    {
+     "channel_id": "333782",
+     "activations": 144
+    },
+    {
+     "channel_id": "333781",
+     "activations": 128
+    },
+    {
+     "channel_id": "229624",
+     "activations": 114
+    },
+    {
+     "channel_id": "229629",
+     "activations": 114
+    },
+    {
+     "channel_id": "229634",
+     "activations": 114
+    },
+    {
+     "channel_id": "120497",
+     "activations": 99
+    }
+   ],
+   "chattering_channels": 186,
+   "chattering_share": 0.7513,
+   "maintenance_share": 0.0569,
+   "by_sensor_type": {
+    "Состояние насоса": 10060,
+    "Состояние вентилятора": 4074,
+    "Датчик дыма": 1066,
+    "КД АВ": 929,
+    "КД Дверь": 242,
+    "Датчик температуры": 238,
+    "Состояние УИР-Р": 223,
+    "Газовый датчик": 210
+   }
+  },
+  {
+   "start": "2026-03-01",
+   "end": "2026-03-31",
+   "activations": 14844,
+   "per_hour_mean": 19.95,
+   "per_hour_p95": 76.9,
+   "per_hour_max": 981,
+   "hours_over_acceptable": 0.3132,
+   "hours_over_manageable": 0.2204,
+   "flood_windows": 269,
+   "flood_share_of_time": 0.0605,
+   "activations_in_floods": 0.7716,
+   "top10_share": 0.1489,
+   "top10_channels": [
+    {
+     "channel_id": "95478",
+     "activations": 232
+    },
+    {
+     "channel_id": "95475",
+     "activations": 232
+    },
+    {
+     "channel_id": "95473",
+     "activations": 231
+    },
+    {
+     "channel_id": "95474",
+     "activations": 231
+    },
+    {
+     "channel_id": "95476",
+     "activations": 231
+    },
+    {
+     "channel_id": "95477",
+     "activations": 231
+    },
+    {
+     "channel_id": "95377",
+     "activations": 209
+    },
+    {
+     "channel_id": "95379",
+     "activations": 207
+    },
+    {
+     "channel_id": "95378",
+     "activations": 205
+    },
+    {
+     "channel_id": "95374",
+     "activations": 201
+    }
+   ],
+   "chattering_channels": 134,
+   "chattering_share": 0.3849,
+   "maintenance_share": 0.2226,
+   "by_sensor_type": {
+    "Состояние насоса": 5506,
+    "Датчик дыма": 3869,
+    "КД АВ": 1743,
+    "Состояние вентилятора": 1553,
+    "Состояние УИР-Р": 551,
+    "КД Дверь": 332,
+    "Датчик температуры": 276,
+    "Датчик движения": 243
+   }
+  },
+  {
+   "start": "2026-04-01",
+   "end": "2026-04-30",
+   "activations": 18236,
+   "per_hour_mean": 25.33,
+   "per_hour_p95": 123.0,
+   "per_hour_max": 851,
+   "hours_over_acceptable": 0.4042,
+   "hours_over_manageable": 0.2958,
+   "flood_windows": 338,
+   "flood_share_of_time": 0.0787,
+   "activations_in_floods": 0.781,
+   "top10_share": 0.0803,
+   "top10_channels": [
+    {
+     "channel_id": "215906",
+     "activations": 150
+    },
+    {
+     "channel_id": "215894",
+     "activations": 150
+    },
+    {
+     "channel_id": "215905",
+     "activations": 149
+    },
+    {
+     "channel_id": "215914",
+     "activations": 148
+    },
+    {
+     "channel_id": "227510",
+     "activations": 146
+    },
+    {
+     "channel_id": "215891",
+     "activations": 146
+    },
+    {
+     "channel_id": "215892",
+     "activations": 146
+    },
+    {
+     "channel_id": "215917",
+     "activations": 145
+    },
+    {
+     "channel_id": "215918",
+     "activations": 145
+    },
+    {
+     "channel_id": "77836",
+     "activations": 140
+    }
+   ],
+   "chattering_channels": 169,
+   "chattering_share": 0.3077,
+   "maintenance_share": 0.1945,
+   "by_sensor_type": {
+    "Состояние насоса": 5103,
+    "Датчик дыма": 5033,
+    "Состояние вентилятора": 3283,
+    "КД АВ": 1594,
+    "Состояние фазы": 808,
+    "Ручной извещатель": 780,
+    "Состояние УИР-Р": 315,
+    "КД Дверь": 233
+   }
+  },
+  {
+   "start": "2026-05-01",
+   "end": "2026-05-31",
+   "activations": 12509,
+   "per_hour_mean": 16.81,
+   "per_hour_p95": 79.7,
+   "per_hour_max": 609,
+   "hours_over_acceptable": 0.3078,
+   "hours_over_manageable": 0.2097,
+   "flood_windows": 227,
+   "flood_share_of_time": 0.0516,
+   "activations_in_floods": 0.7757,
+   "top10_share": 0.1221,
+   "top10_channels": [
+    {
+     "channel_id": "288116",
+     "activations": 182
+    },
+    {
+     "channel_id": "288021",
+     "activations": 180
+    },
+    {
+     "channel_id": "8812",
+     "activations": 177
+    },
+    {
+     "channel_id": "288117",
+     "activations": 172
+    },
+    {
+     "channel_id": "288125",
+     "activations": 172
+    },
+    {
+     "channel_id": "288022",
+     "activations": 170
+    },
+    {
+     "channel_id": "288126",
+     "activations": 168
+    },
+    {
+     "channel_id": "77836",
+     "activations": 122
+    },
+    {
+     "channel_id": "287996",
+     "activations": 92
+    },
+    {
+     "channel_id": "288012",
+     "activations": 92
+    }
+   ],
+   "chattering_channels": 210,
+   "chattering_share": 0.5165,
+   "maintenance_share": 0.0602,
+   "by_sensor_type": {
+    "Состояние вентилятора": 4476,
+    "Состояние насоса": 3306,
+    "КД АВ": 1292,
+    "Датчик дыма": 1111,
+    "Состояние фазы": 704,
+    "Датчик температуры": 210,
+    "Переключатель": 188,
+    "ИБП": 188
+   }
+  },
+  {
+   "start": "2026-06-01",
+   "end": "2026-06-30",
+   "activations": 12393,
+   "per_hour_mean": 17.21,
+   "per_hour_p95": 70.0,
+   "per_hour_max": 671,
+   "hours_over_acceptable": 0.3014,
+   "hours_over_manageable": 0.2069,
+   "flood_windows": 208,
+   "flood_share_of_time": 0.0499,
+   "activations_in_floods": 0.7532,
+   "top10_share": 0.1227,
+   "top10_channels": [
+    {
+     "channel_id": "144830",
+     "activations": 181
+    },
+    {
+     "channel_id": "179209",
+     "activations": 162
+    },
+    {
+     "channel_id": "179211",
+     "activations": 162
+    },
+    {
+     "channel_id": "179210",
+     "activations": 162
+    },
+    {
+     "channel_id": "179212",
+     "activations": 154
+    },
+    {
+     "channel_id": "179213",
+     "activations": 153
+    },
+    {
+     "channel_id": "179214",
+     "activations": 153
+    },
+    {
+     "channel_id": "77836",
+     "activations": 149
+    },
+    {
+     "channel_id": "229501",
+     "activations": 131
+    },
+    {
+     "channel_id": "179218",
+     "activations": 114
+    }
+   ],
+   "chattering_channels": 142,
+   "chattering_share": 0.2944,
+   "maintenance_share": 0.2338,
+   "by_sensor_type": {
+    "Состояние насоса": 3630,
+    "Датчик дыма": 3583,
+    "КД АВ": 1665,
+    "Состояние вентилятора": 1430,
+    "Состояние УИР-Р": 470,
+    "Состояние фазы": 383,
+    "КД Дверь": 273,
+    "Датчик движения": 200
+   }
+  }
+ ]
+}

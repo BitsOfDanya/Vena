@@ -24,6 +24,7 @@ REPORTS = (
     "detection_study",
     "health_index",
     "workload_forecast",
+    "alarm_kpis",
 )
 FILE_NAME = re.compile(r"^[A-Za-z0-9_.-]+\.csv$")
 MAX_ROWS = 1000

@@ -628,3 +628,14 @@ def test_access_routes_and_alarm_categories(client: TestClient, ml_root: Path) -
     assert routes[0]["steps"][0]["picket"] == 284
     assert alarms[0]["category"] == "gas"
     assert alarms[0]["maintenance"] is True
+
+
+def test_alarm_kpis_are_served_from_the_ml_report(client: TestClient, ml_root: Path) -> None:
+    assert client.get("/api/v1/analytics/alarm-kpis").status_code == 404
+    (ml_root / "results").mkdir(parents=True, exist_ok=True)
+    (ml_root / "results" / "alarm_kpis.json").write_text(
+        json.dumps({"recent": {"per_hour_mean": 17.2, "chattering_channels": 142}, "months": []}),
+        encoding="utf-8",
+    )
+    body = client.get("/api/v1/analytics/alarm-kpis").json()
+    assert body["recent"]["chattering_channels"] == 142

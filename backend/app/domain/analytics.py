@@ -101,6 +101,11 @@ def _read(path: Path) -> Any:
         return json.load(handle)
 
 
+def read_report(settings: Settings, name: str) -> dict[str, Any] | None:
+    report = _read(settings.ml_dir / "results" / f"{name}.json")
+    return report if isinstance(report, dict) else None
+
+
 def _lead_times(settings: Settings) -> list[ModelEffect]:
     result = []
     report = _read(settings.ml_dir / "results" / "model_report.json") or {}

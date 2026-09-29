@@ -1,4 +1,4 @@
-from typing import Annotated
+from typing import Annotated, Any
 
 from fastapi import APIRouter, Depends, HTTPException
 from fastapi.responses import Response
@@ -41,6 +41,15 @@ def effect(session: SessionDep, settings: SettingsDep, _: ReaderDep) -> EffectRe
 @router.get("/analytics/event-types", response_model=list[EventTypeStats])
 def event_types(settings: SettingsDep, _: ReaderDep) -> list[EventTypeStats]:
     return analytics_service.event_types(settings, get_prediction_source(settings))
+
+
+@router.get("/analytics/alarm-kpis")
+def alarm_kpis(settings: SettingsDep, _: ReaderDep) -> dict[str, Any]:
+    """Alarm load by ISA-18.2: rate per hour, floods, bad actors, chattering channels."""
+    report = analytics_service.read_report(settings, "alarm_kpis")
+    if report is None:
+        raise HTTPException(status_code=404, detail="alarm KPIs have not been computed")
+    return report
 
 
 @router.get("/reports/management.xlsx")
