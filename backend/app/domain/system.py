@@ -205,6 +205,7 @@ def situations(
 
     incident_probability = source.incident_probabilities()
     health = location_health(source.all(), incident_probability, load_calibration(settings.ml_dir))
+    object_health = source.object_health()
     histories = source.location_history()
     hints = driver_hints(settings)
     result: list[Situation] = []
@@ -268,9 +269,10 @@ def situations(
                 object_id=lead.object_id,
                 asset_count=count,
                 incident_probability=location_probability,
-                health_index=health[incident.location].index
-                if incident.location in health
-                else None,
+                health_index=object_health.get(
+                    lead.object_id or "",
+                    health[incident.location].index if incident.location in health else None,
+                ),
                 model_id=lead.model_id,
                 recommendation=recommend(settings, incident.scenario, lead),
                 history=_history(histories, incident.location, lead.device_type),

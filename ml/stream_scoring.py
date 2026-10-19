@@ -87,7 +87,7 @@ class StreamScorer:
         from pipeline import context, object_risk
 
         if not object_risk.available():
-            return None, None
+            return None, None, None
         day = pd.Timestamp(self.now).normalize()
         if self.registry_day != day:
             self.registry = object_risk.registry_from(self.events, context.locations()[0])
@@ -120,7 +120,7 @@ class StreamScorer:
 
     def publish(self, output, carried, stream=None):
         predictions = list(self.predictions.values())
-        objects, objects_meta = self.object_section(predictions)
+        objects, objects_meta, object_health = self.object_section(predictions)
         self.monitor.record_objects(objects, self.now)
         temporary = f"{output}.tmp"
         score_snapshot.write_snapshot(
@@ -136,6 +136,7 @@ class StreamScorer:
             history=self.history,
             objects=objects,
             objects_meta=objects_meta,
+            object_health=object_health,
         )
         os.replace(temporary, output)
         report = self.monitor.evaluate(self.events, self.now)

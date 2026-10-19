@@ -1,0 +1,55 @@
+{
+ "target": "хотя бы один инцидент реестра на объекте за сутки: отключение питания, подтопление или пожарный",
+ "calibration": "сглаженная изотоническая по 2025 году на вероятностях моделей объекта, обученных до 2025",
+ "period": "2026H1",
+ "objects": 78,
+ "new_index": {
+  "base_rate": 0.139,
+  "mean_probability": 0.1363,
+  "avg_precision": 0.8228,
+  "roc_auc": 0.9712,
+  "brier": 0.0456,
+  "ece": 0.0053,
+  "modal_share_per_day": 0.484,
+  "distinct_per_day": 17.0,
+  "top_value": 100,
+  "top_value_share": 0.484
+ },
+ "independent_product": {
+  "base_rate": 0.139,
+  "mean_probability": 0.1396,
+  "avg_precision": 0.8234,
+  "roc_auc": 0.9712,
+  "brier": 0.0456,
+  "ece": 0.0064
+ },
+ "same_object_days": {
+  "rows": 6326,
+  "objects": 46,
+  "new_index": {
+   "base_rate": 0.3013,
+   "mean_probability": 0.2935,
+   "avg_precision": 0.8286,
+   "roc_auc": 0.9295,
+   "brier": 0.0962,
+   "ece": 0.0132,
+   "modal_share_per_day": 0.282,
+   "distinct_per_day": 16.0,
+   "top_value": 99,
+   "top_value_share": 0.227
+  },
+  "old_index": {
+   "base_rate": 0.3013,
+   "mean_probability": 0.2738,
+   "avg_precision": 0.7266,
+   "roc_auc": 0.8866,
+   "brier": 0.1274,
+   "ece": 0.0538,
+   "modal_share_per_day": 0.288,
+   "distinct_per_day": 15.0,
+   "top_value": 96,
+   "top_value_share": 0.255
+  }
+ },
+ "decision": "в прод"
+}

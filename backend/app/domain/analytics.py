@@ -130,11 +130,12 @@ def asset_tree(
                     picket_m=picket_meters(row.name),
                 )
             )
+        object_health = source.object_health() if source.available else {}
         for obj in registry_objects.values():
             indexes = [
                 section.health_index for section in obj.sections if section.health_index is not None
             ]
-            obj.health_index = min(indexes) if indexes else None
+            obj.health_index = object_health.get(obj.object_id, min(indexes) if indexes else None)
             obj.sections.sort(key=_health_order)
         return sorted(
             registry_objects.values(),
@@ -175,6 +176,7 @@ def asset_tree(
             )
         )
     known = {item.object_id for item in predictions}
+    object_health = source.object_health()
     result = []
     for object_id, nodes in objects.items():
         nodes.sort(key=_health_order)
@@ -184,7 +186,7 @@ def asset_tree(
                 object_id=object_id,
                 label=(object_label(object_id) if object_id in known else None)
                 or f"Объект {object_id}",
-                health_index=min(indexes) if indexes else None,
+                health_index=object_health.get(object_id, min(indexes) if indexes else None),
                 sections=nodes,
             )
         )

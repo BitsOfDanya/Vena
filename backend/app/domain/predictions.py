@@ -371,6 +371,19 @@ class PredictionSource:
         )
         return rows, meta
 
+    def object_health(self) -> dict[str, int]:
+        self._read()
+        raw = (self._payload or {}).get("object_health")
+        items = raw.get("items") if isinstance(raw, dict) else None
+        if not isinstance(items, dict):
+            return {}
+        result = {}
+        for key, value in items.items():
+            index = value.get("index") if isinstance(value, dict) else None
+            if isinstance(index, int) and not isinstance(index, bool) and 0 <= index <= 100:
+                result[str(key)] = index
+        return result
+
     def alarms(self) -> list[AlarmAssessment]:
         result = []
         for row in self._section("alarms"):

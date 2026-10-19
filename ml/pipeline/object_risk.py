@@ -1,3 +1,4 @@
+import json
 import os
 
 import numpy as np
@@ -12,6 +13,7 @@ KINDS = {
 }
 WINDOWS = (1, 7, 30, 90)
 NOWCAST = "object_flood_6h"
+HEALTH = "object_health"
 NOWCAST_WINDOWS = (24, 168, 720)
 SENSORS = {"fire": "Датчик дыма", "flood": "Состояние насоса", "power": "Состояние фазы"}
 STATES = {
@@ -219,3 +221,27 @@ def score(registry, now, object_of, channel=None, events=None, kinds=None, recen
         if kind == "flood" and short is not None:
             meta_out[name]["nowcast"] = summary
     return rows, meta_out
+
+
+def health(rows):
+    folder = artifacts.artifact_dir(HEALTH)
+    if not rows or not os.path.exists(os.path.join(folder, "points.json")):
+        return None
+    points = json.load(open(os.path.join(folder, "points.json"), encoding="utf-8"))
+    meta = json.load(open(os.path.join(folder, "meta.json"), encoding="utf-8"))
+    daily = {name: scenario for scenario, name, _ in KINDS.values()}
+    parts = {}
+    for row in rows:
+        if row["model_id"] in daily:
+            parts.setdefault(row["object_id"], {})[daily[row["model_id"]]] = float(row["probability"])
+    if not parts or any(len(values) < len(KINDS) for values in parts.values()):
+        return None
+    items = {}
+    for obj, values in parts.items():
+        raw = 1.0 - float(np.prod([1.0 - value for value in values.values()]))
+        probability = float(np.clip(np.interp(raw, points["raw_risk"], points["risk"]), 0.0, 1.0))
+        items[obj] = {"index": int(np.clip(round(100 * (1 - probability)), 0, 100)), "probability": round(probability, 4),
+                      "by_scenario": {key: round(value, 4) for key, value in values.items()}}
+    test = meta["metrics_snapshot"].get("test_2026h1", {})
+    return {"day": rows[0]["day"], "label": meta["model_config"]["label"], "target": meta["model_config"]["target"],
+            "period": "2026H1", "ece": test.get("ece"), "avg_precision": test.get("avg_precision"), "items": items}

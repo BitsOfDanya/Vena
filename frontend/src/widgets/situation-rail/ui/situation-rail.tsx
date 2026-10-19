@@ -63,7 +63,7 @@ function HealthSpark({ group, location, object }: { group: string; location?: st
   const objectId = object ?? objectIdFromLocation(location)
   const objectSeries = objectId ? objects.data?.objects[objectId] : undefined
   const points =
-    (section.data?.length ?? 0) >= 2 ? section.data! : (objectSeries?.length ?? 0) >= 2 ? objectSeries! : []
+    (objectSeries?.length ?? 0) >= 2 ? objectSeries! : (section.data?.length ?? 0) >= 2 ? section.data! : []
   if (section.isPending && objects.isPending) return null
   if (points.length < 2) return null
   const values = points.map((point) => point.value)
@@ -242,7 +242,7 @@ function SituationCard({
           {situation.healthIndex !== null && situation.healthIndex !== undefined ? (
             <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-[13px]">
               <span>
-                <span className="text-faint">Индекс здоровья участка: </span>
+                <span className="text-faint">Индекс здоровья объекта: </span>
                 <span className="font-medium tabular-nums">{situation.healthIndex} из 100</span>
               </span>
               {workflowMode === "api" && group ? <HealthSpark group={group} location={situation.location} object={situation.objectId} /> : null}

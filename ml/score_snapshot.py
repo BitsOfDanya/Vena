@@ -447,7 +447,7 @@ def assess_routes(reference, until):
 
 def write_snapshot(
     predictions, prediction_time, output, alarms=None, access_events=None, incidents=None, stream=None, history=None,
-    access_routes=None, weather_forecast=None, data_source="journal", objects=None, objects_meta=None,
+    access_routes=None, weather_forecast=None, data_source="journal", objects=None, objects_meta=None, object_health=None,
 ):
     model_info = {}
     for _, names, _ in DEVICES:
@@ -482,6 +482,8 @@ def write_snapshot(
     if objects is not None:
         payload["objects"] = objects
         payload["objects_meta"] = objects_meta or {}
+    if object_health is not None:
+        payload["object_health"] = object_health
     payload["snapshot_id"] = hashlib.sha256(
         json.dumps(payload["predictions"], sort_keys=True).encode()
     ).hexdigest()[:16]
@@ -498,13 +500,14 @@ def object_section(until, predictions, events_by_sensor=None, registry=None, rec
     from pipeline import context, incidents, object_risk
 
     if not object_risk.available():
-        return None, None
+        return None, None, None
     object_of = context.locations()[0]
     if registry is None:
         sources = events_by_sensor or {sensor: incidents._events(sensor) for sensor in object_risk.SENSORS.values()}
         registry = object_risk.registry_from(sources, object_of)
     channel = object_risk.channel_by_object(predictions, object_of)
-    return object_risk.score(registry, until, object_of, channel, events_by_sensor, recent_flood=recent_flood)
+    rows, meta = object_risk.score(registry, until, object_of, channel, events_by_sensor, recent_flood=recent_flood)
+    return rows, meta, object_risk.health(rows)
 
 
 def main() -> None:
@@ -547,7 +550,7 @@ def main() -> None:
         )
 
     until = pd.Timestamp(prediction_time)
-    objects, objects_meta = object_section(until, predictions)
+    objects, objects_meta, object_health = object_section(until, predictions)
     write_snapshot(
         predictions,
         prediction_time,
@@ -562,6 +565,7 @@ def main() -> None:
         ),
         objects=objects,
         objects_meta=objects_meta,
+        object_health=object_health,
     )
 
 

@@ -613,6 +613,29 @@ def test_asset_tree_effect_and_report(client: TestClient, ml_root: Path) -> None
     assert report.content[:2] == b"PK"
 
 
+def test_object_health_from_object_models_replaces_section_minimum(
+    client: TestClient, ml_root: Path
+) -> None:
+    _snapshot_with_sections(ml_root)
+    path = ml_root / "results" / "predictions" / "snapshot.json"
+    payload = json.loads(path.read_text(encoding="utf-8"))
+    payload["object_health"] = {
+        "day": "2026-06-30",
+        "items": {"5567": {"index": 41, "probability": 0.59}, "x": {"index": "bad"}},
+    }
+    path.write_text(json.dumps(payload), encoding="utf-8")
+
+    tree = client.get("/api/v1/assets/tree").json()
+    situation = client.get("/api/v1/situations").json()[0]
+
+    by_id = {item["object_id"]: item for item in tree}
+    assert by_id["5567"]["health_index"] == 41
+    assert by_id["798"]["health_index"] == 95
+    assert by_id["5567"]["sections"][0]["health_index"] == 15
+    assert situation["object_id"] == "5567"
+    assert situation["health_index"] == 41
+
+
 def test_forecast_exchange_formats_and_event_types(client: TestClient, ml_root: Path) -> None:
     _snapshot_with_sections(ml_root)
     (ml_root / "results" / "workload_forecast.json").write_text(

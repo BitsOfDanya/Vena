@@ -1,0 +1,30 @@
+{
+ "model_config": {
+  "label": "Индекс здоровья объекта",
+  "target": "хотя бы один инцидент реестра на объекте за сутки: отключение питания, подтопление или пожарный",
+  "kinds": [
+   "power",
+   "flood",
+   "fire"
+  ],
+  "calibration": {
+   "method": "smooth_isotonic",
+   "fit_period": "2025"
+  }
+ },
+ "metrics_snapshot": {
+  "test_2026h1": {
+   "base_rate": 0.139,
+   "mean_probability": 0.1363,
+   "avg_precision": 0.8228,
+   "roc_auc": 0.9712,
+   "brier": 0.0456,
+   "ece": 0.0053,
+   "modal_share_per_day": 0.484,
+   "distinct_per_day": 17.0,
+   "top_value": 100,
+   "top_value_share": 0.484
+  }
+ },
+ "version": "2026-10-19"
+}

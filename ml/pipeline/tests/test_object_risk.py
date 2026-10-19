@@ -64,3 +64,22 @@ def test_nowcast_features_count_confirmed_incidents_only():
     assert out.loc["A", "hours_since_incident"] == 25.0
     assert out.loc["B", "incidents_720h"] == 1 and out.loc["C", "hours_since_incident"] == 1e5
     assert out.loc["A", "hour"] == 10
+
+
+def test_health_index_combines_object_models(tmp_path, monkeypatch):
+    import json
+
+    folder = tmp_path / "object_health"
+    folder.mkdir()
+    (folder / "points.json").write_text(json.dumps({"raw_risk": [0.0, 1.0], "risk": [0.0, 1.0]}))
+    (folder / "meta.json").write_text(json.dumps({"model_config": {"label": "Индекс", "target": "инцидент"},
+                                                  "metrics_snapshot": {"test_2026h1": {"ece": 0.01, "avg_precision": 0.8}}}))
+    monkeypatch.setattr(object_risk.artifacts, "artifact_dir", lambda name: str(tmp_path / name))
+    rows = []
+    for scenario, name, _ in object_risk.KINDS.values():
+        rows.append({"object_id": "A", "model_id": name, "probability": 0.5 if scenario == "power_loss" else 0.0, "day": "2026-06-30"})
+        rows.append({"object_id": "B", "model_id": name, "probability": 0.0, "day": "2026-06-30"})
+    out = object_risk.health(rows)
+    assert out["items"]["A"]["index"] == 50 and out["items"]["B"]["index"] == 100
+    assert out["items"]["A"]["by_scenario"]["power_loss"] == 0.5
+    assert object_risk.health(rows[:2]) is None
