@@ -1,0 +1,78 @@
+{
+ "horizon_hours": 6,
+ "target": "начало подтопления реестра на объекте в ближайшие 6 ч",
+ "periods": {
+  "selection_2025": {
+   "history": {
+    "base_rate": 0.0118,
+    "avg_precision": 0.0978,
+    "roc_auc": 0.8549,
+    "precision_top3_per_hour": 0.0401,
+    "incidents": 334,
+    "share_top3": 0.572,
+    "objects": 18
+   },
+   "nowcast": {
+    "base_rate": 0.0118,
+    "avg_precision": 0.0919,
+    "roc_auc": 0.8661,
+    "precision_top3_per_hour": 0.043,
+    "incidents": 334,
+    "share_top3": 0.59,
+    "objects": 18
+   },
+   "rule": {
+    "base_rate": 0.0118,
+    "avg_precision": 0.0348,
+    "roc_auc": 0.6226,
+    "precision_top3_per_hour": 0.0247,
+    "incidents": 334,
+    "share_top3": 0.35,
+    "objects": 18
+   }
+  },
+  "test_2026h1": {
+   "history": {
+    "base_rate": 0.0213,
+    "avg_precision": 0.1848,
+    "roc_auc": 0.8405,
+    "precision_top3_per_hour": 0.0805,
+    "incidents": 298,
+    "share_top3": 0.648,
+    "objects": 18
+   },
+   "nowcast": {
+    "base_rate": 0.0213,
+    "avg_precision": 0.1699,
+    "roc_auc": 0.8463,
+    "precision_top3_per_hour": 0.0806,
+    "incidents": 298,
+    "share_top3": 0.651,
+    "objects": 18
+   },
+   "top_features": [
+    "temp_prev_day",
+    "hours_since_incident",
+    "precip_prev_3d",
+    "hour",
+    "Выключен_168h",
+    "Включен_168h",
+    "precip_prev_day",
+    "incidents_720h",
+    "weekday",
+    "Работают все насосы в АНС_168h"
+   ],
+   "rule": {
+    "base_rate": 0.0213,
+    "avg_precision": 0.1335,
+    "roc_auc": 0.7168,
+    "precision_top3_per_hour": 0.0669,
+    "incidents": 298,
+    "share_top3": 0.513,
+    "objects": 18
+   }
+  }
+ },
+ "selected": "history",
+ "decision": "в прод"
+}

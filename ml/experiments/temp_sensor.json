@@ -1,0 +1,86 @@
+{
+ "target": "начало эпизода технической неисправности датчика температуры за 24 ч",
+ "fault_records": 11535,
+ "text_fault_records": 40388,
+ "episodes": 5648,
+ "episodes_by_year": {
+  "2019": 650,
+  "2020": 417,
+  "2021": 905,
+  "2022": 768,
+  "2023": 1161,
+  "2024": 595,
+  "2025": 656,
+  "2026": 496
+ },
+ "selection_2025": {
+  "catboost": {
+   "n": 168462,
+   "base_rate": 0.0073,
+   "avg_precision": 0.0749,
+   "roc_auc": 0.7865,
+   "recall_at_precision_0.7": 0.0139,
+   "precision_top5_per_day": 0.0225
+  },
+  "lightgbm": {
+   "n": 168462,
+   "base_rate": 0.0073,
+   "avg_precision": 0.0942,
+   "roc_auc": 0.842,
+   "recall_at_precision_0.7": 0.0081,
+   "precision_top5_per_day": 0.023
+  },
+  "logistic_regression": {
+   "n": 168462,
+   "base_rate": 0.0073,
+   "avg_precision": 0.0138,
+   "roc_auc": 0.7334,
+   "recall_at_precision_0.7": 0.0,
+   "precision_top5_per_day": 0.011
+  },
+  "channel_prior": {
+   "n": 168462,
+   "base_rate": 0.0073,
+   "avg_precision": 0.009,
+   "roc_auc": 0.6296,
+   "recall_at_precision_0.7": 0.0,
+   "precision_top5_per_day": 0.0044
+  }
+ },
+ "test_2026h1": {
+  "catboost": {
+   "n": 90207,
+   "base_rate": 0.0046,
+   "avg_precision": 0.0463,
+   "roc_auc": 0.8828,
+   "recall_at_precision_0.7": 0.0024,
+   "precision_top5_per_day": 0.0453
+  },
+  "lightgbm": {
+   "n": 90207,
+   "base_rate": 0.0046,
+   "avg_precision": 0.0932,
+   "roc_auc": 0.9015,
+   "recall_at_precision_0.7": 0.0024,
+   "precision_top5_per_day": 0.0575
+  },
+  "logistic_regression": {
+   "n": 90207,
+   "base_rate": 0.0046,
+   "avg_precision": 0.0412,
+   "roc_auc": 0.9043,
+   "recall_at_precision_0.7": 0.0,
+   "precision_top5_per_day": 0.0331
+  },
+  "channel_prior": {
+   "n": 90207,
+   "base_rate": 0.0046,
+   "avg_precision": 0.0146,
+   "roc_auc": 0.7317,
+   "recall_at_precision_0.7": 0.0,
+   "precision_top5_per_day": 0.0232
+  }
+ },
+ "selected_on_2025": "lightgbm",
+ "decision": "в таблицу проверенных подходов"
+}

@@ -1,0 +1,1076 @@
+{
+ "power": {
+  "history": {
+   "default": {
+    "num_leaves": 15,
+    "min_child_samples": 50,
+    "n_estimators": 300,
+    "avg_precision": 0.8155
+   },
+   "best": {
+    "num_leaves": 31,
+    "min_child_samples": 200,
+    "n_estimators": 300,
+    "avg_precision": 0.8199
+   },
+   "grid": [
+    {
+     "num_leaves": 7,
+     "min_child_samples": 20,
+     "n_estimators": 150,
+     "avg_precision": 0.8085
+    },
+    {
+     "num_leaves": 7,
+     "min_child_samples": 20,
+     "n_estimators": 300,
+     "avg_precision": 0.8129
+    },
+    {
+     "num_leaves": 7,
+     "min_child_samples": 20,
+     "n_estimators": 600,
+     "avg_precision": 0.8142
+    },
+    {
+     "num_leaves": 7,
+     "min_child_samples": 50,
+     "n_estimators": 150,
+     "avg_precision": 0.8089
+    },
+    {
+     "num_leaves": 7,
+     "min_child_samples": 50,
+     "n_estimators": 300,
+     "avg_precision": 0.8132
+    },
+    {
+     "num_leaves": 7,
+     "min_child_samples": 50,
+     "n_estimators": 600,
+     "avg_precision": 0.8145
+    },
+    {
+     "num_leaves": 7,
+     "min_child_samples": 200,
+     "n_estimators": 150,
+     "avg_precision": 0.8085
+    },
+    {
+     "num_leaves": 7,
+     "min_child_samples": 200,
+     "n_estimators": 300,
+     "avg_precision": 0.8129
+    },
+    {
+     "num_leaves": 7,
+     "min_child_samples": 200,
+     "n_estimators": 600,
+     "avg_precision": 0.8156
+    },
+    {
+     "num_leaves": 15,
+     "min_child_samples": 20,
+     "n_estimators": 150,
+     "avg_precision": 0.8111
+    },
+    {
+     "num_leaves": 15,
+     "min_child_samples": 20,
+     "n_estimators": 300,
+     "avg_precision": 0.8157
+    },
+    {
+     "num_leaves": 15,
+     "min_child_samples": 20,
+     "n_estimators": 600,
+     "avg_precision": 0.8176
+    },
+    {
+     "num_leaves": 15,
+     "min_child_samples": 50,
+     "n_estimators": 150,
+     "avg_precision": 0.8116
+    },
+    {
+     "num_leaves": 15,
+     "min_child_samples": 50,
+     "n_estimators": 300,
+     "avg_precision": 0.8155
+    },
+    {
+     "num_leaves": 15,
+     "min_child_samples": 50,
+     "n_estimators": 600,
+     "avg_precision": 0.8161
+    },
+    {
+     "num_leaves": 15,
+     "min_child_samples": 200,
+     "n_estimators": 150,
+     "avg_precision": 0.813
+    },
+    {
+     "num_leaves": 15,
+     "min_child_samples": 200,
+     "n_estimators": 300,
+     "avg_precision": 0.8174
+    },
+    {
+     "num_leaves": 15,
+     "min_child_samples": 200,
+     "n_estimators": 600,
+     "avg_precision": 0.8177
+    },
+    {
+     "num_leaves": 31,
+     "min_child_samples": 20,
+     "n_estimators": 150,
+     "avg_precision": 0.8148
+    },
+    {
+     "num_leaves": 31,
+     "min_child_samples": 20,
+     "n_estimators": 300,
+     "avg_precision": 0.8178
+    },
+    {
+     "num_leaves": 31,
+     "min_child_samples": 20,
+     "n_estimators": 600,
+     "avg_precision": 0.8169
+    },
+    {
+     "num_leaves": 31,
+     "min_child_samples": 50,
+     "n_estimators": 150,
+     "avg_precision": 0.8153
+    },
+    {
+     "num_leaves": 31,
+     "min_child_samples": 50,
+     "n_estimators": 300,
+     "avg_precision": 0.8175
+    },
+    {
+     "num_leaves": 31,
+     "min_child_samples": 50,
+     "n_estimators": 600,
+     "avg_precision": 0.8165
+    },
+    {
+     "num_leaves": 31,
+     "min_child_samples": 200,
+     "n_estimators": 150,
+     "avg_precision": 0.8179
+    },
+    {
+     "num_leaves": 31,
+     "min_child_samples": 200,
+     "n_estimators": 300,
+     "avg_precision": 0.8199
+    },
+    {
+     "num_leaves": 31,
+     "min_child_samples": 200,
+     "n_estimators": 600,
+     "avg_precision": 0.8165
+    }
+   ]
+  },
+  "state": {
+   "default": {
+    "num_leaves": 15,
+    "min_child_samples": 50,
+    "n_estimators": 300,
+    "avg_precision": 0.8303
+   },
+   "best": {
+    "num_leaves": 31,
+    "min_child_samples": 200,
+    "n_estimators": 300,
+    "avg_precision": 0.8347
+   },
+   "grid": [
+    {
+     "num_leaves": 7,
+     "min_child_samples": 20,
+     "n_estimators": 150,
+     "avg_precision": 0.816
+    },
+    {
+     "num_leaves": 7,
+     "min_child_samples": 20,
+     "n_estimators": 300,
+     "avg_precision": 0.826
+    },
+    {
+     "num_leaves": 7,
+     "min_child_samples": 20,
+     "n_estimators": 600,
+     "avg_precision": 0.8276
+    },
+    {
+     "num_leaves": 7,
+     "min_child_samples": 50,
+     "n_estimators": 150,
+     "avg_precision": 0.8164
+    },
+    {
+     "num_leaves": 7,
+     "min_child_samples": 50,
+     "n_estimators": 300,
+     "avg_precision": 0.8262
+    },
+    {
+     "num_leaves": 7,
+     "min_child_samples": 50,
+     "n_estimators": 600,
+     "avg_precision": 0.8273
+    },
+    {
+     "num_leaves": 7,
+     "min_child_samples": 200,
+     "n_estimators": 150,
+     "avg_precision": 0.8162
+    },
+    {
+     "num_leaves": 7,
+     "min_child_samples": 200,
+     "n_estimators": 300,
+     "avg_precision": 0.8271
+    },
+    {
+     "num_leaves": 7,
+     "min_child_samples": 200,
+     "n_estimators": 600,
+     "avg_precision": 0.8293
+    },
+    {
+     "num_leaves": 15,
+     "min_child_samples": 20,
+     "n_estimators": 150,
+     "avg_precision": 0.8245
+    },
+    {
+     "num_leaves": 15,
+     "min_child_samples": 20,
+     "n_estimators": 300,
+     "avg_precision": 0.8302
+    },
+    {
+     "num_leaves": 15,
+     "min_child_samples": 20,
+     "n_estimators": 600,
+     "avg_precision": 0.8294
+    },
+    {
+     "num_leaves": 15,
+     "min_child_samples": 50,
+     "n_estimators": 150,
+     "avg_precision": 0.8249
+    },
+    {
+     "num_leaves": 15,
+     "min_child_samples": 50,
+     "n_estimators": 300,
+     "avg_precision": 0.8303
+    },
+    {
+     "num_leaves": 15,
+     "min_child_samples": 50,
+     "n_estimators": 600,
+     "avg_precision": 0.8301
+    },
+    {
+     "num_leaves": 15,
+     "min_child_samples": 200,
+     "n_estimators": 150,
+     "avg_precision": 0.8255
+    },
+    {
+     "num_leaves": 15,
+     "min_child_samples": 200,
+     "n_estimators": 300,
+     "avg_precision": 0.8323
+    },
+    {
+     "num_leaves": 15,
+     "min_child_samples": 200,
+     "n_estimators": 600,
+     "avg_precision": 0.8324
+    },
+    {
+     "num_leaves": 31,
+     "min_child_samples": 20,
+     "n_estimators": 150,
+     "avg_precision": 0.8296
+    },
+    {
+     "num_leaves": 31,
+     "min_child_samples": 20,
+     "n_estimators": 300,
+     "avg_precision": 0.832
+    },
+    {
+     "num_leaves": 31,
+     "min_child_samples": 20,
+     "n_estimators": 600,
+     "avg_precision": 0.8298
+    },
+    {
+     "num_leaves": 31,
+     "min_child_samples": 50,
+     "n_estimators": 150,
+     "avg_precision": 0.8309
+    },
+    {
+     "num_leaves": 31,
+     "min_child_samples": 50,
+     "n_estimators": 300,
+     "avg_precision": 0.8326
+    },
+    {
+     "num_leaves": 31,
+     "min_child_samples": 50,
+     "n_estimators": 600,
+     "avg_precision": 0.8301
+    },
+    {
+     "num_leaves": 31,
+     "min_child_samples": 200,
+     "n_estimators": 150,
+     "avg_precision": 0.8316
+    },
+    {
+     "num_leaves": 31,
+     "min_child_samples": 200,
+     "n_estimators": 300,
+     "avg_precision": 0.8347
+    },
+    {
+     "num_leaves": 31,
+     "min_child_samples": 200,
+     "n_estimators": 600,
+     "avg_precision": 0.8334
+    }
+   ]
+  }
+ },
+ "flood": {
+  "history": {
+   "default": {
+    "num_leaves": 15,
+    "min_child_samples": 50,
+    "n_estimators": 300,
+    "avg_precision": 0.2158
+   },
+   "best": {
+    "num_leaves": 7,
+    "min_child_samples": 50,
+    "n_estimators": 600,
+    "avg_precision": 0.2188
+   },
+   "grid": [
+    {
+     "num_leaves": 7,
+     "min_child_samples": 20,
+     "n_estimators": 150,
+     "avg_precision": 0.2116
+    },
+    {
+     "num_leaves": 7,
+     "min_child_samples": 20,
+     "n_estimators": 300,
+     "avg_precision": 0.2097
+    },
+    {
+     "num_leaves": 7,
+     "min_child_samples": 20,
+     "n_estimators": 600,
+     "avg_precision": 0.2126
+    },
+    {
+     "num_leaves": 7,
+     "min_child_samples": 50,
+     "n_estimators": 150,
+     "avg_precision": 0.2141
+    },
+    {
+     "num_leaves": 7,
+     "min_child_samples": 50,
+     "n_estimators": 300,
+     "avg_precision": 0.2131
+    },
+    {
+     "num_leaves": 7,
+     "min_child_samples": 50,
+     "n_estimators": 600,
+     "avg_precision": 0.2188
+    },
+    {
+     "num_leaves": 7,
+     "min_child_samples": 200,
+     "n_estimators": 150,
+     "avg_precision": 0.2127
+    },
+    {
+     "num_leaves": 7,
+     "min_child_samples": 200,
+     "n_estimators": 300,
+     "avg_precision": 0.2132
+    },
+    {
+     "num_leaves": 7,
+     "min_child_samples": 200,
+     "n_estimators": 600,
+     "avg_precision": 0.2153
+    },
+    {
+     "num_leaves": 15,
+     "min_child_samples": 20,
+     "n_estimators": 150,
+     "avg_precision": 0.2176
+    },
+    {
+     "num_leaves": 15,
+     "min_child_samples": 20,
+     "n_estimators": 300,
+     "avg_precision": 0.2179
+    },
+    {
+     "num_leaves": 15,
+     "min_child_samples": 20,
+     "n_estimators": 600,
+     "avg_precision": 0.2144
+    },
+    {
+     "num_leaves": 15,
+     "min_child_samples": 50,
+     "n_estimators": 150,
+     "avg_precision": 0.2146
+    },
+    {
+     "num_leaves": 15,
+     "min_child_samples": 50,
+     "n_estimators": 300,
+     "avg_precision": 0.2158
+    },
+    {
+     "num_leaves": 15,
+     "min_child_samples": 50,
+     "n_estimators": 600,
+     "avg_precision": 0.2155
+    },
+    {
+     "num_leaves": 15,
+     "min_child_samples": 200,
+     "n_estimators": 150,
+     "avg_precision": 0.2111
+    },
+    {
+     "num_leaves": 15,
+     "min_child_samples": 200,
+     "n_estimators": 300,
+     "avg_precision": 0.2121
+    },
+    {
+     "num_leaves": 15,
+     "min_child_samples": 200,
+     "n_estimators": 600,
+     "avg_precision": 0.2096
+    },
+    {
+     "num_leaves": 31,
+     "min_child_samples": 20,
+     "n_estimators": 150,
+     "avg_precision": 0.2049
+    },
+    {
+     "num_leaves": 31,
+     "min_child_samples": 20,
+     "n_estimators": 300,
+     "avg_precision": 0.2069
+    },
+    {
+     "num_leaves": 31,
+     "min_child_samples": 20,
+     "n_estimators": 600,
+     "avg_precision": 0.2039
+    },
+    {
+     "num_leaves": 31,
+     "min_child_samples": 50,
+     "n_estimators": 150,
+     "avg_precision": 0.2098
+    },
+    {
+     "num_leaves": 31,
+     "min_child_samples": 50,
+     "n_estimators": 300,
+     "avg_precision": 0.208
+    },
+    {
+     "num_leaves": 31,
+     "min_child_samples": 50,
+     "n_estimators": 600,
+     "avg_precision": 0.1982
+    },
+    {
+     "num_leaves": 31,
+     "min_child_samples": 200,
+     "n_estimators": 150,
+     "avg_precision": 0.2168
+    },
+    {
+     "num_leaves": 31,
+     "min_child_samples": 200,
+     "n_estimators": 300,
+     "avg_precision": 0.2115
+    },
+    {
+     "num_leaves": 31,
+     "min_child_samples": 200,
+     "n_estimators": 600,
+     "avg_precision": 0.2018
+    }
+   ]
+  },
+  "state": {
+   "default": {
+    "num_leaves": 15,
+    "min_child_samples": 50,
+    "n_estimators": 300,
+    "avg_precision": 0.2276
+   },
+   "best": {
+    "num_leaves": 7,
+    "min_child_samples": 20,
+    "n_estimators": 600,
+    "avg_precision": 0.2355
+   },
+   "grid": [
+    {
+     "num_leaves": 7,
+     "min_child_samples": 20,
+     "n_estimators": 150,
+     "avg_precision": 0.2216
+    },
+    {
+     "num_leaves": 7,
+     "min_child_samples": 20,
+     "n_estimators": 300,
+     "avg_precision": 0.2289
+    },
+    {
+     "num_leaves": 7,
+     "min_child_samples": 20,
+     "n_estimators": 600,
+     "avg_precision": 0.2355
+    },
+    {
+     "num_leaves": 7,
+     "min_child_samples": 50,
+     "n_estimators": 150,
+     "avg_precision": 0.2218
+    },
+    {
+     "num_leaves": 7,
+     "min_child_samples": 50,
+     "n_estimators": 300,
+     "avg_precision": 0.2266
+    },
+    {
+     "num_leaves": 7,
+     "min_child_samples": 50,
+     "n_estimators": 600,
+     "avg_precision": 0.2292
+    },
+    {
+     "num_leaves": 7,
+     "min_child_samples": 200,
+     "n_estimators": 150,
+     "avg_precision": 0.2168
+    },
+    {
+     "num_leaves": 7,
+     "min_child_samples": 200,
+     "n_estimators": 300,
+     "avg_precision": 0.2187
+    },
+    {
+     "num_leaves": 7,
+     "min_child_samples": 200,
+     "n_estimators": 600,
+     "avg_precision": 0.2203
+    },
+    {
+     "num_leaves": 15,
+     "min_child_samples": 20,
+     "n_estimators": 150,
+     "avg_precision": 0.229
+    },
+    {
+     "num_leaves": 15,
+     "min_child_samples": 20,
+     "n_estimators": 300,
+     "avg_precision": 0.2341
+    },
+    {
+     "num_leaves": 15,
+     "min_child_samples": 20,
+     "n_estimators": 600,
+     "avg_precision": 0.2334
+    },
+    {
+     "num_leaves": 15,
+     "min_child_samples": 50,
+     "n_estimators": 150,
+     "avg_precision": 0.2243
+    },
+    {
+     "num_leaves": 15,
+     "min_child_samples": 50,
+     "n_estimators": 300,
+     "avg_precision": 0.2276
+    },
+    {
+     "num_leaves": 15,
+     "min_child_samples": 50,
+     "n_estimators": 600,
+     "avg_precision": 0.2265
+    },
+    {
+     "num_leaves": 15,
+     "min_child_samples": 200,
+     "n_estimators": 150,
+     "avg_precision": 0.2282
+    },
+    {
+     "num_leaves": 15,
+     "min_child_samples": 200,
+     "n_estimators": 300,
+     "avg_precision": 0.2291
+    },
+    {
+     "num_leaves": 15,
+     "min_child_samples": 200,
+     "n_estimators": 600,
+     "avg_precision": 0.2208
+    },
+    {
+     "num_leaves": 31,
+     "min_child_samples": 20,
+     "n_estimators": 150,
+     "avg_precision": 0.2299
+    },
+    {
+     "num_leaves": 31,
+     "min_child_samples": 20,
+     "n_estimators": 300,
+     "avg_precision": 0.2331
+    },
+    {
+     "num_leaves": 31,
+     "min_child_samples": 20,
+     "n_estimators": 600,
+     "avg_precision": 0.2349
+    },
+    {
+     "num_leaves": 31,
+     "min_child_samples": 50,
+     "n_estimators": 150,
+     "avg_precision": 0.2246
+    },
+    {
+     "num_leaves": 31,
+     "min_child_samples": 50,
+     "n_estimators": 300,
+     "avg_precision": 0.2247
+    },
+    {
+     "num_leaves": 31,
+     "min_child_samples": 50,
+     "n_estimators": 600,
+     "avg_precision": 0.2229
+    },
+    {
+     "num_leaves": 31,
+     "min_child_samples": 200,
+     "n_estimators": 150,
+     "avg_precision": 0.2323
+    },
+    {
+     "num_leaves": 31,
+     "min_child_samples": 200,
+     "n_estimators": 300,
+     "avg_precision": 0.23
+    },
+    {
+     "num_leaves": 31,
+     "min_child_samples": 200,
+     "n_estimators": 600,
+     "avg_precision": 0.2203
+    }
+   ]
+  }
+ },
+ "fire": {
+  "history": {
+   "default": {
+    "num_leaves": 15,
+    "min_child_samples": 50,
+    "n_estimators": 300,
+    "avg_precision": 0.0671
+   },
+   "best": {
+    "num_leaves": 15,
+    "min_child_samples": 20,
+    "n_estimators": 150,
+    "avg_precision": 0.0866
+   },
+   "grid": [
+    {
+     "num_leaves": 7,
+     "min_child_samples": 20,
+     "n_estimators": 150,
+     "avg_precision": 0.0798
+    },
+    {
+     "num_leaves": 7,
+     "min_child_samples": 20,
+     "n_estimators": 300,
+     "avg_precision": 0.0797
+    },
+    {
+     "num_leaves": 7,
+     "min_child_samples": 20,
+     "n_estimators": 600,
+     "avg_precision": 0.0755
+    },
+    {
+     "num_leaves": 7,
+     "min_child_samples": 50,
+     "n_estimators": 150,
+     "avg_precision": 0.0725
+    },
+    {
+     "num_leaves": 7,
+     "min_child_samples": 50,
+     "n_estimators": 300,
+     "avg_precision": 0.0732
+    },
+    {
+     "num_leaves": 7,
+     "min_child_samples": 50,
+     "n_estimators": 600,
+     "avg_precision": 0.0705
+    },
+    {
+     "num_leaves": 7,
+     "min_child_samples": 200,
+     "n_estimators": 150,
+     "avg_precision": 0.072
+    },
+    {
+     "num_leaves": 7,
+     "min_child_samples": 200,
+     "n_estimators": 300,
+     "avg_precision": 0.0737
+    },
+    {
+     "num_leaves": 7,
+     "min_child_samples": 200,
+     "n_estimators": 600,
+     "avg_precision": 0.0715
+    },
+    {
+     "num_leaves": 15,
+     "min_child_samples": 20,
+     "n_estimators": 150,
+     "avg_precision": 0.0866
+    },
+    {
+     "num_leaves": 15,
+     "min_child_samples": 20,
+     "n_estimators": 300,
+     "avg_precision": 0.0762
+    },
+    {
+     "num_leaves": 15,
+     "min_child_samples": 20,
+     "n_estimators": 600,
+     "avg_precision": 0.0738
+    },
+    {
+     "num_leaves": 15,
+     "min_child_samples": 50,
+     "n_estimators": 150,
+     "avg_precision": 0.0705
+    },
+    {
+     "num_leaves": 15,
+     "min_child_samples": 50,
+     "n_estimators": 300,
+     "avg_precision": 0.0671
+    },
+    {
+     "num_leaves": 15,
+     "min_child_samples": 50,
+     "n_estimators": 600,
+     "avg_precision": 0.0655
+    },
+    {
+     "num_leaves": 15,
+     "min_child_samples": 200,
+     "n_estimators": 150,
+     "avg_precision": 0.0742
+    },
+    {
+     "num_leaves": 15,
+     "min_child_samples": 200,
+     "n_estimators": 300,
+     "avg_precision": 0.0703
+    },
+    {
+     "num_leaves": 15,
+     "min_child_samples": 200,
+     "n_estimators": 600,
+     "avg_precision": 0.0711
+    },
+    {
+     "num_leaves": 31,
+     "min_child_samples": 20,
+     "n_estimators": 150,
+     "avg_precision": 0.0765
+    },
+    {
+     "num_leaves": 31,
+     "min_child_samples": 20,
+     "n_estimators": 300,
+     "avg_precision": 0.0714
+    },
+    {
+     "num_leaves": 31,
+     "min_child_samples": 20,
+     "n_estimators": 600,
+     "avg_precision": 0.0619
+    },
+    {
+     "num_leaves": 31,
+     "min_child_samples": 50,
+     "n_estimators": 150,
+     "avg_precision": 0.0665
+    },
+    {
+     "num_leaves": 31,
+     "min_child_samples": 50,
+     "n_estimators": 300,
+     "avg_precision": 0.066
+    },
+    {
+     "num_leaves": 31,
+     "min_child_samples": 50,
+     "n_estimators": 600,
+     "avg_precision": 0.0664
+    },
+    {
+     "num_leaves": 31,
+     "min_child_samples": 200,
+     "n_estimators": 150,
+     "avg_precision": 0.0735
+    },
+    {
+     "num_leaves": 31,
+     "min_child_samples": 200,
+     "n_estimators": 300,
+     "avg_precision": 0.0715
+    },
+    {
+     "num_leaves": 31,
+     "min_child_samples": 200,
+     "n_estimators": 600,
+     "avg_precision": 0.0695
+    }
+   ]
+  },
+  "state": {
+   "default": {
+    "num_leaves": 15,
+    "min_child_samples": 50,
+    "n_estimators": 300,
+    "avg_precision": 0.1154
+   },
+   "best": {
+    "num_leaves": 15,
+    "min_child_samples": 200,
+    "n_estimators": 300,
+    "avg_precision": 0.1227
+   },
+   "grid": [
+    {
+     "num_leaves": 7,
+     "min_child_samples": 20,
+     "n_estimators": 150,
+     "avg_precision": 0.1021
+    },
+    {
+     "num_leaves": 7,
+     "min_child_samples": 20,
+     "n_estimators": 300,
+     "avg_precision": 0.1015
+    },
+    {
+     "num_leaves": 7,
+     "min_child_samples": 20,
+     "n_estimators": 600,
+     "avg_precision": 0.1015
+    },
+    {
+     "num_leaves": 7,
+     "min_child_samples": 50,
+     "n_estimators": 150,
+     "avg_precision": 0.1151
+    },
+    {
+     "num_leaves": 7,
+     "min_child_samples": 50,
+     "n_estimators": 300,
+     "avg_precision": 0.119
+    },
+    {
+     "num_leaves": 7,
+     "min_child_samples": 50,
+     "n_estimators": 600,
+     "avg_precision": 0.1158
+    },
+    {
+     "num_leaves": 7,
+     "min_child_samples": 200,
+     "n_estimators": 150,
+     "avg_precision": 0.1138
+    },
+    {
+     "num_leaves": 7,
+     "min_child_samples": 200,
+     "n_estimators": 300,
+     "avg_precision": 0.1194
+    },
+    {
+     "num_leaves": 7,
+     "min_child_samples": 200,
+     "n_estimators": 600,
+     "avg_precision": 0.1081
+    },
+    {
+     "num_leaves": 15,
+     "min_child_samples": 20,
+     "n_estimators": 150,
+     "avg_precision": 0.1024
+    },
+    {
+     "num_leaves": 15,
+     "min_child_samples": 20,
+     "n_estimators": 300,
+     "avg_precision": 0.1022
+    },
+    {
+     "num_leaves": 15,
+     "min_child_samples": 20,
+     "n_estimators": 600,
+     "avg_precision": 0.0972
+    },
+    {
+     "num_leaves": 15,
+     "min_child_samples": 50,
+     "n_estimators": 150,
+     "avg_precision": 0.1114
+    },
+    {
+     "num_leaves": 15,
+     "min_child_samples": 50,
+     "n_estimators": 300,
+     "avg_precision": 0.1154
+    },
+    {
+     "num_leaves": 15,
+     "min_child_samples": 50,
+     "n_estimators": 600,
+     "avg_precision": 0.1027
+    },
+    {
+     "num_leaves": 15,
+     "min_child_samples": 200,
+     "n_estimators": 150,
+     "avg_precision": 0.1224
+    },
+    {
+     "num_leaves": 15,
+     "min_child_samples": 200,
+     "n_estimators": 300,
+     "avg_precision": 0.1227
+    },
+    {
+     "num_leaves": 15,
+     "min_child_samples": 200,
+     "n_estimators": 600,
+     "avg_precision": 0.1101
+    },
+    {
+     "num_leaves": 31,
+     "min_child_samples": 20,
+     "n_estimators": 150,
+     "avg_precision": 0.0747
+    },
+    {
+     "num_leaves": 31,
+     "min_child_samples": 20,
+     "n_estimators": 300,
+     "avg_precision": 0.074
+    },
+    {
+     "num_leaves": 31,
+     "min_child_samples": 20,
+     "n_estimators": 600,
+     "avg_precision": 0.0709
+    },
+    {
+     "num_leaves": 31,
+     "min_child_samples": 50,
+     "n_estimators": 150,
+     "avg_precision": 0.0983
+    },
+    {
+     "num_leaves": 31,
+     "min_child_samples": 50,
+     "n_estimators": 300,
+     "avg_precision": 0.094
+    },
+    {
+     "num_leaves": 31,
+     "min_child_samples": 50,
+     "n_estimators": 600,
+     "avg_precision": 0.0842
+    },
+    {
+     "num_leaves": 31,
+     "min_child_samples": 200,
+     "n_estimators": 150,
+     "avg_precision": 0.1175
+    },
+    {
+     "num_leaves": 31,
+     "min_child_samples": 200,
+     "n_estimators": 300,
+     "avg_precision": 0.1038
+    },
+    {
+     "num_leaves": 31,
+     "min_child_samples": 200,
+     "n_estimators": 600,
+     "avg_precision": 0.0909
+    }
+   ]
+  }
+ }
+}

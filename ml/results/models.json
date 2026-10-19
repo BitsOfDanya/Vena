@@ -87,7 +87,10 @@
    "period": "2025-2026H1",
    "avg_precision": 0.448,
    "roc_auc": 0.6657,
-   "ece": 0.0364
+   "ece": 0.0364,
+   "base_rate": null,
+   "kept_share": null,
+   "filtered_share": null
   },
   "lead_time": {
    "episode_recall": 0.0257,
@@ -330,7 +333,114 @@
    "period": "2026H1",
    "avg_precision": 0.9088,
    "roc_auc": 0.7393,
-   "ece": 0.0211
+   "ece": 0.0211,
+   "base_rate": 0.7922,
+   "kept_share": 0.8964,
+   "filtered_share": 0.3626
+  },
+  "lead_time": null,
+  "daily_top_k": null,
+  "drift_psi": null
+ },
+ {
+  "name": "object_power_24h",
+  "scenario": "power_loss",
+  "sensor": "объект: фазы и реестр инцидентов",
+  "target": "отключение питания объекта по реестру за сутки",
+  "horizon_hours": 24,
+  "recipe": "lightgbm",
+  "features": 50,
+  "train_years": "2019-2025",
+  "version": "2026-10-17",
+  "calibration": {
+   "method": "isotonic",
+   "fit_period": "2025"
+  },
+  "held_out": {
+   "period": "2026H1",
+   "base_rate": 0.5351,
+   "avg_precision": 0.8398,
+   "roc_auc": 0.8409,
+   "precision_top5_per_day": 0.7296,
+   "ece": 0.0053
+  },
+  "lead_time": null,
+  "daily_top_k": null,
+  "drift_psi": null
+ },
+ {
+  "name": "object_flood_24h",
+  "scenario": "flooding",
+  "sensor": "объект: насосы и реестр инцидентов",
+  "target": "подтопление станции по реестру за сутки",
+  "horizon_hours": 24,
+  "recipe": "lightgbm",
+  "features": 50,
+  "train_years": "2019-2025",
+  "version": "2026-10-17",
+  "calibration": {
+   "method": "isotonic",
+   "fit_period": "2025"
+  },
+  "held_out": {
+   "period": "2026H1",
+   "base_rate": 0.0677,
+   "avg_precision": 0.28,
+   "roc_auc": 0.8381,
+   "precision_top5_per_day": 0.1911,
+   "ece": 0.0029
+  },
+  "lead_time": null,
+  "daily_top_k": null,
+  "drift_psi": null
+ },
+ {
+  "name": "object_flood_6h",
+  "scenario": "flooding",
+  "sensor": "объект: реестр инцидентов по часам",
+  "target": "подтопление станции по реестру в ближайшие 6 ч",
+  "horizon_hours": 6,
+  "recipe": "lightgbm",
+  "features": 7,
+  "train_years": "2019-2025",
+  "version": "2026-10-17",
+  "calibration": {
+   "method": "isotonic",
+   "fit_period": "2025"
+  },
+  "held_out": {
+   "period": "2026H1",
+   "base_rate": 0.0213,
+   "avg_precision": 0.1848,
+   "roc_auc": 0.8405,
+   "precision_top5_per_day": null,
+   "ece": 0.0038
+  },
+  "lead_time": null,
+  "daily_top_k": null,
+  "drift_psi": null
+ },
+ {
+  "name": "object_fire_24h",
+  "scenario": "fire",
+  "sensor": "объект: дымовые датчики и реестр инцидентов",
+  "target": "пожарный инцидент по реестру за сутки",
+  "horizon_hours": 24,
+  "recipe": "lightgbm",
+  "features": 50,
+  "train_years": "2019-2025",
+  "version": "2026-10-17",
+  "calibration": {
+   "method": "isotonic",
+   "fit_period": "2025"
+  },
+  "held_out": {
+   "period": "2026H1",
+   "base_rate": 0.0192,
+   "avg_precision": 0.214,
+   "roc_auc": 0.837,
+   "precision_top5_per_day": 0.0715,
+   "ece": 0.0013
   },
   "lead_time": null,
   "daily_top_k": null,

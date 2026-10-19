@@ -1,0 +1,138 @@
+{
+  "feature_columns": [
+    "month",
+    "weekday",
+    "fire_1d",
+    "fire_7d",
+    "fire_30d",
+    "fire_90d",
+    "fire_days_since",
+    "flood_1d",
+    "flood_7d",
+    "flood_30d",
+    "flood_90d",
+    "flood_days_since",
+    "power_1d",
+    "power_7d",
+    "power_30d",
+    "power_90d",
+    "power_days_since",
+    "phase_Обесточен_1d",
+    "phase_Обесточен_7d",
+    "phase_Обесточен_30d",
+    "phase_Неисправен_1d",
+    "phase_Неисправен_7d",
+    "phase_Неисправен_30d",
+    "phase_Неопределен_1d",
+    "phase_Неопределен_7d",
+    "phase_Неопределен_30d",
+    "phase_channels_1d",
+    "pump_Затоплен_1d",
+    "pump_Затоплен_7d",
+    "pump_Затоплен_30d",
+    "pump_Неисправен_1d",
+    "pump_Неисправен_7d",
+    "pump_Неисправен_30d",
+    "pump_Обесточен_1d",
+    "pump_Обесточен_7d",
+    "pump_Обесточен_30d",
+    "pump_Включен_1d",
+    "pump_Включен_7d",
+    "pump_Включен_30d",
+    "pump_channels_1d",
+    "smoke_Обнаружен дым_1d",
+    "smoke_Обнаружен дым_7d",
+    "smoke_Обнаружен дым_30d",
+    "smoke_Неисправен_1d",
+    "smoke_Неисправен_7d",
+    "smoke_Неисправен_30d",
+    "smoke_Неопределен_1d",
+    "smoke_Неопределен_7d",
+    "smoke_Неопределен_30d",
+    "smoke_channels_1d"
+  ],
+  "model_config": {
+    "label": "Отключение питания объекта",
+    "rule": "«Обесточен» у трёх и более фидеров одного объекта в пределах 5 минут",
+    "kind": "power",
+    "scenario": "power_loss",
+    "recipe": "lightgbm",
+    "calibration": {
+      "method": "isotonic",
+      "fit_period": "2025"
+    },
+    "variant": "state",
+    "source_model": "phase_24h",
+    "horizon_hours": 24,
+    "calibrated": true,
+    "target": "инцидент реестра на объекте в течение суток",
+    "features": "история инцидентов объекта и число состояний его каналов за 1, 7, 30 суток: обесточен, неисправен, затоплен, обнаружен дым"
+  },
+  "training_period": {
+    "train_years": "2019-2025"
+  },
+  "version": "2026-10-17",
+  "metrics_snapshot": {
+    "selection_2025": {
+      "channel": {
+        "avg_precision": 0.7667,
+        "base_rate": 0.5344,
+        "top_k": {
+          "3": 0.7254,
+          "5": 0.7019,
+          "10": 0.641
+        }
+      },
+      "history": {
+        "avg_precision": 0.8199,
+        "base_rate": 0.5344,
+        "top_k": {
+          "3": 0.7291,
+          "5": 0.7113,
+          "10": 0.6691
+        }
+      },
+      "state": {
+        "avg_precision": 0.8347,
+        "base_rate": 0.5344,
+        "top_k": {
+          "3": 0.7429,
+          "5": 0.7306,
+          "10": 0.6752
+        }
+      },
+      "rule": {
+        "avg_precision": 0.6683,
+        "base_rate": 0.5344,
+        "top_k": {
+          "3": 0.6814,
+          "5": 0.6716,
+          "10": 0.6581
+        }
+      },
+      "blend": {
+        "avg_precision": 0.8206,
+        "base_rate": 0.5344,
+        "top_k": {
+          "3": 0.7447,
+          "5": 0.719,
+          "10": 0.6639
+        }
+      }
+    },
+    "test_2026h1": {
+      "avg_precision": 0.8398,
+      "roc_auc": 0.8409,
+      "base_rate": 0.5351,
+      "top3": 0.7374,
+      "top5": 0.7296,
+      "ece": 0.0053,
+      "recall_top3": 0.2176,
+      "recall_at_precision_0_7": 0.9082,
+      "rule_avg_precision": 0.6885,
+      "channel_avg_precision": 0.7588,
+      "history_avg_precision": 0.8272,
+      "state_avg_precision": 0.8398
+    }
+  }
+}

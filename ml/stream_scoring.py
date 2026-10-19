@@ -1,5 +1,7 @@
 import json
 import os
+import re
+import shutil
 import time
 
 import pandas as pd
@@ -10,6 +12,9 @@ from pipeline.prospective import ProspectiveMonitor
 
 EVENT_COLUMNS = ["channel_id", "ts", "alarm_flag", "raw_value"]
 PROCESSED_RETENTION_DAYS = 7
+CONTROL = "control.json"
+ACK = "control.ack.json"
+MARKER = ".replay_id"
 
 
 def log(message):
@@ -40,6 +45,9 @@ class StreamScorer:
         self.predictions = {}
         self.monitor = ProspectiveMonitor(self.history_end)
         self.history = None
+        self.registry = None
+        self.registry_day = None
+        self.recent_states = {}
 
     def refresh_history(self):
         self.history = score_snapshot.location_history(self.events, self.reference, self.now)
@@ -75,8 +83,45 @@ class StreamScorer:
             self.now = max(self.now, batch["ts"].max())
         return affected
 
+    def object_section(self, predictions):
+        from pipeline import context, object_risk
+
+        if not object_risk.available():
+            return None, None
+        day = pd.Timestamp(self.now).normalize()
+        if self.registry_day != day:
+            self.registry = object_risk.registry_from(self.events, context.locations()[0])
+            since = day - pd.Timedelta(days=max(object_risk.STATE_WINDOWS) + 1)
+            self.recent_states = {
+                sensor: frame.loc[(frame["ts"] >= since) & frame["raw_value"].isin(states)]
+                for sensor, states in object_risk.STATES.items()
+                if (frame := self.events.get(sensor)) is not None
+            }
+            self.registry_day = day
+        pumps = self.events.get(object_risk.SENSORS["flood"])
+        recent_flood = None
+        if pumps is not None:
+            window = pumps.loc[pumps["ts"] >= self.now - pd.Timedelta(days=365), ["channel_id", "ts", "raw_value"]]
+            recent_flood = object_risk.registry_from({object_risk.SENSORS["flood"]: window}, context.locations()[0])["flood"]
+        return score_snapshot.object_section(self.now, predictions, self.recent_states, self.registry, recent_flood)
+
+    def object_outcomes(self):
+        from pipeline import context, object_risk
+
+        if not object_risk.available():
+            return {}
+        since = self.monitor.start - pd.Timedelta(days=1)
+        recent = {
+            sensor: frame.loc[frame["ts"] >= since]
+            for sensor, frame in self.events.items()
+            if sensor in object_risk.SENSORS.values()
+        }
+        return self.monitor.evaluate_objects(object_risk.registry_from(recent, context.locations()[0]), self.now)
+
     def publish(self, output, carried, stream=None):
         predictions = list(self.predictions.values())
+        objects, objects_meta = self.object_section(predictions)
+        self.monitor.record_objects(objects, self.now)
         temporary = f"{output}.tmp"
         score_snapshot.write_snapshot(
             [{key: value for key, value in row.items() if key != "target_state"} for row in predictions],
@@ -89,9 +134,12 @@ class StreamScorer:
             incidents=score_snapshot.incident_probabilities(predictions),
             stream=stream,
             history=self.history,
+            objects=objects,
+            objects_meta=objects_meta,
         )
         os.replace(temporary, output)
         report = self.monitor.evaluate(self.events, self.now)
+        report["objects"] = self.object_outcomes()
         prospective = os.path.join(os.path.dirname(output), "prospective.json")
         with open(f"{prospective}.tmp", "w", encoding="utf-8") as handle:
             json.dump(report, handle, ensure_ascii=False, indent=1)
@@ -149,13 +197,94 @@ def carried_sections(path):
     return {key: payload.get(key) for key in ("alarms", "access_events", "access_routes", "weather_forecast")}
 
 
+def read_json(path):
+    try:
+        with open(path, encoding="utf-8") as handle:
+            return json.load(handle)
+    except (OSError, ValueError):
+        return None
+
+
+def write_json(path, payload):
+    with open(f"{path}.tmp", "w", encoding="utf-8") as handle:
+        json.dump(payload, handle, ensure_ascii=False)
+    os.replace(f"{path}.tmp", path)
+
+
+def parse_control(control):
+    if not isinstance(control, dict):
+        return None
+    replay_id = control.get("replay_id")
+    if not isinstance(replay_id, str) or not replay_id:
+        return None
+    until = control.get("history_until")
+    if until is None:
+        return replay_id, None
+    try:
+        moment = pd.Timestamp(until)
+    except (TypeError, ValueError):
+        return None
+    if pd.isna(moment):
+        return None
+    return replay_id, moment.tz_localize(None) if moment.tzinfo else moment
+
+
+def control_reset(control, current):
+    parsed = parse_control(control)
+    if parsed is None or parsed[0] == current:
+        return None
+    return parsed
+
+
+def archive_events(inbox, processed, label):
+    target = os.path.join(processed, "archive-" + re.sub(r"[^A-Za-z0-9_.-]", "_", label))
+    os.makedirs(target, exist_ok=True)
+    for folder in (processed, inbox):
+        for name in os.listdir(folder):
+            if name.endswith(".jsonl"):
+                os.replace(os.path.join(folder, name), os.path.join(target, name))
+    expired = time.time() - PROCESSED_RETENTION_DAYS * 86400
+    for name in os.listdir(processed):
+        path = os.path.join(processed, name)
+        if name.startswith("archive-") and path != target and os.path.getmtime(path) < expired:
+            shutil.rmtree(path, ignore_errors=True)
+
+
+def acknowledge(inbox, replay_id, history_end, error=None):
+    payload = {
+        "replay_id": replay_id,
+        "history_end": pd.Timestamp(history_end).isoformat(),
+        "ready_at": pd.Timestamp.now(tz="UTC").isoformat(),
+    }
+    if error:
+        payload["error"] = error
+    write_json(os.path.join(inbox, ACK), payload)
+
+
+def build_scorer(reference, history_until):
+    try:
+        return StreamScorer(reference, history_until), None
+    except ValueError as error:
+        log(f"history until {history_until} is empty, using the full journal: {error}")
+        return StreamScorer(reference), str(error)
+
+
 def run(output, inbox, poll_seconds=30, full_refresh_hours=24, history_until=None):
     os.makedirs(inbox, exist_ok=True)
     processed = os.path.join(inbox, "processed")
     os.makedirs(processed, exist_ok=True)
     heartbeat(os.path.join(os.path.dirname(output), "heartbeat"))
     reference = score_snapshot.channel_reference()
-    scorer = StreamScorer(reference, history_until)
+    control_path = os.path.join(inbox, CONTROL)
+    marker = os.path.join(processed, MARKER)
+    current = (read_json(marker) or {}).get("replay_id")
+    control = parse_control(read_json(control_path))
+    if control is not None:
+        if control[0] != current:
+            archive_events(inbox, processed, current or "live")
+            write_json(marker, {"replay_id": control[0]})
+        current, history_until = control
+    scorer, error = build_scorer(reference, history_until)
     restored, _ = read_inbox(processed)
     if len(restored):
         scorer.ingest(restored)
@@ -163,9 +292,25 @@ def run(output, inbox, poll_seconds=30, full_refresh_hours=24, history_until=Non
     scorer.refresh_history()
     scorer.score()
     scorer.publish(output, carried)
+    if control is not None:
+        acknowledge(inbox, current, scorer.history_end, error)
     log(f"initial snapshot: {len(scorer.predictions)} predictions, history until {scorer.history_end}")
     last_full = time.monotonic()
     while True:
+        reset = control_reset(read_json(control_path), current)
+        if reset is not None:
+            archive_events(inbox, processed, current or "live")
+            current, history_until = reset
+            write_json(marker, {"replay_id": current})
+            scorer, error = build_scorer(reference, history_until)
+            carried = full_sections(reference, scorer.history_end, output)
+            scorer.refresh_history()
+            scorer.score()
+            scorer.publish(output, carried)
+            acknowledge(inbox, current, scorer.history_end, error)
+            last_full = time.monotonic()
+            log(f"history reset for {current}: {len(scorer.predictions)} predictions, history until {scorer.history_end}")
+            continue
         batch, files = read_inbox(inbox)
         if files:
             received = min(os.path.getmtime(os.path.join(inbox, name)) for name in files)

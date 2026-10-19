@@ -1,0 +1,111 @@
+{
+ "target": "c30_corroborated",
+ "test": "2026H1 без серий ППР",
+ "surge": [
+  "2021-04-01",
+  "2021-07-01"
+ ],
+ "surge_alarms_in_train": 811,
+ "train_alarms": 20056,
+ "variants": {
+  "все годы": {
+   "train_alarms": 20056,
+   "all": {
+    "n": 5203,
+    "base_rate": 0.7922,
+    "avg_precision": 0.9088,
+    "roc_auc": 0.7393,
+    "threshold": 0.309,
+    "kept_corroborated": 0.8964,
+    "filtered_uncorroborated": 0.3626,
+    "flagged_share": 0.1574,
+    "precision_of_flag": 0.4786
+   },
+   "by_sensor": {
+    "Газовый датчик": {
+     "n": 563,
+     "base_rate": 0.9112,
+     "avg_precision": 0.9662,
+     "roc_auc": 0.7564,
+     "threshold": 0.309,
+     "kept_corroborated": 0.8207,
+     "filtered_uncorroborated": 0.46,
+     "flagged_share": 0.2043,
+     "precision_of_flag": 0.2
+    },
+    "Датчик дыма": {
+     "n": 4146,
+     "base_rate": 0.7892,
+     "avg_precision": 0.8973,
+     "roc_auc": 0.7182,
+     "threshold": 0.309,
+     "kept_corroborated": 0.915,
+     "filtered_uncorroborated": 0.2963,
+     "flagged_share": 0.1295,
+     "precision_of_flag": 0.4823
+    },
+    "Датчик температуры": {
+     "n": 494,
+     "base_rate": 0.6822,
+     "avg_precision": 0.9197,
+     "roc_auc": 0.8395,
+     "threshold": 0.309,
+     "kept_corroborated": 0.8309,
+     "filtered_uncorroborated": 0.7006,
+     "flagged_share": 0.3381,
+     "precision_of_flag": 0.6587
+    }
+   }
+  },
+  "без апреля–июня 2021": {
+   "train_alarms": 19245,
+   "all": {
+    "n": 5203,
+    "base_rate": 0.7922,
+    "avg_precision": 0.9048,
+    "roc_auc": 0.7285,
+    "threshold": 0.2486,
+    "kept_corroborated": 0.9139,
+    "filtered_uncorroborated": 0.2886,
+    "flagged_share": 0.1282,
+    "precision_of_flag": 0.4678
+   },
+   "by_sensor": {
+    "Газовый датчик": {
+     "n": 563,
+     "base_rate": 0.9112,
+     "avg_precision": 0.9655,
+     "roc_auc": 0.7261,
+     "threshold": 0.2486,
+     "kept_corroborated": 0.807,
+     "filtered_uncorroborated": 0.4,
+     "flagged_share": 0.2114,
+     "precision_of_flag": 0.1681
+    },
+    "Датчик дыма": {
+     "n": 4146,
+     "base_rate": 0.7892,
+     "avg_precision": 0.8927,
+     "roc_auc": 0.7087,
+     "threshold": 0.2486,
+     "kept_corroborated": 0.9355,
+     "filtered_uncorroborated": 0.2334,
+     "flagged_share": 0.1001,
+     "precision_of_flag": 0.4916
+    },
+    "Датчик температуры": {
+     "n": 494,
+     "base_rate": 0.6822,
+     "avg_precision": 0.9146,
+     "roc_auc": 0.8412,
+     "threshold": 0.2486,
+     "kept_corroborated": 0.8665,
+     "filtered_uncorroborated": 0.5605,
+     "flagged_share": 0.2692,
+     "precision_of_flag": 0.6617
+    }
+   }
+  }
+ },
+ "decision": "оставить обучение на всех годах: всплеск 2021 не ухудшает модель"
+}

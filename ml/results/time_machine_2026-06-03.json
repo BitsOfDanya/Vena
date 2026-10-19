@@ -1,0 +1,155 @@
+{
+ "window": {
+  "start": "2026-06-03T00:00:00",
+  "end": "2026-06-07T00:00:00"
+ },
+ "speed": "1 ч журнала за 10 с",
+ "events": 45874,
+ "simulation": {
+  "confirmed": 93,
+  "dismissed": 31,
+  "left": 23
+ },
+ "start": "2026-06-02T23:59:50",
+ "now": "2026-06-06T23:59:52",
+ "models": {
+  "fan_24h": {
+   "forecasts": 1037,
+   "event_rate": 0.0444,
+   "mean_probability": 0.0677,
+   "brier": 0.04,
+   "alerts": 0,
+   "alert_precision": null,
+   "episodes": 13,
+   "episodes_warned": 0,
+   "episode_recall": 0.0
+  },
+  "fan_72h": {
+   "forecasts": 260,
+   "event_rate": 0.1462,
+   "mean_probability": 0.1813,
+   "brier": 0.0991,
+   "alerts": 0,
+   "alert_precision": null,
+   "episodes": 1,
+   "episodes_warned": 0,
+   "episode_recall": 0.0
+  },
+  "flood_24h": {
+   "forecasts": 432,
+   "event_rate": 0.1065,
+   "mean_probability": 0.0654,
+   "brier": 0.0926,
+   "alerts": 2,
+   "alert_precision": 0.0,
+   "episodes": 48,
+   "episodes_warned": 0,
+   "episode_recall": 0.0
+  },
+  "phase_24h": {
+   "forecasts": 1286,
+   "event_rate": 0.5303,
+   "mean_probability": 0.55,
+   "brier": 0.1132,
+   "alerts": 665,
+   "alert_precision": 0.8662,
+   "episodes": 567,
+   "episodes_warned": 344,
+   "episode_recall": 0.6067
+  },
+  "pump_24h": {
+   "forecasts": 432,
+   "event_rate": 0.1481,
+   "mean_probability": 0.1023,
+   "brier": 0.1228,
+   "alerts": 0,
+   "alert_precision": null,
+   "episodes": 77,
+   "episodes_warned": 0,
+   "episode_recall": 0.0
+  },
+  "pump_72h": {
+   "forecasts": 148,
+   "event_rate": 0.2162,
+   "mean_probability": 0.278,
+   "brier": 0.16,
+   "alerts": 0,
+   "alert_precision": null,
+   "episodes": 23,
+   "episodes_warned": 0,
+   "episode_recall": 0.0
+  },
+  "smoke_24h": {
+   "forecasts": 879,
+   "event_rate": 0.0159,
+   "mean_probability": 0.0595,
+   "brier": 0.0301,
+   "alerts": 11,
+   "alert_precision": 0.0,
+   "episodes": 115,
+   "episodes_warned": 0,
+   "episode_recall": 0.0
+  },
+  "smoke_alarm_24h": {
+   "forecasts": 879,
+   "event_rate": 0.0193,
+   "mean_probability": 0.0524,
+   "brier": 0.0195,
+   "alerts": 0,
+   "alert_precision": null,
+   "episodes": 127,
+   "episodes_warned": 0,
+   "episode_recall": 0.0
+  }
+ },
+ "objects": {
+  "object_fire_24h": {
+   "lists": 3,
+   "forecasts": 234,
+   "mean_probability": 0.0098,
+   "event_rate": 0.0214,
+   "brier": 0.0194,
+   "top3_precision": 0.1111,
+   "incidents": 7,
+   "incidents_total": 7,
+   "incidents_top3": 1,
+   "incident_recall_top3": 0.1429
+  },
+  "object_flood_24h": {
+   "lists": 3,
+   "forecasts": 234,
+   "mean_probability": 0.0206,
+   "event_rate": 0.0214,
+   "brier": 0.0159,
+   "top3_precision": 0.4444,
+   "incidents": 7,
+   "incidents_total": 7,
+   "incidents_top3": 5,
+   "incident_recall_top3": 0.7143
+  },
+  "object_power_24h": {
+   "lists": 3,
+   "forecasts": 234,
+   "mean_probability": 0.1641,
+   "event_rate": 0.1838,
+   "brier": 0.0399,
+   "top3_precision": 0.7778,
+   "incidents": 81,
+   "incidents_total": 81,
+   "incidents_top3": 18,
+   "incident_recall_top3": 0.2222
+  },
+  "object_flood_6h": {
+   "lists": 26,
+   "forecasts": 2028,
+   "mean_probability": 0.0049,
+   "event_rate": 0.0069,
+   "brier": 0.0063,
+   "top3_precision": 0.1282,
+   "incidents": 9,
+   "incidents_total": 10,
+   "incidents_top3": 6,
+   "incident_recall_top3": 0.6667
+  }
+ }
+}

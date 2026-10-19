@@ -1,0 +1,3032 @@
+{
+ "period": "2026H1",
+ "unit": "object-day",
+ "generated_at": "2026-10-17T14:06:00",
+ "note": "Утренний список: в полночь берётся последняя оценка каждого канала за сутки, объект оценивается максимумом по своим каналам; попадание — начало события на объекте в горизонте модели.",
+ "models": [
+  {
+   "id": "phase_24h",
+   "label": "Потеря питания",
+   "scenario": "power_loss",
+   "horizon_hours": 24,
+   "objects_per_day": 18.9,
+   "days": 179,
+   "base_rate": 0.5851,
+   "avg_precision": 0.7835,
+   "roc_auc": 0.7307,
+   "lift_top3": 1.33,
+   "top_k": {
+    "3": 0.7784,
+    "5": 0.752,
+    "10": 0.6933
+   },
+   "recall_top_k": {
+    "3": 0.2111,
+    "5": 0.3399,
+    "10": 0.6268
+   },
+   "recall_at_precision_0_7": 0.8636,
+   "precision_at_recall_0_5": 0.7443,
+   "curve": [
+    {
+     "top_k": 1,
+     "precision": 0.7877,
+     "recall": 0.0712,
+     "alerts_per_day": 1.0
+    },
+    {
+     "top_k": 2,
+     "precision": 0.7682,
+     "recall": 0.1389,
+     "alerts_per_day": 2.0
+    },
+    {
+     "top_k": 3,
+     "precision": 0.7784,
+     "recall": 0.2111,
+     "alerts_per_day": 3.0
+    },
+    {
+     "top_k": 4,
+     "precision": 0.764,
+     "recall": 0.2763,
+     "alerts_per_day": 4.0
+    },
+    {
+     "top_k": 5,
+     "precision": 0.752,
+     "recall": 0.3399,
+     "alerts_per_day": 5.0
+    },
+    {
+     "top_k": 6,
+     "precision": 0.7365,
+     "recall": 0.3995,
+     "alerts_per_day": 6.0
+    },
+    {
+     "top_k": 7,
+     "precision": 0.7191,
+     "recall": 0.4551,
+     "alerts_per_day": 7.0
+    },
+    {
+     "top_k": 8,
+     "precision": 0.713,
+     "recall": 0.5157,
+     "alerts_per_day": 8.0
+    },
+    {
+     "top_k": 9,
+     "precision": 0.7058,
+     "recall": 0.5742,
+     "alerts_per_day": 9.0
+    },
+    {
+     "top_k": 10,
+     "precision": 0.6933,
+     "recall": 0.6268,
+     "alerts_per_day": 10.0
+    },
+    {
+     "top_k": 11,
+     "precision": 0.6816,
+     "recall": 0.6778,
+     "alerts_per_day": 11.0
+    },
+    {
+     "top_k": 12,
+     "precision": 0.6741,
+     "recall": 0.7313,
+     "alerts_per_day": 12.0
+    },
+    {
+     "top_k": 13,
+     "precision": 0.6635,
+     "recall": 0.7798,
+     "alerts_per_day": 13.0
+    },
+    {
+     "top_k": 14,
+     "precision": 0.6524,
+     "recall": 0.8258,
+     "alerts_per_day": 14.0
+    },
+    {
+     "top_k": 15,
+     "precision": 0.6439,
+     "recall": 0.8732,
+     "alerts_per_day": 15.0
+    }
+   ]
+  },
+  {
+   "id": "pump_72h",
+   "label": "Отказ насоса, 72 ч",
+   "scenario": "flooding",
+   "horizon_hours": 72,
+   "objects_per_day": 17.4,
+   "days": 177,
+   "base_rate": 0.4204,
+   "avg_precision": 0.6239,
+   "roc_auc": 0.6865,
+   "lift_top3": 1.72,
+   "top_k": {
+    "3": 0.725,
+    "5": 0.6328,
+    "10": 0.522
+   },
+   "recall_top_k": {
+    "3": 0.298,
+    "5": 0.4334,
+    "10": 0.7152
+   },
+   "recall_at_precision_0_7": 0.2926,
+   "precision_at_recall_0_5": 0.5799,
+   "curve": [
+    {
+     "top_k": 1,
+     "precision": 0.8305,
+     "recall": 0.1138,
+     "alerts_per_day": 1.0
+    },
+    {
+     "top_k": 2,
+     "precision": 0.7853,
+     "recall": 0.2152,
+     "alerts_per_day": 2.0
+    },
+    {
+     "top_k": 3,
+     "precision": 0.725,
+     "recall": 0.298,
+     "alerts_per_day": 3.0
+    },
+    {
+     "top_k": 4,
+     "precision": 0.6667,
+     "recall": 0.3653,
+     "alerts_per_day": 4.0
+    },
+    {
+     "top_k": 5,
+     "precision": 0.6328,
+     "recall": 0.4334,
+     "alerts_per_day": 5.0
+    },
+    {
+     "top_k": 6,
+     "precision": 0.5998,
+     "recall": 0.493,
+     "alerts_per_day": 6.0
+    },
+    {
+     "top_k": 7,
+     "precision": 0.5722,
+     "recall": 0.5488,
+     "alerts_per_day": 7.0
+    },
+    {
+     "top_k": 8,
+     "precision": 0.5494,
+     "recall": 0.6022,
+     "alerts_per_day": 8.0
+    },
+    {
+     "top_k": 9,
+     "precision": 0.5323,
+     "recall": 0.6563,
+     "alerts_per_day": 9.0
+    },
+    {
+     "top_k": 10,
+     "precision": 0.522,
+     "recall": 0.7152,
+     "alerts_per_day": 10.0
+    },
+    {
+     "top_k": 11,
+     "precision": 0.5152,
+     "recall": 0.7763,
+     "alerts_per_day": 11.0
+    },
+    {
+     "top_k": 12,
+     "precision": 0.5042,
+     "recall": 0.8289,
+     "alerts_per_day": 12.0
+    },
+    {
+     "top_k": 13,
+     "precision": 0.4924,
+     "recall": 0.8769,
+     "alerts_per_day": 13.0
+    },
+    {
+     "top_k": 14,
+     "precision": 0.4778,
+     "recall": 0.9164,
+     "alerts_per_day": 14.0
+    },
+    {
+     "top_k": 15,
+     "precision": 0.4588,
+     "recall": 0.9427,
+     "alerts_per_day": 15.0
+    }
+   ]
+  },
+  {
+   "id": "pump_24h",
+   "label": "Отказ насоса, 24 ч",
+   "scenario": "flooding",
+   "horizon_hours": 24,
+   "objects_per_day": 17.3,
+   "days": 179,
+   "base_rate": 0.2039,
+   "avg_precision": 0.4117,
+   "roc_auc": 0.6996,
+   "lift_top3": 2.2,
+   "top_k": {
+    "3": 0.4488,
+    "5": 0.3553,
+    "10": 0.2693
+   },
+   "recall_top_k": {
+    "3": 0.3807,
+    "5": 0.5024,
+    "10": 0.7615
+   },
+   "recall_at_precision_0_7": 0.0221,
+   "precision_at_recall_0_5": 0.3769,
+   "curve": [
+    {
+     "top_k": 1,
+     "precision": 0.6034,
+     "recall": 0.1706,
+     "alerts_per_day": 1.0
+    },
+    {
+     "top_k": 2,
+     "precision": 0.5223,
+     "recall": 0.2954,
+     "alerts_per_day": 2.0
+    },
+    {
+     "top_k": 3,
+     "precision": 0.4488,
+     "recall": 0.3807,
+     "alerts_per_day": 3.0
+    },
+    {
+     "top_k": 4,
+     "precision": 0.3939,
+     "recall": 0.4455,
+     "alerts_per_day": 4.0
+    },
+    {
+     "top_k": 5,
+     "precision": 0.3553,
+     "recall": 0.5024,
+     "alerts_per_day": 5.0
+    },
+    {
+     "top_k": 6,
+     "precision": 0.3259,
+     "recall": 0.5529,
+     "alerts_per_day": 6.0
+    },
+    {
+     "top_k": 7,
+     "precision": 0.3097,
+     "recall": 0.613,
+     "alerts_per_day": 7.0
+    },
+    {
+     "top_k": 8,
+     "precision": 0.2968,
+     "recall": 0.6714,
+     "alerts_per_day": 8.0
+    },
+    {
+     "top_k": 9,
+     "precision": 0.2831,
+     "recall": 0.7204,
+     "alerts_per_day": 9.0
+    },
+    {
+     "top_k": 10,
+     "precision": 0.2693,
+     "recall": 0.7615,
+     "alerts_per_day": 10.0
+    },
+    {
+     "top_k": 11,
+     "precision": 0.2641,
+     "recall": 0.8215,
+     "alerts_per_day": 11.0
+    },
+    {
+     "top_k": 12,
+     "precision": 0.2537,
+     "recall": 0.861,
+     "alerts_per_day": 12.0
+    },
+    {
+     "top_k": 13,
+     "precision": 0.2462,
+     "recall": 0.9052,
+     "alerts_per_day": 13.0
+    },
+    {
+     "top_k": 14,
+     "precision": 0.2362,
+     "recall": 0.9352,
+     "alerts_per_day": 14.0
+    },
+    {
+     "top_k": 15,
+     "precision": 0.2253,
+     "recall": 0.9558,
+     "alerts_per_day": 15.0
+    }
+   ]
+  },
+  {
+   "id": "fan_72h",
+   "label": "Отказ вентилятора, 72 ч",
+   "scenario": "ventilation",
+   "horizon_hours": 72,
+   "objects_per_day": 15.7,
+   "days": 177,
+   "base_rate": 0.3362,
+   "avg_precision": 0.6472,
+   "roc_auc": 0.8221,
+   "lift_top3": 2.09,
+   "top_k": {
+    "3": 0.7024,
+    "5": 0.6045,
+    "10": 0.4989
+   },
+   "recall_top_k": {
+    "3": 0.3989,
+    "5": 0.5722,
+    "10": 0.9444
+   },
+   "recall_at_precision_0_7": 0.3594,
+   "precision_at_recall_0_5": 0.6426,
+   "curve": [
+    {
+     "top_k": 1,
+     "precision": 0.7345,
+     "recall": 0.139,
+     "alerts_per_day": 1.0
+    },
+    {
+     "top_k": 2,
+     "precision": 0.7288,
+     "recall": 0.2759,
+     "alerts_per_day": 2.0
+    },
+    {
+     "top_k": 3,
+     "precision": 0.7024,
+     "recall": 0.3989,
+     "alerts_per_day": 3.0
+    },
+    {
+     "top_k": 4,
+     "precision": 0.6638,
+     "recall": 0.5027,
+     "alerts_per_day": 4.0
+    },
+    {
+     "top_k": 5,
+     "precision": 0.6045,
+     "recall": 0.5722,
+     "alerts_per_day": 5.0
+    },
+    {
+     "top_k": 6,
+     "precision": 0.58,
+     "recall": 0.6588,
+     "alerts_per_day": 6.0
+    },
+    {
+     "top_k": 7,
+     "precision": 0.5634,
+     "recall": 0.7465,
+     "alerts_per_day": 7.0
+    },
+    {
+     "top_k": 8,
+     "precision": 0.5452,
+     "recall": 0.8257,
+     "alerts_per_day": 8.0
+    },
+    {
+     "top_k": 9,
+     "precision": 0.521,
+     "recall": 0.8877,
+     "alerts_per_day": 9.0
+    },
+    {
+     "top_k": 10,
+     "precision": 0.4989,
+     "recall": 0.9444,
+     "alerts_per_day": 10.0
+    },
+    {
+     "top_k": 11,
+     "precision": 0.4679,
+     "recall": 0.9743,
+     "alerts_per_day": 11.0
+    },
+    {
+     "top_k": 12,
+     "precision": 0.4429,
+     "recall": 1.0,
+     "alerts_per_day": 11.93
+    },
+    {
+     "top_k": 13,
+     "precision": 0.4128,
+     "recall": 1.0,
+     "alerts_per_day": 12.8
+    },
+    {
+     "top_k": 14,
+     "precision": 0.3885,
+     "recall": 1.0,
+     "alerts_per_day": 13.6
+    },
+    {
+     "top_k": 15,
+     "precision": 0.3691,
+     "recall": 1.0,
+     "alerts_per_day": 14.31
+    }
+   ]
+  },
+  {
+   "id": "fan_24h",
+   "label": "Отказ вентилятора, 24 ч",
+   "scenario": "ventilation",
+   "horizon_hours": 24,
+   "objects_per_day": 15.7,
+   "days": 179,
+   "base_rate": 0.1609,
+   "avg_precision": 0.3808,
+   "roc_auc": 0.7871,
+   "lift_top3": 2.27,
+   "top_k": {
+    "3": 0.365,
+    "5": 0.3173,
+    "10": 0.2413
+   },
+   "recall_top_k": {
+    "3": 0.4336,
+    "5": 0.6283,
+    "10": 0.9558
+   },
+   "recall_at_precision_0_7": 0.0398,
+   "precision_at_recall_0_5": 0.3639,
+   "curve": [
+    {
+     "top_k": 1,
+     "precision": 0.3966,
+     "recall": 0.1571,
+     "alerts_per_day": 1.0
+    },
+    {
+     "top_k": 2,
+     "precision": 0.3799,
+     "recall": 0.3009,
+     "alerts_per_day": 2.0
+    },
+    {
+     "top_k": 3,
+     "precision": 0.365,
+     "recall": 0.4336,
+     "alerts_per_day": 3.0
+    },
+    {
+     "top_k": 4,
+     "precision": 0.345,
+     "recall": 0.5465,
+     "alerts_per_day": 4.0
+    },
+    {
+     "top_k": 5,
+     "precision": 0.3173,
+     "recall": 0.6283,
+     "alerts_per_day": 5.0
+    },
+    {
+     "top_k": 6,
+     "precision": 0.297,
+     "recall": 0.7058,
+     "alerts_per_day": 6.0
+    },
+    {
+     "top_k": 7,
+     "precision": 0.2849,
+     "recall": 0.7898,
+     "alerts_per_day": 7.0
+    },
+    {
+     "top_k": 8,
+     "precision": 0.2723,
+     "recall": 0.8628,
+     "alerts_per_day": 8.0
+    },
+    {
+     "top_k": 9,
+     "precision": 0.2545,
+     "recall": 0.9071,
+     "alerts_per_day": 9.0
+    },
+    {
+     "top_k": 10,
+     "precision": 0.2413,
+     "recall": 0.9558,
+     "alerts_per_day": 10.0
+    },
+    {
+     "top_k": 11,
+     "precision": 0.2265,
+     "recall": 0.9867,
+     "alerts_per_day": 11.0
+    },
+    {
+     "top_k": 12,
+     "precision": 0.2117,
+     "recall": 1.0,
+     "alerts_per_day": 11.93
+    },
+    {
+     "top_k": 13,
+     "precision": 0.1973,
+     "recall": 1.0,
+     "alerts_per_day": 12.8
+    },
+    {
+     "top_k": 14,
+     "precision": 0.1856,
+     "recall": 1.0,
+     "alerts_per_day": 13.6
+    },
+    {
+     "top_k": 15,
+     "precision": 0.1765,
+     "recall": 1.0,
+     "alerts_per_day": 14.31
+    }
+   ]
+  },
+  {
+   "id": "flood_24h",
+   "label": "Затопление камеры",
+   "scenario": "flooding",
+   "horizon_hours": 24,
+   "objects_per_day": 17.3,
+   "days": 179,
+   "base_rate": 0.1159,
+   "avg_precision": 0.3981,
+   "roc_auc": 0.8149,
+   "lift_top3": 3.28,
+   "top_k": {
+    "3": 0.3799,
+    "5": 0.2872,
+    "10": 0.1838
+   },
+   "recall_top_k": {
+    "3": 0.5667,
+    "5": 0.7139,
+    "10": 0.9139
+   },
+   "recall_at_precision_0_7": 0.0028,
+   "precision_at_recall_0_5": 0.4054,
+   "curve": [
+    {
+     "top_k": 1,
+     "precision": 0.4413,
+     "recall": 0.2194,
+     "alerts_per_day": 1.0
+    },
+    {
+     "top_k": 2,
+     "precision": 0.4469,
+     "recall": 0.4444,
+     "alerts_per_day": 2.0
+    },
+    {
+     "top_k": 3,
+     "precision": 0.3799,
+     "recall": 0.5667,
+     "alerts_per_day": 3.0
+    },
+    {
+     "top_k": 4,
+     "precision": 0.3254,
+     "recall": 0.6472,
+     "alerts_per_day": 4.0
+    },
+    {
+     "top_k": 5,
+     "precision": 0.2872,
+     "recall": 0.7139,
+     "alerts_per_day": 5.0
+    },
+    {
+     "top_k": 6,
+     "precision": 0.2542,
+     "recall": 0.7583,
+     "alerts_per_day": 6.0
+    },
+    {
+     "top_k": 7,
+     "precision": 0.2306,
+     "recall": 0.8028,
+     "alerts_per_day": 7.0
+    },
+    {
+     "top_k": 8,
+     "precision": 0.213,
+     "recall": 0.8472,
+     "alerts_per_day": 8.0
+    },
+    {
+     "top_k": 9,
+     "precision": 0.1968,
+     "recall": 0.8806,
+     "alerts_per_day": 9.0
+    },
+    {
+     "top_k": 10,
+     "precision": 0.1838,
+     "recall": 0.9139,
+     "alerts_per_day": 10.0
+    },
+    {
+     "top_k": 11,
+     "precision": 0.1691,
+     "recall": 0.925,
+     "alerts_per_day": 11.0
+    },
+    {
+     "top_k": 12,
+     "precision": 0.1578,
+     "recall": 0.9417,
+     "alerts_per_day": 12.0
+    },
+    {
+     "top_k": 13,
+     "precision": 0.1483,
+     "recall": 0.9583,
+     "alerts_per_day": 13.0
+    },
+    {
+     "top_k": 14,
+     "precision": 0.1397,
+     "recall": 0.9722,
+     "alerts_per_day": 14.0
+    },
+    {
+     "top_k": 15,
+     "precision": 0.1315,
+     "recall": 0.9806,
+     "alerts_per_day": 15.0
+    }
+   ]
+  },
+  {
+   "id": "smoke_24h",
+   "label": "Неисправность дымового датчика",
+   "scenario": "fire",
+   "horizon_hours": 24,
+   "objects_per_day": 18.2,
+   "days": 179,
+   "base_rate": 0.0695,
+   "avg_precision": 0.2303,
+   "roc_auc": 0.7903,
+   "lift_top3": 3.27,
+   "top_k": {
+    "3": 0.2272,
+    "5": 0.1747,
+    "10": 0.1106
+   },
+   "recall_top_k": {
+    "3": 0.5398,
+    "5": 0.6903,
+    "10": 0.8584
+   },
+   "recall_at_precision_0_7": 0.0088,
+   "precision_at_recall_0_5": 0.2386,
+   "curve": [
+    {
+     "top_k": 1,
+     "precision": 0.3575,
+     "recall": 0.2832,
+     "alerts_per_day": 1.0
+    },
+    {
+     "top_k": 2,
+     "precision": 0.2654,
+     "recall": 0.4204,
+     "alerts_per_day": 2.0
+    },
+    {
+     "top_k": 3,
+     "precision": 0.2272,
+     "recall": 0.5398,
+     "alerts_per_day": 3.0
+    },
+    {
+     "top_k": 4,
+     "precision": 0.1955,
+     "recall": 0.6195,
+     "alerts_per_day": 4.0
+    },
+    {
+     "top_k": 5,
+     "precision": 0.1747,
+     "recall": 0.6903,
+     "alerts_per_day": 4.99
+    },
+    {
+     "top_k": 6,
+     "precision": 0.159,
+     "recall": 0.7522,
+     "alerts_per_day": 5.97
+    },
+    {
+     "top_k": 7,
+     "precision": 0.1423,
+     "recall": 0.7832,
+     "alerts_per_day": 6.95
+    },
+    {
+     "top_k": 8,
+     "precision": 0.1311,
+     "recall": 0.823,
+     "alerts_per_day": 7.93
+    },
+    {
+     "top_k": 9,
+     "precision": 0.1214,
+     "recall": 0.854,
+     "alerts_per_day": 8.88
+    },
+    {
+     "top_k": 10,
+     "precision": 0.1106,
+     "recall": 0.8584,
+     "alerts_per_day": 9.8
+    },
+    {
+     "top_k": 11,
+     "precision": 0.103,
+     "recall": 0.8717,
+     "alerts_per_day": 10.68
+    },
+    {
+     "top_k": 12,
+     "precision": 0.0991,
+     "recall": 0.9071,
+     "alerts_per_day": 11.55
+    },
+    {
+     "top_k": 13,
+     "precision": 0.095,
+     "recall": 0.9336,
+     "alerts_per_day": 12.41
+    },
+    {
+     "top_k": 14,
+     "precision": 0.0901,
+     "recall": 0.9469,
+     "alerts_per_day": 13.26
+    },
+    {
+     "top_k": 15,
+     "precision": 0.0855,
+     "recall": 0.9513,
+     "alerts_per_day": 14.05
+    }
+   ]
+  },
+  {
+   "id": "smoke_alarm_24h",
+   "label": "Срабатывание дымового датчика",
+   "scenario": "fire",
+   "horizon_hours": 24,
+   "objects_per_day": 18.2,
+   "days": 179,
+   "base_rate": 0.0993,
+   "avg_precision": 0.2332,
+   "roc_auc": 0.7456,
+   "lift_top3": 2.64,
+   "top_k": {
+    "3": 0.2626,
+    "5": 0.2072,
+    "10": 0.1562
+   },
+   "recall_top_k": {
+    "3": 0.4365,
+    "5": 0.5728,
+    "10": 0.8483
+   },
+   "recall_at_precision_0_7": 0.0,
+   "precision_at_recall_0_5": 0.2355,
+   "curve": [
+    {
+     "top_k": 1,
+     "precision": 0.324,
+     "recall": 0.1796,
+     "alerts_per_day": 1.0
+    },
+    {
+     "top_k": 2,
+     "precision": 0.2905,
+     "recall": 0.322,
+     "alerts_per_day": 2.0
+    },
+    {
+     "top_k": 3,
+     "precision": 0.2626,
+     "recall": 0.4365,
+     "alerts_per_day": 3.0
+    },
+    {
+     "top_k": 4,
+     "precision": 0.2277,
+     "recall": 0.5046,
+     "alerts_per_day": 4.0
+    },
+    {
+     "top_k": 5,
+     "precision": 0.2072,
+     "recall": 0.5728,
+     "alerts_per_day": 4.99
+    },
+    {
+     "top_k": 6,
+     "precision": 0.1908,
+     "recall": 0.6316,
+     "alerts_per_day": 5.97
+    },
+    {
+     "top_k": 7,
+     "precision": 0.1817,
+     "recall": 0.6997,
+     "alerts_per_day": 6.95
+    },
+    {
+     "top_k": 8,
+     "precision": 0.1705,
+     "recall": 0.7492,
+     "alerts_per_day": 7.93
+    },
+    {
+     "top_k": 9,
+     "precision": 0.1642,
+     "recall": 0.808,
+     "alerts_per_day": 8.88
+    },
+    {
+     "top_k": 10,
+     "precision": 0.1562,
+     "recall": 0.8483,
+     "alerts_per_day": 9.8
+    },
+    {
+     "top_k": 11,
+     "precision": 0.1475,
+     "recall": 0.8731,
+     "alerts_per_day": 10.68
+    },
+    {
+     "top_k": 12,
+     "precision": 0.1393,
+     "recall": 0.8916,
+     "alerts_per_day": 11.55
+    },
+    {
+     "top_k": 13,
+     "precision": 0.1319,
+     "recall": 0.9071,
+     "alerts_per_day": 12.41
+    },
+    {
+     "top_k": 14,
+     "precision": 0.1255,
+     "recall": 0.9226,
+     "alerts_per_day": 13.26
+    },
+    {
+     "top_k": 15,
+     "precision": 0.1209,
+     "recall": 0.9412,
+     "alerts_per_day": 14.05
+    }
+   ]
+  },
+  {
+   "id": "object_fire_24h",
+   "label": "Пожарный инцидент, модель объекта",
+   "scenario": "fire",
+   "horizon_hours": 24,
+   "objects_per_day": 30.0,
+   "days": 179,
+   "base_rate": 0.0192,
+   "avg_precision": 0.214,
+   "roc_auc": 0.837,
+   "lift_top3": 5.63,
+   "top_k": {
+    "3": 0.108,
+    "5": 0.0715,
+    "10": 0.0441
+   },
+   "recall_top_k": {
+    "3": 0.5631,
+    "5": 0.6214,
+    "10": 0.767
+   },
+   "recall_at_precision_0_7": 0.0777,
+   "precision_at_recall_0_5": 0.0807,
+   "curve": [
+    {
+     "top_k": 1,
+     "precision": 0.2011,
+     "recall": 0.3495,
+     "alerts_per_day": 1.0
+    },
+    {
+     "top_k": 2,
+     "precision": 0.1453,
+     "recall": 0.5049,
+     "alerts_per_day": 2.0
+    },
+    {
+     "top_k": 3,
+     "precision": 0.108,
+     "recall": 0.5631,
+     "alerts_per_day": 3.0
+    },
+    {
+     "top_k": 4,
+     "precision": 0.0866,
+     "recall": 0.6019,
+     "alerts_per_day": 4.0
+    },
+    {
+     "top_k": 5,
+     "precision": 0.0715,
+     "recall": 0.6214,
+     "alerts_per_day": 5.0
+    },
+    {
+     "top_k": 6,
+     "precision": 0.0624,
+     "recall": 0.6505,
+     "alerts_per_day": 6.0
+    },
+    {
+     "top_k": 7,
+     "precision": 0.0567,
+     "recall": 0.6893,
+     "alerts_per_day": 7.0
+    },
+    {
+     "top_k": 8,
+     "precision": 0.0531,
+     "recall": 0.7379,
+     "alerts_per_day": 8.0
+    },
+    {
+     "top_k": 9,
+     "precision": 0.049,
+     "recall": 0.767,
+     "alerts_per_day": 9.0
+    },
+    {
+     "top_k": 10,
+     "precision": 0.0441,
+     "recall": 0.767,
+     "alerts_per_day": 10.0
+    },
+    {
+     "top_k": 11,
+     "precision": 0.0422,
+     "recall": 0.8058,
+     "alerts_per_day": 11.0
+    },
+    {
+     "top_k": 12,
+     "precision": 0.0386,
+     "recall": 0.8058,
+     "alerts_per_day": 12.0
+    },
+    {
+     "top_k": 13,
+     "precision": 0.0365,
+     "recall": 0.8252,
+     "alerts_per_day": 13.0
+    },
+    {
+     "top_k": 14,
+     "precision": 0.0351,
+     "recall": 0.8544,
+     "alerts_per_day": 14.0
+    },
+    {
+     "top_k": 15,
+     "precision": 0.0339,
+     "recall": 0.8835,
+     "alerts_per_day": 15.0
+    }
+   ],
+   "avg_precision_2025": 0.1005
+  },
+  {
+   "id": "object_flood_24h",
+   "label": "Подтопление, модель объекта",
+   "scenario": "flooding",
+   "horizon_hours": 24,
+   "objects_per_day": 18.0,
+   "days": 179,
+   "base_rate": 0.0677,
+   "avg_precision": 0.28,
+   "roc_auc": 0.8381,
+   "lift_top3": 3.41,
+   "top_k": {
+    "3": 0.2309,
+    "5": 0.1911,
+    "10": 0.114
+   },
+   "recall_top_k": {
+    "3": 0.5688,
+    "5": 0.7844,
+    "10": 0.9358
+   },
+   "recall_at_precision_0_7": 0.0229,
+   "precision_at_recall_0_5": 0.25,
+   "curve": [
+    {
+     "top_k": 1,
+     "precision": 0.2514,
+     "recall": 0.2064,
+     "alerts_per_day": 1.0
+    },
+    {
+     "top_k": 2,
+     "precision": 0.2486,
+     "recall": 0.4083,
+     "alerts_per_day": 2.0
+    },
+    {
+     "top_k": 3,
+     "precision": 0.2309,
+     "recall": 0.5688,
+     "alerts_per_day": 3.0
+    },
+    {
+     "top_k": 4,
+     "precision": 0.2081,
+     "recall": 0.6835,
+     "alerts_per_day": 4.0
+    },
+    {
+     "top_k": 5,
+     "precision": 0.1911,
+     "recall": 0.7844,
+     "alerts_per_day": 5.0
+    },
+    {
+     "top_k": 6,
+     "precision": 0.1695,
+     "recall": 0.8349,
+     "alerts_per_day": 6.0
+    },
+    {
+     "top_k": 7,
+     "precision": 0.1508,
+     "recall": 0.867,
+     "alerts_per_day": 7.0
+    },
+    {
+     "top_k": 8,
+     "precision": 0.1376,
+     "recall": 0.9037,
+     "alerts_per_day": 8.0
+    },
+    {
+     "top_k": 9,
+     "precision": 0.1254,
+     "recall": 0.9266,
+     "alerts_per_day": 9.0
+    },
+    {
+     "top_k": 10,
+     "precision": 0.114,
+     "recall": 0.9358,
+     "alerts_per_day": 10.0
+    },
+    {
+     "top_k": 11,
+     "precision": 0.1061,
+     "recall": 0.9587,
+     "alerts_per_day": 11.0
+    },
+    {
+     "top_k": 12,
+     "precision": 0.0987,
+     "recall": 0.9725,
+     "alerts_per_day": 12.0
+    },
+    {
+     "top_k": 13,
+     "precision": 0.0915,
+     "recall": 0.9771,
+     "alerts_per_day": 13.0
+    },
+    {
+     "top_k": 14,
+     "precision": 0.0854,
+     "recall": 0.9817,
+     "alerts_per_day": 14.0
+    },
+    {
+     "top_k": 15,
+     "precision": 0.0801,
+     "recall": 0.9862,
+     "alerts_per_day": 15.0
+    }
+   ],
+   "avg_precision_2025": 0.2317
+  },
+  {
+   "id": "object_power_24h",
+   "label": "Отключение питания объекта, модель объекта",
+   "scenario": "power_loss",
+   "horizon_hours": 24,
+   "objects_per_day": 19.0,
+   "days": 179,
+   "base_rate": 0.5351,
+   "avg_precision": 0.8398,
+   "roc_auc": 0.8409,
+   "lift_top3": 1.38,
+   "top_k": {
+    "3": 0.7374,
+    "5": 0.7296,
+    "10": 0.6927
+   },
+   "recall_top_k": {
+    "3": 0.2176,
+    "5": 0.3588,
+    "10": 0.6813
+   },
+   "recall_at_precision_0_7": 0.9082,
+   "precision_at_recall_0_5": 0.8667,
+   "curve": [
+    {
+     "top_k": 1,
+     "precision": 0.7877,
+     "recall": 0.0775,
+     "alerts_per_day": 1.0
+    },
+    {
+     "top_k": 2,
+     "precision": 0.7682,
+     "recall": 0.1511,
+     "alerts_per_day": 2.0
+    },
+    {
+     "top_k": 3,
+     "precision": 0.7374,
+     "recall": 0.2176,
+     "alerts_per_day": 3.0
+    },
+    {
+     "top_k": 4,
+     "precision": 0.7277,
+     "recall": 0.2863,
+     "alerts_per_day": 4.0
+    },
+    {
+     "top_k": 5,
+     "precision": 0.7296,
+     "recall": 0.3588,
+     "alerts_per_day": 5.0
+    },
+    {
+     "top_k": 6,
+     "precision": 0.7225,
+     "recall": 0.4264,
+     "alerts_per_day": 6.0
+    },
+    {
+     "top_k": 7,
+     "precision": 0.7119,
+     "recall": 0.4901,
+     "alerts_per_day": 7.0
+    },
+    {
+     "top_k": 8,
+     "precision": 0.7109,
+     "recall": 0.5593,
+     "alerts_per_day": 8.0
+    },
+    {
+     "top_k": 9,
+     "precision": 0.7045,
+     "recall": 0.6236,
+     "alerts_per_day": 9.0
+    },
+    {
+     "top_k": 10,
+     "precision": 0.6927,
+     "recall": 0.6813,
+     "alerts_per_day": 10.0
+    },
+    {
+     "top_k": 11,
+     "precision": 0.6831,
+     "recall": 0.739,
+     "alerts_per_day": 11.0
+    },
+    {
+     "top_k": 12,
+     "precision": 0.6671,
+     "recall": 0.7874,
+     "alerts_per_day": 12.0
+    },
+    {
+     "top_k": 13,
+     "precision": 0.6515,
+     "recall": 0.833,
+     "alerts_per_day": 13.0
+    },
+    {
+     "top_k": 14,
+     "precision": 0.6349,
+     "recall": 0.8742,
+     "alerts_per_day": 14.0
+    },
+    {
+     "top_k": 15,
+     "precision": 0.6205,
+     "recall": 0.9154,
+     "alerts_per_day": 15.0
+    }
+   ],
+   "avg_precision_2025": 0.8296
+  }
+ ],
+ "incidents": {
+  "fire": {
+   "label": "Пожарный инцидент",
+   "rule": "«Обнаружен дым» на двух и более дымовых датчиках одного объекта в пределах 15 минут вне серии ППР; отдельно отмечается рост температуры на объекте за 30 минут до и 60 минут после",
+   "source_model": "smoke_alarm_24h",
+   "per_year": {
+    "2019": 123,
+    "2020": 199,
+    "2021": 151,
+    "2022": 218,
+    "2023": 216,
+    "2024": 163,
+    "2025": 190,
+    "2026": 169
+   },
+   "objects": 30,
+   "variants": {
+    "channel_model": {
+     "objects_per_day": 18.2,
+     "days": 179,
+     "base_rate": 0.0255,
+     "avg_precision": 0.1235,
+     "roc_auc": 0.7768,
+     "lift_top3": 3.57,
+     "top_k": {
+      "3": 0.0912,
+      "5": 0.0638,
+      "10": 0.0416
+     },
+     "recall_top_k": {
+      "3": 0.5904,
+      "5": 0.6867,
+      "10": 0.8795
+     },
+     "recall_at_precision_0_7": 0.0,
+     "precision_at_recall_0_5": 0.1243,
+     "curve": [
+      {
+       "top_k": 1,
+       "precision": 0.1564,
+       "recall": 0.3373,
+       "alerts_per_day": 1.0
+      },
+      {
+       "top_k": 2,
+       "precision": 0.1089,
+       "recall": 0.4699,
+       "alerts_per_day": 2.0
+      },
+      {
+       "top_k": 3,
+       "precision": 0.0912,
+       "recall": 0.5904,
+       "alerts_per_day": 3.0
+      },
+      {
+       "top_k": 4,
+       "precision": 0.0754,
+       "recall": 0.6506,
+       "alerts_per_day": 4.0
+      },
+      {
+       "top_k": 5,
+       "precision": 0.0638,
+       "recall": 0.6867,
+       "alerts_per_day": 4.99
+      },
+      {
+       "top_k": 6,
+       "precision": 0.0561,
+       "recall": 0.7229,
+       "alerts_per_day": 5.97
+      },
+      {
+       "top_k": 7,
+       "precision": 0.0498,
+       "recall": 0.747,
+       "alerts_per_day": 6.95
+      },
+      {
+       "top_k": 8,
+       "precision": 0.0458,
+       "recall": 0.7831,
+       "alerts_per_day": 7.93
+      },
+      {
+       "top_k": 9,
+       "precision": 0.044,
+       "recall": 0.8434,
+       "alerts_per_day": 8.88
+      },
+      {
+       "top_k": 10,
+       "precision": 0.0416,
+       "recall": 0.8795,
+       "alerts_per_day": 9.8
+      },
+      {
+       "top_k": 11,
+       "precision": 0.0382,
+       "recall": 0.8795,
+       "alerts_per_day": 10.68
+      },
+      {
+       "top_k": 12,
+       "precision": 0.0353,
+       "recall": 0.8795,
+       "alerts_per_day": 11.55
+      },
+      {
+       "top_k": 13,
+       "precision": 0.0338,
+       "recall": 0.9036,
+       "alerts_per_day": 12.41
+      },
+      {
+       "top_k": 14,
+       "precision": 0.0316,
+       "recall": 0.9036,
+       "alerts_per_day": 13.26
+      },
+      {
+       "top_k": 15,
+       "precision": 0.0306,
+       "recall": 0.9277,
+       "alerts_per_day": 14.05
+      }
+     ]
+    },
+    "history_model": {
+     "objects_per_day": 30.0,
+     "days": 179,
+     "base_rate": 0.0192,
+     "avg_precision": 0.2086,
+     "roc_auc": 0.796,
+     "lift_top3": 4.56,
+     "top_k": {
+      "3": 0.0875,
+      "5": 0.0659,
+      "10": 0.0425
+     },
+     "recall_top_k": {
+      "3": 0.4563,
+      "5": 0.5728,
+      "10": 0.7379
+     },
+     "recall_at_precision_0_7": 0.0291,
+     "precision_at_recall_0_5": 0.0684,
+     "curve": [
+      {
+       "top_k": 1,
+       "precision": 0.1676,
+       "recall": 0.2913,
+       "alerts_per_day": 1.0
+      },
+      {
+       "top_k": 2,
+       "precision": 0.1117,
+       "recall": 0.3883,
+       "alerts_per_day": 2.0
+      },
+      {
+       "top_k": 3,
+       "precision": 0.0875,
+       "recall": 0.4563,
+       "alerts_per_day": 3.0
+      },
+      {
+       "top_k": 4,
+       "precision": 0.0754,
+       "recall": 0.5243,
+       "alerts_per_day": 4.0
+      },
+      {
+       "top_k": 5,
+       "precision": 0.0659,
+       "recall": 0.5728,
+       "alerts_per_day": 5.0
+      },
+      {
+       "top_k": 6,
+       "precision": 0.0615,
+       "recall": 0.6408,
+       "alerts_per_day": 6.0
+      },
+      {
+       "top_k": 7,
+       "precision": 0.0559,
+       "recall": 0.6796,
+       "alerts_per_day": 7.0
+      },
+      {
+       "top_k": 8,
+       "precision": 0.0496,
+       "recall": 0.6893,
+       "alerts_per_day": 8.0
+      },
+      {
+       "top_k": 9,
+       "precision": 0.0459,
+       "recall": 0.7184,
+       "alerts_per_day": 9.0
+      },
+      {
+       "top_k": 10,
+       "precision": 0.0425,
+       "recall": 0.7379,
+       "alerts_per_day": 10.0
+      },
+      {
+       "top_k": 11,
+       "precision": 0.0396,
+       "recall": 0.7573,
+       "alerts_per_day": 11.0
+      },
+      {
+       "top_k": 12,
+       "precision": 0.0386,
+       "recall": 0.8058,
+       "alerts_per_day": 12.0
+      },
+      {
+       "top_k": 13,
+       "precision": 0.0361,
+       "recall": 0.8155,
+       "alerts_per_day": 13.0
+      },
+      {
+       "top_k": 14,
+       "precision": 0.0335,
+       "recall": 0.8155,
+       "alerts_per_day": 14.0
+      },
+      {
+       "top_k": 15,
+       "precision": 0.032,
+       "recall": 0.835,
+       "alerts_per_day": 15.0
+      }
+     ],
+     "avg_precision_2025": 0.0692
+    },
+    "state_model": {
+     "objects_per_day": 30.0,
+     "days": 179,
+     "base_rate": 0.0192,
+     "avg_precision": 0.214,
+     "roc_auc": 0.837,
+     "lift_top3": 5.63,
+     "top_k": {
+      "3": 0.108,
+      "5": 0.0715,
+      "10": 0.0441
+     },
+     "recall_top_k": {
+      "3": 0.5631,
+      "5": 0.6214,
+      "10": 0.767
+     },
+     "recall_at_precision_0_7": 0.0777,
+     "precision_at_recall_0_5": 0.0807,
+     "curve": [
+      {
+       "top_k": 1,
+       "precision": 0.2011,
+       "recall": 0.3495,
+       "alerts_per_day": 1.0
+      },
+      {
+       "top_k": 2,
+       "precision": 0.1453,
+       "recall": 0.5049,
+       "alerts_per_day": 2.0
+      },
+      {
+       "top_k": 3,
+       "precision": 0.108,
+       "recall": 0.5631,
+       "alerts_per_day": 3.0
+      },
+      {
+       "top_k": 4,
+       "precision": 0.0866,
+       "recall": 0.6019,
+       "alerts_per_day": 4.0
+      },
+      {
+       "top_k": 5,
+       "precision": 0.0715,
+       "recall": 0.6214,
+       "alerts_per_day": 5.0
+      },
+      {
+       "top_k": 6,
+       "precision": 0.0624,
+       "recall": 0.6505,
+       "alerts_per_day": 6.0
+      },
+      {
+       "top_k": 7,
+       "precision": 0.0567,
+       "recall": 0.6893,
+       "alerts_per_day": 7.0
+      },
+      {
+       "top_k": 8,
+       "precision": 0.0531,
+       "recall": 0.7379,
+       "alerts_per_day": 8.0
+      },
+      {
+       "top_k": 9,
+       "precision": 0.049,
+       "recall": 0.767,
+       "alerts_per_day": 9.0
+      },
+      {
+       "top_k": 10,
+       "precision": 0.0441,
+       "recall": 0.767,
+       "alerts_per_day": 10.0
+      },
+      {
+       "top_k": 11,
+       "precision": 0.0422,
+       "recall": 0.8058,
+       "alerts_per_day": 11.0
+      },
+      {
+       "top_k": 12,
+       "precision": 0.0386,
+       "recall": 0.8058,
+       "alerts_per_day": 12.0
+      },
+      {
+       "top_k": 13,
+       "precision": 0.0365,
+       "recall": 0.8252,
+       "alerts_per_day": 13.0
+      },
+      {
+       "top_k": 14,
+       "precision": 0.0351,
+       "recall": 0.8544,
+       "alerts_per_day": 14.0
+      },
+      {
+       "top_k": 15,
+       "precision": 0.0339,
+       "recall": 0.8835,
+       "alerts_per_day": 15.0
+      }
+     ],
+     "avg_precision_2025": 0.1005
+    },
+    "rule_7d": {
+     "objects_per_day": 30.0,
+     "days": 179,
+     "base_rate": 0.0192,
+     "avg_precision": 0.1503,
+     "roc_auc": 0.6525,
+     "lift_top3": 3.69,
+     "top_k": {
+      "3": 0.0708,
+      "5": 0.0492,
+      "10": 0.0352
+     },
+     "recall_top_k": {
+      "3": 0.3689,
+      "5": 0.4272,
+      "10": 0.6117
+     },
+     "recall_at_precision_0_7": 0.0,
+     "precision_at_recall_0_5": 0.0303,
+     "curve": [
+      {
+       "top_k": 1,
+       "precision": 0.1341,
+       "recall": 0.233,
+       "alerts_per_day": 1.0
+      },
+      {
+       "top_k": 2,
+       "precision": 0.095,
+       "recall": 0.3301,
+       "alerts_per_day": 2.0
+      },
+      {
+       "top_k": 3,
+       "precision": 0.0708,
+       "recall": 0.3689,
+       "alerts_per_day": 3.0
+      },
+      {
+       "top_k": 4,
+       "precision": 0.0573,
+       "recall": 0.3981,
+       "alerts_per_day": 4.0
+      },
+      {
+       "top_k": 5,
+       "precision": 0.0492,
+       "recall": 0.4272,
+       "alerts_per_day": 5.0
+      },
+      {
+       "top_k": 6,
+       "precision": 0.0447,
+       "recall": 0.466,
+       "alerts_per_day": 6.0
+      },
+      {
+       "top_k": 7,
+       "precision": 0.0423,
+       "recall": 0.5146,
+       "alerts_per_day": 7.0
+      },
+      {
+       "top_k": 8,
+       "precision": 0.0391,
+       "recall": 0.5437,
+       "alerts_per_day": 8.0
+      },
+      {
+       "top_k": 9,
+       "precision": 0.0366,
+       "recall": 0.5728,
+       "alerts_per_day": 9.0
+      },
+      {
+       "top_k": 10,
+       "precision": 0.0352,
+       "recall": 0.6117,
+       "alerts_per_day": 10.0
+      },
+      {
+       "top_k": 11,
+       "precision": 0.0335,
+       "recall": 0.6408,
+       "alerts_per_day": 11.0
+      },
+      {
+       "top_k": 12,
+       "precision": 0.0312,
+       "recall": 0.6505,
+       "alerts_per_day": 12.0
+      },
+      {
+       "top_k": 13,
+       "precision": 0.0301,
+       "recall": 0.6796,
+       "alerts_per_day": 13.0
+      },
+      {
+       "top_k": 14,
+       "precision": 0.0291,
+       "recall": 0.7087,
+       "alerts_per_day": 14.0
+      },
+      {
+       "top_k": 15,
+       "precision": 0.0276,
+       "recall": 0.7184,
+       "alerts_per_day": 15.0
+      }
+     ]
+    },
+    "blend": {
+     "objects_per_day": 18.2,
+     "days": 179,
+     "base_rate": 0.0255,
+     "avg_precision": 0.2362,
+     "roc_auc": 0.8013,
+     "lift_top3": 3.36,
+     "top_k": {
+      "3": 0.0857,
+      "5": 0.0649,
+      "10": 0.0422
+     },
+     "recall_top_k": {
+      "3": 0.5542,
+      "5": 0.6988,
+      "10": 0.8916
+     },
+     "recall_at_precision_0_7": 0.0482,
+     "precision_at_recall_0_5": 0.1163,
+     "curve": [
+      {
+       "top_k": 1,
+       "precision": 0.1899,
+       "recall": 0.4096,
+       "alerts_per_day": 1.0
+      },
+      {
+       "top_k": 2,
+       "precision": 0.1173,
+       "recall": 0.506,
+       "alerts_per_day": 2.0
+      },
+      {
+       "top_k": 3,
+       "precision": 0.0857,
+       "recall": 0.5542,
+       "alerts_per_day": 3.0
+      },
+      {
+       "top_k": 4,
+       "precision": 0.0782,
+       "recall": 0.6747,
+       "alerts_per_day": 4.0
+      },
+      {
+       "top_k": 5,
+       "precision": 0.0649,
+       "recall": 0.6988,
+       "alerts_per_day": 4.99
+      },
+      {
+       "top_k": 6,
+       "precision": 0.058,
+       "recall": 0.747,
+       "alerts_per_day": 5.97
+      },
+      {
+       "top_k": 7,
+       "precision": 0.0555,
+       "recall": 0.8313,
+       "alerts_per_day": 6.95
+      },
+      {
+       "top_k": 8,
+       "precision": 0.05,
+       "recall": 0.8554,
+       "alerts_per_day": 7.93
+      },
+      {
+       "top_k": 9,
+       "precision": 0.0459,
+       "recall": 0.8795,
+       "alerts_per_day": 8.88
+      },
+      {
+       "top_k": 10,
+       "precision": 0.0422,
+       "recall": 0.8916,
+       "alerts_per_day": 9.8
+      },
+      {
+       "top_k": 11,
+       "precision": 0.0387,
+       "recall": 0.8916,
+       "alerts_per_day": 10.68
+      },
+      {
+       "top_k": 12,
+       "precision": 0.0358,
+       "recall": 0.8916,
+       "alerts_per_day": 11.55
+      },
+      {
+       "top_k": 13,
+       "precision": 0.0342,
+       "recall": 0.9157,
+       "alerts_per_day": 12.41
+      },
+      {
+       "top_k": 14,
+       "precision": 0.0324,
+       "recall": 0.9277,
+       "alerts_per_day": 13.26
+      },
+      {
+       "top_k": 15,
+       "precision": 0.0318,
+       "recall": 0.9639,
+       "alerts_per_day": 14.05
+      }
+     ]
+    }
+   },
+   "selected_2025": "state"
+  },
+  "flood": {
+   "label": "Подтопление",
+   "rule": "состояние «Затоплен» у двух и более насосов одной станции в пределах часа или затопление камеры дольше 30 минут",
+   "source_model": "flood_24h",
+   "per_year": {
+    "2019": 327,
+    "2020": 455,
+    "2021": 667,
+    "2022": 464,
+    "2023": 393,
+    "2024": 389,
+    "2025": 334,
+    "2026": 301
+   },
+   "objects": 18,
+   "variants": {
+    "channel_model": {
+     "objects_per_day": 17.3,
+     "days": 179,
+     "base_rate": 0.0696,
+     "avg_precision": 0.2237,
+     "roc_auc": 0.8003,
+     "lift_top3": 2.89,
+     "top_k": {
+      "3": 0.2011,
+      "5": 0.1687,
+      "10": 0.1145
+     },
+     "recall_top_k": {
+      "3": 0.5,
+      "5": 0.6991,
+      "10": 0.9491
+     },
+     "recall_at_precision_0_7": 0.0046,
+     "precision_at_recall_0_5": 0.1967,
+     "curve": [
+      {
+       "top_k": 1,
+       "precision": 0.2123,
+       "recall": 0.1759,
+       "alerts_per_day": 1.0
+      },
+      {
+       "top_k": 2,
+       "precision": 0.2207,
+       "recall": 0.3657,
+       "alerts_per_day": 2.0
+      },
+      {
+       "top_k": 3,
+       "precision": 0.2011,
+       "recall": 0.5,
+       "alerts_per_day": 3.0
+      },
+      {
+       "top_k": 4,
+       "precision": 0.1844,
+       "recall": 0.6111,
+       "alerts_per_day": 4.0
+      },
+      {
+       "top_k": 5,
+       "precision": 0.1687,
+       "recall": 0.6991,
+       "alerts_per_day": 5.0
+      },
+      {
+       "top_k": 6,
+       "precision": 0.1536,
+       "recall": 0.7639,
+       "alerts_per_day": 6.0
+      },
+      {
+       "top_k": 7,
+       "precision": 0.1397,
+       "recall": 0.8102,
+       "alerts_per_day": 7.0
+      },
+      {
+       "top_k": 8,
+       "precision": 0.1306,
+       "recall": 0.8657,
+       "alerts_per_day": 8.0
+      },
+      {
+       "top_k": 9,
+       "precision": 0.1217,
+       "recall": 0.9074,
+       "alerts_per_day": 9.0
+      },
+      {
+       "top_k": 10,
+       "precision": 0.1145,
+       "recall": 0.9491,
+       "alerts_per_day": 10.0
+      },
+      {
+       "top_k": 11,
+       "precision": 0.1056,
+       "recall": 0.963,
+       "alerts_per_day": 11.0
+      },
+      {
+       "top_k": 12,
+       "precision": 0.0978,
+       "recall": 0.9722,
+       "alerts_per_day": 12.0
+      },
+      {
+       "top_k": 13,
+       "precision": 0.0911,
+       "recall": 0.9815,
+       "alerts_per_day": 13.0
+      },
+      {
+       "top_k": 14,
+       "precision": 0.0846,
+       "recall": 0.9815,
+       "alerts_per_day": 14.0
+      },
+      {
+       "top_k": 15,
+       "precision": 0.0793,
+       "recall": 0.9861,
+       "alerts_per_day": 15.0
+      }
+     ]
+    },
+    "history_model": {
+     "objects_per_day": 18.0,
+     "days": 179,
+     "base_rate": 0.0677,
+     "avg_precision": 0.3182,
+     "roc_auc": 0.835,
+     "lift_top3": 3.47,
+     "top_k": {
+      "3": 0.2346,
+      "5": 0.1899,
+      "10": 0.1112
+     },
+     "recall_top_k": {
+      "3": 0.578,
+      "5": 0.7798,
+      "10": 0.9128
+     },
+     "recall_at_precision_0_7": 0.0826,
+     "precision_at_recall_0_5": 0.2385,
+     "curve": [
+      {
+       "top_k": 1,
+       "precision": 0.3017,
+       "recall": 0.2477,
+       "alerts_per_day": 1.0
+      },
+      {
+       "top_k": 2,
+       "precision": 0.2682,
+       "recall": 0.4404,
+       "alerts_per_day": 2.0
+      },
+      {
+       "top_k": 3,
+       "precision": 0.2346,
+       "recall": 0.578,
+       "alerts_per_day": 3.0
+      },
+      {
+       "top_k": 4,
+       "precision": 0.2109,
+       "recall": 0.6927,
+       "alerts_per_day": 4.0
+      },
+      {
+       "top_k": 5,
+       "precision": 0.1899,
+       "recall": 0.7798,
+       "alerts_per_day": 5.0
+      },
+      {
+       "top_k": 6,
+       "precision": 0.1695,
+       "recall": 0.8349,
+       "alerts_per_day": 6.0
+      },
+      {
+       "top_k": 7,
+       "precision": 0.1508,
+       "recall": 0.867,
+       "alerts_per_day": 7.0
+      },
+      {
+       "top_k": 8,
+       "precision": 0.1341,
+       "recall": 0.8807,
+       "alerts_per_day": 8.0
+      },
+      {
+       "top_k": 9,
+       "precision": 0.121,
+       "recall": 0.8945,
+       "alerts_per_day": 9.0
+      },
+      {
+       "top_k": 10,
+       "precision": 0.1112,
+       "recall": 0.9128,
+       "alerts_per_day": 10.0
+      },
+      {
+       "top_k": 11,
+       "precision": 0.1046,
+       "recall": 0.945,
+       "alerts_per_day": 11.0
+      },
+      {
+       "top_k": 12,
+       "precision": 0.0982,
+       "recall": 0.9679,
+       "alerts_per_day": 12.0
+      },
+      {
+       "top_k": 13,
+       "precision": 0.0915,
+       "recall": 0.9771,
+       "alerts_per_day": 13.0
+      },
+      {
+       "top_k": 14,
+       "precision": 0.0858,
+       "recall": 0.9862,
+       "alerts_per_day": 14.0
+      },
+      {
+       "top_k": 15,
+       "precision": 0.0801,
+       "recall": 0.9862,
+       "alerts_per_day": 15.0
+      }
+     ],
+     "avg_precision_2025": 0.2153
+    },
+    "state_model": {
+     "objects_per_day": 18.0,
+     "days": 179,
+     "base_rate": 0.0677,
+     "avg_precision": 0.28,
+     "roc_auc": 0.8381,
+     "lift_top3": 3.41,
+     "top_k": {
+      "3": 0.2309,
+      "5": 0.1911,
+      "10": 0.114
+     },
+     "recall_top_k": {
+      "3": 0.5688,
+      "5": 0.7844,
+      "10": 0.9358
+     },
+     "recall_at_precision_0_7": 0.0229,
+     "precision_at_recall_0_5": 0.25,
+     "curve": [
+      {
+       "top_k": 1,
+       "precision": 0.2514,
+       "recall": 0.2064,
+       "alerts_per_day": 1.0
+      },
+      {
+       "top_k": 2,
+       "precision": 0.2486,
+       "recall": 0.4083,
+       "alerts_per_day": 2.0
+      },
+      {
+       "top_k": 3,
+       "precision": 0.2309,
+       "recall": 0.5688,
+       "alerts_per_day": 3.0
+      },
+      {
+       "top_k": 4,
+       "precision": 0.2081,
+       "recall": 0.6835,
+       "alerts_per_day": 4.0
+      },
+      {
+       "top_k": 5,
+       "precision": 0.1911,
+       "recall": 0.7844,
+       "alerts_per_day": 5.0
+      },
+      {
+       "top_k": 6,
+       "precision": 0.1695,
+       "recall": 0.8349,
+       "alerts_per_day": 6.0
+      },
+      {
+       "top_k": 7,
+       "precision": 0.1508,
+       "recall": 0.867,
+       "alerts_per_day": 7.0
+      },
+      {
+       "top_k": 8,
+       "precision": 0.1376,
+       "recall": 0.9037,
+       "alerts_per_day": 8.0
+      },
+      {
+       "top_k": 9,
+       "precision": 0.1254,
+       "recall": 0.9266,
+       "alerts_per_day": 9.0
+      },
+      {
+       "top_k": 10,
+       "precision": 0.114,
+       "recall": 0.9358,
+       "alerts_per_day": 10.0
+      },
+      {
+       "top_k": 11,
+       "precision": 0.1061,
+       "recall": 0.9587,
+       "alerts_per_day": 11.0
+      },
+      {
+       "top_k": 12,
+       "precision": 0.0987,
+       "recall": 0.9725,
+       "alerts_per_day": 12.0
+      },
+      {
+       "top_k": 13,
+       "precision": 0.0915,
+       "recall": 0.9771,
+       "alerts_per_day": 13.0
+      },
+      {
+       "top_k": 14,
+       "precision": 0.0854,
+       "recall": 0.9817,
+       "alerts_per_day": 14.0
+      },
+      {
+       "top_k": 15,
+       "precision": 0.0801,
+       "recall": 0.9862,
+       "alerts_per_day": 15.0
+      }
+     ],
+     "avg_precision_2025": 0.2317
+    },
+    "rule_7d": {
+     "objects_per_day": 18.0,
+     "days": 179,
+     "base_rate": 0.0677,
+     "avg_precision": 0.3099,
+     "roc_auc": 0.8185,
+     "lift_top3": 3.52,
+     "top_k": {
+      "3": 0.2384,
+      "5": 0.1877,
+      "10": 0.1112
+     },
+     "recall_top_k": {
+      "3": 0.5872,
+      "5": 0.7706,
+      "10": 0.9128
+     },
+     "recall_at_precision_0_7": 0.0642,
+     "precision_at_recall_0_5": 0.2727,
+     "curve": [
+      {
+       "top_k": 1,
+       "precision": 0.2961,
+       "recall": 0.2431,
+       "alerts_per_day": 1.0
+      },
+      {
+       "top_k": 2,
+       "precision": 0.2793,
+       "recall": 0.4587,
+       "alerts_per_day": 2.0
+      },
+      {
+       "top_k": 3,
+       "precision": 0.2384,
+       "recall": 0.5872,
+       "alerts_per_day": 3.0
+      },
+      {
+       "top_k": 4,
+       "precision": 0.2053,
+       "recall": 0.6743,
+       "alerts_per_day": 4.0
+      },
+      {
+       "top_k": 5,
+       "precision": 0.1877,
+       "recall": 0.7706,
+       "alerts_per_day": 5.0
+      },
+      {
+       "top_k": 6,
+       "precision": 0.1629,
+       "recall": 0.8028,
+       "alerts_per_day": 6.0
+      },
+      {
+       "top_k": 7,
+       "precision": 0.1468,
+       "recall": 0.844,
+       "alerts_per_day": 7.0
+      },
+      {
+       "top_k": 8,
+       "precision": 0.1334,
+       "recall": 0.8761,
+       "alerts_per_day": 8.0
+      },
+      {
+       "top_k": 9,
+       "precision": 0.1198,
+       "recall": 0.8853,
+       "alerts_per_day": 9.0
+      },
+      {
+       "top_k": 10,
+       "precision": 0.1112,
+       "recall": 0.9128,
+       "alerts_per_day": 10.0
+      },
+      {
+       "top_k": 11,
+       "precision": 0.1026,
+       "recall": 0.9266,
+       "alerts_per_day": 11.0
+      },
+      {
+       "top_k": 12,
+       "precision": 0.0945,
+       "recall": 0.9312,
+       "alerts_per_day": 12.0
+      },
+      {
+       "top_k": 13,
+       "precision": 0.0877,
+       "recall": 0.9358,
+       "alerts_per_day": 13.0
+      },
+      {
+       "top_k": 14,
+       "precision": 0.0818,
+       "recall": 0.9404,
+       "alerts_per_day": 14.0
+      },
+      {
+       "top_k": 15,
+       "precision": 0.0767,
+       "recall": 0.945,
+       "alerts_per_day": 15.0
+      }
+     ]
+    },
+    "blend": {
+     "objects_per_day": 17.3,
+     "days": 179,
+     "base_rate": 0.0696,
+     "avg_precision": 0.2821,
+     "roc_auc": 0.8321,
+     "lift_top3": 3.32,
+     "top_k": {
+      "3": 0.2309,
+      "5": 0.1866,
+      "10": 0.1134
+     },
+     "recall_top_k": {
+      "3": 0.5741,
+      "5": 0.7731,
+      "10": 0.9398
+     },
+     "recall_at_precision_0_7": 0.0046,
+     "precision_at_recall_0_5": 0.2506,
+     "curve": [
+      {
+       "top_k": 1,
+       "precision": 0.2793,
+       "recall": 0.2315,
+       "alerts_per_day": 1.0
+      },
+      {
+       "top_k": 2,
+       "precision": 0.2458,
+       "recall": 0.4074,
+       "alerts_per_day": 2.0
+      },
+      {
+       "top_k": 3,
+       "precision": 0.2309,
+       "recall": 0.5741,
+       "alerts_per_day": 3.0
+      },
+      {
+       "top_k": 4,
+       "precision": 0.2025,
+       "recall": 0.6713,
+       "alerts_per_day": 4.0
+      },
+      {
+       "top_k": 5,
+       "precision": 0.1866,
+       "recall": 0.7731,
+       "alerts_per_day": 5.0
+      },
+      {
+       "top_k": 6,
+       "precision": 0.1685,
+       "recall": 0.838,
+       "alerts_per_day": 6.0
+      },
+      {
+       "top_k": 7,
+       "precision": 0.1492,
+       "recall": 0.8657,
+       "alerts_per_day": 7.0
+      },
+      {
+       "top_k": 8,
+       "precision": 0.1362,
+       "recall": 0.9028,
+       "alerts_per_day": 8.0
+      },
+      {
+       "top_k": 9,
+       "precision": 0.1254,
+       "recall": 0.9352,
+       "alerts_per_day": 9.0
+      },
+      {
+       "top_k": 10,
+       "precision": 0.1134,
+       "recall": 0.9398,
+       "alerts_per_day": 10.0
+      },
+      {
+       "top_k": 11,
+       "precision": 0.1046,
+       "recall": 0.9537,
+       "alerts_per_day": 11.0
+      },
+      {
+       "top_k": 12,
+       "precision": 0.0973,
+       "recall": 0.9676,
+       "alerts_per_day": 12.0
+      },
+      {
+       "top_k": 13,
+       "precision": 0.0907,
+       "recall": 0.9769,
+       "alerts_per_day": 13.0
+      },
+      {
+       "top_k": 14,
+       "precision": 0.085,
+       "recall": 0.9861,
+       "alerts_per_day": 14.0
+      },
+      {
+       "top_k": 15,
+       "precision": 0.0801,
+       "recall": 0.9954,
+       "alerts_per_day": 15.0
+      }
+     ]
+    }
+   },
+   "selected_2025": "state"
+  },
+  "power": {
+   "label": "Отключение питания объекта",
+   "rule": "«Обесточен» у трёх и более фидеров одного объекта в пределах 5 минут",
+   "source_model": "phase_24h",
+   "per_year": {
+    "2019": 4954,
+    "2020": 5091,
+    "2021": 5317,
+    "2022": 6318,
+    "2023": 6261,
+    "2024": 6378,
+    "2025": 6193,
+    "2026": 3350
+   },
+   "objects": 19,
+   "variants": {
+    "channel_model": {
+     "objects_per_day": 18.9,
+     "days": 179,
+     "base_rate": 0.5378,
+     "avg_precision": 0.7588,
+     "roc_auc": 0.7448,
+     "lift_top3": 1.36,
+     "top_k": {
+      "3": 0.73,
+      "5": 0.7061,
+      "10": 0.6575
+     },
+     "recall_top_k": {
+      "3": 0.2154,
+      "5": 0.3473,
+      "10": 0.6467
+     },
+     "recall_at_precision_0_7": 0.5621,
+     "precision_at_recall_0_5": 0.7247,
+     "curve": [
+      {
+       "top_k": 1,
+       "precision": 0.7263,
+       "recall": 0.0714,
+       "alerts_per_day": 1.0
+      },
+      {
+       "top_k": 2,
+       "precision": 0.7235,
+       "recall": 0.1423,
+       "alerts_per_day": 2.0
+      },
+      {
+       "top_k": 3,
+       "precision": 0.73,
+       "recall": 0.2154,
+       "alerts_per_day": 3.0
+      },
+      {
+       "top_k": 4,
+       "precision": 0.7179,
+       "recall": 0.2824,
+       "alerts_per_day": 4.0
+      },
+      {
+       "top_k": 5,
+       "precision": 0.7061,
+       "recall": 0.3473,
+       "alerts_per_day": 5.0
+      },
+      {
+       "top_k": 6,
+       "precision": 0.6965,
+       "recall": 0.411,
+       "alerts_per_day": 6.0
+      },
+      {
+       "top_k": 7,
+       "precision": 0.6808,
+       "recall": 0.4687,
+       "alerts_per_day": 7.0
+      },
+      {
+       "top_k": 8,
+       "precision": 0.6753,
+       "recall": 0.5313,
+       "alerts_per_day": 8.0
+      },
+      {
+       "top_k": 9,
+       "precision": 0.6685,
+       "recall": 0.5918,
+       "alerts_per_day": 9.0
+      },
+      {
+       "top_k": 10,
+       "precision": 0.6575,
+       "recall": 0.6467,
+       "alerts_per_day": 10.0
+      },
+      {
+       "top_k": 11,
+       "precision": 0.6455,
+       "recall": 0.6984,
+       "alerts_per_day": 11.0
+      },
+      {
+       "top_k": 12,
+       "precision": 0.6392,
+       "recall": 0.7544,
+       "alerts_per_day": 12.0
+      },
+      {
+       "top_k": 13,
+       "precision": 0.6266,
+       "recall": 0.8011,
+       "alerts_per_day": 13.0
+      },
+      {
+       "top_k": 14,
+       "precision": 0.6169,
+       "recall": 0.8495,
+       "alerts_per_day": 14.0
+      },
+      {
+       "top_k": 15,
+       "precision": 0.606,
+       "recall": 0.894,
+       "alerts_per_day": 15.0
+      }
+     ]
+    },
+    "history_model": {
+     "objects_per_day": 19.0,
+     "days": 179,
+     "base_rate": 0.5351,
+     "avg_precision": 0.8272,
+     "roc_auc": 0.8317,
+     "lift_top3": 1.37,
+     "top_k": {
+      "3": 0.7356,
+      "5": 0.7095,
+      "10": 0.6799
+     },
+     "recall_top_k": {
+      "3": 0.217,
+      "5": 0.3489,
+      "10": 0.6687
+     },
+     "recall_at_precision_0_7": 0.8995,
+     "precision_at_recall_0_5": 0.8615,
+     "curve": [
+      {
+       "top_k": 1,
+       "precision": 0.7263,
+       "recall": 0.0714,
+       "alerts_per_day": 1.0
+      },
+      {
+       "top_k": 2,
+       "precision": 0.7514,
+       "recall": 0.1478,
+       "alerts_per_day": 2.0
+      },
+      {
+       "top_k": 3,
+       "precision": 0.7356,
+       "recall": 0.217,
+       "alerts_per_day": 3.0
+      },
+      {
+       "top_k": 4,
+       "precision": 0.7193,
+       "recall": 0.283,
+       "alerts_per_day": 4.0
+      },
+      {
+       "top_k": 5,
+       "precision": 0.7095,
+       "recall": 0.3489,
+       "alerts_per_day": 5.0
+      },
+      {
+       "top_k": 6,
+       "precision": 0.7095,
+       "recall": 0.4187,
+       "alerts_per_day": 6.0
+      },
+      {
+       "top_k": 7,
+       "precision": 0.7023,
+       "recall": 0.4835,
+       "alerts_per_day": 7.0
+      },
+      {
+       "top_k": 8,
+       "precision": 0.6976,
+       "recall": 0.5489,
+       "alerts_per_day": 8.0
+      },
+      {
+       "top_k": 9,
+       "precision": 0.6884,
+       "recall": 0.6093,
+       "alerts_per_day": 9.0
+      },
+      {
+       "top_k": 10,
+       "precision": 0.6799,
+       "recall": 0.6687,
+       "alerts_per_day": 10.0
+      },
+      {
+       "top_k": 11,
+       "precision": 0.6729,
+       "recall": 0.728,
+       "alerts_per_day": 11.0
+      },
+      {
+       "top_k": 12,
+       "precision": 0.6578,
+       "recall": 0.7764,
+       "alerts_per_day": 12.0
+      },
+      {
+       "top_k": 13,
+       "precision": 0.648,
+       "recall": 0.8286,
+       "alerts_per_day": 13.0
+      },
+      {
+       "top_k": 14,
+       "precision": 0.6353,
+       "recall": 0.8747,
+       "alerts_per_day": 14.0
+      },
+      {
+       "top_k": 15,
+       "precision": 0.6231,
+       "recall": 0.9192,
+       "alerts_per_day": 15.0
+      }
+     ],
+     "avg_precision_2025": 0.8151
+    },
+    "state_model": {
+     "objects_per_day": 19.0,
+     "days": 179,
+     "base_rate": 0.5351,
+     "avg_precision": 0.8398,
+     "roc_auc": 0.8409,
+     "lift_top3": 1.38,
+     "top_k": {
+      "3": 0.7374,
+      "5": 0.7296,
+      "10": 0.6927
+     },
+     "recall_top_k": {
+      "3": 0.2176,
+      "5": 0.3588,
+      "10": 0.6813
+     },
+     "recall_at_precision_0_7": 0.9082,
+     "precision_at_recall_0_5": 0.8667,
+     "curve": [
+      {
+       "top_k": 1,
+       "precision": 0.7877,
+       "recall": 0.0775,
+       "alerts_per_day": 1.0
+      },
+      {
+       "top_k": 2,
+       "precision": 0.7682,
+       "recall": 0.1511,
+       "alerts_per_day": 2.0
+      },
+      {
+       "top_k": 3,
+       "precision": 0.7374,
+       "recall": 0.2176,
+       "alerts_per_day": 3.0
+      },
+      {
+       "top_k": 4,
+       "precision": 0.7277,
+       "recall": 0.2863,
+       "alerts_per_day": 4.0
+      },
+      {
+       "top_k": 5,
+       "precision": 0.7296,
+       "recall": 0.3588,
+       "alerts_per_day": 5.0
+      },
+      {
+       "top_k": 6,
+       "precision": 0.7225,
+       "recall": 0.4264,
+       "alerts_per_day": 6.0
+      },
+      {
+       "top_k": 7,
+       "precision": 0.7119,
+       "recall": 0.4901,
+       "alerts_per_day": 7.0
+      },
+      {
+       "top_k": 8,
+       "precision": 0.7109,
+       "recall": 0.5593,
+       "alerts_per_day": 8.0
+      },
+      {
+       "top_k": 9,
+       "precision": 0.7045,
+       "recall": 0.6236,
+       "alerts_per_day": 9.0
+      },
+      {
+       "top_k": 10,
+       "precision": 0.6927,
+       "recall": 0.6813,
+       "alerts_per_day": 10.0
+      },
+      {
+       "top_k": 11,
+       "precision": 0.6831,
+       "recall": 0.739,
+       "alerts_per_day": 11.0
+      },
+      {
+       "top_k": 12,
+       "precision": 0.6671,
+       "recall": 0.7874,
+       "alerts_per_day": 12.0
+      },
+      {
+       "top_k": 13,
+       "precision": 0.6515,
+       "recall": 0.833,
+       "alerts_per_day": 13.0
+      },
+      {
+       "top_k": 14,
+       "precision": 0.6349,
+       "recall": 0.8742,
+       "alerts_per_day": 14.0
+      },
+      {
+       "top_k": 15,
+       "precision": 0.6205,
+       "recall": 0.9154,
+       "alerts_per_day": 15.0
+      }
+     ],
+     "avg_precision_2025": 0.8296
+    },
+    "rule_7d": {
+     "objects_per_day": 19.0,
+     "days": 179,
+     "base_rate": 0.5351,
+     "avg_precision": 0.6885,
+     "roc_auc": 0.7009,
+     "lift_top3": 1.34,
+     "top_k": {
+      "3": 0.7169,
+      "5": 0.6939,
+      "10": 0.6609
+     },
+     "recall_top_k": {
+      "3": 0.2115,
+      "5": 0.3412,
+      "10": 0.65
+     },
+     "recall_at_precision_0_7": 0.4313,
+     "precision_at_recall_0_5": 0.6977,
+     "curve": [
+      {
+       "top_k": 1,
+       "precision": 0.7318,
+       "recall": 0.072,
+       "alerts_per_day": 1.0
+      },
+      {
+       "top_k": 2,
+       "precision": 0.7263,
+       "recall": 0.1429,
+       "alerts_per_day": 2.0
+      },
+      {
+       "top_k": 3,
+       "precision": 0.7169,
+       "recall": 0.2115,
+       "alerts_per_day": 3.0
+      },
+      {
+       "top_k": 4,
+       "precision": 0.7067,
+       "recall": 0.278,
+       "alerts_per_day": 4.0
+      },
+      {
+       "top_k": 5,
+       "precision": 0.6939,
+       "recall": 0.3412,
+       "alerts_per_day": 5.0
+      },
+      {
+       "top_k": 6,
+       "precision": 0.689,
+       "recall": 0.4066,
+       "alerts_per_day": 6.0
+      },
+      {
+       "top_k": 7,
+       "precision": 0.6768,
+       "recall": 0.4659,
+       "alerts_per_day": 7.0
+      },
+      {
+       "top_k": 8,
+       "precision": 0.6683,
+       "recall": 0.5258,
+       "alerts_per_day": 8.0
+      },
+      {
+       "top_k": 9,
+       "precision": 0.6654,
+       "recall": 0.589,
+       "alerts_per_day": 9.0
+      },
+      {
+       "top_k": 10,
+       "precision": 0.6609,
+       "recall": 0.65,
+       "alerts_per_day": 10.0
+      },
+      {
+       "top_k": 11,
+       "precision": 0.6562,
+       "recall": 0.7099,
+       "alerts_per_day": 11.0
+      },
+      {
+       "top_k": 12,
+       "precision": 0.6555,
+       "recall": 0.7736,
+       "alerts_per_day": 12.0
+      },
+      {
+       "top_k": 13,
+       "precision": 0.6442,
+       "recall": 0.8236,
+       "alerts_per_day": 13.0
+      },
+      {
+       "top_k": 14,
+       "precision": 0.6297,
+       "recall": 0.867,
+       "alerts_per_day": 14.0
+      },
+      {
+       "top_k": 15,
+       "precision": 0.6142,
+       "recall": 0.906,
+       "alerts_per_day": 15.0
+      }
+     ]
+    },
+    "blend": {
+     "objects_per_day": 18.9,
+     "days": 179,
+     "base_rate": 0.5378,
+     "avg_precision": 0.8208,
+     "roc_auc": 0.8129,
+     "lift_top3": 1.37,
+     "top_k": {
+      "3": 0.7393,
+      "5": 0.7162,
+      "10": 0.681
+     },
+     "recall_top_k": {
+      "3": 0.2181,
+      "5": 0.3522,
+      "10": 0.6698
+     },
+     "recall_at_precision_0_7": 0.8659,
+     "precision_at_recall_0_5": 0.8412,
+     "curve": [
+      {
+       "top_k": 1,
+       "precision": 0.7486,
+       "recall": 0.0736,
+       "alerts_per_day": 1.0
+      },
+      {
+       "top_k": 2,
+       "precision": 0.7374,
+       "recall": 0.1451,
+       "alerts_per_day": 2.0
+      },
+      {
+       "top_k": 3,
+       "precision": 0.7393,
+       "recall": 0.2181,
+       "alerts_per_day": 3.0
+      },
+      {
+       "top_k": 4,
+       "precision": 0.7277,
+       "recall": 0.2863,
+       "alerts_per_day": 4.0
+      },
+      {
+       "top_k": 5,
+       "precision": 0.7162,
+       "recall": 0.3522,
+       "alerts_per_day": 5.0
+      },
+      {
+       "top_k": 6,
+       "precision": 0.7048,
+       "recall": 0.4159,
+       "alerts_per_day": 6.0
+      },
+      {
+       "top_k": 7,
+       "precision": 0.7015,
+       "recall": 0.483,
+       "alerts_per_day": 7.0
+      },
+      {
+       "top_k": 8,
+       "precision": 0.6955,
+       "recall": 0.5473,
+       "alerts_per_day": 8.0
+      },
+      {
+       "top_k": 9,
+       "precision": 0.6853,
+       "recall": 0.6066,
+       "alerts_per_day": 9.0
+      },
+      {
+       "top_k": 10,
+       "precision": 0.681,
+       "recall": 0.6698,
+       "alerts_per_day": 10.0
+      },
+      {
+       "top_k": 11,
+       "precision": 0.6694,
+       "recall": 0.7242,
+       "alerts_per_day": 11.0
+      },
+      {
+       "top_k": 12,
+       "precision": 0.662,
+       "recall": 0.7813,
+       "alerts_per_day": 12.0
+      },
+      {
+       "top_k": 13,
+       "precision": 0.6485,
+       "recall": 0.8291,
+       "alerts_per_day": 13.0
+      },
+      {
+       "top_k": 14,
+       "precision": 0.6309,
+       "recall": 0.8687,
+       "alerts_per_day": 14.0
+      },
+      {
+       "top_k": 15,
+       "precision": 0.6134,
+       "recall": 0.9049,
+       "alerts_per_day": 15.0
+      }
+     ]
+    }
+   },
+   "selected_2025": "state"
+  }
+ }
+}

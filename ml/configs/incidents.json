@@ -1,0 +1,35 @@
+{
+  "fire": {
+    "label": "Пожарный инцидент",
+    "rule": "«Обнаружен дым» на двух и более дымовых датчиках одного объекта в пределах 15 минут вне серии ППР; отдельно отмечается рост температуры на объекте за 30 минут до и 60 минут после",
+    "sensor": "Датчик дыма",
+    "state": "Обнаружен дым",
+    "onset_gap_minutes": 30,
+    "window_minutes": 15,
+    "min_channels": 2,
+    "exclude_maintenance": true,
+    "temperature_states": ["Температура выше 40ºC"],
+    "temperature_min": 45,
+    "temperature_max": 90,
+    "temperature_before_minutes": 30,
+    "temperature_after_minutes": 60
+  },
+  "flood": {
+    "label": "Подтопление",
+    "rule": "состояние «Затоплен» у двух и более насосов одной станции в пределах часа или затопление камеры дольше 30 минут",
+    "sensor": "Состояние насоса",
+    "state": "Затоплен",
+    "window_minutes": 60,
+    "min_channels": 2,
+    "min_duration_minutes": 30
+  },
+  "power": {
+    "label": "Отключение питания объекта",
+    "rule": "«Обесточен» у трёх и более фидеров одного объекта в пределах 5 минут",
+    "sensor": "Состояние фазы",
+    "state": "Обесточен",
+    "onset_gap_minutes": 30,
+    "window_minutes": 5,
+    "min_channels": 3
+  }
+}

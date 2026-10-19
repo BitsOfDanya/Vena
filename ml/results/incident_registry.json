@@ -1,0 +1,4702 @@
+{
+ "journal_end": "2026-06-30",
+ "incidents": {
+  "fire": {
+   "label": "Пожарный инцидент",
+   "rule": "«Обнаружен дым» на двух и более дымовых датчиках одного объекта в пределах 15 минут вне серии ППР; отдельно отмечается рост температуры на объекте за 30 минут до и 60 минут после",
+   "total": 1429,
+   "objects": 30,
+   "per_year": {
+    "2019": 123,
+    "2020": 199,
+    "2021": 151,
+    "2022": 218,
+    "2023": 216,
+    "2024": 163,
+    "2025": 190,
+    "2026": 169
+   },
+   "recent_2026h1": 169,
+   "per_day_2026h1": 0.93,
+   "channels_median": 2.0,
+   "top_objects": {
+    "3356": 143,
+    "4370": 120,
+    "5567": 98,
+    "5332": 83,
+    "5962": 81,
+    "5537": 72,
+    "5343": 67,
+    "5113": 64,
+    "5677": 60,
+    "4574": 53
+   },
+   "temperature_confirmed": 5
+  },
+  "flood": {
+   "label": "Подтопление",
+   "rule": "состояние «Затоплен» у двух и более насосов одной станции в пределах часа или затопление камеры дольше 30 минут",
+   "total": 3330,
+   "objects": 18,
+   "per_year": {
+    "2019": 327,
+    "2020": 455,
+    "2021": 667,
+    "2022": 464,
+    "2023": 393,
+    "2024": 389,
+    "2025": 334,
+    "2026": 301
+   },
+   "recent_2026h1": 301,
+   "per_day_2026h1": 1.66,
+   "channels_median": 3.0,
+   "top_objects": {
+    "3388": 594,
+    "5011": 448,
+    "5003": 434,
+    "5122": 393,
+    "5333": 232,
+    "3902": 225,
+    "5132": 142,
+    "5675": 139,
+    "4543": 113,
+    "3360": 105
+   },
+   "long_over_30_minutes": 257
+  },
+  "power": {
+   "label": "Отключение питания объекта",
+   "rule": "«Обесточен» у трёх и более фидеров одного объекта в пределах 5 минут",
+   "total": 43862,
+   "objects": 19,
+   "per_year": {
+    "2019": 4954,
+    "2020": 5091,
+    "2021": 5317,
+    "2022": 6318,
+    "2023": 6261,
+    "2024": 6378,
+    "2025": 6193,
+    "2026": 3350
+   },
+   "recent_2026h1": 3350,
+   "per_day_2026h1": 18.51,
+   "channels_median": 7.0,
+   "top_objects": {
+    "5011": 4418,
+    "4610": 3929,
+    "3388": 3715,
+    "5333": 3660,
+    "3902": 3417,
+    "5122": 3223,
+    "5003": 2693,
+    "3360": 2612,
+    "5218": 2461,
+    "5657": 2435
+   }
+  }
+ },
+ "recent": [
+  {
+   "kind": "flood",
+   "object": "5675",
+   "start": "2026-06-30T23:19:26",
+   "end": "2026-06-30T23:19:26",
+   "channels": 2,
+   "max_minutes": 0.0
+  },
+  {
+   "kind": "power",
+   "object": "5675",
+   "start": "2026-06-30T22:48:47",
+   "end": "2026-06-30T22:49:00",
+   "channels": 5
+  },
+  {
+   "kind": "flood",
+   "object": "5675",
+   "start": "2026-06-30T21:43:28",
+   "end": "2026-06-30T21:43:28",
+   "channels": 2,
+   "max_minutes": 0.0
+  },
+  {
+   "kind": "power",
+   "object": "5011",
+   "start": "2026-06-30T20:07:30",
+   "end": "2026-06-30T20:07:54",
+   "channels": 13
+  },
+  {
+   "kind": "flood",
+   "object": "5675",
+   "start": "2026-06-30T18:31:07",
+   "end": "2026-06-30T18:31:07",
+   "channels": 2,
+   "max_minutes": 0.0
+  },
+  {
+   "kind": "power",
+   "object": "3902",
+   "start": "2026-06-30T18:12:50",
+   "end": "2026-06-30T18:13:16",
+   "channels": 13
+  },
+  {
+   "kind": "power",
+   "object": "5218",
+   "start": "2026-06-30T17:47:34",
+   "end": "2026-06-30T17:47:54",
+   "channels": 5
+  },
+  {
+   "kind": "power",
+   "object": "3360",
+   "start": "2026-06-30T17:10:50",
+   "end": "2026-06-30T17:12:30",
+   "channels": 7
+  },
+  {
+   "kind": "power",
+   "object": "5963",
+   "start": "2026-06-30T17:07:31",
+   "end": "2026-06-30T17:07:51",
+   "channels": 8
+  },
+  {
+   "kind": "flood",
+   "object": "5591",
+   "start": "2026-06-30T16:45:12",
+   "end": "2026-06-30T16:45:12",
+   "channels": 2,
+   "max_minutes": 0.0
+  },
+  {
+   "kind": "fire",
+   "object": "5677",
+   "start": "2026-06-30T16:30:20",
+   "end": "2026-06-30T16:42:46",
+   "channels": 3,
+   "temperature_confirmed": false
+  },
+  {
+   "kind": "power",
+   "object": "5578",
+   "start": "2026-06-30T16:29:15",
+   "end": "2026-06-30T16:29:37",
+   "channels": 3
+  },
+  {
+   "kind": "power",
+   "object": "5657",
+   "start": "2026-06-30T16:27:23",
+   "end": "2026-06-30T16:27:57",
+   "channels": 8
+  },
+  {
+   "kind": "power",
+   "object": "3360",
+   "start": "2026-06-30T15:56:04",
+   "end": "2026-06-30T15:56:06",
+   "channels": 3
+  },
+  {
+   "kind": "power",
+   "object": "3902",
+   "start": "2026-06-30T15:44:59",
+   "end": "2026-06-30T15:45:32",
+   "channels": 9
+  },
+  {
+   "kind": "power",
+   "object": "3388",
+   "start": "2026-06-30T15:43:19",
+   "end": "2026-06-30T15:43:58",
+   "channels": 15
+  },
+  {
+   "kind": "power",
+   "object": "5011",
+   "start": "2026-06-30T15:33:45",
+   "end": "2026-06-30T15:34:17",
+   "channels": 16
+  },
+  {
+   "kind": "power",
+   "object": "5578",
+   "start": "2026-06-30T14:00:31",
+   "end": "2026-06-30T14:00:33",
+   "channels": 4
+  },
+  {
+   "kind": "power",
+   "object": "5132",
+   "start": "2026-06-30T14:00:24",
+   "end": "2026-06-30T14:00:29",
+   "channels": 9
+  },
+  {
+   "kind": "power",
+   "object": "4543",
+   "start": "2026-06-30T13:56:39",
+   "end": "2026-06-30T13:56:41",
+   "channels": 3
+  },
+  {
+   "kind": "power",
+   "object": "5122",
+   "start": "2026-06-30T13:50:43",
+   "end": "2026-06-30T13:50:53",
+   "channels": 22
+  },
+  {
+   "kind": "power",
+   "object": "5657",
+   "start": "2026-06-30T13:45:58",
+   "end": "2026-06-30T13:46:08",
+   "channels": 11
+  },
+  {
+   "kind": "power",
+   "object": "4369",
+   "start": "2026-06-30T13:43:56",
+   "end": "2026-06-30T13:45:04",
+   "channels": 17
+  },
+  {
+   "kind": "power",
+   "object": "5333",
+   "start": "2026-06-30T13:42:31",
+   "end": "2026-06-30T13:43:26",
+   "channels": 28
+  },
+  {
+   "kind": "power",
+   "object": "4610",
+   "start": "2026-06-30T13:25:27",
+   "end": "2026-06-30T13:25:31",
+   "channels": 11
+  },
+  {
+   "kind": "power",
+   "object": "5003",
+   "start": "2026-06-30T13:19:26",
+   "end": "2026-06-30T13:19:47",
+   "channels": 8
+  },
+  {
+   "kind": "fire",
+   "object": "5332",
+   "start": "2026-06-30T13:01:20",
+   "end": "2026-06-30T13:26:24",
+   "channels": 3,
+   "temperature_confirmed": false
+  },
+  {
+   "kind": "power",
+   "object": "4610",
+   "start": "2026-06-30T12:45:56",
+   "end": "2026-06-30T12:46:15",
+   "channels": 21
+  },
+  {
+   "kind": "power",
+   "object": "5333",
+   "start": "2026-06-30T12:30:28",
+   "end": "2026-06-30T12:36:51",
+   "channels": 5
+  },
+  {
+   "kind": "flood",
+   "object": "3388",
+   "start": "2026-06-30T12:08:05",
+   "end": "2026-06-30T12:08:05",
+   "channels": 6,
+   "max_minutes": 0.0
+  },
+  {
+   "kind": "power",
+   "object": "3388",
+   "start": "2026-06-30T12:07:53",
+   "end": "2026-06-30T12:08:05",
+   "channels": 11
+  },
+  {
+   "kind": "power",
+   "object": "4369",
+   "start": "2026-06-30T12:01:17",
+   "end": "2026-06-30T12:07:33",
+   "channels": 3
+  },
+  {
+   "kind": "fire",
+   "object": "5336",
+   "start": "2026-06-30T11:45:22",
+   "end": "2026-06-30T11:47:14",
+   "channels": 3,
+   "temperature_confirmed": false
+  },
+  {
+   "kind": "power",
+   "object": "4369",
+   "start": "2026-06-30T11:02:42",
+   "end": "2026-06-30T11:10:14",
+   "channels": 4
+  },
+  {
+   "kind": "power",
+   "object": "4177",
+   "start": "2026-06-30T10:57:19",
+   "end": "2026-06-30T10:57:22",
+   "channels": 6
+  },
+  {
+   "kind": "power",
+   "object": "4369",
+   "start": "2026-06-30T10:30:54",
+   "end": "2026-06-30T10:36:16",
+   "channels": 3
+  },
+  {
+   "kind": "power",
+   "object": "5333",
+   "start": "2026-06-30T10:28:44",
+   "end": "2026-06-30T10:28:46",
+   "channels": 3
+  },
+  {
+   "kind": "power",
+   "object": "5333",
+   "start": "2026-06-30T09:45:18",
+   "end": "2026-06-30T10:01:32",
+   "channels": 17
+  },
+  {
+   "kind": "power",
+   "object": "5578",
+   "start": "2026-06-30T09:40:45",
+   "end": "2026-06-30T09:40:45",
+   "channels": 4
+  },
+  {
+   "kind": "power",
+   "object": "5003",
+   "start": "2026-06-30T09:23:04",
+   "end": "2026-06-30T09:23:22",
+   "channels": 8
+  },
+  {
+   "kind": "power",
+   "object": "5003",
+   "start": "2026-06-30T05:33:20",
+   "end": "2026-06-30T05:33:20",
+   "channels": 3
+  },
+  {
+   "kind": "power",
+   "object": "3902",
+   "start": "2026-06-29T22:56:47",
+   "end": "2026-06-29T22:57:08",
+   "channels": 12
+  },
+  {
+   "kind": "power",
+   "object": "5578",
+   "start": "2026-06-29T21:00:48",
+   "end": "2026-06-29T21:00:50",
+   "channels": 5
+  },
+  {
+   "kind": "power",
+   "object": "3360",
+   "start": "2026-06-29T18:44:59",
+   "end": "2026-06-29T18:45:29",
+   "channels": 18
+  },
+  {
+   "kind": "power",
+   "object": "5218",
+   "start": "2026-06-29T18:23:00",
+   "end": "2026-06-29T18:23:09",
+   "channels": 6
+  },
+  {
+   "kind": "power",
+   "object": "5011",
+   "start": "2026-06-29T18:05:18",
+   "end": "2026-06-29T18:05:21",
+   "channels": 6
+  },
+  {
+   "kind": "power",
+   "object": "5675",
+   "start": "2026-06-29T16:57:19",
+   "end": "2026-06-29T16:57:33",
+   "channels": 8
+  },
+  {
+   "kind": "power",
+   "object": "3902",
+   "start": "2026-06-29T16:51:10",
+   "end": "2026-06-29T16:51:16",
+   "channels": 4
+  },
+  {
+   "kind": "power",
+   "object": "5657",
+   "start": "2026-06-29T16:48:17",
+   "end": "2026-06-29T16:48:51",
+   "channels": 9
+  },
+  {
+   "kind": "power",
+   "object": "5122",
+   "start": "2026-06-29T16:31:03",
+   "end": "2026-06-29T16:31:37",
+   "channels": 7
+  },
+  {
+   "kind": "power",
+   "object": "5011",
+   "start": "2026-06-29T15:55:52",
+   "end": "2026-06-29T15:56:11",
+   "channels": 23
+  },
+  {
+   "kind": "power",
+   "object": "5578",
+   "start": "2026-06-29T15:50:27",
+   "end": "2026-06-29T15:50:27",
+   "channels": 4
+  },
+  {
+   "kind": "power",
+   "object": "3388",
+   "start": "2026-06-29T14:52:08",
+   "end": "2026-06-29T14:52:36",
+   "channels": 16
+  },
+  {
+   "kind": "power",
+   "object": "4610",
+   "start": "2026-06-29T14:35:58",
+   "end": "2026-06-29T14:36:00",
+   "channels": 7
+  },
+  {
+   "kind": "power",
+   "object": "5333",
+   "start": "2026-06-29T14:21:30",
+   "end": "2026-06-29T14:21:36",
+   "channels": 4
+  },
+  {
+   "kind": "power",
+   "object": "5333",
+   "start": "2026-06-29T14:10:12",
+   "end": "2026-06-29T14:10:52",
+   "channels": 12
+  },
+  {
+   "kind": "power",
+   "object": "4369",
+   "start": "2026-06-29T14:09:17",
+   "end": "2026-06-29T14:09:22",
+   "channels": 6
+  },
+  {
+   "kind": "power",
+   "object": "5963",
+   "start": "2026-06-29T13:58:16",
+   "end": "2026-06-29T13:58:38",
+   "channels": 27
+  },
+  {
+   "kind": "power",
+   "object": "5333",
+   "start": "2026-06-29T13:22:06",
+   "end": "2026-06-29T13:23:28",
+   "channels": 30
+  },
+  {
+   "kind": "fire",
+   "object": "5332",
+   "start": "2026-06-29T12:58:52",
+   "end": "2026-06-29T12:58:52",
+   "channels": 2,
+   "temperature_confirmed": false
+  },
+  {
+   "kind": "power",
+   "object": "3388",
+   "start": "2026-06-29T12:52:54",
+   "end": "2026-06-29T12:53:41",
+   "channels": 8
+  },
+  {
+   "kind": "fire",
+   "object": "5332",
+   "start": "2026-06-29T12:43:42",
+   "end": "2026-06-29T12:43:42",
+   "channels": 2,
+   "temperature_confirmed": false
+  },
+  {
+   "kind": "power",
+   "object": "111",
+   "start": "2026-06-29T12:11:08",
+   "end": "2026-06-29T12:11:31",
+   "channels": 26
+  },
+  {
+   "kind": "power",
+   "object": "4610",
+   "start": "2026-06-29T12:10:58",
+   "end": "2026-06-29T12:11:02",
+   "channels": 4
+  },
+  {
+   "kind": "power",
+   "object": "3902",
+   "start": "2026-06-29T11:56:26",
+   "end": "2026-06-29T11:56:26",
+   "channels": 4
+  },
+  {
+   "kind": "power",
+   "object": "5333",
+   "start": "2026-06-29T11:16:35",
+   "end": "2026-06-29T11:29:22",
+   "channels": 6
+  },
+  {
+   "kind": "power",
+   "object": "5011",
+   "start": "2026-06-29T10:29:50",
+   "end": "2026-06-29T10:38:39",
+   "channels": 3
+  },
+  {
+   "kind": "power",
+   "object": "5333",
+   "start": "2026-06-29T10:16:02",
+   "end": "2026-06-29T10:21:44",
+   "channels": 3
+  },
+  {
+   "kind": "power",
+   "object": "5011",
+   "start": "2026-06-29T07:08:36",
+   "end": "2026-06-29T07:08:42",
+   "channels": 5
+  },
+  {
+   "kind": "power",
+   "object": "5675",
+   "start": "2026-06-28T19:23:42",
+   "end": "2026-06-28T19:23:48",
+   "channels": 3
+  },
+  {
+   "kind": "power",
+   "object": "5011",
+   "start": "2026-06-28T13:40:20",
+   "end": "2026-06-28T13:40:24",
+   "channels": 4
+  },
+  {
+   "kind": "power",
+   "object": "5011",
+   "start": "2026-06-28T13:21:28",
+   "end": "2026-06-28T13:24:00",
+   "channels": 6
+  },
+  {
+   "kind": "power",
+   "object": "5132",
+   "start": "2026-06-28T12:35:50",
+   "end": "2026-06-28T12:35:55",
+   "channels": 3
+  },
+  {
+   "kind": "power",
+   "object": "5578",
+   "start": "2026-06-28T12:11:18",
+   "end": "2026-06-28T12:11:20",
+   "channels": 6
+  },
+  {
+   "kind": "power",
+   "object": "5657",
+   "start": "2026-06-28T12:01:13",
+   "end": "2026-06-28T12:01:25",
+   "channels": 9
+  },
+  {
+   "kind": "power",
+   "object": "5657",
+   "start": "2026-06-28T11:10:23",
+   "end": "2026-06-28T11:10:33",
+   "channels": 9
+  },
+  {
+   "kind": "power",
+   "object": "5011",
+   "start": "2026-06-28T10:21:59",
+   "end": "2026-06-28T10:26:14",
+   "channels": 3
+  },
+  {
+   "kind": "power",
+   "object": "5011",
+   "start": "2026-06-28T09:53:32",
+   "end": "2026-06-28T09:58:33",
+   "channels": 6
+  },
+  {
+   "kind": "fire",
+   "object": "5343",
+   "start": "2026-06-28T07:15:10",
+   "end": "2026-06-28T07:19:20",
+   "channels": 2,
+   "temperature_confirmed": false
+  },
+  {
+   "kind": "flood",
+   "object": "5132",
+   "start": "2026-06-28T05:27:26",
+   "end": "2026-06-28T05:27:26",
+   "channels": 2,
+   "max_minutes": 0.0
+  },
+  {
+   "kind": "power",
+   "object": "5675",
+   "start": "2026-06-28T03:38:00",
+   "end": "2026-06-28T03:38:04",
+   "channels": 4
+  },
+  {
+   "kind": "flood",
+   "object": "5657",
+   "start": "2026-06-28T00:26:33",
+   "end": "2026-06-28T00:26:33",
+   "channels": 2,
+   "max_minutes": 0.7
+  },
+  {
+   "kind": "power",
+   "object": "5333",
+   "start": "2026-06-27T21:04:14",
+   "end": "2026-06-27T21:04:24",
+   "channels": 8
+  },
+  {
+   "kind": "power",
+   "object": "5218",
+   "start": "2026-06-27T17:00:30",
+   "end": "2026-06-27T17:00:51",
+   "channels": 6
+  },
+  {
+   "kind": "power",
+   "object": "3360",
+   "start": "2026-06-27T16:53:46",
+   "end": "2026-06-27T16:53:49",
+   "channels": 6
+  },
+  {
+   "kind": "power",
+   "object": "3902",
+   "start": "2026-06-27T15:14:22",
+   "end": "2026-06-27T15:14:50",
+   "channels": 12
+  },
+  {
+   "kind": "power",
+   "object": "5963",
+   "start": "2026-06-26T17:53:36",
+   "end": "2026-06-26T17:53:44",
+   "channels": 4
+  },
+  {
+   "kind": "power",
+   "object": "5218",
+   "start": "2026-06-26T17:23:05",
+   "end": "2026-06-26T17:23:21",
+   "channels": 7
+  },
+  {
+   "kind": "power",
+   "object": "3902",
+   "start": "2026-06-26T16:48:23",
+   "end": "2026-06-26T16:48:57",
+   "channels": 39
+  },
+  {
+   "kind": "power",
+   "object": "3360",
+   "start": "2026-06-26T16:41:31",
+   "end": "2026-06-26T16:41:38",
+   "channels": 10
+  },
+  {
+   "kind": "power",
+   "object": "5011",
+   "start": "2026-06-26T16:39:20",
+   "end": "2026-06-26T16:40:00",
+   "channels": 20
+  },
+  {
+   "kind": "power",
+   "object": "5003",
+   "start": "2026-06-26T16:29:03",
+   "end": "2026-06-26T16:29:43",
+   "channels": 41
+  },
+  {
+   "kind": "power",
+   "object": "5657",
+   "start": "2026-06-26T16:06:27",
+   "end": "2026-06-26T16:07:04",
+   "channels": 10
+  },
+  {
+   "kind": "power",
+   "object": "4177",
+   "start": "2026-06-26T15:06:39",
+   "end": "2026-06-26T15:06:42",
+   "channels": 4
+  },
+  {
+   "kind": "power",
+   "object": "5122",
+   "start": "2026-06-26T14:22:24",
+   "end": "2026-06-26T14:22:33",
+   "channels": 14
+  },
+  {
+   "kind": "power",
+   "object": "5333",
+   "start": "2026-06-26T14:21:54",
+   "end": "2026-06-26T14:22:15",
+   "channels": 8
+  },
+  {
+   "kind": "power",
+   "object": "5578",
+   "start": "2026-06-26T14:06:39",
+   "end": "2026-06-26T14:06:49",
+   "channels": 8
+  },
+  {
+   "kind": "power",
+   "object": "5675",
+   "start": "2026-06-26T13:13:45",
+   "end": "2026-06-26T13:13:51",
+   "channels": 5
+  },
+  {
+   "kind": "power",
+   "object": "5333",
+   "start": "2026-06-26T12:58:30",
+   "end": "2026-06-26T12:58:38",
+   "channels": 11
+  },
+  {
+   "kind": "power",
+   "object": "4369",
+   "start": "2026-06-26T12:28:30",
+   "end": "2026-06-26T12:29:12",
+   "channels": 15
+  },
+  {
+   "kind": "power",
+   "object": "3360",
+   "start": "2026-06-26T12:09:33",
+   "end": "2026-06-26T12:11:53",
+   "channels": 3
+  },
+  {
+   "kind": "power",
+   "object": "4610",
+   "start": "2026-06-26T11:32:48",
+   "end": "2026-06-26T11:32:56",
+   "channels": 11
+  },
+  {
+   "kind": "power",
+   "object": "4610",
+   "start": "2026-06-26T10:24:46",
+   "end": "2026-06-26T10:24:46",
+   "channels": 6
+  },
+  {
+   "kind": "power",
+   "object": "5657",
+   "start": "2026-06-26T10:23:30",
+   "end": "2026-06-26T10:23:42",
+   "channels": 10
+  },
+  {
+   "kind": "power",
+   "object": "5003",
+   "start": "2026-06-26T10:13:47",
+   "end": "2026-06-26T10:16:37",
+   "channels": 3
+  },
+  {
+   "kind": "power",
+   "object": "5578",
+   "start": "2026-06-26T08:51:17",
+   "end": "2026-06-26T08:52:57",
+   "channels": 10
+  },
+  {
+   "kind": "flood",
+   "object": "3360",
+   "start": "2026-06-26T00:57:53",
+   "end": "2026-06-26T00:57:53",
+   "channels": 1,
+   "max_minutes": 34.6
+  },
+  {
+   "kind": "power",
+   "object": "5003",
+   "start": "2026-06-25T22:45:17",
+   "end": "2026-06-25T22:45:23",
+   "channels": 4
+  },
+  {
+   "kind": "power",
+   "object": "5963",
+   "start": "2026-06-25T22:07:04",
+   "end": "2026-06-25T22:07:10",
+   "channels": 5
+  },
+  {
+   "kind": "power",
+   "object": "3360",
+   "start": "2026-06-25T18:42:38",
+   "end": "2026-06-25T18:42:45",
+   "channels": 9
+  },
+  {
+   "kind": "power",
+   "object": "5675",
+   "start": "2026-06-25T17:32:00",
+   "end": "2026-06-25T17:32:04",
+   "channels": 7
+  },
+  {
+   "kind": "power",
+   "object": "5122",
+   "start": "2026-06-25T17:12:02",
+   "end": "2026-06-25T17:12:20",
+   "channels": 16
+  },
+  {
+   "kind": "power",
+   "object": "5218",
+   "start": "2026-06-25T16:49:04",
+   "end": "2026-06-25T16:49:18",
+   "channels": 7
+  },
+  {
+   "kind": "power",
+   "object": "5657",
+   "start": "2026-06-25T16:22:13",
+   "end": "2026-06-25T16:24:02",
+   "channels": 21
+  },
+  {
+   "kind": "power",
+   "object": "5011",
+   "start": "2026-06-25T16:10:05",
+   "end": "2026-06-25T16:10:11",
+   "channels": 3
+  },
+  {
+   "kind": "power",
+   "object": "3902",
+   "start": "2026-06-25T15:25:34",
+   "end": "2026-06-25T15:25:34",
+   "channels": 7
+  },
+  {
+   "kind": "power",
+   "object": "3388",
+   "start": "2026-06-25T15:24:19",
+   "end": "2026-06-25T15:24:38",
+   "channels": 12
+  },
+  {
+   "kind": "power",
+   "object": "5011",
+   "start": "2026-06-25T14:55:23",
+   "end": "2026-06-25T14:55:38",
+   "channels": 11
+  },
+  {
+   "kind": "power",
+   "object": "5333",
+   "start": "2026-06-25T14:29:08",
+   "end": "2026-06-25T14:29:40",
+   "channels": 21
+  },
+  {
+   "kind": "power",
+   "object": "4177",
+   "start": "2026-06-25T13:46:09",
+   "end": "2026-06-25T13:46:13",
+   "channels": 6
+  },
+  {
+   "kind": "power",
+   "object": "3902",
+   "start": "2026-06-25T13:45:44",
+   "end": "2026-06-25T13:45:44",
+   "channels": 4
+  },
+  {
+   "kind": "fire",
+   "object": "5537",
+   "start": "2026-06-25T13:45:42",
+   "end": "2026-06-25T13:51:32",
+   "channels": 4,
+   "temperature_confirmed": false
+  },
+  {
+   "kind": "power",
+   "object": "4610",
+   "start": "2026-06-25T13:15:41",
+   "end": "2026-06-25T13:15:43",
+   "channels": 7
+  },
+  {
+   "kind": "power",
+   "object": "5333",
+   "start": "2026-06-25T13:14:10",
+   "end": "2026-06-25T13:26:36",
+   "channels": 6
+  },
+  {
+   "kind": "power",
+   "object": "5011",
+   "start": "2026-06-25T13:12:42",
+   "end": "2026-06-25T13:12:45",
+   "channels": 6
+  },
+  {
+   "kind": "power",
+   "object": "111",
+   "start": "2026-06-25T13:02:56",
+   "end": "2026-06-25T13:03:00",
+   "channels": 4
+  },
+  {
+   "kind": "power",
+   "object": "4369",
+   "start": "2026-06-25T12:23:47",
+   "end": "2026-06-25T12:23:52",
+   "channels": 8
+  },
+  {
+   "kind": "power",
+   "object": "5132",
+   "start": "2026-06-25T12:11:14",
+   "end": "2026-06-25T12:14:01",
+   "channels": 3
+  },
+  {
+   "kind": "power",
+   "object": "5333",
+   "start": "2026-06-25T11:54:34",
+   "end": "2026-06-25T11:59:54",
+   "channels": 3
+  },
+  {
+   "kind": "power",
+   "object": "5333",
+   "start": "2026-06-25T11:44:02",
+   "end": "2026-06-25T11:49:00",
+   "channels": 4
+  },
+  {
+   "kind": "power",
+   "object": "5003",
+   "start": "2026-06-25T11:35:47",
+   "end": "2026-06-25T11:35:54",
+   "channels": 4
+  },
+  {
+   "kind": "flood",
+   "object": "3360",
+   "start": "2026-06-25T10:00:04",
+   "end": "2026-06-25T10:05:57",
+   "channels": 2,
+   "max_minutes": 4.3
+  },
+  {
+   "kind": "power",
+   "object": "3902",
+   "start": "2026-06-25T02:51:40",
+   "end": "2026-06-25T02:52:11",
+   "channels": 14
+  },
+  {
+   "kind": "power",
+   "object": "3902",
+   "start": "2026-06-25T01:27:50",
+   "end": "2026-06-25T01:34:28",
+   "channels": 3
+  },
+  {
+   "kind": "power",
+   "object": "3902",
+   "start": "2026-06-25T00:29:48",
+   "end": "2026-06-25T00:30:18",
+   "channels": 4
+  },
+  {
+   "kind": "power",
+   "object": "4610",
+   "start": "2026-06-24T23:18:42",
+   "end": "2026-06-24T23:18:48",
+   "channels": 3
+  },
+  {
+   "kind": "power",
+   "object": "4610",
+   "start": "2026-06-24T22:02:23",
+   "end": "2026-06-24T22:02:29",
+   "channels": 11
+  },
+  {
+   "kind": "power",
+   "object": "4369",
+   "start": "2026-06-24T21:11:52",
+   "end": "2026-06-24T21:11:56",
+   "channels": 4
+  },
+  {
+   "kind": "power",
+   "object": "3902",
+   "start": "2026-06-24T20:18:14",
+   "end": "2026-06-24T20:18:14",
+   "channels": 4
+  },
+  {
+   "kind": "power",
+   "object": "3360",
+   "start": "2026-06-24T17:34:28",
+   "end": "2026-06-24T17:36:05",
+   "channels": 17
+  },
+  {
+   "kind": "power",
+   "object": "5218",
+   "start": "2026-06-24T17:32:08",
+   "end": "2026-06-24T17:32:18",
+   "channels": 4
+  },
+  {
+   "kind": "power",
+   "object": "3902",
+   "start": "2026-06-24T17:27:06",
+   "end": "2026-06-24T17:27:50",
+   "channels": 20
+  },
+  {
+   "kind": "power",
+   "object": "5218",
+   "start": "2026-06-24T17:10:11",
+   "end": "2026-06-24T17:16:38",
+   "channels": 4
+  },
+  {
+   "kind": "power",
+   "object": "5675",
+   "start": "2026-06-24T17:08:14",
+   "end": "2026-06-24T17:08:18",
+   "channels": 3
+  },
+  {
+   "kind": "power",
+   "object": "5003",
+   "start": "2026-06-24T17:04:40",
+   "end": "2026-06-24T17:04:49",
+   "channels": 11
+  },
+  {
+   "kind": "power",
+   "object": "5122",
+   "start": "2026-06-24T16:46:02",
+   "end": "2026-06-24T16:46:24",
+   "channels": 14
+  },
+  {
+   "kind": "power",
+   "object": "5578",
+   "start": "2026-06-24T16:31:38",
+   "end": "2026-06-24T16:31:48",
+   "channels": 15
+  },
+  {
+   "kind": "power",
+   "object": "5011",
+   "start": "2026-06-24T16:15:27",
+   "end": "2026-06-24T16:15:31",
+   "channels": 3
+  },
+  {
+   "kind": "power",
+   "object": "4610",
+   "start": "2026-06-24T16:06:43",
+   "end": "2026-06-24T16:06:45",
+   "channels": 7
+  },
+  {
+   "kind": "power",
+   "object": "5011",
+   "start": "2026-06-24T16:03:34",
+   "end": "2026-06-24T16:03:40",
+   "channels": 9
+  },
+  {
+   "kind": "power",
+   "object": "3388",
+   "start": "2026-06-24T15:50:01",
+   "end": "2026-06-24T15:51:04",
+   "channels": 23
+  },
+  {
+   "kind": "power",
+   "object": "5132",
+   "start": "2026-06-24T15:47:32",
+   "end": "2026-06-24T15:47:36",
+   "channels": 9
+  },
+  {
+   "kind": "power",
+   "object": "5011",
+   "start": "2026-06-24T15:28:04",
+   "end": "2026-06-24T15:28:07",
+   "channels": 6
+  },
+  {
+   "kind": "power",
+   "object": "5333",
+   "start": "2026-06-24T15:24:00",
+   "end": "2026-06-24T15:24:22",
+   "channels": 22
+  },
+  {
+   "kind": "power",
+   "object": "5011",
+   "start": "2026-06-24T15:10:37",
+   "end": "2026-06-24T15:14:04",
+   "channels": 11
+  },
+  {
+   "kind": "power",
+   "object": "3902",
+   "start": "2026-06-24T14:53:38",
+   "end": "2026-06-24T14:53:52",
+   "channels": 8
+  },
+  {
+   "kind": "power",
+   "object": "111",
+   "start": "2026-06-24T14:45:11",
+   "end": "2026-06-24T14:45:17",
+   "channels": 6
+  },
+  {
+   "kind": "power",
+   "object": "5657",
+   "start": "2026-06-24T14:43:49",
+   "end": "2026-06-24T14:44:29",
+   "channels": 21
+  },
+  {
+   "kind": "power",
+   "object": "4369",
+   "start": "2026-06-24T13:34:51",
+   "end": "2026-06-24T13:34:54",
+   "channels": 7
+  },
+  {
+   "kind": "power",
+   "object": "5657",
+   "start": "2026-06-24T13:28:34",
+   "end": "2026-06-24T13:37:45",
+   "channels": 5
+  },
+  {
+   "kind": "power",
+   "object": "5657",
+   "start": "2026-06-24T12:52:51",
+   "end": "2026-06-24T12:56:00",
+   "channels": 3
+  },
+  {
+   "kind": "power",
+   "object": "5003",
+   "start": "2026-06-24T10:46:31",
+   "end": "2026-06-24T10:46:32",
+   "channels": 3
+  },
+  {
+   "kind": "power",
+   "object": "5657",
+   "start": "2026-06-24T07:58:31",
+   "end": "2026-06-24T07:59:45",
+   "channels": 7
+  },
+  {
+   "kind": "power",
+   "object": "4610",
+   "start": "2026-06-24T05:35:58",
+   "end": "2026-06-24T05:36:02",
+   "channels": 3
+  },
+  {
+   "kind": "power",
+   "object": "5675",
+   "start": "2026-06-24T05:35:52",
+   "end": "2026-06-24T05:35:54",
+   "channels": 3
+  },
+  {
+   "kind": "power",
+   "object": "5003",
+   "start": "2026-06-24T05:34:09",
+   "end": "2026-06-24T05:34:34",
+   "channels": 5
+  },
+  {
+   "kind": "power",
+   "object": "5675",
+   "start": "2026-06-23T18:42:07",
+   "end": "2026-06-23T18:42:17",
+   "channels": 26
+  },
+  {
+   "kind": "power",
+   "object": "3360",
+   "start": "2026-06-23T17:33:06",
+   "end": "2026-06-23T17:33:15",
+   "channels": 6
+  },
+  {
+   "kind": "power",
+   "object": "5963",
+   "start": "2026-06-23T17:30:28",
+   "end": "2026-06-23T17:30:55",
+   "channels": 15
+  },
+  {
+   "kind": "power",
+   "object": "5218",
+   "start": "2026-06-23T17:17:52",
+   "end": "2026-06-23T17:17:58",
+   "channels": 4
+  },
+  {
+   "kind": "power",
+   "object": "5218",
+   "start": "2026-06-23T16:48:08",
+   "end": "2026-06-23T16:55:44",
+   "channels": 4
+  },
+  {
+   "kind": "power",
+   "object": "5657",
+   "start": "2026-06-23T16:35:45",
+   "end": "2026-06-23T16:36:25",
+   "channels": 26
+  },
+  {
+   "kind": "power",
+   "object": "5011",
+   "start": "2026-06-23T16:26:28",
+   "end": "2026-06-23T16:26:31",
+   "channels": 6
+  },
+  {
+   "kind": "power",
+   "object": "5122",
+   "start": "2026-06-23T16:18:44",
+   "end": "2026-06-23T16:18:47",
+   "channels": 10
+  },
+  {
+   "kind": "power",
+   "object": "3902",
+   "start": "2026-06-23T15:44:20",
+   "end": "2026-06-23T15:44:32",
+   "channels": 4
+  },
+  {
+   "kind": "power",
+   "object": "5333",
+   "start": "2026-06-23T15:39:30",
+   "end": "2026-06-23T15:40:00",
+   "channels": 26
+  },
+  {
+   "kind": "power",
+   "object": "3388",
+   "start": "2026-06-23T13:58:50",
+   "end": "2026-06-23T13:59:38",
+   "channels": 25
+  },
+  {
+   "kind": "power",
+   "object": "5011",
+   "start": "2026-06-23T13:51:38",
+   "end": "2026-06-23T13:51:53",
+   "channels": 14
+  },
+  {
+   "kind": "power",
+   "object": "4610",
+   "start": "2026-06-23T13:41:58",
+   "end": "2026-06-23T13:42:00",
+   "channels": 7
+  },
+  {
+   "kind": "power",
+   "object": "4369",
+   "start": "2026-06-23T13:24:04",
+   "end": "2026-06-23T13:24:53",
+   "channels": 20
+  },
+  {
+   "kind": "power",
+   "object": "4610",
+   "start": "2026-06-23T12:18:51",
+   "end": "2026-06-23T12:19:06",
+   "channels": 25
+  },
+  {
+   "kind": "power",
+   "object": "4369",
+   "start": "2026-06-23T11:58:31",
+   "end": "2026-06-23T12:04:59",
+   "channels": 3
+  },
+  {
+   "kind": "power",
+   "object": "3902",
+   "start": "2026-06-23T11:09:48",
+   "end": "2026-06-23T11:14:40",
+   "channels": 5
+  },
+  {
+   "kind": "power",
+   "object": "4369",
+   "start": "2026-06-23T11:01:50",
+   "end": "2026-06-23T11:06:53",
+   "channels": 3
+  },
+  {
+   "kind": "power",
+   "object": "5657",
+   "start": "2026-06-23T10:43:52",
+   "end": "2026-06-23T10:51:00",
+   "channels": 3
+  },
+  {
+   "kind": "power",
+   "object": "5657",
+   "start": "2026-06-23T10:29:50",
+   "end": "2026-06-23T10:34:57",
+   "channels": 4
+  },
+  {
+   "kind": "power",
+   "object": "5657",
+   "start": "2026-06-23T10:06:46",
+   "end": "2026-06-23T10:10:57",
+   "channels": 5
+  },
+  {
+   "kind": "power",
+   "object": "5657",
+   "start": "2026-06-23T09:42:00",
+   "end": "2026-06-23T09:48:23",
+   "channels": 3
+  },
+  {
+   "kind": "power",
+   "object": "5657",
+   "start": "2026-06-23T09:19:30",
+   "end": "2026-06-23T09:19:30",
+   "channels": 3
+  },
+  {
+   "kind": "power",
+   "object": "5122",
+   "start": "2026-06-23T09:04:35",
+   "end": "2026-06-23T09:04:51",
+   "channels": 4
+  },
+  {
+   "kind": "power",
+   "object": "5657",
+   "start": "2026-06-23T09:04:13",
+   "end": "2026-06-23T09:04:13",
+   "channels": 6
+  },
+  {
+   "kind": "power",
+   "object": "4177",
+   "start": "2026-06-22T22:19:40",
+   "end": "2026-06-22T22:19:43",
+   "channels": 3
+  },
+  {
+   "kind": "power",
+   "object": "5675",
+   "start": "2026-06-22T19:58:21",
+   "end": "2026-06-22T19:58:37",
+   "channels": 12
+  },
+  {
+   "kind": "power",
+   "object": "3902",
+   "start": "2026-06-22T18:02:49",
+   "end": "2026-06-22T18:02:53",
+   "channels": 4
+  },
+  {
+   "kind": "power",
+   "object": "3360",
+   "start": "2026-06-22T18:00:07",
+   "end": "2026-06-22T18:00:11",
+   "channels": 6
+  },
+  {
+   "kind": "power",
+   "object": "5963",
+   "start": "2026-06-22T17:42:14",
+   "end": "2026-06-22T17:42:50",
+   "channels": 28
+  },
+  {
+   "kind": "power",
+   "object": "5218",
+   "start": "2026-06-22T17:19:42",
+   "end": "2026-06-22T17:19:48",
+   "channels": 5
+  },
+  {
+   "kind": "power",
+   "object": "3902",
+   "start": "2026-06-22T17:16:54",
+   "end": "2026-06-22T17:16:56",
+   "channels": 3
+  },
+  {
+   "kind": "power",
+   "object": "3388",
+   "start": "2026-06-22T16:38:11",
+   "end": "2026-06-22T16:40:03",
+   "channels": 26
+  },
+  {
+   "kind": "power",
+   "object": "3902",
+   "start": "2026-06-22T16:36:15",
+   "end": "2026-06-22T16:41:04",
+   "channels": 6
+  },
+  {
+   "kind": "power",
+   "object": "5657",
+   "start": "2026-06-22T16:19:13",
+   "end": "2026-06-22T16:20:26",
+   "channels": 19
+  },
+  {
+   "kind": "power",
+   "object": "5122",
+   "start": "2026-06-22T16:06:20",
+   "end": "2026-06-22T16:06:23",
+   "channels": 7
+  },
+  {
+   "kind": "power",
+   "object": "5011",
+   "start": "2026-06-22T15:58:11",
+   "end": "2026-06-22T15:58:11",
+   "channels": 5
+  },
+  {
+   "kind": "power",
+   "object": "3902",
+   "start": "2026-06-22T15:37:14",
+   "end": "2026-06-22T15:38:02",
+   "channels": 22
+  },
+  {
+   "kind": "flood",
+   "object": "3388",
+   "start": "2026-06-22T15:36:39",
+   "end": "2026-06-22T15:36:45",
+   "channels": 21,
+   "max_minutes": 0.0
+  },
+  {
+   "kind": "power",
+   "object": "3360",
+   "start": "2026-06-22T15:36:39",
+   "end": "2026-06-22T15:36:39",
+   "channels": 5
+  },
+  {
+   "kind": "power",
+   "object": "3388",
+   "start": "2026-06-22T15:36:39",
+   "end": "2026-06-22T15:36:45",
+   "channels": 61
+  },
+  {
+   "kind": "power",
+   "object": "5011",
+   "start": "2026-06-22T15:36:35",
+   "end": "2026-06-22T15:36:39",
+   "channels": 6
+  },
+  {
+   "kind": "power",
+   "object": "4610",
+   "start": "2026-06-22T14:47:10",
+   "end": "2026-06-22T14:47:12",
+   "channels": 7
+  },
+  {
+   "kind": "power",
+   "object": "3902",
+   "start": "2026-06-22T14:33:00",
+   "end": "2026-06-22T14:33:14",
+   "channels": 20
+  },
+  {
+   "kind": "power",
+   "object": "5122",
+   "start": "2026-06-22T14:04:44",
+   "end": "2026-06-22T14:04:50",
+   "channels": 4
+  },
+  {
+   "kind": "power",
+   "object": "5003",
+   "start": "2026-06-22T13:57:47",
+   "end": "2026-06-22T13:58:27",
+   "channels": 36
+  },
+  {
+   "kind": "power",
+   "object": "4369",
+   "start": "2026-06-22T13:35:52",
+   "end": "2026-06-22T13:35:56",
+   "channels": 4
+  },
+  {
+   "kind": "power",
+   "object": "111",
+   "start": "2026-06-22T12:18:06",
+   "end": "2026-06-22T12:18:41",
+   "channels": 27
+  },
+  {
+   "kind": "power",
+   "object": "5578",
+   "start": "2026-06-22T11:51:15",
+   "end": "2026-06-22T11:54:20",
+   "channels": 3
+  },
+  {
+   "kind": "flood",
+   "object": "3360",
+   "start": "2026-06-22T10:32:50",
+   "end": "2026-06-22T10:38:45",
+   "channels": 2,
+   "max_minutes": 15.2
+  },
+  {
+   "kind": "power",
+   "object": "4543",
+   "start": "2026-06-22T10:18:41",
+   "end": "2026-06-22T10:18:41",
+   "channels": 3
+  },
+  {
+   "kind": "fire",
+   "object": "4574",
+   "start": "2026-06-22T09:06:08",
+   "end": "2026-06-22T09:10:48",
+   "channels": 4,
+   "temperature_confirmed": false
+  },
+  {
+   "kind": "power",
+   "object": "111",
+   "start": "2026-06-22T06:00:24",
+   "end": "2026-06-22T06:00:36",
+   "channels": 7
+  },
+  {
+   "kind": "flood",
+   "object": "5963",
+   "start": "2026-06-20T02:02:58",
+   "end": "2026-06-20T02:13:42",
+   "channels": 2,
+   "max_minutes": 0.0
+  },
+  {
+   "kind": "flood",
+   "object": "3388",
+   "start": "2026-06-20T01:04:03",
+   "end": "2026-06-20T01:06:06",
+   "channels": 6,
+   "max_minutes": 0.0
+  },
+  {
+   "kind": "flood",
+   "object": "5963",
+   "start": "2026-06-19T19:55:33",
+   "end": "2026-06-19T19:55:33",
+   "channels": 2,
+   "max_minutes": 0.0
+  },
+  {
+   "kind": "flood",
+   "object": "5963",
+   "start": "2026-06-17T12:24:56",
+   "end": "2026-06-17T12:24:56",
+   "channels": 3,
+   "max_minutes": 0.0
+  },
+  {
+   "kind": "flood",
+   "object": "3388",
+   "start": "2026-06-16T20:24:39",
+   "end": "2026-06-16T20:26:18",
+   "channels": 6,
+   "max_minutes": 0.0
+  },
+  {
+   "kind": "flood",
+   "object": "5657",
+   "start": "2026-06-16T19:16:08",
+   "end": "2026-06-16T19:16:08",
+   "channels": 2,
+   "max_minutes": 0.7
+  },
+  {
+   "kind": "flood",
+   "object": "5963",
+   "start": "2026-06-16T17:45:42",
+   "end": "2026-06-16T17:45:42",
+   "channels": 3,
+   "max_minutes": 0.0
+  },
+  {
+   "kind": "flood",
+   "object": "3388",
+   "start": "2026-06-16T04:18:36",
+   "end": "2026-06-16T04:18:40",
+   "channels": 12,
+   "max_minutes": 0.0
+  },
+  {
+   "kind": "flood",
+   "object": "3388",
+   "start": "2026-06-15T14:44:37",
+   "end": "2026-06-15T14:44:37",
+   "channels": 9,
+   "max_minutes": 0.0
+  },
+  {
+   "kind": "flood",
+   "object": "5132",
+   "start": "2026-06-15T10:54:29",
+   "end": "2026-06-15T11:21:03",
+   "channels": 5,
+   "max_minutes": 0.0
+  },
+  {
+   "kind": "flood",
+   "object": "3388",
+   "start": "2026-06-13T19:21:01",
+   "end": "2026-06-13T19:21:05",
+   "channels": 12,
+   "max_minutes": 0.0
+  },
+  {
+   "kind": "fire",
+   "object": "5567",
+   "start": "2026-06-13T19:07:08",
+   "end": "2026-06-13T19:18:26",
+   "channels": 6,
+   "temperature_confirmed": false
+  },
+  {
+   "kind": "fire",
+   "object": "5567",
+   "start": "2026-06-13T18:48:16",
+   "end": "2026-06-13T18:50:06",
+   "channels": 2,
+   "temperature_confirmed": false
+  },
+  {
+   "kind": "fire",
+   "object": "5567",
+   "start": "2026-06-13T18:14:18",
+   "end": "2026-06-13T18:17:10",
+   "channels": 2,
+   "temperature_confirmed": false
+  },
+  {
+   "kind": "fire",
+   "object": "5567",
+   "start": "2026-06-13T17:38:08",
+   "end": "2026-06-13T17:45:26",
+   "channels": 4,
+   "temperature_confirmed": false
+  },
+  {
+   "kind": "fire",
+   "object": "5567",
+   "start": "2026-06-13T11:22:24",
+   "end": "2026-06-13T11:22:24",
+   "channels": 2,
+   "temperature_confirmed": false
+  },
+  {
+   "kind": "fire",
+   "object": "5677",
+   "start": "2026-06-11T15:44:08",
+   "end": "2026-06-11T15:51:38",
+   "channels": 2,
+   "temperature_confirmed": false
+  },
+  {
+   "kind": "flood",
+   "object": "5963",
+   "start": "2026-06-11T12:11:47",
+   "end": "2026-06-11T12:11:47",
+   "channels": 2,
+   "max_minutes": 0.0
+  },
+  {
+   "kind": "fire",
+   "object": "5567",
+   "start": "2026-06-10T16:45:08",
+   "end": "2026-06-10T16:46:20",
+   "channels": 2,
+   "temperature_confirmed": false
+  },
+  {
+   "kind": "flood",
+   "object": "5963",
+   "start": "2026-06-09T22:16:02",
+   "end": "2026-06-09T22:16:02",
+   "channels": 2,
+   "max_minutes": 0.0
+  },
+  {
+   "kind": "flood",
+   "object": "5011",
+   "start": "2026-06-09T09:17:21",
+   "end": "2026-06-09T13:19:36",
+   "channels": 14,
+   "max_minutes": 0.7
+  },
+  {
+   "kind": "flood",
+   "object": "3388",
+   "start": "2026-06-09T03:28:54",
+   "end": "2026-06-09T03:28:57",
+   "channels": 12,
+   "max_minutes": 0.0
+  },
+  {
+   "kind": "fire",
+   "object": "5567",
+   "start": "2026-06-08T19:20:28",
+   "end": "2026-06-08T19:30:14",
+   "channels": 2,
+   "temperature_confirmed": false
+  },
+  {
+   "kind": "fire",
+   "object": "5567",
+   "start": "2026-06-08T18:36:44",
+   "end": "2026-06-08T19:01:22",
+   "channels": 3,
+   "temperature_confirmed": false
+  },
+  {
+   "kind": "flood",
+   "object": "3388",
+   "start": "2026-06-06T16:15:59",
+   "end": "2026-06-06T16:15:59",
+   "channels": 6,
+   "max_minutes": 0.0
+  },
+  {
+   "kind": "flood",
+   "object": "5657",
+   "start": "2026-06-06T14:26:02",
+   "end": "2026-06-06T15:15:36",
+   "channels": 2,
+   "max_minutes": 7.8
+  },
+  {
+   "kind": "flood",
+   "object": "5011",
+   "start": "2026-06-06T09:02:50",
+   "end": "2026-06-06T09:02:50",
+   "channels": 3,
+   "max_minutes": 0.0
+  },
+  {
+   "kind": "fire",
+   "object": "5581",
+   "start": "2026-06-05T18:52:31",
+   "end": "2026-06-05T18:58:02",
+   "channels": 4,
+   "temperature_confirmed": false
+  },
+  {
+   "kind": "flood",
+   "object": "5011",
+   "start": "2026-06-05T11:20:03",
+   "end": "2026-06-05T11:23:23",
+   "channels": 12,
+   "max_minutes": 0.0
+  },
+  {
+   "kind": "fire",
+   "object": "3902",
+   "start": "2026-06-05T08:40:50",
+   "end": "2026-06-05T08:45:24",
+   "channels": 2,
+   "temperature_confirmed": false
+  },
+  {
+   "kind": "flood",
+   "object": "3388",
+   "start": "2026-06-04T22:58:12",
+   "end": "2026-06-04T22:58:12",
+   "channels": 9,
+   "max_minutes": 0.0
+  },
+  {
+   "kind": "flood",
+   "object": "5011",
+   "start": "2026-06-04T18:27:55",
+   "end": "2026-06-04T18:27:55",
+   "channels": 3,
+   "max_minutes": 0.0
+  },
+  {
+   "kind": "fire",
+   "object": "3356",
+   "start": "2026-06-04T18:06:02",
+   "end": "2026-06-04T18:06:19",
+   "channels": 4,
+   "temperature_confirmed": false
+  },
+  {
+   "kind": "fire",
+   "object": "3356",
+   "start": "2026-06-04T15:04:46",
+   "end": "2026-06-04T15:27:18",
+   "channels": 4,
+   "temperature_confirmed": false
+  },
+  {
+   "kind": "flood",
+   "object": "5011",
+   "start": "2026-06-04T08:42:39",
+   "end": "2026-06-04T11:56:24",
+   "channels": 12,
+   "max_minutes": 0.0
+  },
+  {
+   "kind": "flood",
+   "object": "5657",
+   "start": "2026-06-03T20:21:54",
+   "end": "2026-06-03T20:21:54",
+   "channels": 2,
+   "max_minutes": 0.7
+  },
+  {
+   "kind": "flood",
+   "object": "5963",
+   "start": "2026-06-03T13:34:11",
+   "end": "2026-06-03T13:34:11",
+   "channels": 2,
+   "max_minutes": 0.0
+  },
+  {
+   "kind": "fire",
+   "object": "5677",
+   "start": "2026-06-03T13:29:46",
+   "end": "2026-06-03T13:41:12",
+   "channels": 2,
+   "temperature_confirmed": false
+  },
+  {
+   "kind": "fire",
+   "object": "5343",
+   "start": "2026-06-03T12:25:10",
+   "end": "2026-06-03T12:41:02",
+   "channels": 3,
+   "temperature_confirmed": false
+  },
+  {
+   "kind": "flood",
+   "object": "5963",
+   "start": "2026-06-03T11:07:49",
+   "end": "2026-06-03T11:49:28",
+   "channels": 2,
+   "max_minutes": 0.0
+  },
+  {
+   "kind": "fire",
+   "object": "5343",
+   "start": "2026-06-03T09:42:55",
+   "end": "2026-06-03T09:51:24",
+   "channels": 2,
+   "temperature_confirmed": false
+  },
+  {
+   "kind": "flood",
+   "object": "3388",
+   "start": "2026-06-02T19:55:07",
+   "end": "2026-06-02T19:55:07",
+   "channels": 9,
+   "max_minutes": 0.0
+  },
+  {
+   "kind": "fire",
+   "object": "5677",
+   "start": "2026-06-02T12:09:16",
+   "end": "2026-06-02T12:09:16",
+   "channels": 2,
+   "temperature_confirmed": false
+  },
+  {
+   "kind": "flood",
+   "object": "3388",
+   "start": "2026-06-02T12:00:25",
+   "end": "2026-06-02T12:00:25",
+   "channels": 3,
+   "max_minutes": 0.0
+  },
+  {
+   "kind": "fire",
+   "object": "5567",
+   "start": "2026-06-02T11:58:16",
+   "end": "2026-06-02T12:02:46",
+   "channels": 4,
+   "temperature_confirmed": false
+  },
+  {
+   "kind": "fire",
+   "object": "5677",
+   "start": "2026-06-02T11:49:38",
+   "end": "2026-06-02T11:51:06",
+   "channels": 2,
+   "temperature_confirmed": false
+  },
+  {
+   "kind": "flood",
+   "object": "5963",
+   "start": "2026-06-02T10:59:34",
+   "end": "2026-06-02T11:25:46",
+   "channels": 4,
+   "max_minutes": 0.2
+  },
+  {
+   "kind": "fire",
+   "object": "5567",
+   "start": "2026-06-02T10:13:56",
+   "end": "2026-06-02T10:22:32",
+   "channels": 2,
+   "temperature_confirmed": false
+  },
+  {
+   "kind": "flood",
+   "object": "3388",
+   "start": "2026-06-02T10:07:28",
+   "end": "2026-06-02T10:07:40",
+   "channels": 3,
+   "max_minutes": 0.0
+  },
+  {
+   "kind": "flood",
+   "object": "5657",
+   "start": "2026-06-02T03:09:42",
+   "end": "2026-06-02T03:09:42",
+   "channels": 2,
+   "max_minutes": 0.7
+  },
+  {
+   "kind": "flood",
+   "object": "5963",
+   "start": "2026-05-31T14:48:56",
+   "end": "2026-05-31T14:48:56",
+   "channels": 2,
+   "max_minutes": 0.0
+  },
+  {
+   "kind": "flood",
+   "object": "5003",
+   "start": "2026-05-30T21:41:25",
+   "end": "2026-05-30T21:41:25",
+   "channels": 2,
+   "max_minutes": 0.0
+  },
+  {
+   "kind": "fire",
+   "object": "5343",
+   "start": "2026-05-30T06:18:19",
+   "end": "2026-05-30T06:18:33",
+   "channels": 2,
+   "temperature_confirmed": false
+  },
+  {
+   "kind": "fire",
+   "object": "5343",
+   "start": "2026-05-30T04:21:06",
+   "end": "2026-05-30T04:26:17",
+   "channels": 2,
+   "temperature_confirmed": false
+  },
+  {
+   "kind": "fire",
+   "object": "5343",
+   "start": "2026-05-30T03:45:26",
+   "end": "2026-05-30T03:47:58",
+   "channels": 2,
+   "temperature_confirmed": false
+  },
+  {
+   "kind": "fire",
+   "object": "5343",
+   "start": "2026-05-28T20:54:21",
+   "end": "2026-05-28T20:56:27",
+   "channels": 2,
+   "temperature_confirmed": false
+  },
+  {
+   "kind": "fire",
+   "object": "3216",
+   "start": "2026-05-28T11:11:12",
+   "end": "2026-05-28T11:14:56",
+   "channels": 3,
+   "temperature_confirmed": false
+  },
+  {
+   "kind": "flood",
+   "object": "5963",
+   "start": "2026-05-27T09:55:30",
+   "end": "2026-05-27T09:55:35",
+   "channels": 3,
+   "max_minutes": 0.0
+  },
+  {
+   "kind": "fire",
+   "object": "5962",
+   "start": "2026-05-27T08:29:26",
+   "end": "2026-05-27T08:35:55",
+   "channels": 2,
+   "temperature_confirmed": false
+  },
+  {
+   "kind": "fire",
+   "object": "5962",
+   "start": "2026-05-27T08:02:34",
+   "end": "2026-05-27T08:12:05",
+   "channels": 3,
+   "temperature_confirmed": false
+  },
+  {
+   "kind": "flood",
+   "object": "5132",
+   "start": "2026-05-26T11:36:47",
+   "end": "2026-05-26T11:36:47",
+   "channels": 5,
+   "max_minutes": 0.0
+  },
+  {
+   "kind": "flood",
+   "object": "3388",
+   "start": "2026-05-26T10:15:46",
+   "end": "2026-05-26T11:00:32",
+   "channels": 3,
+   "max_minutes": 0.0
+  },
+  {
+   "kind": "fire",
+   "object": "5677",
+   "start": "2026-05-23T22:26:05",
+   "end": "2026-05-23T22:28:16",
+   "channels": 2,
+   "temperature_confirmed": false
+  },
+  {
+   "kind": "flood",
+   "object": "3388",
+   "start": "2026-05-23T18:10:38",
+   "end": "2026-05-23T18:10:38",
+   "channels": 9,
+   "max_minutes": 0.0
+  },
+  {
+   "kind": "flood",
+   "object": "5122",
+   "start": "2026-05-23T18:10:30",
+   "end": "2026-05-23T18:10:30",
+   "channels": 2,
+   "max_minutes": 0.1
+  },
+  {
+   "kind": "fire",
+   "object": "5581",
+   "start": "2026-05-23T15:09:09",
+   "end": "2026-05-23T15:23:08",
+   "channels": 5,
+   "temperature_confirmed": false
+  },
+  {
+   "kind": "flood",
+   "object": "5011",
+   "start": "2026-05-22T12:10:19",
+   "end": "2026-05-22T13:22:14",
+   "channels": 3,
+   "max_minutes": 0.0
+  },
+  {
+   "kind": "flood",
+   "object": "3388",
+   "start": "2026-05-21T11:36:53",
+   "end": "2026-05-21T11:36:53",
+   "channels": 3,
+   "max_minutes": 0.0
+  },
+  {
+   "kind": "fire",
+   "object": "3356",
+   "start": "2026-05-21T10:17:13",
+   "end": "2026-05-21T10:19:10",
+   "channels": 2,
+   "temperature_confirmed": false
+  },
+  {
+   "kind": "flood",
+   "object": "3388",
+   "start": "2026-05-21T09:47:10",
+   "end": "2026-05-21T09:47:10",
+   "channels": 3,
+   "max_minutes": 0.0
+  },
+  {
+   "kind": "flood",
+   "object": "5675",
+   "start": "2026-05-21T06:44:00",
+   "end": "2026-05-21T07:22:10",
+   "channels": 3,
+   "max_minutes": 0.0
+  },
+  {
+   "kind": "flood",
+   "object": "5963",
+   "start": "2026-05-20T14:16:11",
+   "end": "2026-05-20T14:16:11",
+   "channels": 2,
+   "max_minutes": 0.0
+  },
+  {
+   "kind": "flood",
+   "object": "5963",
+   "start": "2026-05-20T11:39:12",
+   "end": "2026-05-20T11:39:12",
+   "channels": 2,
+   "max_minutes": 0.0
+  },
+  {
+   "kind": "fire",
+   "object": "5581",
+   "start": "2026-05-19T19:19:45",
+   "end": "2026-05-19T19:27:27",
+   "channels": 3,
+   "temperature_confirmed": false
+  },
+  {
+   "kind": "fire",
+   "object": "5581",
+   "start": "2026-05-19T18:45:57",
+   "end": "2026-05-19T18:54:00",
+   "channels": 2,
+   "temperature_confirmed": false
+  },
+  {
+   "kind": "flood",
+   "object": "5963",
+   "start": "2026-05-19T15:28:16",
+   "end": "2026-05-19T15:29:04",
+   "channels": 3,
+   "max_minutes": 0.0
+  },
+  {
+   "kind": "flood",
+   "object": "5122",
+   "start": "2026-05-19T12:28:17",
+   "end": "2026-05-19T12:28:35",
+   "channels": 2,
+   "max_minutes": 0.0
+  },
+  {
+   "kind": "fire",
+   "object": "5962",
+   "start": "2026-05-19T09:40:21",
+   "end": "2026-05-19T09:48:46",
+   "channels": 2,
+   "temperature_confirmed": false
+  },
+  {
+   "kind": "flood",
+   "object": "5122",
+   "start": "2026-05-18T12:33:05",
+   "end": "2026-05-18T12:33:06",
+   "channels": 7,
+   "max_minutes": 13.1
+  },
+  {
+   "kind": "fire",
+   "object": "111",
+   "start": "2026-05-18T12:13:53",
+   "end": "2026-05-18T12:14:19",
+   "channels": 2,
+   "temperature_confirmed": false
+  },
+  {
+   "kind": "flood",
+   "object": "5011",
+   "start": "2026-05-18T11:27:01",
+   "end": "2026-05-18T13:59:30",
+   "channels": 6,
+   "max_minutes": 0.0
+  },
+  {
+   "kind": "fire",
+   "object": "20",
+   "start": "2026-05-18T09:35:48",
+   "end": "2026-05-18T09:49:45",
+   "channels": 3,
+   "temperature_confirmed": false
+  },
+  {
+   "kind": "flood",
+   "object": "5011",
+   "start": "2026-05-18T09:14:10",
+   "end": "2026-05-18T09:48:06",
+   "channels": 10,
+   "max_minutes": 0.0
+  },
+  {
+   "kind": "flood",
+   "object": "5963",
+   "start": "2026-05-18T06:47:26",
+   "end": "2026-05-18T06:47:26",
+   "channels": 2,
+   "max_minutes": 0.0
+  },
+  {
+   "kind": "fire",
+   "object": "5962",
+   "start": "2026-05-17T23:08:25",
+   "end": "2026-05-17T23:22:54",
+   "channels": 8,
+   "temperature_confirmed": false
+  },
+  {
+   "kind": "fire",
+   "object": "5962",
+   "start": "2026-05-17T22:13:56",
+   "end": "2026-05-17T22:16:14",
+   "channels": 2,
+   "temperature_confirmed": false
+  },
+  {
+   "kind": "flood",
+   "object": "5963",
+   "start": "2026-05-17T17:05:37",
+   "end": "2026-05-17T17:05:37",
+   "channels": 2,
+   "max_minutes": 0.0
+  },
+  {
+   "kind": "flood",
+   "object": "5657",
+   "start": "2026-05-17T09:04:06",
+   "end": "2026-05-17T09:04:06",
+   "channels": 2,
+   "max_minutes": 0.7
+  },
+  {
+   "kind": "flood",
+   "object": "5011",
+   "start": "2026-05-17T00:56:02",
+   "end": "2026-05-17T00:56:02",
+   "channels": 3,
+   "max_minutes": 0.0
+  },
+  {
+   "kind": "flood",
+   "object": "5657",
+   "start": "2026-05-16T15:31:40",
+   "end": "2026-05-16T15:31:40",
+   "channels": 2,
+   "max_minutes": 0.7
+  },
+  {
+   "kind": "flood",
+   "object": "5011",
+   "start": "2026-05-16T12:10:16",
+   "end": "2026-05-16T12:10:16",
+   "channels": 2,
+   "max_minutes": 0.0
+  },
+  {
+   "kind": "flood",
+   "object": "3388",
+   "start": "2026-05-16T09:54:14",
+   "end": "2026-05-16T09:54:14",
+   "channels": 6,
+   "max_minutes": 0.0
+  },
+  {
+   "kind": "flood",
+   "object": "5657",
+   "start": "2026-05-15T23:57:36",
+   "end": "2026-05-15T23:57:36",
+   "channels": 2,
+   "max_minutes": 0.7
+  },
+  {
+   "kind": "flood",
+   "object": "5657",
+   "start": "2026-05-15T09:16:19",
+   "end": "2026-05-15T09:16:19",
+   "channels": 2,
+   "max_minutes": 0.8
+  },
+  {
+   "kind": "flood",
+   "object": "5657",
+   "start": "2026-05-14T19:35:48",
+   "end": "2026-05-14T19:35:48",
+   "channels": 2,
+   "max_minutes": 0.8
+  },
+  {
+   "kind": "flood",
+   "object": "5011",
+   "start": "2026-05-14T12:36:50",
+   "end": "2026-05-14T13:59:41",
+   "channels": 12,
+   "max_minutes": 0.0
+  },
+  {
+   "kind": "flood",
+   "object": "5657",
+   "start": "2026-05-14T06:21:40",
+   "end": "2026-05-14T06:21:40",
+   "channels": 2,
+   "max_minutes": 0.8
+  },
+  {
+   "kind": "flood",
+   "object": "5657",
+   "start": "2026-05-13T17:53:08",
+   "end": "2026-05-13T17:53:08",
+   "channels": 2,
+   "max_minutes": 0.8
+  },
+  {
+   "kind": "fire",
+   "object": "5132",
+   "start": "2026-05-13T11:44:24",
+   "end": "2026-05-13T11:45:08",
+   "channels": 2,
+   "temperature_confirmed": false
+  },
+  {
+   "kind": "flood",
+   "object": "5963",
+   "start": "2026-05-13T08:22:52",
+   "end": "2026-05-13T08:22:52",
+   "channels": 2,
+   "max_minutes": 0.0
+  },
+  {
+   "kind": "flood",
+   "object": "5657",
+   "start": "2026-05-13T00:07:42",
+   "end": "2026-05-13T00:07:42",
+   "channels": 2,
+   "max_minutes": 0.8
+  },
+  {
+   "kind": "flood",
+   "object": "5657",
+   "start": "2026-05-12T12:28:54",
+   "end": "2026-05-12T12:28:58",
+   "channels": 2,
+   "max_minutes": 0.8
+  },
+  {
+   "kind": "flood",
+   "object": "5657",
+   "start": "2026-05-12T00:58:47",
+   "end": "2026-05-12T00:58:47",
+   "channels": 2,
+   "max_minutes": 0.8
+  },
+  {
+   "kind": "flood",
+   "object": "5657",
+   "start": "2026-05-11T13:33:16",
+   "end": "2026-05-11T13:33:16",
+   "channels": 2,
+   "max_minutes": 0.8
+  },
+  {
+   "kind": "flood",
+   "object": "5657",
+   "start": "2026-05-11T02:36:36",
+   "end": "2026-05-11T02:36:36",
+   "channels": 2,
+   "max_minutes": 0.8
+  },
+  {
+   "kind": "flood",
+   "object": "5657",
+   "start": "2026-05-10T15:34:18",
+   "end": "2026-05-10T15:34:18",
+   "channels": 2,
+   "max_minutes": 0.8
+  },
+  {
+   "kind": "flood",
+   "object": "5657",
+   "start": "2026-05-10T04:00:43",
+   "end": "2026-05-10T04:00:43",
+   "channels": 2,
+   "max_minutes": 0.8
+  },
+  {
+   "kind": "flood",
+   "object": "5657",
+   "start": "2026-05-09T16:42:10",
+   "end": "2026-05-09T16:42:12",
+   "channels": 2,
+   "max_minutes": 0.8
+  },
+  {
+   "kind": "fire",
+   "object": "4177",
+   "start": "2026-05-08T13:09:49",
+   "end": "2026-05-08T13:12:37",
+   "channels": 3,
+   "temperature_confirmed": false
+  },
+  {
+   "kind": "flood",
+   "object": "5657",
+   "start": "2026-05-08T09:08:38",
+   "end": "2026-05-08T09:09:18",
+   "channels": 2,
+   "max_minutes": 0.7
+  },
+  {
+   "kind": "flood",
+   "object": "5657",
+   "start": "2026-05-08T00:08:44",
+   "end": "2026-05-08T00:08:44",
+   "channels": 2,
+   "max_minutes": 0.8
+  },
+  {
+   "kind": "flood",
+   "object": "5657",
+   "start": "2026-05-07T15:53:00",
+   "end": "2026-05-07T15:53:00",
+   "channels": 2,
+   "max_minutes": 0.8
+  },
+  {
+   "kind": "fire",
+   "object": "108",
+   "start": "2026-05-07T13:08:13",
+   "end": "2026-05-07T13:09:51",
+   "channels": 2,
+   "temperature_confirmed": false
+  },
+  {
+   "kind": "flood",
+   "object": "4369",
+   "start": "2026-05-06T23:52:21",
+   "end": "2026-05-06T23:52:21",
+   "channels": 2,
+   "max_minutes": 37.2
+  },
+  {
+   "kind": "flood",
+   "object": "5122",
+   "start": "2026-05-06T20:39:06",
+   "end": "2026-05-06T21:05:17",
+   "channels": 7,
+   "max_minutes": 0.3
+  },
+  {
+   "kind": "flood",
+   "object": "5333",
+   "start": "2026-05-04T20:50:43",
+   "end": "2026-05-04T20:50:43",
+   "channels": 3,
+   "max_minutes": 0.0
+  },
+  {
+   "kind": "flood",
+   "object": "5011",
+   "start": "2026-05-04T12:00:00",
+   "end": "2026-05-04T12:00:00",
+   "channels": 2,
+   "max_minutes": 0.0
+  },
+  {
+   "kind": "flood",
+   "object": "5675",
+   "start": "2026-05-03T10:49:34",
+   "end": "2026-05-03T10:49:34",
+   "channels": 2,
+   "max_minutes": 0.0
+  },
+  {
+   "kind": "fire",
+   "object": "5677",
+   "start": "2026-05-02T14:24:22",
+   "end": "2026-05-02T14:45:56",
+   "channels": 5,
+   "temperature_confirmed": false
+  },
+  {
+   "kind": "flood",
+   "object": "5011",
+   "start": "2026-05-02T13:58:07",
+   "end": "2026-05-02T14:19:35",
+   "channels": 14,
+   "max_minutes": 0.0
+  },
+  {
+   "kind": "flood",
+   "object": "5675",
+   "start": "2026-05-02T13:55:46",
+   "end": "2026-05-02T14:36:06",
+   "channels": 2,
+   "max_minutes": 0.0
+  },
+  {
+   "kind": "flood",
+   "object": "3388",
+   "start": "2026-05-02T12:01:50",
+   "end": "2026-05-02T12:01:50",
+   "channels": 9,
+   "max_minutes": 0.0
+  },
+  {
+   "kind": "flood",
+   "object": "5122",
+   "start": "2026-05-02T05:40:10",
+   "end": "2026-05-02T05:40:10",
+   "channels": 2,
+   "max_minutes": 0.1
+  },
+  {
+   "kind": "flood",
+   "object": "3388",
+   "start": "2026-05-01T18:24:48",
+   "end": "2026-05-01T18:24:49",
+   "channels": 9,
+   "max_minutes": 0.0
+  },
+  {
+   "kind": "flood",
+   "object": "5122",
+   "start": "2026-05-01T17:06:51",
+   "end": "2026-05-01T17:06:51",
+   "channels": 2,
+   "max_minutes": 0.1
+  },
+  {
+   "kind": "flood",
+   "object": "3388",
+   "start": "2026-04-30T22:30:14",
+   "end": "2026-04-30T22:30:14",
+   "channels": 9,
+   "max_minutes": 0.0
+  },
+  {
+   "kind": "flood",
+   "object": "3388",
+   "start": "2026-04-30T11:33:50",
+   "end": "2026-04-30T11:34:02",
+   "channels": 3,
+   "max_minutes": 0.0
+  },
+  {
+   "kind": "fire",
+   "object": "5677",
+   "start": "2026-04-29T13:26:41",
+   "end": "2026-04-29T13:42:30",
+   "channels": 4,
+   "temperature_confirmed": false
+  },
+  {
+   "kind": "flood",
+   "object": "5675",
+   "start": "2026-04-29T00:10:16",
+   "end": "2026-04-29T00:10:16",
+   "channels": 2,
+   "max_minutes": 0.0
+  },
+  {
+   "kind": "fire",
+   "object": "5962",
+   "start": "2026-04-28T12:16:06",
+   "end": "2026-04-28T12:23:14",
+   "channels": 2,
+   "temperature_confirmed": false
+  },
+  {
+   "kind": "fire",
+   "object": "5962",
+   "start": "2026-04-28T11:59:17",
+   "end": "2026-04-28T11:59:23",
+   "channels": 2,
+   "temperature_confirmed": false
+  },
+  {
+   "kind": "fire",
+   "object": "5962",
+   "start": "2026-04-28T11:33:16",
+   "end": "2026-04-28T11:42:44",
+   "channels": 3,
+   "temperature_confirmed": false
+  },
+  {
+   "kind": "flood",
+   "object": "5963",
+   "start": "2026-04-28T11:23:23",
+   "end": "2026-04-28T12:26:22",
+   "channels": 8,
+   "max_minutes": 0.5
+  },
+  {
+   "kind": "flood",
+   "object": "5122",
+   "start": "2026-04-28T11:07:44",
+   "end": "2026-04-28T11:07:54",
+   "channels": 11,
+   "max_minutes": 1.0
+  },
+  {
+   "kind": "flood",
+   "object": "3388",
+   "start": "2026-04-28T10:50:00",
+   "end": "2026-04-28T10:53:07",
+   "channels": 3,
+   "max_minutes": 1.6
+  },
+  {
+   "kind": "flood",
+   "object": "5963",
+   "start": "2026-04-28T08:56:15",
+   "end": "2026-04-28T09:12:35",
+   "channels": 2,
+   "max_minutes": 0.0
+  },
+  {
+   "kind": "flood",
+   "object": "5963",
+   "start": "2026-04-27T19:15:16",
+   "end": "2026-04-27T20:02:00",
+   "channels": 3,
+   "max_minutes": 0.0
+  },
+  {
+   "kind": "fire",
+   "object": "5962",
+   "start": "2026-04-27T12:23:56",
+   "end": "2026-04-27T12:25:55",
+   "channels": 4,
+   "temperature_confirmed": false
+  },
+  {
+   "kind": "fire",
+   "object": "5677",
+   "start": "2026-04-27T01:32:37",
+   "end": "2026-04-27T01:32:51",
+   "channels": 2,
+   "temperature_confirmed": false
+  },
+  {
+   "kind": "flood",
+   "object": "3388",
+   "start": "2026-04-26T07:02:02",
+   "end": "2026-04-26T07:02:02",
+   "channels": 9,
+   "max_minutes": 0.0
+  },
+  {
+   "kind": "flood",
+   "object": "3388",
+   "start": "2026-04-25T17:45:23",
+   "end": "2026-04-25T17:45:23",
+   "channels": 9,
+   "max_minutes": 0.0
+  },
+  {
+   "kind": "flood",
+   "object": "5963",
+   "start": "2026-04-24T14:24:00",
+   "end": "2026-04-24T14:45:04",
+   "channels": 2,
+   "max_minutes": 0.0
+  },
+  {
+   "kind": "fire",
+   "object": "5962",
+   "start": "2026-04-24T11:26:55",
+   "end": "2026-04-24T11:31:19",
+   "channels": 2,
+   "temperature_confirmed": false
+  },
+  {
+   "kind": "fire",
+   "object": "5962",
+   "start": "2026-04-24T10:40:58",
+   "end": "2026-04-24T10:55:35",
+   "channels": 2,
+   "temperature_confirmed": false
+  },
+  {
+   "kind": "flood",
+   "object": "5122",
+   "start": "2026-04-24T10:30:02",
+   "end": "2026-04-24T10:30:03",
+   "channels": 7,
+   "max_minutes": 0.7
+  },
+  {
+   "kind": "flood",
+   "object": "5963",
+   "start": "2026-04-24T10:14:29",
+   "end": "2026-04-24T10:14:29",
+   "channels": 2,
+   "max_minutes": 0.0
+  },
+  {
+   "kind": "flood",
+   "object": "3388",
+   "start": "2026-04-23T21:08:42",
+   "end": "2026-04-23T21:08:42",
+   "channels": 6,
+   "max_minutes": 0.0
+  },
+  {
+   "kind": "flood",
+   "object": "3388",
+   "start": "2026-04-23T20:04:22",
+   "end": "2026-04-23T20:04:22",
+   "channels": 6,
+   "max_minutes": 0.0
+  },
+  {
+   "kind": "fire",
+   "object": "5962",
+   "start": "2026-04-23T12:19:56",
+   "end": "2026-04-23T12:20:10",
+   "channels": 2,
+   "temperature_confirmed": false
+  },
+  {
+   "kind": "flood",
+   "object": "3388",
+   "start": "2026-04-22T23:08:57",
+   "end": "2026-04-22T23:08:57",
+   "channels": 6,
+   "max_minutes": 0.0
+  },
+  {
+   "kind": "fire",
+   "object": "5581",
+   "start": "2026-04-22T14:50:20",
+   "end": "2026-04-22T15:10:46",
+   "channels": 4,
+   "temperature_confirmed": false
+  },
+  {
+   "kind": "flood",
+   "object": "5003",
+   "start": "2026-04-22T09:38:08",
+   "end": "2026-04-22T09:44:42",
+   "channels": 3,
+   "max_minutes": 0.0
+  },
+  {
+   "kind": "flood",
+   "object": "5011",
+   "start": "2026-04-22T06:06:38",
+   "end": "2026-04-22T06:06:38",
+   "channels": 3,
+   "max_minutes": 0.0
+  },
+  {
+   "kind": "fire",
+   "object": "5581",
+   "start": "2026-04-21T13:51:46",
+   "end": "2026-04-21T14:00:16",
+   "channels": 2,
+   "temperature_confirmed": false
+  },
+  {
+   "kind": "fire",
+   "object": "5962",
+   "start": "2026-04-21T13:14:22",
+   "end": "2026-04-21T13:14:42",
+   "channels": 2,
+   "temperature_confirmed": false
+  },
+  {
+   "kind": "fire",
+   "object": "5581",
+   "start": "2026-04-21T11:50:23",
+   "end": "2026-04-21T12:04:00",
+   "channels": 2,
+   "temperature_confirmed": false
+  },
+  {
+   "kind": "flood",
+   "object": "5963",
+   "start": "2026-04-21T11:44:53",
+   "end": "2026-04-21T12:45:39",
+   "channels": 4,
+   "max_minutes": 0.0
+  },
+  {
+   "kind": "fire",
+   "object": "5339",
+   "start": "2026-04-21T10:52:55",
+   "end": "2026-04-21T10:54:42",
+   "channels": 2,
+   "temperature_confirmed": false
+  },
+  {
+   "kind": "flood",
+   "object": "5122",
+   "start": "2026-04-21T09:32:23",
+   "end": "2026-04-21T09:32:24",
+   "channels": 4,
+   "max_minutes": 0.0
+  },
+  {
+   "kind": "fire",
+   "object": "5581",
+   "start": "2026-04-21T08:02:36",
+   "end": "2026-04-21T08:02:36",
+   "channels": 2,
+   "temperature_confirmed": false
+  },
+  {
+   "kind": "flood",
+   "object": "5963",
+   "start": "2026-04-20T14:48:13",
+   "end": "2026-04-20T15:24:34",
+   "channels": 2,
+   "max_minutes": 36.4
+  },
+  {
+   "kind": "fire",
+   "object": "5123",
+   "start": "2026-04-20T14:04:05",
+   "end": "2026-04-20T14:11:13",
+   "channels": 4,
+   "temperature_confirmed": false
+  },
+  {
+   "kind": "flood",
+   "object": "5963",
+   "start": "2026-04-20T10:29:24",
+   "end": "2026-04-20T10:29:24",
+   "channels": 3,
+   "max_minutes": 0.0
+  },
+  {
+   "kind": "fire",
+   "object": "5962",
+   "start": "2026-04-20T10:29:22",
+   "end": "2026-04-20T10:33:47",
+   "channels": 3,
+   "temperature_confirmed": false
+  },
+  {
+   "kind": "fire",
+   "object": "5962",
+   "start": "2026-04-19T08:44:36",
+   "end": "2026-04-19T08:47:49",
+   "channels": 7,
+   "temperature_confirmed": false
+  },
+  {
+   "kind": "flood",
+   "object": "5963",
+   "start": "2026-04-19T08:02:37",
+   "end": "2026-04-19T08:44:40",
+   "channels": 3,
+   "max_minutes": 0.0
+  },
+  {
+   "kind": "flood",
+   "object": "5011",
+   "start": "2026-04-18T12:41:04",
+   "end": "2026-04-18T12:41:04",
+   "channels": 3,
+   "max_minutes": 0.0
+  },
+  {
+   "kind": "flood",
+   "object": "5963",
+   "start": "2026-04-17T05:57:02",
+   "end": "2026-04-17T06:43:00",
+   "channels": 2,
+   "max_minutes": 0.0
+  },
+  {
+   "kind": "flood",
+   "object": "5963",
+   "start": "2026-04-15T19:57:32",
+   "end": "2026-04-15T19:57:32",
+   "channels": 2,
+   "max_minutes": 0.0
+  },
+  {
+   "kind": "flood",
+   "object": "5003",
+   "start": "2026-04-14T20:19:37",
+   "end": "2026-04-14T20:19:37",
+   "channels": 2,
+   "max_minutes": 0.0
+  },
+  {
+   "kind": "flood",
+   "object": "5963",
+   "start": "2026-04-14T12:55:50",
+   "end": "2026-04-14T12:56:10",
+   "channels": 3,
+   "max_minutes": 0.9
+  },
+  {
+   "kind": "flood",
+   "object": "5963",
+   "start": "2026-04-14T11:17:00",
+   "end": "2026-04-14T11:18:36",
+   "channels": 3,
+   "max_minutes": 8.0
+  },
+  {
+   "kind": "flood",
+   "object": "5011",
+   "start": "2026-04-14T10:40:25",
+   "end": "2026-04-14T10:46:40",
+   "channels": 3,
+   "max_minutes": 0.0
+  },
+  {
+   "kind": "flood",
+   "object": "5963",
+   "start": "2026-04-14T07:06:18",
+   "end": "2026-04-14T07:14:59",
+   "channels": 3,
+   "max_minutes": 7.5
+  },
+  {
+   "kind": "fire",
+   "object": "5962",
+   "start": "2026-04-14T07:06:15",
+   "end": "2026-04-14T07:14:57",
+   "channels": 2,
+   "temperature_confirmed": false
+  },
+  {
+   "kind": "fire",
+   "object": "4574",
+   "start": "2026-04-13T13:49:51",
+   "end": "2026-04-13T13:51:19",
+   "channels": 4,
+   "temperature_confirmed": false
+  },
+  {
+   "kind": "flood",
+   "object": "5675",
+   "start": "2026-04-12T23:53:14",
+   "end": "2026-04-12T23:53:14",
+   "channels": 2,
+   "max_minutes": 0.0
+  },
+  {
+   "kind": "flood",
+   "object": "5003",
+   "start": "2026-04-10T22:31:58",
+   "end": "2026-04-10T22:31:59",
+   "channels": 2,
+   "max_minutes": 0.0
+  },
+  {
+   "kind": "fire",
+   "object": "5567",
+   "start": "2026-04-10T18:38:18",
+   "end": "2026-04-10T19:16:16",
+   "channels": 40,
+   "temperature_confirmed": false
+  },
+  {
+   "kind": "flood",
+   "object": "5011",
+   "start": "2026-04-10T10:13:45",
+   "end": "2026-04-10T10:43:55",
+   "channels": 6,
+   "max_minutes": 0.0
+  },
+  {
+   "kind": "flood",
+   "object": "5675",
+   "start": "2026-04-09T18:12:30",
+   "end": "2026-04-09T18:12:54",
+   "channels": 2,
+   "max_minutes": 0.0
+  },
+  {
+   "kind": "flood",
+   "object": "5003",
+   "start": "2026-04-09T13:14:08",
+   "end": "2026-04-09T13:14:08",
+   "channels": 2,
+   "max_minutes": 0.0
+  },
+  {
+   "kind": "flood",
+   "object": "5132",
+   "start": "2026-04-09T10:24:02",
+   "end": "2026-04-09T10:26:06",
+   "channels": 5,
+   "max_minutes": 0.0
+  },
+  {
+   "kind": "flood",
+   "object": "4369",
+   "start": "2026-04-08T09:50:17",
+   "end": "2026-04-08T10:18:16",
+   "channels": 2,
+   "max_minutes": 1.1
+  },
+  {
+   "kind": "flood",
+   "object": "5963",
+   "start": "2026-04-07T17:20:34",
+   "end": "2026-04-07T18:18:32",
+   "channels": 3,
+   "max_minutes": 0.0
+  },
+  {
+   "kind": "flood",
+   "object": "5963",
+   "start": "2026-04-07T13:16:50",
+   "end": "2026-04-07T13:37:08",
+   "channels": 5,
+   "max_minutes": 0.0
+  },
+  {
+   "kind": "flood",
+   "object": "4369",
+   "start": "2026-04-07T12:34:56",
+   "end": "2026-04-07T12:34:56",
+   "channels": 2,
+   "max_minutes": 0.1
+  },
+  {
+   "kind": "flood",
+   "object": "5011",
+   "start": "2026-04-07T09:58:39",
+   "end": "2026-04-07T10:00:16",
+   "channels": 3,
+   "max_minutes": 0.0
+  },
+  {
+   "kind": "flood",
+   "object": "3388",
+   "start": "2026-04-07T00:25:41",
+   "end": "2026-04-07T00:25:41",
+   "channels": 9,
+   "max_minutes": 0.0
+  },
+  {
+   "kind": "flood",
+   "object": "5122",
+   "start": "2026-04-07T00:25:38",
+   "end": "2026-04-07T00:25:38",
+   "channels": 2,
+   "max_minutes": 0.1
+  },
+  {
+   "kind": "flood",
+   "object": "5963",
+   "start": "2026-04-06T15:51:59",
+   "end": "2026-04-06T15:51:59",
+   "channels": 2,
+   "max_minutes": 0.0
+  },
+  {
+   "kind": "fire",
+   "object": "5962",
+   "start": "2026-04-05T19:47:00",
+   "end": "2026-04-05T19:51:40",
+   "channels": 3,
+   "temperature_confirmed": false
+  },
+  {
+   "kind": "fire",
+   "object": "5962",
+   "start": "2026-04-05T13:09:18",
+   "end": "2026-04-05T13:10:35",
+   "channels": 2,
+   "temperature_confirmed": false
+  },
+  {
+   "kind": "fire",
+   "object": "5962",
+   "start": "2026-04-05T11:47:46",
+   "end": "2026-04-05T11:58:10",
+   "channels": 3,
+   "temperature_confirmed": false
+  },
+  {
+   "kind": "fire",
+   "object": "5962",
+   "start": "2026-04-05T11:30:22",
+   "end": "2026-04-05T11:31:12",
+   "channels": 2,
+   "temperature_confirmed": false
+  },
+  {
+   "kind": "fire",
+   "object": "5962",
+   "start": "2026-04-05T11:03:57",
+   "end": "2026-04-05T11:04:45",
+   "channels": 3,
+   "temperature_confirmed": false
+  },
+  {
+   "kind": "fire",
+   "object": "5962",
+   "start": "2026-04-04T16:26:26",
+   "end": "2026-04-04T16:35:54",
+   "channels": 2,
+   "temperature_confirmed": false
+  },
+  {
+   "kind": "fire",
+   "object": "5962",
+   "start": "2026-04-04T13:42:48",
+   "end": "2026-04-04T14:00:55",
+   "channels": 7,
+   "temperature_confirmed": false
+  },
+  {
+   "kind": "fire",
+   "object": "5962",
+   "start": "2026-04-04T13:17:45",
+   "end": "2026-04-04T13:27:20",
+   "channels": 7,
+   "temperature_confirmed": false
+  },
+  {
+   "kind": "fire",
+   "object": "5962",
+   "start": "2026-04-04T12:24:56",
+   "end": "2026-04-04T12:44:36",
+   "channels": 11,
+   "temperature_confirmed": false
+  },
+  {
+   "kind": "fire",
+   "object": "5962",
+   "start": "2026-04-04T11:38:23",
+   "end": "2026-04-04T11:52:06",
+   "channels": 2,
+   "temperature_confirmed": false
+  },
+  {
+   "kind": "fire",
+   "object": "5962",
+   "start": "2026-04-03T13:45:43",
+   "end": "2026-04-03T14:01:07",
+   "channels": 4,
+   "temperature_confirmed": false
+  },
+  {
+   "kind": "flood",
+   "object": "4369",
+   "start": "2026-04-03T12:33:02",
+   "end": "2026-04-03T12:36:21",
+   "channels": 2,
+   "max_minutes": 0.2
+  },
+  {
+   "kind": "flood",
+   "object": "4369",
+   "start": "2026-04-03T11:27:26",
+   "end": "2026-04-03T11:29:20",
+   "channels": 2,
+   "max_minutes": 0.1
+  },
+  {
+   "kind": "fire",
+   "object": "5113",
+   "start": "2026-04-02T15:04:22",
+   "end": "2026-04-02T15:09:54",
+   "channels": 2,
+   "temperature_confirmed": false
+  },
+  {
+   "kind": "fire",
+   "object": "5962",
+   "start": "2026-04-02T13:55:43",
+   "end": "2026-04-02T13:58:10",
+   "channels": 2,
+   "temperature_confirmed": false
+  },
+  {
+   "kind": "flood",
+   "object": "4369",
+   "start": "2026-04-02T09:22:52",
+   "end": "2026-04-02T11:49:00",
+   "channels": 3,
+   "max_minutes": 1.1
+  },
+  {
+   "kind": "fire",
+   "object": "5962",
+   "start": "2026-04-02T01:32:05",
+   "end": "2026-04-02T01:51:55",
+   "channels": 5,
+   "temperature_confirmed": false
+  },
+  {
+   "kind": "fire",
+   "object": "5962",
+   "start": "2026-04-02T00:27:14",
+   "end": "2026-04-02T01:15:58",
+   "channels": 15,
+   "temperature_confirmed": false
+  },
+  {
+   "kind": "fire",
+   "object": "5962",
+   "start": "2026-04-01T23:42:33",
+   "end": "2026-04-01T23:51:42",
+   "channels": 5,
+   "temperature_confirmed": false
+  },
+  {
+   "kind": "fire",
+   "object": "5962",
+   "start": "2026-04-01T22:22:53",
+   "end": "2026-04-01T23:21:18",
+   "channels": 24,
+   "temperature_confirmed": false
+  },
+  {
+   "kind": "fire",
+   "object": "5962",
+   "start": "2026-04-01T21:39:56",
+   "end": "2026-04-01T22:03:50",
+   "channels": 7,
+   "temperature_confirmed": false
+  },
+  {
+   "kind": "fire",
+   "object": "5962",
+   "start": "2026-04-01T15:13:58",
+   "end": "2026-04-01T15:27:22",
+   "channels": 2,
+   "temperature_confirmed": false
+  },
+  {
+   "kind": "fire",
+   "object": "5962",
+   "start": "2026-03-31T14:51:15",
+   "end": "2026-03-31T14:58:14",
+   "channels": 3,
+   "temperature_confirmed": false
+  },
+  {
+   "kind": "fire",
+   "object": "5962",
+   "start": "2026-03-31T13:47:49",
+   "end": "2026-03-31T13:53:24",
+   "channels": 3,
+   "temperature_confirmed": false
+  },
+  {
+   "kind": "fire",
+   "object": "5962",
+   "start": "2026-03-31T13:01:46",
+   "end": "2026-03-31T13:06:57",
+   "channels": 2,
+   "temperature_confirmed": false
+  },
+  {
+   "kind": "fire",
+   "object": "5962",
+   "start": "2026-03-31T12:26:17",
+   "end": "2026-03-31T12:28:03",
+   "channels": 2,
+   "temperature_confirmed": false
+  },
+  {
+   "kind": "fire",
+   "object": "5962",
+   "start": "2026-03-31T12:03:26",
+   "end": "2026-03-31T12:08:46",
+   "channels": 4,
+   "temperature_confirmed": false
+  },
+  {
+   "kind": "flood",
+   "object": "3388",
+   "start": "2026-03-30T23:29:26",
+   "end": "2026-03-30T23:29:27",
+   "channels": 6,
+   "max_minutes": 0.0
+  },
+  {
+   "kind": "fire",
+   "object": "5962",
+   "start": "2026-03-30T21:03:24",
+   "end": "2026-03-30T21:14:29",
+   "channels": 2,
+   "temperature_confirmed": false
+  },
+  {
+   "kind": "fire",
+   "object": "5962",
+   "start": "2026-03-30T19:46:37",
+   "end": "2026-03-30T20:13:50",
+   "channels": 6,
+   "temperature_confirmed": false
+  },
+  {
+   "kind": "fire",
+   "object": "5962",
+   "start": "2026-03-30T17:27:17",
+   "end": "2026-03-30T17:42:42",
+   "channels": 4,
+   "temperature_confirmed": false
+  },
+  {
+   "kind": "flood",
+   "object": "5122",
+   "start": "2026-03-30T07:14:20",
+   "end": "2026-03-30T07:14:23",
+   "channels": 3,
+   "max_minutes": 0.2
+  },
+  {
+   "kind": "fire",
+   "object": "5962",
+   "start": "2026-03-30T00:58:11",
+   "end": "2026-03-30T00:58:55",
+   "channels": 2,
+   "temperature_confirmed": false
+  },
+  {
+   "kind": "flood",
+   "object": "5122",
+   "start": "2026-03-29T18:51:04",
+   "end": "2026-03-29T18:51:04",
+   "channels": 3,
+   "max_minutes": 0.0
+  },
+  {
+   "kind": "flood",
+   "object": "3388",
+   "start": "2026-03-29T13:53:44",
+   "end": "2026-03-29T13:53:44",
+   "channels": 9,
+   "max_minutes": 0.0
+  },
+  {
+   "kind": "fire",
+   "object": "5962",
+   "start": "2026-03-28T22:18:08",
+   "end": "2026-03-28T22:32:38",
+   "channels": 15,
+   "temperature_confirmed": false
+  },
+  {
+   "kind": "fire",
+   "object": "5962",
+   "start": "2026-03-28T20:43:05",
+   "end": "2026-03-28T20:44:53",
+   "channels": 4,
+   "temperature_confirmed": false
+  },
+  {
+   "kind": "fire",
+   "object": "5962",
+   "start": "2026-03-28T18:54:50",
+   "end": "2026-03-28T19:03:10",
+   "channels": 4,
+   "temperature_confirmed": false
+  },
+  {
+   "kind": "flood",
+   "object": "5963",
+   "start": "2026-03-28T16:17:13",
+   "end": "2026-03-28T16:23:39",
+   "channels": 3,
+   "max_minutes": 0.0
+  },
+  {
+   "kind": "flood",
+   "object": "5675",
+   "start": "2026-03-28T15:52:06",
+   "end": "2026-03-28T15:52:06",
+   "channels": 2,
+   "max_minutes": 0.0
+  },
+  {
+   "kind": "flood",
+   "object": "3388",
+   "start": "2026-03-28T06:55:46",
+   "end": "2026-03-28T06:55:46",
+   "channels": 9,
+   "max_minutes": 0.0
+  },
+  {
+   "kind": "fire",
+   "object": "5962",
+   "start": "2026-03-27T21:23:20",
+   "end": "2026-03-27T21:27:36",
+   "channels": 2,
+   "temperature_confirmed": false
+  },
+  {
+   "kind": "fire",
+   "object": "5962",
+   "start": "2026-03-27T19:22:12",
+   "end": "2026-03-27T19:33:35",
+   "channels": 7,
+   "temperature_confirmed": false
+  },
+  {
+   "kind": "fire",
+   "object": "5962",
+   "start": "2026-03-27T18:15:48",
+   "end": "2026-03-27T18:43:48",
+   "channels": 12,
+   "temperature_confirmed": false
+  },
+  {
+   "kind": "fire",
+   "object": "5962",
+   "start": "2026-03-27T14:11:17",
+   "end": "2026-03-27T14:21:09",
+   "channels": 3,
+   "temperature_confirmed": false
+  },
+  {
+   "kind": "fire",
+   "object": "5962",
+   "start": "2026-03-27T13:32:12",
+   "end": "2026-03-27T13:34:57",
+   "channels": 2,
+   "temperature_confirmed": false
+  },
+  {
+   "kind": "fire",
+   "object": "5962",
+   "start": "2026-03-26T18:29:42",
+   "end": "2026-03-26T18:29:57",
+   "channels": 2,
+   "temperature_confirmed": false
+  },
+  {
+   "kind": "flood",
+   "object": "5963",
+   "start": "2026-03-26T18:04:11",
+   "end": "2026-03-26T18:04:11",
+   "channels": 2,
+   "max_minutes": 0.0
+  },
+  {
+   "kind": "flood",
+   "object": "5963",
+   "start": "2026-03-26T10:52:16",
+   "end": "2026-03-26T11:21:29",
+   "channels": 2,
+   "max_minutes": 0.0
+  },
+  {
+   "kind": "flood",
+   "object": "5132",
+   "start": "2026-03-26T10:37:32",
+   "end": "2026-03-26T11:56:15",
+   "channels": 5,
+   "max_minutes": 0.0
+  },
+  {
+   "kind": "flood",
+   "object": "5578",
+   "start": "2026-03-26T09:57:26",
+   "end": "2026-03-26T10:08:44",
+   "channels": 4,
+   "max_minutes": 0.1
+  },
+  {
+   "kind": "flood",
+   "object": "3388",
+   "start": "2026-03-25T22:01:56",
+   "end": "2026-03-25T22:01:56",
+   "channels": 6,
+   "max_minutes": 0.0
+  },
+  {
+   "kind": "flood",
+   "object": "5675",
+   "start": "2026-03-24T23:33:28",
+   "end": "2026-03-24T23:57:40",
+   "channels": 2,
+   "max_minutes": 0.0
+  },
+  {
+   "kind": "flood",
+   "object": "5333",
+   "start": "2026-03-24T17:16:32",
+   "end": "2026-03-24T17:16:32",
+   "channels": 3,
+   "max_minutes": 175.9
+  },
+  {
+   "kind": "fire",
+   "object": "5677",
+   "start": "2026-03-24T09:18:52",
+   "end": "2026-03-24T09:19:04",
+   "channels": 2,
+   "temperature_confirmed": false
+  },
+  {
+   "kind": "fire",
+   "object": "5962",
+   "start": "2026-03-24T02:59:01",
+   "end": "2026-03-24T03:13:02",
+   "channels": 2,
+   "temperature_confirmed": false
+  },
+  {
+   "kind": "fire",
+   "object": "5962",
+   "start": "2026-03-24T01:31:14",
+   "end": "2026-03-24T01:46:11",
+   "channels": 2,
+   "temperature_confirmed": false
+  },
+  {
+   "kind": "fire",
+   "object": "5962",
+   "start": "2026-03-23T23:33:51",
+   "end": "2026-03-23T23:36:26",
+   "channels": 3,
+   "temperature_confirmed": false
+  },
+  {
+   "kind": "fire",
+   "object": "5962",
+   "start": "2026-03-23T21:26:12",
+   "end": "2026-03-23T21:45:27",
+   "channels": 5,
+   "temperature_confirmed": false
+  },
+  {
+   "kind": "fire",
+   "object": "5962",
+   "start": "2026-03-23T17:25:43",
+   "end": "2026-03-23T17:26:29",
+   "channels": 3,
+   "temperature_confirmed": false
+  },
+  {
+   "kind": "flood",
+   "object": "5675",
+   "start": "2026-03-23T10:39:10",
+   "end": "2026-03-23T10:42:54",
+   "channels": 2,
+   "max_minutes": 0.0
+  },
+  {
+   "kind": "flood",
+   "object": "5675",
+   "start": "2026-03-23T06:54:26",
+   "end": "2026-03-23T06:54:26",
+   "channels": 2,
+   "max_minutes": 0.0
+  },
+  {
+   "kind": "fire",
+   "object": "5962",
+   "start": "2026-03-22T22:57:48",
+   "end": "2026-03-22T22:58:06",
+   "channels": 2,
+   "temperature_confirmed": false
+  },
+  {
+   "kind": "fire",
+   "object": "5962",
+   "start": "2026-03-22T20:06:19",
+   "end": "2026-03-22T20:09:37",
+   "channels": 5,
+   "temperature_confirmed": false
+  },
+  {
+   "kind": "fire",
+   "object": "5962",
+   "start": "2026-03-21T20:03:54",
+   "end": "2026-03-21T20:05:17",
+   "channels": 2,
+   "temperature_confirmed": false
+  },
+  {
+   "kind": "fire",
+   "object": "5962",
+   "start": "2026-03-21T18:27:06",
+   "end": "2026-03-21T18:37:43",
+   "channels": 17,
+   "temperature_confirmed": false
+  },
+  {
+   "kind": "flood",
+   "object": "5675",
+   "start": "2026-03-21T16:01:58",
+   "end": "2026-03-21T16:01:58",
+   "channels": 2,
+   "max_minutes": 0.0
+  },
+  {
+   "kind": "flood",
+   "object": "5675",
+   "start": "2026-03-21T13:04:14",
+   "end": "2026-03-21T13:21:24",
+   "channels": 3,
+   "max_minutes": 0.0
+  },
+  {
+   "kind": "fire",
+   "object": "5962",
+   "start": "2026-03-20T16:42:06",
+   "end": "2026-03-20T16:46:08",
+   "channels": 2,
+   "temperature_confirmed": false
+  },
+  {
+   "kind": "flood",
+   "object": "5675",
+   "start": "2026-03-20T09:39:02",
+   "end": "2026-03-20T10:14:14",
+   "channels": 3,
+   "max_minutes": 0.0
+  },
+  {
+   "kind": "flood",
+   "object": "5657",
+   "start": "2026-03-20T02:26:08",
+   "end": "2026-03-20T02:26:08",
+   "channels": 2,
+   "max_minutes": 0.0
+  },
+  {
+   "kind": "fire",
+   "object": "5962",
+   "start": "2026-03-19T14:39:34",
+   "end": "2026-03-19T14:40:27",
+   "channels": 3,
+   "temperature_confirmed": false
+  },
+  {
+   "kind": "flood",
+   "object": "5578",
+   "start": "2026-03-19T11:58:22",
+   "end": "2026-03-19T11:58:22",
+   "channels": 2,
+   "max_minutes": 0.0
+  },
+  {
+   "kind": "flood",
+   "object": "5675",
+   "start": "2026-03-19T11:31:16",
+   "end": "2026-03-19T11:34:04",
+   "channels": 2,
+   "max_minutes": 0.0
+  },
+  {
+   "kind": "flood",
+   "object": "3360",
+   "start": "2026-03-19T11:01:02",
+   "end": "2026-03-19T11:15:34",
+   "channels": 2,
+   "max_minutes": 9.4
+  },
+  {
+   "kind": "flood",
+   "object": "3388",
+   "start": "2026-03-19T08:54:00",
+   "end": "2026-03-19T12:21:53",
+   "channels": 30,
+   "max_minutes": 1.1
+  },
+  {
+   "kind": "flood",
+   "object": "5011",
+   "start": "2026-03-19T00:15:27",
+   "end": "2026-03-19T00:16:46",
+   "channels": 6,
+   "max_minutes": 0.0
+  },
+  {
+   "kind": "flood",
+   "object": "5963",
+   "start": "2026-03-18T21:22:45",
+   "end": "2026-03-18T22:11:10",
+   "channels": 3,
+   "max_minutes": 0.0
+  },
+  {
+   "kind": "fire",
+   "object": "5962",
+   "start": "2026-03-18T16:45:26",
+   "end": "2026-03-18T16:46:08",
+   "channels": 2,
+   "temperature_confirmed": false
+  },
+  {
+   "kind": "flood",
+   "object": "3360",
+   "start": "2026-03-18T14:46:12",
+   "end": "2026-03-18T14:47:49",
+   "channels": 2,
+   "max_minutes": 0.4
+  },
+  {
+   "kind": "fire",
+   "object": "5962",
+   "start": "2026-03-18T12:34:23",
+   "end": "2026-03-18T12:41:33",
+   "channels": 2,
+   "temperature_confirmed": false
+  },
+  {
+   "kind": "fire",
+   "object": "5567",
+   "start": "2026-03-18T00:28:36",
+   "end": "2026-03-18T00:36:40",
+   "channels": 3,
+   "temperature_confirmed": false
+  },
+  {
+   "kind": "fire",
+   "object": "5567",
+   "start": "2026-03-18T00:02:20",
+   "end": "2026-03-18T00:04:34",
+   "channels": 2,
+   "temperature_confirmed": false
+  },
+  {
+   "kind": "fire",
+   "object": "5567",
+   "start": "2026-03-17T23:19:54",
+   "end": "2026-03-17T23:25:38",
+   "channels": 3,
+   "temperature_confirmed": false
+  },
+  {
+   "kind": "fire",
+   "object": "5567",
+   "start": "2026-03-17T22:21:52",
+   "end": "2026-03-17T22:25:04",
+   "channels": 3,
+   "temperature_confirmed": false
+  },
+  {
+   "kind": "fire",
+   "object": "5567",
+   "start": "2026-03-17T21:12:34",
+   "end": "2026-03-17T21:30:06",
+   "channels": 3,
+   "temperature_confirmed": false
+  },
+  {
+   "kind": "flood",
+   "object": "3388",
+   "start": "2026-03-17T14:18:44",
+   "end": "2026-03-17T15:47:04",
+   "channels": 15,
+   "max_minutes": 0.0
+  },
+  {
+   "kind": "fire",
+   "object": "5962",
+   "start": "2026-03-17T12:19:26",
+   "end": "2026-03-17T12:19:26",
+   "channels": 2,
+   "temperature_confirmed": false
+  },
+  {
+   "kind": "fire",
+   "object": "4177",
+   "start": "2026-03-17T09:34:35",
+   "end": "2026-03-17T09:40:41",
+   "channels": 3,
+   "temperature_confirmed": false
+  },
+  {
+   "kind": "flood",
+   "object": "5591",
+   "start": "2026-03-16T16:09:24",
+   "end": "2026-03-16T16:17:14",
+   "channels": 2,
+   "max_minutes": 0.0
+  },
+  {
+   "kind": "flood",
+   "object": "4369",
+   "start": "2026-03-16T11:43:35",
+   "end": "2026-03-16T11:43:35",
+   "channels": 2,
+   "max_minutes": 7.5
+  },
+  {
+   "kind": "fire",
+   "object": "5583",
+   "start": "2026-03-16T11:29:04",
+   "end": "2026-03-16T11:50:40",
+   "channels": 4,
+   "temperature_confirmed": false
+  },
+  {
+   "kind": "fire",
+   "object": "5132",
+   "start": "2026-03-16T11:03:55",
+   "end": "2026-03-16T11:12:42",
+   "channels": 2,
+   "temperature_confirmed": false
+  },
+  {
+   "kind": "fire",
+   "object": "5583",
+   "start": "2026-03-16T10:29:00",
+   "end": "2026-03-16T10:36:58",
+   "channels": 4,
+   "temperature_confirmed": false
+  },
+  {
+   "kind": "fire",
+   "object": "5583",
+   "start": "2026-03-16T10:12:26",
+   "end": "2026-03-16T10:12:40",
+   "channels": 4,
+   "temperature_confirmed": false
+  },
+  {
+   "kind": "flood",
+   "object": "5657",
+   "start": "2026-03-14T03:46:18",
+   "end": "2026-03-14T03:46:18",
+   "channels": 2,
+   "max_minutes": 0.0
+  },
+  {
+   "kind": "flood",
+   "object": "5675",
+   "start": "2026-03-13T16:21:00",
+   "end": "2026-03-13T16:21:00",
+   "channels": 2,
+   "max_minutes": 0.0
+  },
+  {
+   "kind": "flood",
+   "object": "5122",
+   "start": "2026-03-13T15:28:29",
+   "end": "2026-03-13T15:28:29",
+   "channels": 3,
+   "max_minutes": 0.0
+  },
+  {
+   "kind": "flood",
+   "object": "3388",
+   "start": "2026-03-13T15:28:28",
+   "end": "2026-03-13T15:28:28",
+   "channels": 6,
+   "max_minutes": 0.0
+  },
+  {
+   "kind": "flood",
+   "object": "3388",
+   "start": "2026-03-13T09:02:49",
+   "end": "2026-03-13T11:03:53",
+   "channels": 15,
+   "max_minutes": 0.0
+  },
+  {
+   "kind": "flood",
+   "object": "5011",
+   "start": "2026-03-13T01:47:40",
+   "end": "2026-03-13T01:47:40",
+   "channels": 3,
+   "max_minutes": 0.0
+  },
+  {
+   "kind": "flood",
+   "object": "5675",
+   "start": "2026-03-12T18:45:18",
+   "end": "2026-03-12T19:13:36",
+   "channels": 2,
+   "max_minutes": 0.0
+  },
+  {
+   "kind": "flood",
+   "object": "5963",
+   "start": "2026-03-12T13:52:17",
+   "end": "2026-03-12T14:07:58",
+   "channels": 2,
+   "max_minutes": 0.0
+  },
+  {
+   "kind": "flood",
+   "object": "3388",
+   "start": "2026-03-12T09:34:47",
+   "end": "2026-03-12T13:19:02",
+   "channels": 21,
+   "max_minutes": 0.5
+  },
+  {
+   "kind": "flood",
+   "object": "5011",
+   "start": "2026-03-11T14:43:29",
+   "end": "2026-03-11T14:43:29",
+   "channels": 2,
+   "max_minutes": 0.0
+  },
+  {
+   "kind": "flood",
+   "object": "5963",
+   "start": "2026-03-11T12:17:22",
+   "end": "2026-03-11T12:50:01",
+   "channels": 3,
+   "max_minutes": 4.0
+  },
+  {
+   "kind": "fire",
+   "object": "99",
+   "start": "2026-03-11T10:52:07",
+   "end": "2026-03-11T10:56:32",
+   "channels": 4,
+   "temperature_confirmed": false
+  },
+  {
+   "kind": "flood",
+   "object": "5963",
+   "start": "2026-03-11T09:46:23",
+   "end": "2026-03-11T09:46:23",
+   "channels": 3,
+   "max_minutes": 0.0
+  },
+  {
+   "kind": "flood",
+   "object": "5963",
+   "start": "2026-03-10T12:58:21",
+   "end": "2026-03-10T12:58:30",
+   "channels": 3,
+   "max_minutes": 0.0
+  },
+  {
+   "kind": "fire",
+   "object": "20",
+   "start": "2026-03-10T10:34:31",
+   "end": "2026-03-10T10:40:06",
+   "channels": 3,
+   "temperature_confirmed": false
+  },
+  {
+   "kind": "fire",
+   "object": "111",
+   "start": "2026-03-10T10:33:22",
+   "end": "2026-03-10T10:33:28",
+   "channels": 2,
+   "temperature_confirmed": false
+  },
+  {
+   "kind": "fire",
+   "object": "165",
+   "start": "2026-03-10T10:29:37",
+   "end": "2026-03-10T10:30:06",
+   "channels": 2,
+   "temperature_confirmed": false
+  },
+  {
+   "kind": "flood",
+   "object": "3388",
+   "start": "2026-03-09T15:15:36",
+   "end": "2026-03-09T15:38:38",
+   "channels": 6,
+   "max_minutes": 0.0
+  },
+  {
+   "kind": "flood",
+   "object": "3388",
+   "start": "2026-03-09T13:30:45",
+   "end": "2026-03-09T13:30:45",
+   "channels": 6,
+   "max_minutes": 0.0
+  },
+  {
+   "kind": "fire",
+   "object": "5332",
+   "start": "2026-03-06T13:56:14",
+   "end": "2026-03-06T13:56:36",
+   "channels": 3,
+   "temperature_confirmed": false
+  },
+  {
+   "kind": "fire",
+   "object": "5343",
+   "start": "2026-03-06T09:31:14",
+   "end": "2026-03-06T09:53:48",
+   "channels": 4,
+   "temperature_confirmed": false
+  },
+  {
+   "kind": "fire",
+   "object": "5332",
+   "start": "2026-03-06T09:14:20",
+   "end": "2026-03-06T09:16:38",
+   "channels": 2,
+   "temperature_confirmed": false
+  },
+  {
+   "kind": "fire",
+   "object": "5343",
+   "start": "2026-03-05T12:17:36",
+   "end": "2026-03-05T12:31:10",
+   "channels": 2,
+   "temperature_confirmed": false
+  },
+  {
+   "kind": "fire",
+   "object": "5343",
+   "start": "2026-03-05T09:38:06",
+   "end": "2026-03-05T09:38:46",
+   "channels": 2,
+   "temperature_confirmed": false
+  },
+  {
+   "kind": "fire",
+   "object": "108",
+   "start": "2026-03-04T12:44:11",
+   "end": "2026-03-04T12:47:05",
+   "channels": 2,
+   "temperature_confirmed": false
+  },
+  {
+   "kind": "fire",
+   "object": "4370",
+   "start": "2026-03-04T12:27:09",
+   "end": "2026-03-04T12:27:14",
+   "channels": 2,
+   "temperature_confirmed": false
+  },
+  {
+   "kind": "fire",
+   "object": "3216",
+   "start": "2026-03-02T12:02:25",
+   "end": "2026-03-02T12:04:25",
+   "channels": 3,
+   "temperature_confirmed": false
+  },
+  {
+   "kind": "flood",
+   "object": "5011",
+   "start": "2026-03-02T05:02:00",
+   "end": "2026-03-02T05:02:00",
+   "channels": 3,
+   "max_minutes": 0.0
+  },
+  {
+   "kind": "flood",
+   "object": "3388",
+   "start": "2026-03-01T01:41:23",
+   "end": "2026-03-01T01:41:23",
+   "channels": 6,
+   "max_minutes": 0.0
+  },
+  {
+   "kind": "fire",
+   "object": "5677",
+   "start": "2026-02-26T10:35:37",
+   "end": "2026-02-26T10:44:16",
+   "channels": 2,
+   "temperature_confirmed": false
+  },
+  {
+   "kind": "flood",
+   "object": "5122",
+   "start": "2026-02-25T11:00:10",
+   "end": "2026-02-25T11:00:40",
+   "channels": 6,
+   "max_minutes": 0.2
+  },
+  {
+   "kind": "flood",
+   "object": "5011",
+   "start": "2026-02-24T00:44:54",
+   "end": "2026-02-24T00:44:54",
+   "channels": 3,
+   "max_minutes": 0.0
+  },
+  {
+   "kind": "flood",
+   "object": "111",
+   "start": "2026-02-23T16:45:20",
+   "end": "2026-02-23T16:45:20",
+   "channels": 1,
+   "max_minutes": 1083.7
+  },
+  {
+   "kind": "flood",
+   "object": "111",
+   "start": "2026-02-23T10:36:23",
+   "end": "2026-02-23T12:54:04",
+   "channels": 1,
+   "max_minutes": 57.4
+  },
+  {
+   "kind": "flood",
+   "object": "3388",
+   "start": "2026-02-21T18:34:10",
+   "end": "2026-02-21T18:34:10",
+   "channels": 6,
+   "max_minutes": 0.0
+  },
+  {
+   "kind": "fire",
+   "object": "5332",
+   "start": "2026-02-21T07:27:10",
+   "end": "2026-02-21T07:41:38",
+   "channels": 2,
+   "temperature_confirmed": false
+  },
+  {
+   "kind": "fire",
+   "object": "5537",
+   "start": "2026-02-19T11:56:30",
+   "end": "2026-02-19T12:01:30",
+   "channels": 3,
+   "temperature_confirmed": false
+  },
+  {
+   "kind": "flood",
+   "object": "3388",
+   "start": "2026-02-18T11:50:27",
+   "end": "2026-02-18T11:50:27",
+   "channels": 6,
+   "max_minutes": 0.0
+  },
+  {
+   "kind": "flood",
+   "object": "5122",
+   "start": "2026-02-18T11:50:19",
+   "end": "2026-02-18T11:50:19",
+   "channels": 3,
+   "max_minutes": 0.0
+  },
+  {
+   "kind": "flood",
+   "object": "5675",
+   "start": "2026-02-17T09:35:02",
+   "end": "2026-02-17T09:35:02",
+   "channels": 2,
+   "max_minutes": 0.0
+  },
+  {
+   "kind": "flood",
+   "object": "3388",
+   "start": "2026-02-16T17:49:46",
+   "end": "2026-02-16T17:49:46",
+   "channels": 6,
+   "max_minutes": 0.0
+  },
+  {
+   "kind": "flood",
+   "object": "3388",
+   "start": "2026-02-16T09:45:32",
+   "end": "2026-02-16T09:53:28",
+   "channels": 15,
+   "max_minutes": 0.0
+  },
+  {
+   "kind": "fire",
+   "object": "5677",
+   "start": "2026-02-15T12:21:28",
+   "end": "2026-02-15T12:23:20",
+   "channels": 2,
+   "temperature_confirmed": false
+  },
+  {
+   "kind": "fire",
+   "object": "4574",
+   "start": "2026-02-05T09:06:17",
+   "end": "2026-02-05T09:11:06",
+   "channels": 4,
+   "temperature_confirmed": false
+  },
+  {
+   "kind": "fire",
+   "object": "3356",
+   "start": "2026-02-03T09:31:21",
+   "end": "2026-02-03T09:33:37",
+   "channels": 2,
+   "temperature_confirmed": false
+  },
+  {
+   "kind": "fire",
+   "object": "3356",
+   "start": "2026-02-02T15:36:46",
+   "end": "2026-02-02T15:39:27",
+   "channels": 2,
+   "temperature_confirmed": false
+  },
+  {
+   "kind": "fire",
+   "object": "4648",
+   "start": "2026-01-27T15:41:55",
+   "end": "2026-01-27T15:42:07",
+   "channels": 2,
+   "temperature_confirmed": false
+  },
+  {
+   "kind": "fire",
+   "object": "4648",
+   "start": "2026-01-27T12:27:03",
+   "end": "2026-01-27T12:38:08",
+   "channels": 3,
+   "temperature_confirmed": false
+  },
+  {
+   "kind": "fire",
+   "object": "5339",
+   "start": "2026-01-26T11:18:34",
+   "end": "2026-01-26T11:26:12",
+   "channels": 3,
+   "temperature_confirmed": false
+  },
+  {
+   "kind": "fire",
+   "object": "5581",
+   "start": "2026-01-23T02:32:16",
+   "end": "2026-01-23T02:32:16",
+   "channels": 3,
+   "temperature_confirmed": false
+  },
+  {
+   "kind": "fire",
+   "object": "4177",
+   "start": "2026-01-22T14:46:13",
+   "end": "2026-01-22T14:49:07",
+   "channels": 3,
+   "temperature_confirmed": false
+  },
+  {
+   "kind": "fire",
+   "object": "3216",
+   "start": "2026-01-22T12:15:59",
+   "end": "2026-01-22T12:16:34",
+   "channels": 2,
+   "temperature_confirmed": false
+  },
+  {
+   "kind": "fire",
+   "object": "5583",
+   "start": "2026-01-21T16:38:14",
+   "end": "2026-01-21T16:38:22",
+   "channels": 2,
+   "temperature_confirmed": false
+  },
+  {
+   "kind": "fire",
+   "object": "5962",
+   "start": "2026-01-21T14:23:12",
+   "end": "2026-01-21T14:30:38",
+   "channels": 2,
+   "temperature_confirmed": false
+  },
+  {
+   "kind": "fire",
+   "object": "5581",
+   "start": "2026-01-20T12:35:24",
+   "end": "2026-01-20T12:35:24",
+   "channels": 2,
+   "temperature_confirmed": false
+  },
+  {
+   "kind": "fire",
+   "object": "165",
+   "start": "2026-01-19T13:00:52",
+   "end": "2026-01-19T13:02:07",
+   "channels": 2,
+   "temperature_confirmed": false
+  },
+  {
+   "kind": "fire",
+   "object": "165",
+   "start": "2026-01-19T11:20:04",
+   "end": "2026-01-19T11:20:25",
+   "channels": 2,
+   "temperature_confirmed": false
+  },
+  {
+   "kind": "fire",
+   "object": "111",
+   "start": "2026-01-19T11:01:39",
+   "end": "2026-01-19T11:05:35",
+   "channels": 2,
+   "temperature_confirmed": false
+  },
+  {
+   "kind": "fire",
+   "object": "165",
+   "start": "2026-01-19T10:30:32",
+   "end": "2026-01-19T10:32:55",
+   "channels": 3,
+   "temperature_confirmed": false
+  },
+  {
+   "kind": "fire",
+   "object": "20",
+   "start": "2026-01-19T09:38:05",
+   "end": "2026-01-19T09:52:22",
+   "channels": 2,
+   "temperature_confirmed": false
+  },
+  {
+   "kind": "fire",
+   "object": "5113",
+   "start": "2026-01-16T15:43:46",
+   "end": "2026-01-16T15:52:52",
+   "channels": 3,
+   "temperature_confirmed": false
+  },
+  {
+   "kind": "fire",
+   "object": "5113",
+   "start": "2026-01-16T12:12:54",
+   "end": "2026-01-16T12:15:50",
+   "channels": 2,
+   "temperature_confirmed": false
+  },
+  {
+   "kind": "fire",
+   "object": "108",
+   "start": "2026-01-15T11:56:01",
+   "end": "2026-01-15T11:57:23",
+   "channels": 2,
+   "temperature_confirmed": false
+  },
+  {
+   "kind": "fire",
+   "object": "4370",
+   "start": "2026-01-15T11:29:13",
+   "end": "2026-01-15T11:54:01",
+   "channels": 4,
+   "temperature_confirmed": false
+  },
+  {
+   "kind": "fire",
+   "object": "3902",
+   "start": "2025-12-22T12:57:52",
+   "end": "2025-12-22T13:10:55",
+   "channels": 3,
+   "temperature_confirmed": false
+  },
+  {
+   "kind": "fire",
+   "object": "3902",
+   "start": "2025-12-22T12:35:28",
+   "end": "2025-12-22T12:39:01",
+   "channels": 4,
+   "temperature_confirmed": false
+  },
+  {
+   "kind": "fire",
+   "object": "5962",
+   "start": "2025-12-21T09:09:00",
+   "end": "2025-12-21T09:22:26",
+   "channels": 3,
+   "temperature_confirmed": false
+  },
+  {
+   "kind": "fire",
+   "object": "5581",
+   "start": "2025-12-20T13:31:44",
+   "end": "2025-12-20T13:39:24",
+   "channels": 2,
+   "temperature_confirmed": false
+  },
+  {
+   "kind": "fire",
+   "object": "5677",
+   "start": "2025-12-18T13:20:04",
+   "end": "2025-12-18T13:21:18",
+   "channels": 4,
+   "temperature_confirmed": false
+  },
+  {
+   "kind": "fire",
+   "object": "5537",
+   "start": "2025-12-16T11:13:12",
+   "end": "2025-12-16T11:13:50",
+   "channels": 2,
+   "temperature_confirmed": false
+  },
+  {
+   "kind": "fire",
+   "object": "5962",
+   "start": "2025-12-15T11:37:00",
+   "end": "2025-12-15T11:45:43",
+   "channels": 3,
+   "temperature_confirmed": false
+  },
+  {
+   "kind": "fire",
+   "object": "5962",
+   "start": "2025-12-12T11:15:55",
+   "end": "2025-12-12T11:19:13",
+   "channels": 2,
+   "temperature_confirmed": false
+  },
+  {
+   "kind": "fire",
+   "object": "4370",
+   "start": "2025-12-12T10:32:01",
+   "end": "2025-12-12T10:32:01",
+   "channels": 2,
+   "temperature_confirmed": false
+  },
+  {
+   "kind": "fire",
+   "object": "5962",
+   "start": "2025-12-12T10:25:14",
+   "end": "2025-12-12T10:40:15",
+   "channels": 3,
+   "temperature_confirmed": false
+  },
+  {
+   "kind": "fire",
+   "object": "5962",
+   "start": "2025-12-11T14:32:57",
+   "end": "2025-12-11T14:50:22",
+   "channels": 3,
+   "temperature_confirmed": false
+  },
+  {
+   "kind": "fire",
+   "object": "5962",
+   "start": "2025-12-11T11:43:37",
+   "end": "2025-12-11T12:06:46",
+   "channels": 3,
+   "temperature_confirmed": false
+  },
+  {
+   "kind": "fire",
+   "object": "5962",
+   "start": "2025-12-11T11:07:18",
+   "end": "2025-12-11T11:17:14",
+   "channels": 4,
+   "temperature_confirmed": false
+  },
+  {
+   "kind": "fire",
+   "object": "5962",
+   "start": "2025-12-09T10:02:20",
+   "end": "2025-12-09T10:08:24",
+   "channels": 2,
+   "temperature_confirmed": false
+  },
+  {
+   "kind": "fire",
+   "object": "5962",
+   "start": "2025-12-06T11:03:46",
+   "end": "2025-12-06T11:04:20",
+   "channels": 3,
+   "temperature_confirmed": false
+  },
+  {
+   "kind": "fire",
+   "object": "5962",
+   "start": "2025-12-06T10:29:17",
+   "end": "2025-12-06T10:30:08",
+   "channels": 3,
+   "temperature_confirmed": false
+  },
+  {
+   "kind": "fire",
+   "object": "5343",
+   "start": "2025-12-05T12:00:34",
+   "end": "2025-12-05T12:04:04",
+   "channels": 2,
+   "temperature_confirmed": false
+  },
+  {
+   "kind": "fire",
+   "object": "5343",
+   "start": "2025-12-04T22:51:50",
+   "end": "2025-12-04T22:53:06",
+   "channels": 2,
+   "temperature_confirmed": false
+  },
+  {
+   "kind": "fire",
+   "object": "5336",
+   "start": "2025-12-04T15:54:14",
+   "end": "2025-12-04T15:56:06",
+   "channels": 2,
+   "temperature_confirmed": false
+  },
+  {
+   "kind": "fire",
+   "object": "5962",
+   "start": "2025-12-04T14:24:12",
+   "end": "2025-12-04T14:24:45",
+   "channels": 2,
+   "temperature_confirmed": false
+  },
+  {
+   "kind": "fire",
+   "object": "5332",
+   "start": "2025-12-03T10:34:18",
+   "end": "2025-12-03T10:41:22",
+   "channels": 2,
+   "temperature_confirmed": false
+  },
+  {
+   "kind": "fire",
+   "object": "5336",
+   "start": "2025-12-03T09:20:56",
+   "end": "2025-12-03T09:21:42",
+   "channels": 2,
+   "temperature_confirmed": false
+  },
+  {
+   "kind": "fire",
+   "object": "5962",
+   "start": "2025-12-02T10:20:44",
+   "end": "2025-12-02T10:24:03",
+   "channels": 2,
+   "temperature_confirmed": false
+  },
+  {
+   "kind": "fire",
+   "object": "5962",
+   "start": "2025-12-02T09:57:06",
+   "end": "2025-12-02T10:04:45",
+   "channels": 2,
+   "temperature_confirmed": false
+  },
+  {
+   "kind": "fire",
+   "object": "3356",
+   "start": "2025-12-01T12:27:27",
+   "end": "2025-12-01T12:32:29",
+   "channels": 4,
+   "temperature_confirmed": false
+  },
+  {
+   "kind": "fire",
+   "object": "5962",
+   "start": "2025-12-01T12:08:45",
+   "end": "2025-12-01T12:09:49",
+   "channels": 3,
+   "temperature_confirmed": false
+  },
+  {
+   "kind": "fire",
+   "object": "3356",
+   "start": "2025-12-01T10:55:24",
+   "end": "2025-12-01T10:55:48",
+   "channels": 2,
+   "temperature_confirmed": false
+  },
+  {
+   "kind": "fire",
+   "object": "4574",
+   "start": "2025-12-01T09:08:13",
+   "end": "2025-12-01T09:12:23",
+   "channels": 4,
+   "temperature_confirmed": false
+  },
+  {
+   "kind": "fire",
+   "object": "5567",
+   "start": "2025-11-29T20:15:05",
+   "end": "2025-11-29T20:16:48",
+   "channels": 7,
+   "temperature_confirmed": false
+  },
+  {
+   "kind": "fire",
+   "object": "108",
+   "start": "2025-11-25T12:27:20",
+   "end": "2025-11-25T12:27:50",
+   "channels": 2,
+   "temperature_confirmed": false
+  },
+  {
+   "kind": "fire",
+   "object": "4370",
+   "start": "2025-11-25T12:03:58",
+   "end": "2025-11-25T12:05:19",
+   "channels": 2,
+   "temperature_confirmed": false
+  }
+ ]
+}

@@ -1,0 +1,494 @@
+{
+ "generated_at": "2026-10-17T18:27:55",
+ "summary": {
+  "fire": {
+   "incidents": 169,
+   "hours_before": 6,
+   "share_top3": 0.408,
+   "object_share_top3": 0.562,
+   "nowcast_share_top3": null,
+   "share_top3_random": 0.117,
+   "best_share_top3": 0.562,
+   "in_catalog": true
+  },
+  "flood": {
+   "incidents": 301,
+   "hours_before": 6,
+   "share_top3": 0.495,
+   "object_share_top3": 0.645,
+   "nowcast_share_top3": 0.631,
+   "share_top3_random": 0.17,
+   "best_share_top3": 0.645,
+   "in_catalog": true
+  },
+  "power": {
+   "incidents": 200,
+   "hours_before": 6,
+   "share_top3": 0.275,
+   "object_share_top3": 0.205,
+   "nowcast_share_top3": null,
+   "share_top3_random": 0.158,
+   "best_share_top3": 0.275,
+   "in_catalog": true
+  }
+ },
+ "items": [
+  {
+   "id": "fire-5113-202601161212",
+   "kind": "fire",
+   "label": "Пожарный инцидент",
+   "object": "5113",
+   "start": "2026-01-16T12:12:54",
+   "end": "2026-01-16T12:15:50",
+   "channels": 2,
+   "rule": "«Обнаружен дым» на двух и более дымовых датчиках одного объекта в пределах 15 минут вне серии ППР; отдельно отмечается рост температуры на объекте за 30 минут до и 60 минут после",
+   "before_hours": 24,
+   "after_hours": 2,
+   "lead": [
+    {
+     "hours_before": 24,
+     "objects_ranked": 22,
+     "place": 1,
+     "score": 0.096124,
+     "level": "high"
+    },
+    {
+     "hours_before": 6,
+     "objects_ranked": 22,
+     "place": 1,
+     "score": 0.096124,
+     "level": "high"
+    },
+    {
+     "hours_before": 1,
+     "objects_ranked": 22,
+     "place": 1,
+     "score": 0.096124,
+     "level": "medium"
+    }
+   ],
+   "object_place": 18,
+   "object_probability": 0.0098,
+   "nowcast_place": null
+  },
+  {
+   "id": "fire-3356-202602030931",
+   "kind": "fire",
+   "label": "Пожарный инцидент",
+   "object": "3356",
+   "start": "2026-02-03T09:31:21",
+   "end": "2026-02-03T09:33:37",
+   "channels": 2,
+   "rule": "«Обнаружен дым» на двух и более дымовых датчиках одного объекта в пределах 15 минут вне серии ППР; отдельно отмечается рост температуры на объекте за 30 минут до и 60 минут после",
+   "before_hours": 24,
+   "after_hours": 2,
+   "lead": [
+    {
+     "hours_before": 24,
+     "objects_ranked": 30,
+     "place": 7,
+     "score": 0.079447,
+     "level": "low"
+    },
+    {
+     "hours_before": 6,
+     "objects_ranked": 30,
+     "place": 6,
+     "score": 0.096124,
+     "level": "medium"
+    },
+    {
+     "hours_before": 1,
+     "objects_ranked": 30,
+     "place": 6,
+     "score": 0.096124,
+     "level": "medium"
+    }
+   ],
+   "object_place": 1,
+   "object_probability": 0.25,
+   "nowcast_place": null
+  },
+  {
+   "id": "fire-5537-202602191156",
+   "kind": "fire",
+   "label": "Пожарный инцидент",
+   "object": "5537",
+   "start": "2026-02-19T11:56:30",
+   "end": "2026-02-19T12:01:30",
+   "channels": 3,
+   "rule": "«Обнаружен дым» на двух и более дымовых датчиках одного объекта в пределах 15 минут вне серии ППР; отдельно отмечается рост температуры на объекте за 30 минут до и 60 минут после",
+   "before_hours": 24,
+   "after_hours": 2,
+   "lead": [
+    {
+     "hours_before": 24,
+     "objects_ranked": 27,
+     "place": 12,
+     "score": 0.058505,
+     "level": "low"
+    },
+    {
+     "hours_before": 6,
+     "objects_ranked": 26,
+     "place": 13,
+     "score": 0.058505,
+     "level": "low"
+    },
+    {
+     "hours_before": 1,
+     "objects_ranked": 26,
+     "place": 14,
+     "score": 0.049371,
+     "level": "low"
+    }
+   ],
+   "object_place": 1,
+   "object_probability": 0.2333,
+   "nowcast_place": null
+  },
+  {
+   "id": "fire-5332-202602210727",
+   "kind": "fire",
+   "label": "Пожарный инцидент",
+   "object": "5332",
+   "start": "2026-02-21T07:27:10",
+   "end": "2026-02-21T07:41:38",
+   "channels": 2,
+   "rule": "«Обнаружен дым» на двух и более дымовых датчиках одного объекта в пределах 15 минут вне серии ППР; отдельно отмечается рост температуры на объекте за 30 минут до и 60 минут после",
+   "before_hours": 24,
+   "after_hours": 2,
+   "lead": [
+    {
+     "hours_before": 24,
+     "objects_ranked": 26,
+     "place": 2,
+     "score": 0.096124,
+     "level": "medium"
+    },
+    {
+     "hours_before": 6,
+     "objects_ranked": 25,
+     "place": 2,
+     "score": 0.096124,
+     "level": "medium"
+    },
+    {
+     "hours_before": 1,
+     "objects_ranked": 25,
+     "place": 2,
+     "score": 0.096124,
+     "level": "medium"
+    }
+   ],
+   "object_place": 1,
+   "object_probability": 0.0061,
+   "nowcast_place": null
+  },
+  {
+   "id": "flood-5122-202601060051",
+   "kind": "flood",
+   "label": "Подтопление",
+   "object": "5122",
+   "start": "2026-01-06T00:51:40",
+   "end": "2026-01-06T00:55:33",
+   "channels": 7,
+   "rule": "состояние «Затоплен» у двух и более насосов одной станции в пределах часа или затопление камеры дольше 30 минут",
+   "before_hours": 24,
+   "after_hours": 2,
+   "lead": [
+    {
+     "hours_before": 24,
+     "objects_ranked": 18,
+     "place": 1,
+     "score": 0.298874,
+     "level": "high"
+    },
+    {
+     "hours_before": 6,
+     "objects_ranked": 18,
+     "place": 1,
+     "score": 0.298874,
+     "level": "high"
+    },
+    {
+     "hours_before": 1,
+     "objects_ranked": 18,
+     "place": 1,
+     "score": 0.298874,
+     "level": "high"
+    }
+   ],
+   "object_place": 1,
+   "object_probability": 0.2889,
+   "nowcast_place": 2
+  },
+  {
+   "id": "flood-3360-202601071836",
+   "kind": "flood",
+   "label": "Подтопление",
+   "object": "3360",
+   "start": "2026-01-07T18:36:03",
+   "end": "2026-01-07T18:36:03",
+   "channels": 1,
+   "rule": "состояние «Затоплен» у двух и более насосов одной станции в пределах часа или затопление камеры дольше 30 минут",
+   "before_hours": 24,
+   "after_hours": 2,
+   "lead": [
+    {
+     "hours_before": 24,
+     "objects_ranked": 18,
+     "place": 8,
+     "score": 0.072061,
+     "level": "low"
+    },
+    {
+     "hours_before": 6,
+     "objects_ranked": 18,
+     "place": 2,
+     "score": 0.298874,
+     "level": "medium"
+    },
+    {
+     "hours_before": 1,
+     "objects_ranked": 18,
+     "place": 2,
+     "score": 0.298874,
+     "level": "medium"
+    }
+   ],
+   "object_place": 5,
+   "object_probability": 0.0698,
+   "nowcast_place": 1
+  },
+  {
+   "id": "flood-5963-202601210929",
+   "kind": "flood",
+   "label": "Подтопление",
+   "object": "5963",
+   "start": "2026-01-21T09:29:29",
+   "end": "2026-01-21T10:12:18",
+   "channels": 2,
+   "rule": "состояние «Затоплен» у двух и более насосов одной станции в пределах часа или затопление камеры дольше 30 минут",
+   "before_hours": 24,
+   "after_hours": 2,
+   "lead": [
+    {
+     "hours_before": 24,
+     "objects_ranked": 17,
+     "place": 6,
+     "score": 0.072061,
+     "level": "low"
+    },
+    {
+     "hours_before": 6,
+     "objects_ranked": 17,
+     "place": 4,
+     "score": 0.147826,
+     "level": "low"
+    },
+    {
+     "hours_before": 1,
+     "objects_ranked": 17,
+     "place": 4,
+     "score": 0.154135,
+     "level": "low"
+    }
+   ],
+   "object_place": 1,
+   "object_probability": 0.4074,
+   "nowcast_place": 1
+  },
+  {
+   "id": "flood-5003-202601261109",
+   "kind": "flood",
+   "label": "Подтопление",
+   "object": "5003",
+   "start": "2026-01-26T11:09:04",
+   "end": "2026-01-26T11:09:07",
+   "channels": 2,
+   "rule": "состояние «Затоплен» у двух и более насосов одной станции в пределах часа или затопление камеры дольше 30 минут",
+   "before_hours": 24,
+   "after_hours": 2,
+   "lead": [
+    {
+     "hours_before": 24,
+     "objects_ranked": 17,
+     "place": 9,
+     "score": 0.049834,
+     "level": "low"
+    },
+    {
+     "hours_before": 6,
+     "objects_ranked": 17,
+     "place": 9,
+     "score": 0.049834,
+     "level": "low"
+    },
+    {
+     "hours_before": 1,
+     "objects_ranked": 17,
+     "place": 9,
+     "score": 0.049834,
+     "level": "low"
+    }
+   ],
+   "object_place": 1,
+   "object_probability": 0.4667,
+   "nowcast_place": 1
+  },
+  {
+   "id": "power-4610-202601011031",
+   "kind": "power",
+   "label": "Отключение питания объекта",
+   "object": "4610",
+   "start": "2026-01-01T10:31:22",
+   "end": "2026-01-01T10:31:24",
+   "channels": 6,
+   "rule": "«Обесточен» у трёх и более фидеров одного объекта в пределах 5 минут",
+   "before_hours": 24,
+   "after_hours": 2,
+   "lead": [
+    {
+     "hours_before": 24,
+     "objects_ranked": 19,
+     "place": 2,
+     "score": 0.96372,
+     "level": "critical"
+    },
+    {
+     "hours_before": 6,
+     "objects_ranked": 19,
+     "place": 1,
+     "score": 0.96372,
+     "level": "critical"
+    },
+    {
+     "hours_before": 1,
+     "objects_ranked": 19,
+     "place": 1,
+     "score": 0.96372,
+     "level": "critical"
+    }
+   ],
+   "object_place": 6,
+   "object_probability": 0.651,
+   "nowcast_place": null
+  },
+  {
+   "id": "power-5218-202601121701",
+   "kind": "power",
+   "label": "Отключение питания объекта",
+   "object": "5218",
+   "start": "2026-01-12T17:01:19",
+   "end": "2026-01-12T17:01:24",
+   "channels": 6,
+   "rule": "«Обесточен» у трёх и более фидеров одного объекта в пределах 5 минут",
+   "before_hours": 24,
+   "after_hours": 2,
+   "lead": [
+    {
+     "hours_before": 24,
+     "objects_ranked": 19,
+     "place": 4,
+     "score": 0.67102,
+     "level": "high"
+    },
+    {
+     "hours_before": 6,
+     "objects_ranked": 19,
+     "place": 1,
+     "score": 0.99,
+     "level": "critical"
+    },
+    {
+     "hours_before": 1,
+     "objects_ranked": 19,
+     "place": 1,
+     "score": 0.99,
+     "level": "critical"
+    }
+   ],
+   "object_place": 4,
+   "object_probability": 0.6512,
+   "nowcast_place": null
+  },
+  {
+   "id": "power-5333-202601131226",
+   "kind": "power",
+   "label": "Отключение питания объекта",
+   "object": "5333",
+   "start": "2026-01-13T12:26:40",
+   "end": "2026-01-13T12:27:16",
+   "channels": 8,
+   "rule": "«Обесточен» у трёх и более фидеров одного объекта в пределах 5 минут",
+   "before_hours": 24,
+   "after_hours": 2,
+   "lead": [
+    {
+     "hours_before": 24,
+     "objects_ranked": 19,
+     "place": 11,
+     "score": 0.945048,
+     "level": "critical"
+    },
+    {
+     "hours_before": 6,
+     "objects_ranked": 19,
+     "place": 1,
+     "score": 0.945048,
+     "level": "critical"
+    },
+    {
+     "hours_before": 1,
+     "objects_ranked": 19,
+     "place": 4,
+     "score": 0.99,
+     "level": "critical"
+    }
+   ],
+   "object_place": 12,
+   "object_probability": 0.6122,
+   "nowcast_place": null
+  },
+  {
+   "id": "power-5675-202602010929",
+   "kind": "power",
+   "label": "Отключение питания объекта",
+   "object": "5675",
+   "start": "2026-02-01T09:29:46",
+   "end": "2026-02-01T09:30:00",
+   "channels": 12,
+   "rule": "«Обесточен» у трёх и более фидеров одного объекта в пределах 5 минут",
+   "before_hours": 24,
+   "after_hours": 2,
+   "lead": [
+    {
+     "hours_before": 24,
+     "objects_ranked": 19,
+     "place": 10,
+     "score": 0.622352,
+     "level": "high"
+    },
+    {
+     "hours_before": 6,
+     "objects_ranked": 19,
+     "place": 13,
+     "score": 0.497662,
+     "level": "medium"
+    },
+    {
+     "hours_before": 1,
+     "objects_ranked": 19,
+     "place": 12,
+     "score": 0.535894,
+     "level": "high"
+    }
+   ],
+   "object_place": 1,
+   "object_probability": 0.3526,
+   "nowcast_place": null
+  }
+ ],
+ "note": "Реальные инциденты января–июня 2026, которые модели не видели при обучении. В каталоге случаи, где объект стоял в топ-3 утреннего списка за 6 ч до начала. По всем инцидентам полугодия так было: пожарный инцидент — 56% против 12%; подтопление — 64% против 17%; отключение питания объекта — 28% против 16% при случайном порядке."
+}

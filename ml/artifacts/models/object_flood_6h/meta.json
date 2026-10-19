@@ -1,0 +1,73 @@
+{
+  "feature_columns": [
+    "hour",
+    "weekday",
+    "month",
+    "incidents_24h",
+    "incidents_168h",
+    "incidents_720h",
+    "hours_since_incident"
+  ],
+  "model_config": {
+    "label": "Подтопление станции за 6 ч",
+    "kind": "flood",
+    "scenario": "flooding",
+    "recipe": "lightgbm",
+    "variant": "history",
+    "horizon_hours": 6,
+    "calibrated": true,
+    "target": "начало подтопления реестра на объекте в ближайшие 6 ч",
+    "calibration": {
+      "method": "isotonic",
+      "fit_period": "2025"
+    },
+    "features": "инциденты подтопления станции за 24, 168, 720 ч и часы с последнего (с момента подтверждения), час, день недели, месяц"
+  },
+  "training_period": {
+    "train_years": "2019-2025"
+  },
+  "version": "2026-10-17",
+  "metrics_snapshot": {
+    "selection_2025": {
+      "history": {
+        "base_rate": 0.0118,
+        "avg_precision": 0.0978,
+        "roc_auc": 0.8549,
+        "precision_top3_per_hour": 0.0401,
+        "incidents": 334,
+        "share_top3": 0.572,
+        "objects": 18
+      },
+      "nowcast": {
+        "base_rate": 0.0118,
+        "avg_precision": 0.0919,
+        "roc_auc": 0.8661,
+        "precision_top3_per_hour": 0.043,
+        "incidents": 334,
+        "share_top3": 0.59,
+        "objects": 18
+      },
+      "rule": {
+        "base_rate": 0.0118,
+        "avg_precision": 0.0348,
+        "roc_auc": 0.6226,
+        "precision_top3_per_hour": 0.0247,
+        "incidents": 334,
+        "share_top3": 0.35,
+        "objects": 18
+      }
+    },
+    "test_2026h1": {
+      "base_rate": 0.0213,
+      "avg_precision": 0.1848,
+      "roc_auc": 0.8405,
+      "precision_top3_per_hour": 0.0805,
+      "incidents": 298,
+      "share_top3": 0.648,
+      "objects": 18,
+      "ece": 0.0038,
+      "rule_avg_precision": 0.1335,
+      "rule_share_top3": 0.513
+    }
+  }
+}

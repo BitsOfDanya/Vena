@@ -1,0 +1,50 @@
+{
+ "pump": {
+  "cap_hours": 720.0,
+  "periods": {
+   "selection_2025": {
+    "rows": 218971,
+    "events_within_cap": 0.6974,
+    "coverage_20_80": 0.6672,
+    "median_abs_error_hours": 152.7,
+    "median_true_hours": 187.4,
+    "c_index_quantile_median": 0.5941,
+    "c_index_classifier_72h": 0.609
+   },
+   "test_2026h1": {
+    "rows": 237244,
+    "events_within_cap": 0.8404,
+    "coverage_20_80": 0.6327,
+    "median_abs_error_hours": 123.8,
+    "median_true_hours": 149.0,
+    "c_index_quantile_median": 0.5725,
+    "c_index_classifier_72h": 0.5683
+   }
+  },
+  "decision": "в прод"
+ },
+ "fan": {
+  "cap_hours": 720.0,
+  "periods": {
+   "selection_2025": {
+    "rows": 190011,
+    "events_within_cap": 0.4812,
+    "coverage_20_80": 0.5005,
+    "median_abs_error_hours": 548.1,
+    "median_true_hours": 171.9,
+    "c_index_quantile_median": 0.5,
+    "c_index_classifier_72h": 0.8366
+   },
+   "test_2026h1": {
+    "rows": 196988,
+    "events_within_cap": 0.2705,
+    "coverage_20_80": 0.916,
+    "median_abs_error_hours": 594.1,
+    "median_true_hours": 125.9,
+    "c_index_quantile_median": 0.5,
+    "c_index_classifier_72h": 0.9206
+   }
+  },
+  "decision": "в таблицу проверенных подходов"
+ }
+}

@@ -14,6 +14,10 @@ MODELS = {
     "phase_24h": ("power_loss", "Состояние фазы", "начало эпизода «Обесточен» за 24 ч"),
     "flood_24h": ("flooding", "Состояние насоса", "состояние камеры «Затоплен» за 24 ч"),
     "alarm_30m": ("false_alarms", "дым, газ, температура", "подтверждение тревоги за 30 мин"),
+    "object_power_24h": ("power_loss", "объект: фазы и реестр инцидентов", "отключение питания объекта по реестру за сутки"),
+    "object_flood_24h": ("flooding", "объект: насосы и реестр инцидентов", "подтопление станции по реестру за сутки"),
+    "object_flood_6h": ("flooding", "объект: реестр инцидентов по часам", "подтопление станции по реестру в ближайшие 6 ч"),
+    "object_fire_24h": ("fire", "объект: дымовые датчики и реестр инцидентов", "пожарный инцидент по реестру за сутки"),
 }
 OUTPUT = os.path.join(config.ROOT, "results", "models.json")
 
@@ -36,14 +40,22 @@ def held_out(name, meta, refit, detection):
         return {"period": detection["recent"]["period"], "base_rate": detection["recent"]["base_rate"],
                 **{key: detection["refit"].get(key) for key in ("avg_precision", "roc_auc", "precision_top5_per_day", "ece")}}
     metrics = meta["metrics_snapshot"]
+    if "test_2026h1" in metrics:
+        test = metrics["test_2026h1"]
+        return {"period": "2026H1", "base_rate": test.get("base_rate"), "avg_precision": test.get("avg_precision"),
+                "roc_auc": test.get("roc_auc"), "precision_top5_per_day": test.get("top5"), "ece": test.get("ece")}
     test = metrics.get("test", {})
     calibrated = meta["model_config"].get("calibration") or metrics.get("calibration") or {}
     period = test.get("period") or ("2026H1" if name == "alarm_30m" else "2025-2026H1")
+    operating = metrics.get("operating_test", {})
     return {"period": period,
             **{key: round(float(value), 4) if value is not None else None for key, value in (
                 ("avg_precision", test.get("avg_precision", test.get("pr_auc"))),
                 ("roc_auc", test.get("roc_auc")),
-                ("ece", calibrated.get("ece_calibrated")))}}
+                ("ece", calibrated.get("ece_calibrated")),
+                ("base_rate", metrics.get("test_base_rate")),
+                ("kept_share", operating.get("kept_corroborated")),
+                ("filtered_share", operating.get("filtered_uncorroborated")))}}
 
 
 def main() -> None:

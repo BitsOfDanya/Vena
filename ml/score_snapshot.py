@@ -181,8 +181,27 @@ def calibrated(calibrator, score):
     return float(np.clip(calibration.apply_isotonic(calibrator, [score])[0], *PROBABILITY_RANGE))
 
 
+TTF_QUANTILES = (20, 50, 80)
+
+
+def ttf_models(device):
+    names = [f"{device}_ttf_q{q}" for q in TTF_QUANTILES]
+    if not all(os.path.exists(os.path.join(artifacts.artifact_dir(name), "meta.json")) for name in names):
+        return None
+    return [artifacts.load_artifact(name) for name in names]
+
+
+def ttf_hours(models, feature_row):
+    if not models or any(c not in feature_row.columns for c in models[0][1]["feature_columns"]):
+        return None
+    values = sorted(float(np.expm1(model.predict(feature_row[meta["feature_columns"]])[0])) for model, meta in models)
+    cap = models[0][1]["model_config"]["cap_hours"]
+    return {f"q{q}": round(min(max(v, 0.0), cap), 1) for q, v in zip(TTF_QUANTILES, values, strict=True)}
+
+
 def score_rows(device, model_names, target_state, events, reference):
     events = events.sort_values(["channel_id", "ts"])
+    ttf = ttf_models(device)
     all_episodes = build_episodes(events, target_state)
     models = {}
     fallbacks = {}
@@ -273,6 +292,7 @@ def score_rows(device, model_names, target_state, events, reference):
                     },
                     "sensor_type": info.get("sensor_type"),
                     "system_type": info.get("system_type"),
+                    "ttf_hours": ttf_hours(ttf, feature_row) if name == model_names[-1] else None,
                     "tag": info.get("tag"),
                     "object_id": info.get("object_id"),
                     "name": info.get("name"),
@@ -427,7 +447,7 @@ def assess_routes(reference, until):
 
 def write_snapshot(
     predictions, prediction_time, output, alarms=None, access_events=None, incidents=None, stream=None, history=None,
-    access_routes=None, weather_forecast=None, data_source="journal",
+    access_routes=None, weather_forecast=None, data_source="journal", objects=None, objects_meta=None,
 ):
     model_info = {}
     for _, names, _ in DEVICES:
@@ -459,6 +479,9 @@ def write_snapshot(
         payload["access_routes"] = access_routes
     if weather_forecast is not None:
         payload["weather_forecast"] = weather_forecast
+    if objects is not None:
+        payload["objects"] = objects
+        payload["objects_meta"] = objects_meta or {}
     payload["snapshot_id"] = hashlib.sha256(
         json.dumps(payload["predictions"], sort_keys=True).encode()
     ).hexdigest()[:16]
@@ -469,6 +492,19 @@ def write_snapshot(
         json.dump(payload, handle, ensure_ascii=False)
     os.replace(temporary, output)
     print(f"{len(predictions)} predictions -> {output} ({payload['snapshot_id']})")
+
+
+def object_section(until, predictions, events_by_sensor=None, registry=None, recent_flood=None):
+    from pipeline import context, incidents, object_risk
+
+    if not object_risk.available():
+        return None, None
+    object_of = context.locations()[0]
+    if registry is None:
+        sources = events_by_sensor or {sensor: incidents._events(sensor) for sensor in object_risk.SENSORS.values()}
+        registry = object_risk.registry_from(sources, object_of)
+    channel = object_risk.channel_by_object(predictions, object_of)
+    return object_risk.score(registry, until, object_of, channel, events_by_sensor, recent_flood=recent_flood)
 
 
 def main() -> None:
@@ -511,6 +547,7 @@ def main() -> None:
         )
 
     until = pd.Timestamp(prediction_time)
+    objects, objects_meta = object_section(until, predictions)
     write_snapshot(
         predictions,
         prediction_time,
@@ -523,6 +560,8 @@ def main() -> None:
         history=location_history(
             {sensor_of(device): extract.extract_events(sensor_of(device)) for device, _, _ in DEVICES}, reference, until
         ),
+        objects=objects,
+        objects_meta=objects_meta,
     )
 
 

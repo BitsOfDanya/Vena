@@ -11,6 +11,8 @@ EPOCH_ERROR = re.compile(r"^01\.01\.1970 ")
 TIMESTAMP = re.compile(r"^\d{2}\.\d{2}\.\d{4} \d{2}:\d{2}:\d{2}$")
 GAS_LIMITS = (0.0, 100.0)
 GAS_ALARM = 1.0
+SENTINEL_CODES = (-3276.0, -3276.8, -127.0, -100.0, 255.0, -255.0, 32767.0, -32768.0)
+TEMPERATURE_LIMITS = (-50.0, 90.0)
 
 
 def catalogue():
@@ -35,6 +37,15 @@ def gas_reading(values):
     invalid = numbers.notna() & ((numbers < GAS_LIMITS[0]) | (numbers > GAS_LIMITS[1]))
     alarm = (numbers >= GAS_ALARM) & ~invalid
     return numbers.mask(invalid), invalid.to_numpy(), alarm.to_numpy()
+
+
+def technical_fault(values, alarm_flags, limits=None):
+    numbers = pd.to_numeric(pd.Series(values).astype(str).str.replace(",", ".", regex=False), errors="coerce")
+    fault = numbers.isin(SENTINEL_CODES)
+    if limits is not None:
+        fault |= numbers.notna() & ((numbers < limits[0]) | (numbers > limits[1]))
+    alarm = pd.Series(alarm_flags).astype(str).str.lower().isin(("t", "true", "1")).to_numpy()
+    return fault.to_numpy() & ~alarm
 
 
 def is_timestamp(values):

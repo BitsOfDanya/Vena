@@ -18,10 +18,90 @@ def onsets(events, target_state):
     return found[["channel_id", "episode_start"]].astype({"channel_id": str})
 
 
+OBJECT_KINDS = {"object_power_24h": "power", "object_flood_24h": "flood", "object_fire_24h": "fire", "object_flood_6h": "flood"}
+TOP = 3
+
+
+def object_summary(frame, incidents, list_key, horizon):
+    frame = frame.assign(outcome=frame["outcome"].astype(int))
+    tops = frame.loc[frame["place"] <= TOP]
+    lists = frame[list_key].nunique()
+    covered = eligible = 0
+    for row in incidents.itertuples():
+        lead = frame.loc[(frame["object"] == row.object) & (frame["issued"] < row.t0) & (frame["issued"] >= row.t0 - horizon)]
+        if len(lead):
+            eligible += 1
+            covered += int(lead.sort_values("issued").iloc[0]["place"] <= TOP)
+    return {
+        "lists": int(lists),
+        "forecasts": int(len(frame)),
+        "mean_probability": round(float(frame["probability"].mean()), 4),
+        "event_rate": round(float(frame["outcome"].mean()), 4),
+        "brier": round(float(np.mean((frame["probability"] - frame["outcome"]) ** 2)), 4),
+        "top3_precision": round(float(tops["outcome"].mean()), 4) if len(tops) else None,
+        "incidents": eligible,
+        "incidents_total": int(len(incidents)),
+        "incidents_top3": covered,
+        "incident_recall_top3": round(covered / eligible, 4) if eligible else None,
+    }
+
+
 class ProspectiveMonitor:
     def __init__(self, start):
         self.start = pd.Timestamp(start)
         self.parts = []
+        self.daily = {}
+        self.hourly = {}
+
+    def record_objects(self, rows, now):
+        now = pd.Timestamp(now)
+        hour = now.floor("h")
+        for row in rows or []:
+            day = pd.Timestamp(row["day"])
+            if day >= self.start and (row["model_id"], day, row["object_id"]) not in self.daily:
+                self.daily[(row["model_id"], day, row["object_id"])] = (float(row["probability"]), int(row["rank"]))
+            if row.get("rank_6h") is not None and now >= self.start:
+                self.hourly.setdefault((hour, row["object_id"]), (now, float(row["probability_6h"]), int(row["rank_6h"])))
+
+    def evaluate_objects(self, registry, now):
+        now = pd.Timestamp(now)
+        report = {}
+        daily = pd.DataFrame(
+            [(model, day, obj, p, place) for (model, day, obj), (p, place) in self.daily.items()],
+            columns=["model", "issued", "object", "probability", "place"],
+        )
+        for model, frame in daily.groupby("model"):
+            kind = OBJECT_KINDS.get(model)
+            events = registry.get(kind)
+            frame = frame.assign(issued=pd.to_datetime(frame["issued"]))
+            frame = frame.loc[frame["issued"] + pd.Timedelta(days=1) <= now]
+            if events is None or frame.empty:
+                continue
+            days = set(zip(events["object"].astype(str), events["t0"].dt.normalize()))
+            frame = frame.assign(outcome=[(obj, day) in days for obj, day in zip(frame["object"], frame["issued"])])
+            span = events.loc[(events["t0"] >= frame["issued"].min()) & (events["t0"] < frame["issued"].max() + pd.Timedelta(days=1))]
+            report[model] = object_summary(frame, span.assign(object=span["object"].astype(str)), "issued", pd.Timedelta(days=1))
+        hourly = pd.DataFrame(
+            [(issued, obj, p, place) for (_, obj), (issued, p, place) in self.hourly.items()],
+            columns=["issued", "object", "probability", "place"],
+        )
+        if not hourly.empty:
+            hourly = hourly.loc[pd.to_datetime(hourly["issued"]) + pd.Timedelta(hours=6) <= now]
+        flood = registry.get("flood")
+        if not hourly.empty and flood is not None:
+            starts = {obj: np.sort(part["t0"].values) for obj, part in flood.assign(object=flood["object"].astype(str)).groupby("object")}
+
+            def happened(row):
+                times = starts.get(row.object)
+                if times is None:
+                    return False
+                index = np.searchsorted(times, np.datetime64(row.issued), side="right")
+                return bool(index < len(times) and times[index] <= np.datetime64(row.issued + pd.Timedelta(hours=6)))
+
+            hourly = hourly.assign(outcome=[happened(row) for row in hourly.itertuples()])
+            span = flood.loc[(flood["t0"] > hourly["issued"].min()) & (flood["t0"] <= hourly["issued"].max() + pd.Timedelta(hours=6))]
+            report["object_flood_6h"] = object_summary(hourly, span.assign(object=span["object"].astype(str)), "issued", pd.Timedelta(hours=6))
+        return report
 
     def record(self, rows):
         fresh = [
