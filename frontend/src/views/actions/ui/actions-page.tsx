@@ -49,7 +49,9 @@ export function ActionsPage() {
   const approve = useApproveAction(now)
   const setStatus = useSetActionStatus(now)
   const [hours, setHours] = React.useState(72)
-  const [selectedId, setSelectedId] = React.useState<string | null>(null)
+  const [selectedId, setSelectedId] = React.useState<string | null>(() =>
+    typeof window === "undefined" ? null : new URLSearchParams(window.location.search).get("action")
+  )
   const [sheetOpen, setSheetOpen] = React.useState(false)
   const [draft, setDraft] = React.useState<ActionDraft>({})
 

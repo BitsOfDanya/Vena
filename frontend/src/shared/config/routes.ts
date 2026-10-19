@@ -9,6 +9,7 @@ import {
   Info,
   LayoutDashboard,
   ScrollText,
+  Siren,
   type LucideIcon,
 } from "lucide-react"
 
@@ -21,6 +22,7 @@ export const NAV_GROUPS: { title: string; items: NavItem[] }[] = [
       { href: "/pulse", label: "Пульс", icon: Activity, hint: "Что требует внимания сейчас" },
       { href: "/network", label: "Сеть", icon: GitBranch, hint: "Объекты, участки и схема по пикетам" },
       { href: "/alarms", label: "Алармы", icon: BellRing, hint: "Тревоги и проверка перед выездом" },
+      { href: "/incidents", label: "Инциденты", icon: Siren, hint: "Утренний список объектов и реестр инцидентов" },
       { href: "/timeline", label: "Таймлайн", icon: History, hint: "История и прогноз канала" },
     ],
   },

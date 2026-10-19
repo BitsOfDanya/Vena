@@ -16,6 +16,8 @@ import { ForecastVsFactPanel } from "./forecast-vs-fact-panel"
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8000"
 
+const EXPORT_LABEL = { xlsx: "XLSX", csv: "CSV", xml: "XML" } as const
+
 const STATUS_RU: Record<string, string> = {
   new: "нужна работа",
   acknowledged: "принято",
@@ -214,7 +216,7 @@ export function EffectPage() {
                 onClick={() => runDownload(kind)}
                 className="cursor-pointer px-3 font-mono text-[12px] uppercase outline-none hover:bg-accent focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-ring/60 disabled:opacity-50"
               >
-                {downloading === kind ? "…" : kind}
+                {downloading === kind ? "…" : EXPORT_LABEL[kind]}
               </button>
             ))}
           </div>

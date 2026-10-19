@@ -1,6 +1,6 @@
 "use client"
 
-import { Activity, BellRing, Boxes, LayoutDashboard, ListChecks, Network, Plug, SlidersHorizontal, Waves } from "lucide-react"
+import { Activity, BellRing, Boxes, LayoutDashboard, ListChecks, Network, Plug, Siren, SlidersHorizontal, Waves } from "lucide-react"
 import { useRouter } from "next/navigation"
 import * as React from "react"
 
@@ -26,6 +26,7 @@ const NAVIGATION = [
   { href: "/timeline", label: "Хронология", icon: Waves },
   { href: "/actions", label: "Работы", icon: ListChecks },
   { href: "/alarms", label: "Алармы", icon: BellRing },
+  { href: "/incidents", label: "Инциденты", icon: Siren },
   { href: "/journal", label: "Журнал", icon: ListChecks },
   { href: "/dashboard", label: "Дашборд", icon: LayoutDashboard },
   { href: "/effect", label: "Эффект", icon: LayoutDashboard },

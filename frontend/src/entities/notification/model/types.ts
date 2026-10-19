@@ -44,12 +44,6 @@ export const NOTIFICATION_TYPE_LABEL: Record<NotificationType, string> = {
   integration: "Интеграция",
 }
 
-export const NOTIFICATION_STATUS_LABEL: Record<NotificationStatus, string> = {
-  new: "Новое",
-  acknowledged: "Принято",
-  resolved: "Решено",
-}
-
 export type NotificationChannelId = "email" | "in_app" | "webhook" | "telegram" | "teams"
 export type ChannelState = "configured" | "not_configured" | "disabled"
 
@@ -109,14 +103,6 @@ export type DigestSchedule = {
   recipients: string[]
   sections: DigestSection[]
   enabled: boolean
-}
-
-export const DIGEST_SECTION_LABEL: Record<DigestSection, string> = {
-  critical_risks: "Критические риски",
-  new_patterns: "Новые связки",
-  open_actions: "Открытые работы",
-  overdue_actions: "Просроченные работы",
-  changes: "Изменения с прошлого дайджеста",
 }
 
 export type EmailSettings = {

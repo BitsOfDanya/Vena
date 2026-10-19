@@ -4,15 +4,6 @@ import type { EventSeverity, EventType } from "../model/types"
 
 export type GlyphKind = "event" | "transition" | "attention" | "critical" | "sustained" | "cluster"
 
-export const EVENT_GLYPH_LEGEND: { kind: GlyphKind; label: string }[] = [
-  { kind: "event", label: "Событие" },
-  { kind: "transition", label: "Переход" },
-  { kind: "attention", label: "Внимание" },
-  { kind: "critical", label: "Критично" },
-  { kind: "sustained", label: "Устойчиво" },
-  { kind: "cluster", label: "Кластер" },
-]
-
 export function glyphKind(event: { severity: EventSeverity; type: EventType }): GlyphKind {
   if (event.severity === "critical") return "critical"
   if (event.severity === "warning") return "attention"

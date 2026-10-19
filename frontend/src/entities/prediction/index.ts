@@ -1,8 +1,18 @@
 export { getAssetPrediction, getBackendSituations, getDashboardPredictions, getPredictionSummary, getPredictions, getSnapshotStatus } from "./api/service"
-export { useBackendSituations, useCriticalPredictions, useDashboardPredictions, useRiskRising, useSnapshotStatus } from "./model/queries"
+export {
+  useBackendSituations,
+  useClaimSituation,
+  useCriticalPredictions,
+  useDashboardPredictions,
+  usePredictionContext,
+  useReleaseSituation,
+  useRiskRising,
+  useSnapshotStatus,
+} from "./model/queries"
 export type {
   BackendSituation,
   Prediction,
+  PredictionContextLine,
   PredictionDriver,
   PredictionFactor,
   PredictionRiskLevel,
@@ -15,4 +25,4 @@ export type {
 
 export { SCENARIO_LABEL } from "./model/scenario"
 export { formatProbability, formatProbabilityDelta } from "./lib/format"
-export { modelLabel, modelLabelWithId } from "./lib/model-label"
+export { modelLabel } from "./lib/model-label"

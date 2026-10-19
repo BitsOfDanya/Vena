@@ -4,7 +4,7 @@ import { Plus } from "lucide-react"
 import * as React from "react"
 
 import type { InspectionPlan, InspectionPlanItem } from "@/entities/analytics"
-import { useTodaysInspectionPlan } from "@/entities/analytics"
+import { timeToFailureLine, useTodaysInspectionPlan } from "@/entities/analytics"
 import { formatProbability } from "@/entities/prediction"
 import { workflowMode } from "@/shared/config/env"
 import { cn } from "@/shared/lib/utils"
@@ -36,6 +36,9 @@ function PlanList({ plan, onCreate }: { plan: InspectionPlan | undefined; onCrea
               </div>
               {item.location ? <p className="truncate text-[12.5px] text-muted-foreground">{item.location}</p> : null}
               {item.reason ? <p className="mt-0.5 line-clamp-2 text-[12.5px] text-faint">{item.reason}</p> : null}
+              {item.ttfHours ? (
+                <p className="mt-0.5 text-[12.5px] text-muted-foreground">{timeToFailureLine(item.ttfHours)}</p>
+              ) : null}
             </div>
             <button
               type="button"

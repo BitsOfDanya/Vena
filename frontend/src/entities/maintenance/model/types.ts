@@ -30,6 +30,7 @@ export type ActionEventType =
   | "cancelled"
   | "dismissed"
   | "notified"
+  | "ticket"
 
 export type ActionEvent = {
   at: number
@@ -164,6 +165,7 @@ export const ACTION_EVENT_LABEL: Record<ActionEventType, string> = {
   cancelled: "Отменено",
   dismissed: "Отклонено",
   notified: "Уведомление запрошено",
+  ticket: "Система заявок",
 }
 
 export const OPEN_STATUSES: ActionStatus[] = ["suggested", "planned", "assigned", "in_progress", "waiting"]

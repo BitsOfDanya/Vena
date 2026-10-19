@@ -40,6 +40,11 @@ export type Prediction = {
   drivers: PredictionDriver[]
 }
 
+export type PredictionContextLine = {
+  label: string
+  text: string
+}
+
 export type SnapshotStatus = {
   available: boolean
   snapshotId: string | null
@@ -96,10 +101,21 @@ export type BackendSituation = {
   scenario: PredictionScenario | null
   location: string | null
   locationGroup: string | null
+  objectId?: string | null
   assetCount: number
   incidentProbability: number | null
   healthIndex: number | null
   modelId: string | null
   recommendation: SituationRecommendation | null
   history: SituationHistory | null
+  claimedBy: string | null
+  claimedBySubject: string | null
+  claimedAt: number | null
+}
+
+export type SituationClaim = {
+  situationId: string
+  claimedBy: string
+  claimedBySubject: string
+  claimedAt: number
 }

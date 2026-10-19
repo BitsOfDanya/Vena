@@ -3,7 +3,16 @@
 import { Maximize, Minus, Plus } from "lucide-react"
 import * as React from "react"
 
-import { RISK_HIGH, RISK_MEDIUM, StatusMark, type NetworkEdge, type NetworkModel, type NetworkNode } from "@/entities/infrastructure"
+import {
+  RISK_HIGH,
+  RISK_MEDIUM,
+  STATUS_LABEL,
+  StatusMark,
+  TYPE_LABEL,
+  type NetworkEdge,
+  type NetworkModel,
+  type NetworkNode,
+} from "@/entities/infrastructure"
 import { useElementSize } from "@/shared/lib/hooks/use-element-size"
 import { useReducedMotion } from "@/shared/lib/hooks/use-reduced-motion"
 import { cn } from "@/shared/lib/utils"
@@ -136,7 +145,7 @@ export function NetworkCanvas({ model, selectedId, dimmed, pulseAssetId, onSelec
         width={size.width}
         height={size.height}
         role="group"
-        aria-label="Schematic infrastructure network. Lines show logical grouping, not physical connections."
+        aria-label="Схема инфраструктурной сети. Линии показывают логическую группировку, а не физические связи."
         className="block cursor-grab touch-none select-none active:cursor-grabbing"
         onPointerDown={(event) => {
           if (event.target !== event.currentTarget && !(event.target as Element).hasAttribute("data-canvas")) return
@@ -213,7 +222,7 @@ export function NetworkCanvas({ model, selectedId, dimmed, pulseAssetId, onSelec
                 key={node.id}
                 role="button"
                 tabIndex={important || selected ? 0 : -1}
-                aria-label={`${node.id}, ${node.type}, ${node.status}, risk ${node.risk} of 100`}
+                aria-label={`${node.id}, ${TYPE_LABEL[node.type]}, ${STATUS_LABEL[node.status].toLowerCase()}, риск ${node.risk} из 100`}
                 aria-pressed={selected}
                 opacity={dim ? 0.22 : 1}
                 className="cursor-pointer outline-none [&:focus-visible_circle.hit]:stroke-ring"

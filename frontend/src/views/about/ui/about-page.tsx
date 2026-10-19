@@ -65,10 +65,10 @@ export function AboutPage() {
           </p>
           <div className="mt-8 grid grid-cols-2 gap-6 border-t border-white/15 pt-6 sm:grid-cols-4">
             {[
-              ["8", "моделей прогноза"],
+              ["12", "моделей прогноза"],
               ["10 800+", "прогнозов в каждом расчёте"],
               ["7,5 лет", "журнала СМВУ в обучении"],
-              ["24 / 72 ч", "горизонт прогноза"],
+              ["6 / 24 / 72 ч", "горизонт прогноза"],
             ].map(([value, label]) => (
               <div key={label}>
                 <p className="font-mono text-[24px] text-white">{value}</p>

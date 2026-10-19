@@ -147,7 +147,7 @@ export function LoginShowcase() {
       <div className="mt-auto flex flex-wrap items-end justify-between gap-4">
         <div className="flex flex-wrap gap-x-8 gap-y-3">
           {[
-            ["8", "моделей прогноза"],
+            ["12", "моделей прогноза"],
             ["×2–3", "точнее случайного выбора"],
             ["13–48 ч", "упреждение"],
             ["7,5 лет", "журнала в обучении"],

@@ -11,6 +11,15 @@ export class ApiError extends Error {
   }
 }
 
+export function errorMessage(error: unknown, fallback: string) {
+  if (!(error instanceof ApiError)) return fallback
+  if (/[а-яё]/i.test(error.detail)) return error.detail
+  if (error.status === 401 || error.status === 403) return "Недостаточно прав для этого действия."
+  if (error.status === 404) return "Запись не найдена. Обновите страницу."
+  if (error.status === 409) return "Данные уже изменились. Обновите страницу и повторите."
+  return fallback
+}
+
 export async function apiFetch<T>(path: string, init?: RequestInit): Promise<T> {
   const response = await fetch(`${API_URL}${path}`, {
     ...init,

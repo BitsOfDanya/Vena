@@ -6,6 +6,7 @@ import * as React from "react"
 import { useMlModels, useObjectHealthHistory, useSectionHealthHistory } from "@/entities/analytics"
 import type { Situation } from "@/entities/infrastructure"
 import { SCENARIO_LABEL, type PredictionScenario } from "@/entities/prediction"
+import { ClaimControl } from "@/features/claim-situation"
 import {
   leadTimeLine,
   topKTrustLine,
@@ -56,10 +57,10 @@ function whereText(situation: Situation) {
   return parts.join(" · ") || null
 }
 
-function HealthSpark({ group, location }: { group: string; location?: string | null }) {
+function HealthSpark({ group, location, object }: { group: string; location?: string | null; object?: string | null }) {
   const section = useSectionHealthHistory(group)
   const objects = useObjectHealthHistory()
-  const objectId = objectIdFromLocation(location)
+  const objectId = object ?? objectIdFromLocation(location)
   const objectSeries = objectId ? objects.data?.objects[objectId] : undefined
   const points =
     (section.data?.length ?? 0) >= 2 ? section.data! : (objectSeries?.length ?? 0) >= 2 ? objectSeries! : []
@@ -244,7 +245,7 @@ function SituationCard({
                 <span className="text-faint">Индекс здоровья участка: </span>
                 <span className="font-medium tabular-nums">{situation.healthIndex} из 100</span>
               </span>
-              {workflowMode === "api" && group ? <HealthSpark group={group} location={situation.location} /> : null}
+              {workflowMode === "api" && group ? <HealthSpark group={group} location={situation.location} object={situation.objectId} /> : null}
             </div>
           ) : null}
           {workflowMode === "api" ? <ModelTrust situation={situation} /> : null}
@@ -277,6 +278,7 @@ function SituationCard({
         ) : situation.status === "acknowledged" ? (
           <span className="text-[12.5px] text-muted-foreground">Принято</span>
         ) : null}
+        {workflowMode === "api" ? <ClaimControl situation={situation} /> : null}
         <button
           type="button"
           onClick={() => onInspect(situation)}

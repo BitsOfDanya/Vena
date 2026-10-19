@@ -3,6 +3,8 @@ import { z } from "zod"
 import { apiFetch } from "@/shared/api/http"
 import { workflowMode } from "@/shared/config/env"
 
+import { TYPE_LABEL } from "../lib/risk"
+
 const FeatureSchema = z.object({
   type: z.literal("Feature"),
   id: z.union([z.string(), z.number()]).optional(),
@@ -24,6 +26,7 @@ const CollectionSchema = z.object({
 const StatusSchema = z.object({
   configured: z.boolean(),
   source: z.string().nullable().optional(),
+  label: z.string().nullable().optional(),
   feature_count: z.number(),
   asset_count: z.number(),
   updated_at: z.string().nullable().optional(),
@@ -38,11 +41,28 @@ export type MapAssetPoint = {
   lon: number
   lat: number
   groupId?: string
+  objectId?: string
   name?: string
 }
 
 export type MapCorridor = {
   coordinates: [number, number][]
+}
+
+export type MapLine = {
+  id: string
+  kind: "collector" | "gallery"
+  name?: string
+  objectId?: string
+  paths: [number, number][][]
+}
+
+export type MapGeometry = {
+  assets: MapAssetPoint[]
+  corridor: MapCorridor | null
+  collectors: MapAssetPoint[]
+  lines: MapLine[]
+  generated: boolean
 }
 
 function asLonLat(coordinates: unknown): [number, number] | null {
@@ -53,45 +73,71 @@ function asLonLat(coordinates: unknown): [number, number] | null {
   return [lon, lat]
 }
 
-export function extractMapGeometry(collection: SpatialCollection): {
-  assets: MapAssetPoint[]
-  corridor: MapCorridor | null
-  collectors: MapAssetPoint[]
-} {
+function asPath(coordinates: unknown): [number, number][] | null {
+  if (!Array.isArray(coordinates)) return null
+  const path = coordinates.map((item) => asLonLat(item)).filter((item): item is [number, number] => item !== null)
+  return path.length >= 2 ? path : null
+}
+
+function asText(value: unknown) {
+  if (typeof value === "string" && value) return value
+  if (typeof value === "number" && Number.isFinite(value)) return String(value)
+  return undefined
+}
+
+export function extractMapGeometry(collection: SpatialCollection): MapGeometry {
   const assets: MapAssetPoint[] = []
   const collectors: MapAssetPoint[] = []
+  const lines: MapLine[] = []
   let corridor: MapCorridor | null = null
+  let generated = collection.source === "generated" || collection.properties?.source === "generated"
 
-  for (const feature of collection.features) {
+  collection.features.forEach((feature, index) => {
     const props = feature.properties ?? {}
     const kind = typeof props.kind === "string" ? props.kind : ""
+    if (props.source === "generated") generated = true
     if (feature.geometry.type === "Point") {
       const pair = asLonLat(feature.geometry.coordinates)
-      if (!pair) continue
+      if (!pair) return
       const [lon, lat] = pair
-      const assetId = typeof props.asset_id === "string" ? props.asset_id : String(feature.id ?? "")
+      const assetId = asText(props.asset_id) ?? String(feature.id ?? "")
       const point = {
         assetId,
         lon,
         lat,
-        groupId: typeof props.group_id === "string" ? props.group_id : undefined,
-        name: typeof props.name === "string" ? props.name : undefined,
+        groupId: asText(props.group_id),
+        objectId: asText(props.object_id),
+        name: asText(props.name),
       }
       if (kind === "collector") collectors.push(point)
       else if (kind === "asset" || assetId) assets.push(point)
+      return
     }
+    const raw = feature.geometry.coordinates
     if (feature.geometry.type === "LineString" && kind === "corridor") {
-      const raw = feature.geometry.coordinates
-      if (Array.isArray(raw)) {
-        const coordinates = raw
-          .map((item) => asLonLat(item))
-          .filter((item): item is [number, number] => item !== null)
-        if (coordinates.length >= 2) corridor = { coordinates }
-      }
+      const coordinates = asPath(raw)
+      if (coordinates) corridor = { coordinates }
+      return
     }
-  }
+    if (kind !== "collector" && kind !== "gallery") return
+    const paths =
+      feature.geometry.type === "LineString"
+        ? [asPath(raw)]
+        : feature.geometry.type === "MultiLineString" && Array.isArray(raw)
+          ? raw.map((item) => asPath(item))
+          : []
+    const valid = paths.filter((item): item is [number, number][] => item !== null)
+    if (valid.length === 0) return
+    lines.push({
+      id: asText(feature.id) ?? `${kind}-${index}`,
+      kind,
+      name: asText(props.name),
+      objectId: asText(props.object_id),
+      paths: valid,
+    })
+  })
 
-  return { assets, corridor, collectors }
+  return { assets, corridor, collectors, lines, generated }
 }
 
 export function buildDemoSpatialCollection(): SpatialCollection {
@@ -121,7 +167,7 @@ export function buildDemoSpatialCollection(): SpatialCollection {
     type: "Feature",
     id: "corridor-main",
     geometry: { type: "LineString", coordinates: corridor },
-    properties: { kind: "corridor", name: "Demo collector corridor", source: "demo_spatial" },
+    properties: { kind: "corridor", name: "Демонстрационный коридор коллекторов", source: "demo_spatial" },
   })
 
   for (let index = 0; index < 128; index += 1) {
@@ -142,7 +188,7 @@ export function buildDemoSpatialCollection(): SpatialCollection {
         asset_id: assetId,
         group_id: `K-${String(groupIndex + 1).padStart(2, "0")}`,
         asset_type: assetType,
-        name: `${assetType} ${index + 1}`,
+        name: `${TYPE_LABEL[assetType]} ${index + 1}`,
         source: "demo_spatial",
       },
     })

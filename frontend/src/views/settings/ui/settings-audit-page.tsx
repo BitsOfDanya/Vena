@@ -11,16 +11,20 @@ import { SettingsSection, SettingsShell } from "./settings-shell"
 const roles: Record<string, string> = { admin: "Администратор", dispatcher: "Диспетчер", viewer: "Наблюдатель" }
 const actions: Record<string, string> = {
   "user.create": "Создание пользователя", "user.update": "Изменение доступа", "user.password_reset": "Сброс пароля",
-  "auth.ldap_login": "Вход через LDAP / AD", "import.validate": "Проверка файла", "import.apply": "Применение загрузки",
+  "auth.login": "Вход по паролю", "auth.login_failed": "Неудачный вход", "auth.logout": "Выход",
+  "auth.password_change": "Смена своего пароля", "auth.ldap_login": "Вход через LDAP / AD",
+  "import.validate": "Проверка файла", "import.apply": "Применение загрузки",
   "equipment.update": "Обновление реестра", "equipment.sync": "Синхронизация реестра", "stand.cleanup": "Очистка стенда",
   "action.create": "Создание работы", "action.patch": "Изменение работы", "action.approve": "Согласование работы",
   "action.dismissed": "Отклонение рекомендации", "action.assign": "Назначение исполнителя", "action.result": "Результат работы",
   "action.planned": "Работа запланирована", "action.in_progress": "Работа начата", "action.completed": "Работа завершена", "action.cancelled": "Работа отменена",
+  "helpdesk.ticket": "Заявка в системе учёта",
+  "situation.claim": "Ситуация взята в работу", "situation.release": "Ситуация отпущена",
   "notification.create": "Создание уведомления", "notification.patch": "Изменение уведомления",
   "settings.notifications.update": "Настройка уведомлений", "predictions.refresh": "Обновление прогнозов", "smvu.ingest": "Приём событий",
-  "spatial.import_geojson": "Загрузка карты GeoJSON", "spatial.import_wkt": "Загрузка карты WKT", "spatial.reset_demo": "Сброс демонстрационной карты",
+  "spatial.import_geojson": "Загрузка карты GeoJSON", "spatial.import_wkt": "Загрузка карты WKT", "spatial.reset": "Возврат к условной геометрии", "spatial.reset_demo": "Сброс демонстрационной карты",
 }
-const resources: Record<string, string> = { user: "Пользователь", action: "Работа", notification: "Уведомление", equipment: "Оборудование", integration_run: "Загрузка", database: "База данных", settings: "Настройки", snapshot: "Снимок прогнозов", smvu_batch: "Пакет событий", spatial_layer: "Карта" }
+const resources: Record<string, string> = { user: "Пользователь", action: "Работа", notification: "Уведомление", equipment: "Оборудование", integration_run: "Загрузка", database: "База данных", settings: "Настройки", snapshot: "Снимок прогнозов", smvu_batch: "Пакет событий", spatial_layer: "Карта", situation: "Ситуация" }
 
 export function SettingsAuditPage() {
   const audit = useQuery({

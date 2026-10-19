@@ -5,6 +5,7 @@ const SCENARIO_TITLE: Record<string, string> = {
   fire: "Пожар / дым",
   power_loss: "Потеря питания",
   equipment: "Отказ оборудования",
+  false_alarms: "Подтверждение тревог",
 }
 
 const HELD_OUT_PERIOD: Record<string, string> = {
@@ -81,4 +82,17 @@ export function leadHorizonPhrase(medianHours: number | null | undefined, prefix
 
 export function verifiedLine(period: string | null | undefined) {
   return `Проверено на ${heldOutPeriodPhrase(period)}, модель их не видела`
+}
+
+function durationText(hours: number) {
+  if (hours < 48) return `${Math.max(1, Math.round(hours))} ч`
+  return `${Math.round(hours / 24)} сут`
+}
+
+export function timeToFailureLine(ttf: { q20: number; q50: number; q80: number } | null | undefined, capHours = 720) {
+  if (!ttf) return null
+  const cap = `${Math.round(capHours / 24)} сут`
+  const high = ttf.q80 >= capHours ? `${cap} и более` : durationText(ttf.q80)
+  const mid = ttf.q50 >= capHours ? `более ${cap}` : `около ${durationText(ttf.q50)}`
+  return `Срок до отказа: ${mid}; с вероятностью 60 % — от ${durationText(ttf.q20)} до ${high}`
 }

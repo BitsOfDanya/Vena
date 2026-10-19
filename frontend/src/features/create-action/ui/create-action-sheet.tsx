@@ -16,6 +16,7 @@ import {
   type ActionPriority,
 } from "@/entities/maintenance"
 import { useWorkspace } from "@/features/workspace"
+import { errorMessage } from "@/shared/api/http"
 import { workflowMode } from "@/shared/config/env"
 import { HOUR, formatDateTime, fromDateTimeLocal, toDateTimeLocal } from "@/shared/lib/time"
 import { Button } from "@/shared/ui/button"
@@ -89,22 +90,30 @@ export function CreateActionSheet({
 
   const submit = handleSubmit(async (values) => {
     const fromPrediction = Boolean(draft.sourcePredictionId)
-    const action = await create.mutateAsync({
-      assetId: values.assetId,
-      reason: values.reason,
-      kind: values.kind,
-      priority: values.priority,
-      recommendedAt: fromDateTimeLocal(values.recommendedAt),
-      assignee: values.assignee,
-      note: values.note,
-      source: fromPrediction ? "vena_forecast" : "manual",
-      sourceDetail: fromPrediction ? (draft.sourceModelId ?? "Прогноз ML") : "Диспетчер",
-      notifyChannels: notify ? ["in_app", "email"] : ["in_app"],
-      sourcePredictionId: draft.sourcePredictionId,
-      sourceModelId: draft.sourceModelId,
-      sourceScore: draft.sourceScore,
-      sourceHorizonHours: draft.sourceHorizonHours,
-    })
+    let action
+    try {
+      action = await create.mutateAsync({
+        assetId: values.assetId,
+        reason: values.reason,
+        kind: values.kind,
+        priority: values.priority,
+        recommendedAt: fromDateTimeLocal(values.recommendedAt),
+        assignee: values.assignee,
+        note: values.note,
+        source: fromPrediction ? "vena_forecast" : "manual",
+        sourceDetail: fromPrediction ? (draft.sourceModelId ?? "Прогноз ML") : "Диспетчер",
+        notifyChannels: notify ? ["in_app", "email"] : ["in_app"],
+        sourcePredictionId: draft.sourcePredictionId,
+        sourceModelId: draft.sourceModelId,
+        sourceScore: draft.sourceScore,
+        sourceHorizonHours: draft.sourceHorizonHours,
+      })
+    } catch (error) {
+      toast.error("Не удалось создать работу", {
+        description: errorMessage(error, "Сервер не принял изменения. Попробуйте ещё раз."),
+      })
+      return
+    }
     onOpenChange(false)
     toast.success(`Работа ${action.id} создана`, {
       description: `${action.assetId} · ${KIND_LABEL[action.kind]} до ${formatDateTime(action.recommendedAt)}`,
@@ -228,7 +237,7 @@ export function CreateActionSheet({
                   <span>
                     Уведомить исполнителя по Email
                     <span className="mt-0.5 block text-[12px] text-muted-foreground">
-                      Канал записывается в работу. Отправка появится после подключения почтового шлюза.
+                      Письмо уйдёт получателям правила «Работа назначена» из настроек уведомлений.
                     </span>
                   </span>
                 </label>

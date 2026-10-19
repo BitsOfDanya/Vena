@@ -11,6 +11,7 @@ import {
   getEventTypes,
   getMlModels,
   getObjectHealthHistory,
+  getObjectLevel,
   getProspective,
   getSeasonality,
   getSectionHealthHistory,
@@ -61,6 +62,15 @@ export function useMlModels() {
   return useQuery({
     queryKey: ["ml", "models"],
     queryFn: getMlModels,
+    enabled: api,
+    staleTime: 300_000,
+  })
+}
+
+export function useObjectLevel() {
+  return useQuery({
+    queryKey: ["ml", "object-level"],
+    queryFn: getObjectLevel,
     enabled: api,
     staleTime: 300_000,
   })

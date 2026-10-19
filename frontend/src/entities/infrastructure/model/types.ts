@@ -234,12 +234,16 @@ export type Situation = {
   scenario?: string | null
   location?: string | null
   locationGroup?: string | null
+  objectId?: string | null
   assetCount?: number
   incidentProbability?: number | null
   healthIndex?: number | null
   modelId?: string | null
   recommendation?: SituationRecommendation | null
   history?: SituationHistory | null
+  claimedBy?: string | null
+  claimedBySubject?: string | null
+  claimedAt?: number | null
 }
 
 export type PulseSummary = {

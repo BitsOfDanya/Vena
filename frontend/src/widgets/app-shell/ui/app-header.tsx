@@ -19,6 +19,8 @@ import {
 import { VenaMark } from "@/shared/ui/vena-mark"
 import { NotificationCenter } from "@/widgets/notification-center"
 
+import { TimeMachineBadge } from "./time-machine-badge"
+
 const ROLE_LABEL: Record<string, string> = {
   admin: "Администратор",
   dispatcher: "Диспетчер",
@@ -59,6 +61,7 @@ export function AppHeader({ onOpenSearch, onOpenMenu }: { onOpenSearch: () => vo
         </div>
       ) : null}
       <div className="ml-auto flex shrink-0 items-center gap-1">
+        <TimeMachineBadge />
         <button
           type="button"
           onClick={onOpenSearch}
@@ -83,6 +86,11 @@ export function AppHeader({ onOpenSearch, onOpenMenu }: { onOpenSearch: () => vo
             <DropdownMenuLabel className="font-normal">
               <span className="block truncate text-[14px] font-medium text-foreground">{title}</span>
               {role ? <span className="block text-[12px] text-muted-foreground">{role}</span> : null}
+              {me?.scope_label ? (
+                <span className="block truncate text-[12px] text-muted-foreground" title={me.scope_label}>
+                  Область: {me.scope_label}
+                </span>
+              ) : null}
             </DropdownMenuLabel>
             <DropdownMenuSeparator />
             {ACCOUNT_ITEMS.map((item) => {

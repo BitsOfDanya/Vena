@@ -140,7 +140,3 @@ export async function getApiNotificationSettings(): Promise<NotificationSettings
     },
   }
 }
-
-export async function sendTestEmail(recipient: string): Promise<void> {
-  await apiFetch("/api/v1/notifications/test", { method: "POST", body: JSON.stringify({ recipient }) })
-}

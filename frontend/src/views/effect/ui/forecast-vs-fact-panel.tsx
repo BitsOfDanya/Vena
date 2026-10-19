@@ -30,11 +30,15 @@ function DualSeriesChart({
   const height = 120
   const width = Math.max(320, points.length * 4)
   const step = width / Math.max(1, points.length - 1)
+  const left = 34
+  const top = 16
+  const level = (value: number) => height - (value / max) * (height - 8) - 4
+  const ticks = [0, Math.round(max / 2), Math.round(max)].filter((value, index, list) => list.indexOf(value) === index)
 
   const forecastPath = points
     .map((point, index) => {
       const x = index * step
-      const y = height - (point.forecast / max) * (height - 8) - 4
+      const y = level(point.forecast)
       return `${index === 0 ? "M" : "L"}${x.toFixed(1)},${y.toFixed(1)}`
     })
     .join(" ")
@@ -50,7 +54,7 @@ function DualSeriesChart({
       return
     }
     const x = index * step
-    const y = height - (point.actual / max) * (height - 8) - 4
+    const y = level(point.actual)
     segment += `${segment ? "L" : "M"}${x.toFixed(1)},${y.toFixed(1)} `
   })
   if (segment) actualSegments.push(segment)
@@ -61,25 +65,47 @@ function DualSeriesChart({
     <div className="px-4 py-3">
       <p className="text-[13px] font-medium">{title}</p>
       <div className="mt-3 overflow-x-auto">
-        <svg width={width} height={height + 24} viewBox={`0 0 ${width} ${height + 24}`} role="img" aria-label={`${title}: прогноз против факта`}>
-          <path d={forecastPath} fill="none" stroke="currentColor" className="text-vena" strokeWidth="1.5" />
-          {actualSegments.map((d) => (
-            <path key={d} d={d.trim()} fill="none" stroke="currentColor" className="text-foreground" strokeWidth="1.5" />
-          ))}
-          {sample.map((point) => {
-            const index = points.indexOf(point)
-            return (
-              <text
-                key={point.day}
-                x={index * step}
-                y={height + 16}
-                textAnchor="middle"
-                className="fill-muted-foreground font-mono text-[9px]"
-              >
-                {point.day.slice(5)}
-              </text>
-            )
-          })}
+        <svg
+          width={width + left + 8}
+          height={height + top + 42}
+          viewBox={`0 0 ${width + left + 8} ${height + top + 42}`}
+          role="img"
+          aria-label={`${title}: прогноз против факта`}
+        >
+          <text x={left} y={10} className="fill-muted-foreground text-[10.5px]">
+            эпизодов в сутки
+          </text>
+          <text x={left + width / 2} y={height + top + 38} textAnchor="middle" className="fill-muted-foreground text-[10.5px]">
+            дата, месяц-день
+          </text>
+          <g transform={`translate(${left},${top})`}>
+            {ticks.map((value) => (
+              <g key={value}>
+                <line x1={0} x2={width} y1={level(value)} y2={level(value)} stroke="var(--grid)" />
+                <text x={-6} y={level(value) + 3} textAnchor="end" className="fill-muted-foreground font-mono text-[9px]">
+                  {value}
+                </text>
+              </g>
+            ))}
+            <path d={forecastPath} fill="none" stroke="currentColor" className="text-vena" strokeWidth="1.5" />
+            {actualSegments.map((d) => (
+              <path key={d} d={d.trim()} fill="none" stroke="currentColor" className="text-foreground" strokeWidth="1.5" />
+            ))}
+            {sample.map((point) => {
+              const index = points.indexOf(point)
+              return (
+                <text
+                  key={point.day}
+                  x={index * step}
+                  y={height + 16}
+                  textAnchor="middle"
+                  className="fill-muted-foreground font-mono text-[9px]"
+                >
+                  {point.day.slice(5)}
+                </text>
+              )
+            })}
+          </g>
         </svg>
       </div>
       <p className="mt-1 flex flex-wrap gap-x-4 text-[11px] text-muted-foreground">

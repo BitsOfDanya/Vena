@@ -2,7 +2,7 @@ import { workflowMode } from "@/shared/config/env"
 
 import type { NotificationRepository, NotificationSettings, SystemNotice } from "../model/types"
 
-import { apiNotificationRepository, getApiNotificationSettings, getApiSystemNotices, sendTestEmail } from "./api-repository"
+import { apiNotificationRepository, getApiNotificationSettings, getApiSystemNotices } from "./api-repository"
 import {
   getNotificationSettings as getDemoNotificationSettings,
   getSystemNotices as getDemoSystemNotices,
@@ -18,9 +18,4 @@ export function getSystemNotices(): Promise<SystemNotice[]> {
 
 export function getNotificationSettings(): Promise<NotificationSettings> {
   return workflowMode === "api" ? getApiNotificationSettings() : getDemoNotificationSettings()
-}
-
-export function sendTestNotification(recipient: string): Promise<void> {
-  if (workflowMode !== "api") return Promise.reject(new Error("Test delivery requires the API workflow mode"))
-  return sendTestEmail(recipient)
 }

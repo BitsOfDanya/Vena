@@ -7,16 +7,12 @@ import { MINUTE } from "@/shared/lib/time"
 import {
   getAsset,
   getAssets,
-  getEvents,
-  getForecast,
   getNetwork,
   getPredictionAssets,
   getPulse,
   getPulseSummary,
   getReplayEpisodes,
-  getRiskHistory,
   getSituations,
-  getStateHistory,
   getTemporal,
   searchAssets,
 } from "../api/service"
@@ -136,42 +132,6 @@ export function useAssetDetail(id: string | null, now: number, horizon: Forecast
   return useQuery({
     queryKey: ["asset", id, bucketNow(now, 1), horizon],
     queryFn: () => getAsset(id as string, { now, horizon }),
-    enabled: id !== null,
-    placeholderData: keepPreviousData,
-  })
-}
-
-export function useRiskHistory(id: string | null, from: number, to: number, horizon: ForecastHorizon) {
-  return useQuery({
-    queryKey: ["risk-history", id, bucketNow(from, 30), bucketNow(to, 1), horizon],
-    queryFn: () => getRiskHistory(id as string, from, to, horizon),
-    enabled: id !== null,
-    placeholderData: keepPreviousData,
-  })
-}
-
-export function useAssetEvents(id: string | null, from: number, to: number) {
-  return useQuery({
-    queryKey: ["events", id, bucketNow(from, 30), bucketNow(to, 1)],
-    queryFn: () => getEvents(id as string, from, to),
-    enabled: id !== null,
-    placeholderData: keepPreviousData,
-  })
-}
-
-export function useStateHistory(id: string | null, from: number, to: number) {
-  return useQuery({
-    queryKey: ["state-history", id, bucketNow(from, 30), bucketNow(to, 1)],
-    queryFn: () => getStateHistory(id as string, from, to),
-    enabled: id !== null,
-    placeholderData: keepPreviousData,
-  })
-}
-
-export function useForecast(id: string | null, now: number, horizon: number) {
-  return useQuery({
-    queryKey: ["forecast", id, bucketNow(now, 1), horizon],
-    queryFn: () => getForecast(id as string, now, horizon),
     enabled: id !== null,
     placeholderData: keepPreviousData,
   })

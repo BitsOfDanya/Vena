@@ -23,7 +23,23 @@ export type ProspectiveModel = {
   episodeRecall: number | null
 }
 
-export type Prospective = { start: number; now: number; models: Record<string, ProspectiveModel> }
+export type ProspectiveObjectModel = {
+  lists: number
+  forecasts: number
+  meanProbability: number
+  eventRate: number
+  top3Precision: number | null
+  incidents: number
+  incidentsTop3: number
+  incidentRecallTop3: number | null
+}
+
+export type Prospective = {
+  start: number
+  now: number
+  models: Record<string, ProspectiveModel>
+  objects: Record<string, ProspectiveObjectModel>
+}
 
 export type ModelEffect = {
   modelId: string
@@ -103,6 +119,8 @@ export type MlModelHeldOut = {
   rocAuc: number | null
   precisionTop5PerDay: number | null
   ece: number | null
+  keptShare: number | null
+  filteredShare: number | null
 }
 
 export type MlModelLeadTime = {
@@ -169,6 +187,13 @@ export type InspectionPlanItem = {
   probability: number
   riskLevel: string
   reason: string | null
+  ttfHours: TimeToFailure | null
+}
+
+export type TimeToFailure = {
+  q20: number
+  q50: number
+  q80: number
 }
 
 export type InspectionPlan = {
@@ -193,4 +218,33 @@ export type WeatherReport = {
   source: string
   forecast: WeatherDay[]
   floodingVsWeather: Record<string, number>
+}
+
+export type ObjectLevelPoint = {
+  topK: number
+  precision: number | null
+  recall: number | null
+  alertsPerDay: number | null
+}
+
+export type ObjectLevelModel = {
+  id: string
+  label: string
+  scenario: string
+  horizonHours: number | null
+  objectsPerDay: number | null
+  baseRate: number | null
+  avgPrecision: number | null
+  rocAuc: number | null
+  topK: Record<string, number | null>
+  recallAtPrecision70: number | null
+  precisionAtRecall50: number | null
+  curve: ObjectLevelPoint[]
+}
+
+export type ObjectLevelReport = {
+  period: string | null
+  unit: string | null
+  generatedAt: string | null
+  models: ObjectLevelModel[]
 }

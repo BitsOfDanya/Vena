@@ -2,6 +2,7 @@ import { z } from "zod"
 
 import { ApiError, apiFetch } from "@/shared/api/http"
 
+import { parseObjectLevel } from "../lib/object-level"
 import type {
   AlarmKpis,
   EffectReport,
@@ -9,6 +10,7 @@ import type {
   HealthPoint,
   InspectionPlan,
   MlModel,
+  ObjectLevelReport,
   ObjectNode,
   Prospective,
   Seasonality,
@@ -50,6 +52,21 @@ const ProspectiveSchema = z.object({
       episode_recall: z.number().nullable(),
     })
   ),
+  objects: z
+    .record(
+      z.string(),
+      z.object({
+        lists: z.number(),
+        forecasts: z.number(),
+        mean_probability: z.number(),
+        event_rate: z.number(),
+        top3_precision: z.number().nullable(),
+        incidents: z.number(),
+        incidents_top3: z.number(),
+        incident_recall_top3: z.number().nullable(),
+      })
+    )
+    .optional(),
 })
 
 export async function getProspective(): Promise<Prospective | null> {
@@ -71,6 +88,21 @@ export async function getProspective(): Promise<Prospective | null> {
             episodes: item.episodes,
             episodesWarned: item.episodes_warned,
             episodeRecall: item.episode_recall,
+          },
+        ])
+      ),
+      objects: Object.fromEntries(
+        Object.entries(raw.objects ?? {}).map(([name, item]) => [
+          name,
+          {
+            lists: item.lists,
+            forecasts: item.forecasts,
+            meanProbability: item.mean_probability,
+            eventRate: item.event_rate,
+            top3Precision: item.top3_precision,
+            incidents: item.incidents,
+            incidentsTop3: item.incidents_top3,
+            incidentRecallTop3: item.incident_recall_top3,
           },
         ])
       ),
@@ -233,6 +265,8 @@ export async function getMlModels(): Promise<MlModel[]> {
         roc_auc?: number | null
         precision_top5_per_day?: number | null
         ece?: number | null
+        kept_share?: number | null
+        filtered_share?: number | null
       } | null
       lead_time?: {
         episode_recall?: number | null
@@ -248,7 +282,7 @@ export async function getMlModels(): Promise<MlModel[]> {
     scenario: item.scenario ?? "equipment",
     sensor: item.sensor ?? null,
     target: item.target ?? null,
-    horizonHours: item.horizon_hours ?? 24,
+    horizonHours: item.horizon_hours ?? (item.scenario === "false_alarms" ? 0.5 : 24),
     recipe: item.recipe ?? null,
     features: item.features ?? null,
     trainYears: item.train_years ?? null,
@@ -261,6 +295,8 @@ export async function getMlModels(): Promise<MlModel[]> {
           rocAuc: item.held_out.roc_auc ?? null,
           precisionTop5PerDay: item.held_out.precision_top5_per_day ?? null,
           ece: item.held_out.ece ?? null,
+          keptShare: item.held_out.kept_share ?? null,
+          filteredShare: item.held_out.filtered_share ?? null,
         }
       : null,
     leadTime: item.lead_time
@@ -273,6 +309,15 @@ export async function getMlModels(): Promise<MlModel[]> {
       : null,
     dailyTopK: item.daily_top_k ?? null,
   }))
+}
+
+export async function getObjectLevel(): Promise<ObjectLevelReport | null> {
+  try {
+    return parseObjectLevel(await apiFetch<unknown>("/api/v1/ml/object-level"))
+  } catch (error) {
+    if (error instanceof ApiError && error.status === 404) return null
+    throw error
+  }
 }
 
 export async function getSectionHealthHistory(group: string): Promise<HealthPoint[]> {
@@ -381,6 +426,7 @@ type ApiPlanItem = {
   probability: number
   risk_level: string
   reason: string | null
+  ttf_hours?: { q20: number; q50: number; q80: number } | null
 }
 
 type ApiInspectionPlan = {
@@ -404,6 +450,7 @@ function mapInspectionPlan(raw: ApiInspectionPlan): InspectionPlan {
       probability: item.probability,
       riskLevel: item.risk_level,
       reason: item.reason,
+      ttfHours: item.ttf_hours ?? null,
     })),
   }
 }

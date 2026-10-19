@@ -5,6 +5,7 @@ import { toast } from "sonner"
 
 import { OUTCOME_LABEL, useCloseAction, type ActionOutcome } from "@/entities/maintenance"
 import { useWorkspace } from "@/features/workspace"
+import { errorMessage } from "@/shared/api/http"
 import { Button } from "@/shared/ui/button"
 import { Field, FieldLabel } from "@/shared/ui/field"
 import { NativeSelect, NativeSelectOption } from "@/shared/ui/native-select"
@@ -18,7 +19,14 @@ export function CloseActionForm({ actionId, onClosed }: { actionId: string; onCl
 
   async function submit(event: React.FormEvent) {
     event.preventDefault()
-    await close.mutateAsync({ id: actionId, outcome, note })
+    try {
+      await close.mutateAsync({ id: actionId, outcome, note })
+    } catch (error) {
+      toast.error(`Не удалось закрыть работу ${actionId}`, {
+        description: errorMessage(error, "Сервер не принял изменения. Попробуйте ещё раз."),
+      })
+      return
+    }
     toast.success(`Работа ${actionId} закрыта`, { description: OUTCOME_LABEL[outcome] })
     setNote("")
     onClosed?.()

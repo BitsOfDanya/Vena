@@ -7,6 +7,8 @@ const MeSchema = z.object({
   role: z.enum(["admin", "dispatcher", "viewer"]),
   auth_method: z.string(),
   email: z.string().nullable().optional(),
+  scopes: z.array(z.string()).optional(),
+  scope_label: z.string().optional(),
 })
 
 const StatusSchema = z.object({

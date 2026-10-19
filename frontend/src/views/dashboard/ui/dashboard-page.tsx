@@ -8,7 +8,7 @@ import * as React from "react"
 import { TYPE_LABEL, TYPE_ORDER, formatScore, useAssets, type ForecastHorizon } from "@/entities/infrastructure"
 import { OUTCOME_LABEL, useActions } from "@/entities/maintenance"
 import { useAssetTree, useEventTypes, useObjectHealthHistory } from "@/entities/analytics"
-import { useDashboardPredictions, useSnapshotStatus, modelLabel } from "@/entities/prediction"
+import { useDashboardPredictions, usePredictionContext, useSnapshotStatus, modelLabel } from "@/entities/prediction"
 import { CreateActionSheet, type ActionDraft } from "@/features/create-action"
 import { useWorkspace } from "@/features/workspace"
 import { workflowMode } from "@/shared/config/env"
@@ -318,6 +318,7 @@ function PredictionInspector({
 }) {
   const { selectAsset, setCompare } = useWorkspace()
   const router = useRouter()
+  const context = usePredictionContext(row.predictionId)
   return (
     <Inspector label="Инспектор прогноза на сводке">
       <InspectorHeader title={row.assetId} eyebrow={`${TYPE_LABEL[row.type]} · ${row.group}`} onClose={onClose}>
@@ -347,6 +348,16 @@ function PredictionInspector({
         <InspectorSection title="Контекст прогноза">
           <p className="text-[13px]">{row.name}</p>
           <p className="mt-2 text-[12px] text-muted-foreground">{row.modelId ? modelLabel(row.modelId) : "Демо-телеметрия"}</p>
+          {context.data?.length ? (
+            <dl aria-label="Контекст" className="mt-4 space-y-2">
+              {context.data.map((line) => (
+                <div key={line.label}>
+                  <dt className="text-[11px] text-faint">{line.label}</dt>
+                  <dd className="text-[12px]">{line.text}</dd>
+                </div>
+              ))}
+            </dl>
+          ) : null}
           <p className="mt-3 text-[11px] text-faint">Точное время до отказа в источнике не указано. Горизонт — окно прогноза.</p>
         </InspectorSection>
         <InspectorSection title="Почему этот риск">

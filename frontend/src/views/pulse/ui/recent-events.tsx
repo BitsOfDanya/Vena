@@ -11,7 +11,16 @@ type EventFeed = {
   latest_at: string | null
   from: string | null
   has_more: boolean
-  items: { event_id: string; channel_id: string; name: string; object_id: string | null; ts: string; value: string; alarm: boolean }[]
+  items: {
+    event_id: string
+    channel_id: string
+    name: string
+    object_id: string | null
+    ts: string
+    value: string
+    alarm: boolean
+    technical_fault?: boolean
+  }[]
 }
 
 const TIME = new Intl.DateTimeFormat("ru-RU", { timeZone: "Europe/Moscow", hour: "2-digit", minute: "2-digit" })
@@ -73,7 +82,9 @@ export function RecentEvents({ hours, onSelect }: { hours: number; onSelect: (id
                     <span className="ml-auto shrink-0 text-[12px] text-faint tabular-nums">{TIME.format(new Date(event.ts))}</span>
                   </span>
                   <span className="block truncate text-[12.5px] text-muted-foreground">
-                    <span className={event.alarm ? "text-status-critical" : "text-foreground"}>{event.value}</span>
+                    <span className={event.alarm ? "text-status-critical" : "text-foreground"}>
+                      {event.technical_fault ? `Неисправность датчика, служебный код ${event.value}` : event.value}
+                    </span>
                     {event.object_id ? ` · объект ${event.object_id}` : ""}
                   </span>
                 </span>

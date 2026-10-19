@@ -18,6 +18,8 @@ import { formatAgo } from "@/shared/lib/time"
 import { cn } from "@/shared/lib/utils"
 import { Popover, PopoverContent, PopoverTrigger } from "@/shared/ui/popover"
 
+import { useCriticalToasts, useUnreadTitle } from "./notification-alerts"
+
 const MARK: Record<NotificationSeverity, "critical" | "attention" | "normal"> = {
   critical: "critical",
   warning: "attention",
@@ -51,6 +53,18 @@ export function NotificationCenter() {
   const list = notifications.data ?? []
   const unread = list.filter((item) => item.readAt === null)
   const visible = list.filter((item) => matches(item, filter))
+
+  function openNotification(item: Notification) {
+    setOpen(false)
+    if (item.assetId) selectAsset(item.assetId)
+    router.push(item.assetId ? "/timeline" : "/pulse")
+  }
+
+  useUnreadTitle(unread.length)
+  useCriticalToasts(notifications.data, (item) => {
+    if (item.readAt === null) markRead.mutate([item.id])
+    openNotification(item)
+  })
 
   function openCenter(next: boolean) {
     setOpen(next)
@@ -118,30 +132,13 @@ export function NotificationCenter() {
                         Принять
                       </button>
                     ) : null}
-                    {item.assetId ? (
-                      <button
-                        type="button"
-                        onClick={() => {
-                          selectAsset(item.assetId)
-                          setOpen(false)
-                          router.push("/timeline")
-                        }}
-                        className="text-[12px] text-vena underline-offset-4 outline-none hover:underline focus-visible:ring-2 focus-visible:ring-ring/60"
-                      >
-                        Открыть
-                      </button>
-                    ) : (
-                      <button
-                        type="button"
-                        onClick={() => {
-                          setOpen(false)
-                          router.push("/pulse")
-                        }}
-                        className="text-[12px] text-vena underline-offset-4 outline-none hover:underline focus-visible:ring-2 focus-visible:ring-ring/60"
-                      >
-                        Открыть
-                      </button>
-                    )}
+                    <button
+                      type="button"
+                      onClick={() => openNotification(item)}
+                      className="text-[12px] text-vena underline-offset-4 outline-none hover:underline focus-visible:ring-2 focus-visible:ring-ring/60"
+                    >
+                      Открыть
+                    </button>
                   </span>
                 </div>
               </li>

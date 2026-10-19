@@ -1,15 +1,12 @@
-export { getNotificationSettings, getSystemNotices, notificationRepository, sendTestNotification } from "./api/repository"
+export { getNotificationSettings, getSystemNotices, notificationRepository } from "./api/repository"
 export {
   useAcknowledgeNotification,
   useMarkNotificationsRead,
   useNotificationSettings,
   useNotifications,
-  useResolveNotification,
   useSystemNotices,
 } from "./model/queries"
 export {
-  DIGEST_SECTION_LABEL,
-  NOTIFICATION_STATUS_LABEL,
   NOTIFICATION_TYPE_LABEL,
   RULE_TRIGGER_LABEL,
 } from "./model/types"

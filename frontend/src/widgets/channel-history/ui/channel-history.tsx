@@ -14,7 +14,7 @@ type EventFeed = {
   latest_at: string | null
   from: string | null
   has_more: boolean
-  items: { event_id: string; ts: string; value: string; alarm: boolean }[]
+  items: { event_id: string; ts: string; value: string; alarm: boolean; technical_fault?: boolean }[]
 }
 
 const HOURS = 72
@@ -39,7 +39,7 @@ function HealthChart({ points }: { points: { day: string; value: number }[] }) {
   const height = 220
   const left = 36
   const right = 12
-  const top = 12
+  const top = 24
   const bottom = 26
   const plotW = width - left - right
   const plotH = height - top - bottom
@@ -70,6 +70,9 @@ function HealthChart({ points }: { points: { day: string; value: number }[] }) {
         }}
         onMouseLeave={() => setHover(null)}
       >
+        <text x={left} y={12} fontSize="10.5" fill="var(--muted-foreground)">
+          индекс здоровья, баллы из 100
+        </text>
         <rect x={left} y={y(40)} width={plotW} height={y(0) - y(40)} fill="var(--status-critical)" fillOpacity="0.07" />
         <rect x={left} y={y(70)} width={plotW} height={y(40) - y(70)} fill="var(--status-attention)" fillOpacity="0.07" />
         {[0, 40, 70, 100].map((value) => (
@@ -205,7 +208,9 @@ export function ChannelHistory({ assetId }: { assetId: string }) {
               {events.data.items.slice(0, 40).map((event) => (
                 <li key={event.event_id} className="flex items-baseline gap-3 px-4 py-1.5 text-[13px]">
                   <span className="font-mono text-[12px] whitespace-nowrap text-muted-foreground">{formatDateTime(Date.parse(event.ts))}</span>
-                  <span className={event.alarm ? "text-status-critical" : "text-status-attention"}>{event.value}</span>
+                  <span className={event.alarm ? "text-status-critical" : "text-status-attention"}>
+                    {event.technical_fault ? `Неисправность датчика, служебный код ${event.value}` : event.value}
+                  </span>
                   {event.alarm ? <span className="ml-auto font-mono text-[11px] text-status-critical">ТРЕВОГА</span> : null}
                 </li>
               ))}

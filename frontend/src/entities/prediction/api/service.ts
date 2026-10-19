@@ -5,8 +5,10 @@ import { apiFetch } from "@/shared/api/http"
 import type {
   BackendSituation,
   Prediction,
+  PredictionContextLine,
   PredictionScenario,
   PredictionSummary,
+  SituationClaim,
   SnapshotStatus,
 } from "../model/types"
 import { loadHorizonPages } from "@/shared/api/horizon-pages"
@@ -157,6 +159,11 @@ export async function getAssetPrediction(assetId: string): Promise<Prediction | 
   }
 }
 
+export async function getPredictionContext(predictionId: string): Promise<PredictionContextLine[]> {
+  const detail = await apiFetch<{ context?: PredictionContextLine[] }>(`/api/v1/predictions/${encodeURIComponent(predictionId)}`)
+  return detail.context ?? []
+}
+
 export async function getSnapshotStatus(): Promise<SnapshotStatus> {
   const item = await apiFetch<{
     available: boolean
@@ -215,6 +222,7 @@ export async function getBackendSituations(): Promise<BackendSituation[]> {
       scenario?: string | null
       location?: string | null
       location_group?: string | null
+      object_id?: string | null
       asset_count?: number
       incident_probability?: number | null
       health_index?: number | null
@@ -234,6 +242,9 @@ export async function getBackendSituations(): Promise<BackendSituation[]> {
         last_episode_at: string | null
         median_duration_minutes: number | null
       } | null
+      claimed_by?: string | null
+      claimed_by_subject?: string | null
+      claimed_at?: string | null
     }[]
   >("/api/v1/situations")
   return items.map((item) => ({
@@ -255,6 +266,7 @@ export async function getBackendSituations(): Promise<BackendSituation[]> {
     scenario: item.scenario ? toScenario(item.scenario) : null,
     location: item.location ?? null,
     locationGroup: item.location_group ?? null,
+    objectId: item.object_id ?? null,
     assetCount: item.asset_count ?? item.asset_ids.length,
     incidentProbability: item.incident_probability ?? null,
     healthIndex: item.health_index ?? null,
@@ -278,5 +290,31 @@ export async function getBackendSituations(): Promise<BackendSituation[]> {
           medianDurationMinutes: item.history.median_duration_minutes,
         }
       : null,
+    claimedBy: item.claimed_by ?? null,
+    claimedBySubject: item.claimed_by_subject ?? null,
+    claimedAt: item.claimed_at ? Date.parse(item.claimed_at) : null,
   }))
+}
+
+function claimPath(situationId: string) {
+  return `/api/v1/situations/${encodeURIComponent(situationId)}/claim`
+}
+
+export async function claimSituation(situationId: string): Promise<SituationClaim> {
+  const item = await apiFetch<{
+    situation_id: string
+    claimed_by: string
+    claimed_by_subject: string
+    claimed_at: string
+  }>(claimPath(situationId), { method: "POST" })
+  return {
+    situationId: item.situation_id,
+    claimedBy: item.claimed_by,
+    claimedBySubject: item.claimed_by_subject,
+    claimedAt: Date.parse(item.claimed_at),
+  }
+}
+
+export async function releaseSituation(situationId: string): Promise<void> {
+  await apiFetch<void>(claimPath(situationId), { method: "DELETE" })
 }

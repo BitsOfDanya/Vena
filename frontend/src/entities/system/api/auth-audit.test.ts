@@ -23,6 +23,12 @@ describe("password session", () => {
       .mockResolvedValueOnce(respond(me))
     expect((await resolveSession()).me).toEqual(me)
   })
+  it("keeps the visibility scope of the user", async () => {
+    const scoped = { ...me, scopes: ["complex:5"], scope_label: "объект Альфа" }
+    fetchMock.mockResolvedValueOnce(respond({ auth_enabled: true, methods: ["password"], configured: true }))
+      .mockResolvedValueOnce(respond(scoped))
+    expect((await resolveSession()).me?.scope_label).toBe("объект Альфа")
+  })
   it("requests a fresh login when JWT expires", async () => {
     fetchMock.mockResolvedValueOnce(respond({ auth_enabled: true, methods: ["password"], configured: true }))
       .mockResolvedValueOnce(respond({ detail: "Authentication required" }, 401))

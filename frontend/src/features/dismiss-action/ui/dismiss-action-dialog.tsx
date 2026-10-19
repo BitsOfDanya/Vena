@@ -5,6 +5,7 @@ import { toast } from "sonner"
 
 import { DISMISS_REASON_LABEL, useDismissAction, type DismissReason } from "@/entities/maintenance"
 import { useWorkspace } from "@/features/workspace"
+import { errorMessage } from "@/shared/api/http"
 import { Button } from "@/shared/ui/button"
 import {
   Dialog,
@@ -28,7 +29,14 @@ export function DismissActionDialog({ actionId, trigger }: { actionId: string; t
 
   async function submit(event: React.FormEvent) {
     event.preventDefault()
-    await dismiss.mutateAsync({ id: actionId, reason, note: note.trim() })
+    try {
+      await dismiss.mutateAsync({ id: actionId, reason, note: note.trim() })
+    } catch (error) {
+      toast.error(`Не удалось отклонить работу ${actionId}`, {
+        description: errorMessage(error, "Сервер не принял изменения. Попробуйте ещё раз."),
+      })
+      return
+    }
     toast.success(`Работа ${actionId} отклонена`, { description: DISMISS_REASON_LABEL[reason] })
     setOpen(false)
     setNote("")

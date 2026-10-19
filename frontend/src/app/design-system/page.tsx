@@ -1,5 +1,6 @@
 import type { Metadata } from "next"
 
+import { AuthGate } from "@/features/auth"
 import { DesignSystemPage } from "@/views/design-system"
 
 export const metadata: Metadata = {
@@ -8,5 +9,9 @@ export const metadata: Metadata = {
 }
 
 export default function Page() {
-  return <DesignSystemPage />
+  return (
+    <AuthGate>
+      <DesignSystemPage />
+    </AuthGate>
+  )
 }

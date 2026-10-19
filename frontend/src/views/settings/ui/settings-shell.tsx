@@ -10,6 +10,7 @@ import { cn } from "@/shared/lib/utils"
 const TABS = [
   { href: "/settings", label: "Обзор" },
   { href: "/settings/notifications", label: "Уведомления" },
+  { href: "/settings/thresholds", label: "Пороги и горизонты" },
   { href: "/settings/integrations", label: "Интеграции" },
   { href: "/settings/security", label: "Безопасность" },
   { href: "/settings/users", label: "Пользователи" },

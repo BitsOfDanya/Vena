@@ -2,7 +2,7 @@
 
 import * as React from "react"
 
-import { useAssets, useNetwork, usePulse } from "@/entities/infrastructure"
+import { useAssets, useNetwork, usePulse, type Asset, type MapAssetPoint } from "@/entities/infrastructure"
 import { useActions } from "@/entities/maintenance"
 import { CreateActionSheet, type ActionDraft } from "@/features/create-action"
 import { useWorkspace } from "@/features/workspace"
@@ -19,6 +19,14 @@ import { NetworkMap } from "@/widgets/network-map"
 import { ObjectPower } from "@/widgets/object-power"
 import { ObjectSchema } from "@/widgets/object-schema"
 import { NetworkToolbar, type NetworkMode, type RiskFilter, type SystemFilter } from "@/widgets/network-toolbar"
+
+function keepAsset(asset: Asset, system: SystemFilter, risk: RiskFilter, needle: string) {
+  if (system !== "all" && asset.type !== system) return false
+  if (risk === "attention" && asset.status !== "attention" && asset.status !== "critical") return false
+  if (risk === "critical" && asset.status !== "critical") return false
+  if (needle && !asset.id.toLowerCase().includes(needle) && !asset.group.toLowerCase().includes(needle)) return false
+  return true
+}
 
 export function NetworkPage() {
   const { now, horizon, setHorizon, selectedAssetId, selectAsset } = useWorkspace()
@@ -56,6 +64,18 @@ export function NetworkPage() {
     const visible = new Set(matches.map((node) => node.id))
     return new Set((nodes ?? []).filter((node) => !visible.has(node.id)).map((node) => node.id))
   }, [matches, nodes])
+  const nodeStatus = React.useMemo(() => new Map((nodes ?? []).map((node) => [node.id, node.status])), [nodes])
+  const assetById = React.useMemo(() => new Map((assets.data ?? []).map((asset) => [asset.id, asset])), [assets.data])
+
+  const mapStatus = (id: string) => (apiMode ? assetById.get(id)?.status : nodeStatus.get(id))
+  const mapDimmed = (point: MapAssetPoint) => {
+    if (!apiMode) return dimmed.has(point.assetId)
+    const asset = assetById.get(point.assetId)
+    const texts = [point.assetId, point.name, point.objectId, asset?.name, asset?.group]
+    if (needle && !texts.some((text) => text?.toLowerCase().includes(needle))) return true
+    if (!asset) return system !== "all" || risk !== "all"
+    return !keepAsset(asset, system, risk, "")
+  }
 
   const openAction = (next: ActionDraft) => {
     const asset = (assets.data ?? []).find((item) => item.id === next.assetId)
@@ -125,6 +145,8 @@ export function NetworkPage() {
               ? "Датчики на трассе объекта по пикетам, цвет — риск модели"
               : mode === "power"
                 ? "Однолинейная схема: вводы, шина, фидеры и потребители"
+              : mode === "map" && apiMode
+                ? "Трассы коллекторов и датчики на карте, цвет — риск модели"
               : network.data
                 ? `${network.data.groups.length} групп · ${network.data.nodes.length} объектов`
                 : ""
@@ -180,6 +202,16 @@ export function NetworkPage() {
                 setFocusId(null)
               }}
             />
+          ) : mode === "map" && apiMode ? (
+            <NetworkMap
+              statusOf={mapStatus}
+              isDimmed={mapDimmed}
+              selectedId={selectedAssetId}
+              onSelect={(id) => {
+                selectAsset(id)
+                setFocusId(null)
+              }}
+            />
           ) : network.isPending ? (
             <LoadingBar />
           ) : network.isError ? (
@@ -194,13 +226,7 @@ export function NetworkPage() {
             />
           ) : mode === "assets" ? (
             <AssetTable
-              assets={(assets.data ?? []).filter((asset) => {
-                if (system !== "all" && asset.type !== system) return false
-                if (risk === "attention" && asset.status !== "attention" && asset.status !== "critical") return false
-                if (risk === "critical" && asset.status !== "critical") return false
-                if (needle && !asset.id.toLowerCase().includes(needle) && !asset.group.toLowerCase().includes(needle)) return false
-                return true
-              })}
+              assets={(assets.data ?? []).filter((asset) => keepAsset(asset, system, risk, needle))}
               actions={actions.data ?? []}
               now={now}
               selectedId={selectedAssetId}
@@ -208,9 +234,9 @@ export function NetworkPage() {
             />
           ) : mode === "map" && network.data ? (
             <NetworkMap
-              nodes={matches}
+              statusOf={mapStatus}
+              isDimmed={mapDimmed}
               selectedId={selectedAssetId}
-              dimmed={dimmed}
               onSelect={(id) => {
                 selectAsset(id)
                 setFocusId(null)

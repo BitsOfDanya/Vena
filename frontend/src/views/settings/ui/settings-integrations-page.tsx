@@ -12,6 +12,7 @@ import { z } from "zod"
 import { DataImportPanel } from "./data-import-panel"
 
 import { SettingsSection, SettingsShell, StateTag } from "./settings-shell"
+import { TimeMachinePanel } from "./time-machine-panel"
 
 const SmvuStatusSchema = z.object({
   configured: z.boolean(),
@@ -40,6 +41,7 @@ export function SettingsIntegrationsPage() {
 
   return (
     <SettingsShell title="Интеграции" descriptor={`среда ${environmentLabel}`}>
+      <TimeMachinePanel />
       <DataImportPanel />
       <SettingsSection title="Источники данных">
         <ul className="border border-border bg-elevated">
@@ -69,7 +71,7 @@ export function SettingsIntegrationsPage() {
             <span className="w-48 text-[14px]">Пространственные данные (GeoJSON/WKT)</span>
             <span className="text-[13px] text-muted-foreground">
               {spatial.data?.configured
-                ? `${spatial.data.source ?? "слой"} · ${spatial.data.asset_count} активов · режим карты`
+                ? `${spatial.data.label ?? (spatial.data.source === "demo_spatial" ? "Демонстрационный слой" : "Загруженный слой")} · ${spatial.data.asset_count} активов · режим карты`
                 : "Режим карты включится после подключения"}
             </span>
             <span className="ml-auto">

@@ -1,1 +1,1 @@
-export { ObjectList, ObjectSchema, hiTone } from "./ui/object-schema"
+export { ObjectList, ObjectSchema } from "./ui/object-schema"

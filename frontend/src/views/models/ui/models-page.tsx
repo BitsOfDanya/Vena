@@ -19,6 +19,8 @@ import { cn } from "@/shared/lib/utils"
 import { Button } from "@/shared/ui/button"
 import { LoadingBar, StateMessage } from "@/shared/ui/state-message"
 
+import { ObjectLevelSection } from "./object-level-section"
+
 const ICON: Record<string, LucideIcon> = {
   flooding: Droplets,
   ventilation: Fan,
@@ -60,6 +62,7 @@ function ModelCard({ model }: { model: MlModel }) {
   const ap = model.heldOut?.avgPrecision
   const base = model.heldOut?.baseRate
   const lift = ap != null && base ? ap / base : null
+  const objectLevel = model.name.startsWith("object_")
 
   return (
     <article id={model.name} className="flex scroll-mt-20 flex-col border-r border-b border-border bg-elevated p-5">
@@ -78,11 +81,18 @@ function ModelCard({ model }: { model: MlModel }) {
 
       {top5 != null ? (
         <div className="mt-4 border-l-2 border-vena bg-surface/60 py-2.5 pr-3 pl-3">
-          <p className="text-[13.5px]">
-            Из 5 каналов с наибольшим риском в день{" "}
-            <span className="text-[17px] font-semibold text-vena tabular-nums">{Math.round(top5 * 5)}</span> действительно
-            отказывают {model.horizonHours >= 72 ? "за 3 суток" : "за сутки"}
-          </p>
+          {objectLevel ? (
+            <p className="text-[13.5px]">
+              У 5 объектов с наибольшим риском в день инцидент за сутки случается в{" "}
+              <span className="text-[17px] font-semibold text-vena tabular-nums">{Math.round(top5 * 100)} %</span> случаев
+            </p>
+          ) : (
+            <p className="text-[13.5px]">
+              Из 5 каналов с наибольшим риском в день{" "}
+              <span className="text-[17px] font-semibold text-vena tabular-nums">{Math.round(top5 * 5)}</span> действительно
+              отказывают {model.horizonHours >= 72 ? "за 3 суток" : "за сутки"}
+            </p>
+          )}
           {topK.length > 1 ? (
             <ul className="mt-1.5 space-y-0.5 text-[12.5px] text-muted-foreground">
               {topK.slice(1).map((line) => (
@@ -93,11 +103,28 @@ function ModelCard({ model }: { model: MlModel }) {
         </div>
       ) : null}
 
-      <div className="mt-4 grid grid-cols-3 divide-x divide-border border-y border-border py-3 [&>*]:px-3 [&>*:first-child]:pl-0">
-        <Metric value={precision != null ? `${Math.round(precision * 100)}%` : "—"} label="тревог подтверждаются" />
-        <Metric value={lead ? lead.replace("за ", "") : "—"} label="среднее упреждение" />
-        <Metric value={lift != null ? `×${lift.toFixed(1)}` : "—"} label="точнее случайного выбора" />
-      </div>
+      {model.scenario === "false_alarms" ? (
+        <div className="mt-4 grid grid-cols-3 divide-x divide-border border-y border-border py-3 [&>*]:px-3 [&>*:first-child]:pl-0">
+          <Metric value={share(model.heldOut?.keptShare)} label="подтверждающихся тревог остаются" />
+          <Metric value={share(model.heldOut?.filteredShare)} label="неподтверждающихся отсеивается" />
+          <Metric value={ap != null ? ap.toFixed(2).replace(".", ",") : "—"} label="средняя точность" />
+        </div>
+      ) : objectLevel ? (
+        <div className="mt-4 grid grid-cols-3 divide-x divide-border border-y border-border py-3 [&>*]:px-3 [&>*:first-child]:pl-0">
+          <Metric value={ap != null ? ap.toFixed(2).replace(".", ",") : "—"} label="средняя точность" />
+          <Metric
+            value={share(base)}
+            label={model.horizonHours < 24 ? "станции-часов перед подтоплением" : "объекто-суток с инцидентом"}
+          />
+          <Metric value={lift != null ? `×${lift.toFixed(1)}` : "—"} label="точнее случайного выбора" />
+        </div>
+      ) : (
+        <div className="mt-4 grid grid-cols-3 divide-x divide-border border-y border-border py-3 [&>*]:px-3 [&>*:first-child]:pl-0">
+          <Metric value={precision != null ? `${Math.round(precision * 100)}%` : "—"} label="тревог подтверждаются" />
+          <Metric value={lead ? lead.replace("за ", "") : "—"} label="среднее упреждение" />
+          <Metric value={lift != null ? `×${lift.toFixed(1)}` : "—"} label="точнее случайного выбора" />
+        </div>
+      )}
 
       <div className="mt-4 space-y-1 text-[12.5px] text-muted-foreground">
         {calib ? <p>{calib}</p> : null}
@@ -110,6 +137,10 @@ function ModelCard({ model }: { model: MlModel }) {
       </p>
     </article>
   )
+}
+
+function share(value: number | null | undefined) {
+  return value == null ? "—" : `${Math.round(value * 100)}%`
 }
 
 export function ModelsPage() {
@@ -183,6 +214,7 @@ export function ModelsPage() {
             ))}
           </div>
         )}
+        <ObjectLevelSection />
       </div>
     </div>
   )

@@ -257,7 +257,7 @@ async function getApiAssetDetail(id: string, view: View): Promise<AssetDetail | 
   try {
     const item = await apiFetch<ApiAssetPrediction>(`/api/v1/assets/${encodeURIComponent(id)}/prediction`)
     const live = mapItem(item)
-    const asset = assetFromLive(live, view.horizon)
+    const asset = assetFromLive(live)
     const delta =
       item.score_delta === null || item.score_delta === undefined
         ? 0
@@ -544,7 +544,7 @@ function typeFromModel(modelId: string): AssetType {
   return "other"
 }
 
-function assetFromLive(prediction: LivePrediction, _horizon: ForecastHorizon): Asset {
+function assetFromLive(prediction: LivePrediction): Asset {
   const overlay = overlayFromPrediction(prediction)
   return {
     id: prediction.assetId,
@@ -567,7 +567,7 @@ export async function getPredictionAssets(horizon: ForecastHorizon): Promise<Ass
   const predictions = await listLivePredictions(horizon)
   return predictions
     .filter((item) => item.horizonHours === null || item.horizonHours === horizon)
-    .map((item) => assetFromLive(item, horizon))
+    .map((item) => assetFromLive(item))
 }
 
 export async function getTemporal(id: string, view: View, halfSpanHours: number): Promise<TemporalBundle | null> {
@@ -578,7 +578,7 @@ export async function getTemporal(id: string, view: View, halfSpanHours: number)
   if (!record) {
     const prediction = (await listLivePredictions(view.horizon)).find((item) => item.assetId === id)
     if (!prediction) return null
-    const asset = assetFromLive(prediction, view.horizon)
+    const asset = assetFromLive(prediction)
     const score = asset.riskScore
     let history: RiskSnapshot[] = []
     try {

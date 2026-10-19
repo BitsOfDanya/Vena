@@ -39,11 +39,3 @@ export function useAcknowledgeNotification(now: number) {
     onSuccess: (data) => client.setQueryData(KEY, data),
   })
 }
-
-export function useResolveNotification(now: number) {
-  const client = useQueryClient()
-  return useMutation({
-    mutationFn: (id: string) => notificationRepository.resolve(id, now),
-    onSuccess: (data) => client.setQueryData(KEY, data),
-  })
-}

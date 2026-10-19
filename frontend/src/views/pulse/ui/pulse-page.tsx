@@ -132,12 +132,16 @@ export function PulsePage() {
     scenario: item.scenario,
     location: item.location,
     locationGroup: item.locationGroup,
+    objectId: item.objectId,
     assetCount: item.assetCount,
     incidentProbability: item.incidentProbability,
     healthIndex: item.healthIndex,
     modelId: item.modelId,
     recommendation: item.recommendation,
     history: item.history,
+    claimedBy: item.claimedBy,
+    claimedBySubject: item.claimedBySubject,
+    claimedAt: item.claimedAt,
   }))
 
   const openActions = (actions.data ?? []).filter((action) => OPEN_STATUSES.includes(action.status))

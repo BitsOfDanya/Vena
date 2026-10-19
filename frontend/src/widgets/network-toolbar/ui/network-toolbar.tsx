@@ -58,7 +58,7 @@ export function NetworkToolbar({
 }) {
   const modes = MODES.filter((item) =>
     showPicket
-      ? item.value === "picket" || item.value === "power" || item.value === "tree" || item.value === "assets"
+      ? item.value === "picket" || item.value === "power" || item.value === "tree" || item.value === "assets" || (item.value === "map" && !realGeometryOnly)
       : (item.value !== "tree" || showTree) && item.value !== "picket" && item.value !== "power" && (item.value !== "map" || !realGeometryOnly)
   )
   return (
