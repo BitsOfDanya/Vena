@@ -69,6 +69,18 @@ ID каналов в `/predictions`, `worker.state` и состояние сни
 
 Новые события: `POST /api/v1/smvu/events` с JWT диспетчера/администратора,
 `batch_id`, `event_count`, `events` (`event_id`, `channel_id`, `ts`, `value`, `alarm`).
+Тот же пакет принимается в XML с `Content-Type: application/xml`:
+
+```xml
+<batch id="smvu-0001" event_count="2" last_event_at="2026-07-01T09:05:00">
+  <event event_id="1" channel_id="96463" ts="2026-07-01T09:00:00" alarm="true">Неисправен</event>
+  <event event_id="2" channel_id="96463" ts="2026-07-01T09:05:00">Норма</event>
+</batch>
+```
+
+XML сводится к той же модели, что JSON: те же проверки, лимиты, ответы и аудит. Разбор —
+defusedxml: DTD, сущности, внешние ссылки и любые элементы, кроме `<batch>` и `<event>`,
+отклоняются с 422.
 ML опрашивает очередь каждые 30 секунд и пересчитывает затронутые каналы.
 Смотрите `/predictions/snapshot`: `stream.events`, `channels_rescored`,
 `published_at`, `latency_seconds`. Архив обработанных батчей сохраняется в inbox/processed
@@ -112,6 +124,76 @@ VENA_EQUIPMENT_SYNC_CA_FILE=/srv/certs/customer-ca.pem. HTTP разрешает�
 ошибка отражается в истории без токенов. Параллельные изменения сериализуются в БД.
 Ручной запуск — кнопка «Синхронизировать реестр» или POST /equipment/sync.
 
+## Система учёта заявок (ТЗ 6)
+
+Утверждённая работа уходит заявкой во внешнюю систему, статус заявки возвращается в историю
+работы. Протокол источника в ТЗ не задан: реализован HTTPS JSON API с Bearer-токеном из двух вызовов.
+
+- `POST {VENA_HELPDESK_URL}/tickets` с `external_ref` (ID работы), `title`, `description`,
+  `priority` (`high`/`medium`/`low`), `due_at` (ISO 8601) → `{"id": …, "status": …}`. В описании —
+  причина, объект, канал с названием из реестра, приоритет и срок. `external_ref` — ключ
+  идемпотентности: повтор для той же работы должен вернуть существующую заявку.
+- `GET {VENA_HELPDESK_URL}/tickets/{id}` → `{"id": …, "status": …}`.
+
+Заявка создаётся при утверждении черновика и при создании работы сразу запланированной.
+Если система недоступна, работа сохраняется как обычно, заявка получает статус `pending`, и
+отправку повторяет планировщик. Он же раз в `VENA_HELPDESK_INTERVAL_SECONDS` (60 с) опрашивает
+незакрытые заявки. Каждое изменение пишется в историю работы: «Заявка №12: принята».
+Статусы: `new` — зарегистрирована, `accepted` — принята, `in_progress` — в работе,
+`closed` — закрыта; другие значения записываются как есть. Закрытие заявки не закрывает
+работу: результат фиксирует диспетчер. В API работ — поля `helpdesk_ticket_id` и
+`helpdesk_status`, создание заявки — в аудите (`helpdesk.ticket`).
+
+```dotenv
+VENA_HELPDESK_URL=https://servicedesk.example/api
+VENA_HELPDESK_TOKEN=replace-on-server
+VENA_HELPDESK_INTERVAL_SECONDS=60
+VENA_HELPDESK_CA_FILE=/srv/certs/customer-ca.pem
+```
+
+Пустой `VENA_HELPDESK_URL` выключает интеграцию; в production он пуст, пока заказчик не
+передаст адрес и токен. Требования к соединению те же, что у учётной системы: только HTTPS
+(HTTP — явной `VENA_HELPDESK_ALLOW_HTTP=true`), без редиректов, проверка сертификата,
+5 секунд на запрос. Для системы с другой схемой API нужен адаптер к этим двум вызовам.
+
+## Эмуляторы внешних систем
+
+По решению заказчика внешние взаимодействия проверяются на шаблонах и эмуляторах.
+Корневой `compose.yaml` поднимает их вместе с сервисом.
+
+| Сервис | Что эмулирует | Адрес |
+|---|---|---|
+| `helpdesk` | систему заявок и учётную систему оборудования, `emulators/helpdesk` | http://localhost:8090 (`VENA_HELPDESK_PORT`), в сети compose — http://helpdesk:8090 |
+| `ldap`, профиль `ldap` | каталог OpenLDAP с тремя пользователями | ldap://ldap:389, StartTLS; [authentication.md](authentication.md#тестовый-каталог-ldap) |
+
+Эмулятор заявок — FastAPI без БД, заявки хранятся в JSON в томе `vena-helpdesk`.
+`POST /tickets`, `GET /tickets/{id}`, `GET /tickets?status=…`. Статус меняется со временем:
+принята через `HELPDESK_ACCEPT_SECONDS` (60), в работе через `HELPDESK_START_SECONDS` (180),
+закрыта через `HELPDESK_CLOSE_SECONDS` (600). Backend локального стенда подключён к нему
+сразу (`VENA_HELPDESK_URL=http://helpdesk:8090`, токен `VENA_HELPDESK_TOKEN`, по умолчанию
+`local-helpdesk-token`). Пустое значение `VENA_HELPDESK_URL=` отключает экспорт.
+
+```bash
+curl -H 'Authorization: Bearer local-helpdesk-token' http://localhost:8090/tickets
+```
+
+`GET /equipment` отдаёт реестр из `emulators/helpdesk/fixtures/equipment.json` в формате
+коннектора учётной системы, с пагинацией по `cursor`: 17 каналов демонстрационного снимка
+с объектом, секцией, производителем, моделью, серийным номером и датой установки.
+Синхронизация с ним в compose выключена: она добавляет каналы эмулятора в реестр, а реестр
+публикуется в справочник ML (`справочник_каналов_датчиков.csv` в `VENA_DATASET_DIR`).
+Включайте её только на стенде без реального справочника:
+
+```bash
+VENA_EQUIPMENT_SYNC_ENABLED=true docker compose up -d backend
+```
+
+Канал, уже загруженный из справочника с другим внешним идентификатором, не перезаписывается:
+синхронизация отклоняется целиком, а реестр остаётся прежним.
+
+Тесты эмулятора: `cd emulators/helpdesk && pytest` (нужны fastapi, httpx и pytest, например
+из окружения backend).
+
 ## LDAP / Active Directory (ТЗ 11)
 
 ```dotenv
@@ -125,6 +207,8 @@ VENA_LDAP_USERNAME_ATTRIBUTE=sAMAccountName
 VENA_LDAP_ID_ATTRIBUTE=objectGUID
 VENA_LDAP_GROUP_ROLES={"CN=Vena-Admins,OU=Groups,DC=example,DC=local":"admin","CN=Vena-Dispatchers,OU=Groups,DC=example,DC=local":"dispatcher","CN=Vena-Viewers,OU=Groups,DC=example,DC=local":"viewer"}
 VENA_LDAP_DEFAULT_ROLE=none
+VENA_LDAP_GROUP_SCOPES={"CN=Vena-ODS,OU=Groups,DC=example,DC=local":["all"],"Vena-Alpha":["complex:5"]}
+VENA_LDAP_DEFAULT_SCOPES=["all"]
 VENA_LDAP_CA_FILE=/srv/certs/customer-ca.pem
 VENA_LDAP_TIMEOUT_SECONDS=5
 ```
@@ -134,6 +218,8 @@ USER_FILTER=(|(uid={login})(mail={login})). Группы читаются из m
 нужен memberOf overlay. Маппинг использует прямое членство, не вложенные группы AD.
 Без совпадения применяется DEFAULT_ROLE; `none` запрещает вход. Внутри совпавших
 групп выбирается наибольшая роль. Административные права не берутся из запроса клиента.
+Области видимости групп суммируются при каждом входе; см.
+[authentication.md](authentication.md#области-видимости).
 
 После настройки перезапустите backend: на экране входа появляется выбор
 «Корпоративный LDAP / AD», `/auth/status` возвращает ldap_available=true.
@@ -155,7 +241,10 @@ JWT, защищённая cookie, ограничение попыток и вы�
 
 Необходимы доступ сервера Vena к корпоративной сети (при необходимости VPN),
 адрес/DC, доверенный CA, base DN, служебный bind и согласованные группы.
-Без этих данных проверка настоящего AD заказчика невозможна.
+Без этих данных проверка настоящего AD заказчика невозможна. Тот же код проверяется на
+тестовом каталоге OpenLDAP: профиль `ldap` корневого compose, [authentication.md](authentication.md#тестовый-каталог-ldap).
+
+Параметры TLS сверены с документацией [ldap3](https://ldap3.readthedocs.io/en/latest/ssltls.html) и [OpenLDAP](https://openldap.org/doc/admin26/tls.html). В изолированном OpenLDAP проверены LDAPS, StartTLS, отказ при неверном пароле и недоверенном сертификате. Проверка корпоративного AD требует его адреса и учётной записи.
 
 ## Пользователи
 
@@ -165,23 +254,9 @@ JWT, защищённая cookie, ограничение попыток и вы�
 События попадают в аудит; пароли не возвращаются API и не журналируются.
 На стенде user1 назначен администратором; остальные демонстрационные аккаунты — диспетчеры.
 
-## Резервное восстановление
+## Резервное копирование
 
-Ежедневный backup сохраняет дамп БД и архив dataset, включая принятые файлы.
-Обработанный поток inbox хранится в Docker volume и автоматически архивируется в `.inbox.tar.gz` вместе
-с остальными данными при ежедневном резервном копировании. Восстановление дампа без затрагивания production:
-
-```sh
-bash /opt/vena/current/infra/scripts/backup.sh
-bash /opt/vena/current/infra/scripts/verify-backup.sh /opt/vena/shared/backups/vena-TIMESTAMP.sql.gz
-```
-
-Проверка создаёт отдельную БД, выполняет полный SQL restore, читает таблицы и удаляет
-тестовую БД. Для восстановления рабочего контура остановите запись и ML, восстановите
-БД и соответствующий dataset, затем запустите сервис. Перед очисткой старых записей
-обязательно сохраните дамп. Исходные данные должны быть обезличены на стороне заказчика.
-
-Параметры TLS сверены с документацией [ldap3](https://ldap3.readthedocs.io/en/latest/ssltls.html) и [OpenLDAP](https://openldap.org/doc/admin26/tls.html). В изолированном OpenLDAP проверены LDAPS, StartTLS, отказ при неверном пароле и недоверенном сертификате. Проверка корпоративного AD требует его адреса и учётной записи.
+Копии, проверка и восстановление — в [installation.md](installation.md#резервное-копирование) и [infra/README.md](../infra/README.md#резервные-копии).
 
 ## Лента событий на главном экране
 

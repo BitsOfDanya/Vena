@@ -7,7 +7,8 @@
 | Компонент | Версия | Назначение |
 |---|---|---|
 | PostgreSQL | 16 | хранение оперативных данных и истории |
-| Docker Compose | v2 | локально: db, backend, frontend; стенд: db, ml, backend, frontend, caddy |
+| Docker Compose | v2 | локально: db, backend, frontend, эмулятор `helpdesk`, профиль `ldap`; стенд: db, ml, backend, frontend, caddy |
+| OpenLDAP, образ `osixia/openldap` | 1.5.0 | тестовый каталог LDAP, профиль `ldap` локального compose |
 | Caddy | 2 | HTTPS (автоматический сертификат), маршрутизация `/api` и интерфейса |
 | Node.js | 22 | среда выполнения интерфейса |
 | Python | 3.12 | backend и ML |
@@ -21,14 +22,15 @@
 | SQLAlchemy | ≥2.0.54 | ORM |
 | Alembic | ≥1.20 | миграции схемы |
 | psycopg[binary] | ≥3.2 | драйвер PostgreSQL |
-| APScheduler | ≥3.11 | фоновые задачи: приём снимка прогнозов, очередь писем, публикация загрузок, синхронизация реестра, сводка |
+| APScheduler | ≥3.11 | фоновые задачи: приём снимка прогнозов, очередь писем, публикация загрузок, синхронизация реестра и заявок, сводка |
 | PyJWT | ≥2.10 | JWT-сессии |
 | pwdlib[argon2] | ≥0.3 | хеширование паролей Argon2 |
 | ldap3 | ≥2.9.1 | вход через LDAP/AD, StartTLS и LDAPS |
 | openpyxl | ≥3.1 | импорт XLSX, отчёт руководству XLSX |
-| defusedxml | ≥0.7 | безопасный разбор XML внутри XLSX |
+| ReportLab | ≥4.4 | отчёты PDF (руководству и сводка смены), шрифт IBM Plex Sans (OFL) встроен |
+| defusedxml | ≥0.7 | безопасный разбор XML внутри XLSX и пакетов потока СМВУ в XML |
 | python-multipart | ≥0.0.20 | загрузка файлов CSV/XLSX |
-| httpx | ≥0.28 | опрос внешней учётной системы (реестр оборудования) |
+| httpx | ≥0.28 | обмен с учётной системой (реестр оборудования) и системой заявок |
 | email-validator | ≥2.2 | проверка адресов получателей |
 | smtplib (stdlib) | — | отправка писем по SMTP |
 | pytest, mypy, ruff | dev | тесты, типизация, линтер |
