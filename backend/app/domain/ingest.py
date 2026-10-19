@@ -9,8 +9,18 @@ from app.db.models import Action, Notification, PredictionPoint, ProcessedSnapsh
 from app.domain import actions as action_service
 from app.domain import notifications as notification_service
 from app.domain.email import EmailProvider
-from app.domain.incidents import Incident, group_incidents, reason_text, score_text
+from app.domain.incidents import (
+    LEVEL_LABELS,
+    SCENARIO_LABELS,
+    Incident,
+    group_incidents,
+    location_label,
+    model_label,
+    reason_text,
+    score_text,
+)
 from app.domain.predictions import PredictionSource
+from app.domain.recommendations import driver_hints
 from app.schemas.actions import ActionCreate
 from app.schemas.notifications import NotificationCreate
 from app.schemas.predictions import Prediction
@@ -27,14 +37,6 @@ class IngestResult:
     notifications_created: int = 0
     actions_created: int = 0
     detail: str = ""
-
-
-LEVEL_RU = {
-    "critical": "критично",
-    "attention": "внимание",
-    "observe": "наблюдение",
-    "normal": "норма",
-}
 
 
 def previous_scores(session: Session, snapshot_id: str) -> dict[tuple[str, str], float]:
@@ -92,28 +94,38 @@ def _has_open_forecast_action(session: Session, asset_ids: list[str]) -> bool:
     return session.scalars(statement).first() is not None
 
 
-def _suggest_action(session: Session, incident: Incident, now: datetime) -> bool:
+def _forecast_reason(incident: Incident, hints: dict[str, str] | None = None) -> str:
+    lead = incident.lead
+    scenario = SCENARIO_LABELS.get(incident.scenario, incident.scenario)
+    level = LEVEL_LABELS.get(lead.risk_level, lead.risk_level)
+    place = location_label(incident.location) or f"канал {lead.asset_id}"
+    count = len(incident.asset_ids)
+    scope = f" Каналов на локации: {count}." if count > 1 else ""
+    cause = reason_text(lead, hints).rstrip(".")
+    return (
+        f"Прогноз: {scenario.lower()}, {level}, {score_text(lead)} за "
+        f"{lead.horizon_hours or 24} ч. Место: {place}. Причина: {cause}.{scope}"
+    )
+
+
+def _suggest_action(
+    session: Session, incident: Incident, now: datetime, hints: dict[str, str]
+) -> bool:
     if _has_open_forecast_action(session, incident.asset_ids):
         return False
     lead = incident.lead
     horizon = lead.horizon_hours or 24
     priority = PRIORITY_FOR_LEVEL.get(lead.risk_level, "medium")
-    count = len(incident.asset_ids)
-    scope = f"; каналов на локации: {count}" if count > 1 else ""
     action_service.create_action(
         session,
         ActionCreate(
             asset_id=lead.asset_id,
             kind="inspect",
-            reason=(
-                f"{incident.title}: модель {lead.model_id}, уровень "
-                f"{LEVEL_RU.get(lead.risk_level, lead.risk_level)}, вероятность "
-                f"{score_text(lead)} за {horizon} ч{scope}"
-            ),
+            reason=_forecast_reason(incident, hints),
             priority=priority,  # type: ignore[arg-type]
             recommended_at=max(lead.prediction_time, now) + timedelta(hours=horizon),
             assignee="Дежурный инженер",
-            note="Черновик создан по прогнозу модели",
+            note=f"Черновик создан по прогнозу «{model_label(lead.model_id)}»",
             source="vena_forecast",
             source_detail=lead.model_id,
             status="suggested",
@@ -138,7 +150,9 @@ def refresh_predictions(
     status = source.status()
     if not status.available or status.snapshot_id is None:
         return IngestResult(
-            processed=False, snapshot_id=None, detail=status.detail or "snapshot unavailable"
+            processed=False,
+            snapshot_id=None,
+            detail=status.detail or "Снимок прогнозов недоступен",
         )
 
     existing = session.get(ProcessedSnapshot, status.snapshot_id)
@@ -147,7 +161,7 @@ def refresh_predictions(
             processed=False,
             snapshot_id=status.snapshot_id,
             prediction_count=existing.prediction_count,
-            detail="snapshot already processed",
+            detail="Снимок уже обработан",
         )
 
     predictions = apply_deltas(session, source.all(), status.snapshot_id)
@@ -172,6 +186,7 @@ def refresh_predictions(
     created = 0
     actions_created = 0
     now = datetime.now(tz=UTC)
+    hints = driver_hints(settings)
     significant = [item for item in predictions if item.risk_level in RULE_FOR_LEVEL]
     per_scenario: dict[str, int] = {}
     for incident in group_incidents(significant):
@@ -194,12 +209,12 @@ def refresh_predictions(
                 NotificationCreate(
                     type="risk",
                     severity="critical" if lead.risk_level == "critical" else "attention",
-                    title=f"{incident.title} · {lead.model_id} {score_text(lead)}",
+                    title=f"{incident.title} · {score_text(lead)} за {lead.horizon_hours or 24} ч",
                     description=(
-                        f"Модель {lead.model_id}: уровень "
-                        f"{LEVEL_RU.get(lead.risk_level, lead.risk_level)} на "
+                        f"Прогноз «{model_label(lead.model_id)}»: уровень "
+                        f"{LEVEL_LABELS.get(lead.risk_level, lead.risk_level)} на "
                         f"{lead.horizon_hours} ч{change}.{scope} "
-                        f"Главная причина: {reason_text(lead)}."
+                        f"Главная причина: {reason_text(lead, hints).rstrip('.')}."
                     ),
                     asset_id=lead.asset_id,
                     dedup_key=dedup_key,
@@ -214,7 +229,7 @@ def refresh_predictions(
                 allow_email=status.data_source == "journal",
             )
             created += 1
-        if _suggest_action(session, incident, now):
+        if _suggest_action(session, incident, now, hints):
             actions_created += 1
 
     if existing is None:

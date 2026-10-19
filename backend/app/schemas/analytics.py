@@ -2,6 +2,8 @@ from typing import Any
 
 from pydantic import BaseModel
 
+from app.schemas.predictions import TimeToFailure
+
 
 class ChannelNode(BaseModel):
     asset_id: str
@@ -100,6 +102,7 @@ class PlanItem(BaseModel):
     probability: float
     risk_level: str
     reason: str | None
+    ttf_hours: TimeToFailure | None = None
 
 
 class InspectionPlan(BaseModel):

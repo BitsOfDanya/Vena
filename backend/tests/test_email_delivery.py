@@ -36,10 +36,11 @@ class FakeSMTP:
     configured = True
 
     def __init__(self, fails=0):
-        self.fails, self.messages = fails, []
+        self.fails, self.messages, self.html = fails, [], []
 
-    def send(self, recipient, subject, body, *, delivery_id=None):
+    def send(self, recipient, subject, body, *, html=None, delivery_id=None):
         self.messages.append((recipient, subject, body, delivery_id))
+        self.html.append(html)
         if len(self.messages) <= self.fails:
             raise OSError("sensitive server text")
 
@@ -269,7 +270,9 @@ def test_actual_smtp_transport_to_local_capture_server(client):
     assert len(messages) == 1
     assert messages[0]["To"] == "duty@example.com"
     assert messages[0]["Subject"] == "VENA · Проверка SMTP"
-    assert "Критический" in messages[0].get_content()
+    assert messages[0].get_content_type() == "multipart/alternative"
+    assert "Уровень: Критично" in messages[0].get_body(("plain",)).get_content()
+    assert "Открыть в VENA" in messages[0].get_body(("html",)).get_content()
 
 
 def test_demonstration_forecasts_cannot_send_mail(client):

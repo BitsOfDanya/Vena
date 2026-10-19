@@ -1,3 +1,5 @@
+from collections.abc import Collection
+
 from sqlalchemy import select
 from sqlalchemy.orm import Session
 
@@ -30,6 +32,7 @@ def entries(
     scenario: str | None = None,
     decision: str | None = None,
     limit: int = 500,
+    channels: Collection[str] | None = None,
 ) -> list[JournalEntry]:
     source = get_prediction_source(settings)
     locations = {
@@ -41,6 +44,8 @@ def entries(
     )
     result: list[JournalEntry] = []
     for action in session.scalars(statement):
+        if channels is not None and action.asset_id not in channels:
+            continue
         model_id = action.source_model_id or action.source_detail or None
         entry = JournalEntry(
             id=action.id,

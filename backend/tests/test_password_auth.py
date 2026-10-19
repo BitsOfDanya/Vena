@@ -1,11 +1,14 @@
+import sys
 from datetime import UTC, datetime, timedelta
 
 import jwt
+import pytest
 from sqlalchemy import func, select
 
 from app.core.config import get_settings
 from app.core.security import COOKIE_NAME, PASSWORDS
 from app.db.models import AuthSession, User
+from app.db.seed_users import main as seed_main
 from app.db.seed_users import seed_users
 from app.db.session import SessionLocal
 
@@ -171,6 +174,41 @@ def test_seed_twenty_users_idempotent_and_does_not_reset(client):
         assert PASSWORDS.verify("changed-password", user.password_hash)
         assert user.role == "viewer" and not user.is_active
         assert user.email == "user1@example.com"
+
+
+def test_seed_admin_from_environment_only_on_creation(client, monkeypatch):
+    monkeypatch.setenv("VENA_SEED_ADMIN", "user1")
+    monkeypatch.delenv("VENA_USER_PASSWORD", raising=False)
+    monkeypatch.setattr(sys, "argv", ["seed_users"])
+    seed_main()
+    with SessionLocal.begin() as db:
+        roles = {u.username: u.role for u in db.scalars(select(User))}
+        assert len(roles) == 20
+        assert roles.pop("user1") == "admin"
+        assert set(roles.values()) == {"dispatcher"}
+        user = db.scalar(select(User).where(User.username == "user1"))
+        assert PASSWORDS.verify("0987654321", user.password_hash)
+        user.role = "viewer"
+    seed_main()
+    with SessionLocal.begin() as db:
+        assert db.scalar(select(func.count()).select_from(User)) == 20
+        assert db.scalar(select(User.role).where(User.username == "user1")) == "viewer"
+    monkeypatch.setenv("VENA_SEED_ADMIN", "user21")
+    with pytest.raises(SystemExit):
+        seed_main()
+
+
+def test_seeded_admin_can_log_in(client, monkeypatch):
+    monkeypatch.setattr(get_settings(), "auth_enabled", True)
+    monkeypatch.setattr(get_settings(), "jwt_secret", "test-signing-secret-with-at-least-32-bytes")
+    with SessionLocal.begin() as db:
+        assert seed_users(db, admin="user1") == 20
+    token = client.post(
+        "/api/v1/auth/login", json={"login": "user1", "password": "0987654321"}
+    ).json()["access_token"]
+    client.cookies.clear()
+    me = client.get("/api/v1/auth/me", headers={"Authorization": "Bearer " + token}).json()
+    assert me["role"] == "admin"
 
 
 def test_missing_secret_fails_closed(client, auth_users, monkeypatch):

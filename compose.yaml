@@ -18,18 +18,44 @@ services:
       timeout: 3s
       retries: 20
 
+  ml:
+    build:
+      context: .
+      dockerfile: infra/docker/ml.Dockerfile
+    environment:
+      VENA_ML_MODE: ${VENA_ML_MODE:-auto}
+      VENA_ML_REFRESH_SECONDS: ${VENA_ML_REFRESH_SECONDS:-3600}
+      VENA_INBOX_DIR: /srv/ml/inbox
+      VENA_STREAM_POLL_SECONDS: ${VENA_STREAM_POLL_SECONDS:-30}
+      VENA_STREAM_HISTORY_UNTIL: ${VENA_STREAM_HISTORY_UNTIL:-}
+    volumes:
+      - vena-predictions:/srv/ml/results/predictions
+      - vena-inbox:/srv/ml/inbox
+      - ${VENA_DATASET_DIR:-./ml/dataset}:/srv/ml/dataset:ro
+    healthcheck:
+      test: ["CMD", "python", "-c", "import time; assert time.time()-float(open('/srv/ml/results/predictions/heartbeat').read())<7200"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+      start_period: 300s
+
   backend:
     build:
       context: ./backend
     environment:
       VENA_ML_DIR: /srv/ml
+      VENA_PREDICTIONS_DIR: /srv/predictions
       VENA_INBOX_DIR: /srv/ml/inbox
+      VENA_DATASET_DIR: /srv/ml/dataset
       VENA_DATABASE_URL: postgresql+psycopg://vena:vena@db:5432/vena
       VENA_ENVIRONMENT: local
-      VENA_CORS_ORIGINS: '["http://localhost:3100"]'
-      VENA_PUBLIC_URL: http://localhost:3100
+      VENA_CORS_ORIGINS: '["http://localhost:${VENA_UI_PORT:-3100}"]'
+      VENA_PUBLIC_URL: http://localhost:${VENA_UI_PORT:-3100}
       VENA_TIMEZONE: ${VENA_TIMEZONE:-Europe/Moscow}
       VENA_SEED_DEMO: ${VENA_SEED_DEMO:-false}
+      VENA_SEED_USERS: ${VENA_SEED_USERS:-true}
+      VENA_SEED_ADMIN: ${VENA_SEED_ADMIN:-user1}
+      VENA_USER_PASSWORD: ${VENA_USER_PASSWORD:-0987654321}
       VENA_PREDICTION_STALE_SECONDS: ${VENA_PREDICTION_STALE_SECONDS:-86400}
       VENA_AUTH_ENABLED: ${VENA_AUTH_ENABLED:-true}
       VENA_JWT_SECRET: ${VENA_JWT_SECRET:-local-development-only-change-this-secret-12345}
@@ -39,28 +65,52 @@ services:
       SMTP_PASSWORD: ${SMTP_PASSWORD:-}
       SMTP_FROM: ${SMTP_FROM:-}
       SMTP_TLS: ${SMTP_TLS:-true}
+      VENA_HELPDESK_URL: ${VENA_HELPDESK_URL-http://helpdesk:8090}
+      VENA_HELPDESK_TOKEN: ${VENA_HELPDESK_TOKEN:-local-helpdesk-token}
+      VENA_HELPDESK_ALLOW_HTTP: "true"
+      VENA_EQUIPMENT_SYNC_ENABLED: ${VENA_EQUIPMENT_SYNC_ENABLED:-false}
+      VENA_EQUIPMENT_SYNC_URL: http://helpdesk:8090/equipment
+      VENA_EQUIPMENT_SYNC_TOKEN: ${VENA_HELPDESK_TOKEN:-local-helpdesk-token}
+      VENA_EQUIPMENT_SYNC_ALLOW_HTTP: "true"
+      VENA_LDAP_ENABLED: ${VENA_LDAP_ENABLED:-false}
+      VENA_LDAP_URL: ldap://ldap:389
+      VENA_LDAP_BIND_DN: cn=vena-reader,dc=vena,dc=local
+      VENA_LDAP_BIND_PASSWORD: ${VENA_LDAP_BIND_PASSWORD:-local-ldap-reader}
+      VENA_LDAP_BASE_DN: ou=people,dc=vena,dc=local
+      VENA_LDAP_USER_FILTER: (|(uid={login})(mail={login}))
+      VENA_LDAP_USERNAME_ATTRIBUTE: uid
+      VENA_LDAP_ID_ATTRIBUTE: entryUUID
+      VENA_LDAP_GROUP_ROLES: '{"cn=vena-admins,ou=groups,dc=vena,dc=local":"admin","cn=vena-dispatchers,ou=groups,dc=vena,dc=local":"dispatcher","cn=vena-viewers,ou=groups,dc=vena,dc=local":"viewer"}'
+      VENA_LDAP_DEFAULT_ROLE: none
+      VENA_LDAP_CA_FILE: /srv/ldap-ca/ca.crt
     volumes:
+      - vena-ldap-ca:/srv/ldap-ca:ro
       - ./ml/results:/srv/ml/results:ro
       - ./ml/configs:/srv/ml/configs:ro
       - ./ml/artifacts:/srv/ml/artifacts:ro
-      - ./ml/inbox:/srv/ml/inbox
+      - vena-predictions:/srv/predictions:ro
+      - vena-inbox:/srv/ml/inbox
+      - ${VENA_DATASET_DIR:-./ml/dataset}:/srv/ml/dataset
     depends_on:
       db:
         condition: service_healthy
+      ml:
+        condition: service_healthy
     ports:
-      - "8100:8000"
+      - "${VENA_API_PORT:-8100}:8000"
     healthcheck:
-      test: ["CMD", "python", "-c", "import urllib.request;urllib.request.urlopen('http://127.0.0.1:8000/api/v1/health')"]
+      test: ["CMD", "python", "-c", "import urllib.request;urllib.request.urlopen('http://127.0.0.1:8000/api/v1/health',timeout=3)"]
       interval: 10s
-      timeout: 3s
+      timeout: 5s
       retries: 10
+      start_period: 60s
 
   frontend:
     build:
       context: ./frontend
       network: host
       args:
-        NEXT_PUBLIC_API_URL: http://localhost:8100
+        NEXT_PUBLIC_API_URL: http://localhost:${VENA_API_PORT:-8100}
         NEXT_PUBLIC_VENA_DATA_MODE: demo
         NEXT_PUBLIC_VENA_WORKFLOW_MODE: api
         NEXT_PUBLIC_VENA_ENVIRONMENT: docker
@@ -68,12 +118,74 @@ services:
       backend:
         condition: service_healthy
     ports:
-      - "3100:3000"
+      - "${VENA_UI_PORT:-3100}:3000"
     healthcheck:
       test: ["CMD", "node", "-e", "fetch('http://127.0.0.1:3000/pulse').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))"]
       interval: 15s
       timeout: 5s
       retries: 5
 
+  helpdesk:
+    build:
+      context: ./emulators/helpdesk
+    environment:
+      HELPDESK_TOKEN: ${VENA_HELPDESK_TOKEN:-local-helpdesk-token}
+      HELPDESK_ACCEPT_SECONDS: ${HELPDESK_ACCEPT_SECONDS:-60}
+      HELPDESK_START_SECONDS: ${HELPDESK_START_SECONDS:-180}
+      HELPDESK_CLOSE_SECONDS: ${HELPDESK_CLOSE_SECONDS:-600}
+      HELPDESK_DATA_FILE: /srv/emulator/state/tickets.json
+    volumes:
+      - vena-helpdesk:/srv/emulator/state
+    ports:
+      - "127.0.0.1:${VENA_HELPDESK_PORT:-8090}:8090"
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request;urllib.request.urlopen('http://127.0.0.1:8090/health',timeout=3)"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  ldap-certs:
+    image: osixia/openldap:1.5.0
+    profiles: [ldap]
+    entrypoint: ["/bin/bash", "/make-certs.sh"]
+    volumes:
+      - ./emulators/ldap/make-certs.sh:/make-certs.sh:ro
+      - vena-ldap-ca:/ca
+      - vena-ldap-tls:/tls
+
+  ldap:
+    image: osixia/openldap:1.5.0
+    profiles: [ldap]
+    hostname: ldap
+    environment:
+      LDAP_ORGANISATION: VENA
+      LDAP_DOMAIN: vena.local
+      LDAP_ADMIN_PASSWORD: ${VENA_LDAP_ADMIN_PASSWORD:-local-ldap-admin}
+      LDAP_CONFIG_PASSWORD: ${VENA_LDAP_ADMIN_PASSWORD:-local-ldap-admin}
+      LDAP_READONLY_USER: "true"
+      LDAP_READONLY_USER_USERNAME: vena-reader
+      LDAP_READONLY_USER_PASSWORD: ${VENA_LDAP_BIND_PASSWORD:-local-ldap-reader}
+      LDAP_TLS_VERIFY_CLIENT: never
+      LDAP_SEED_INTERNAL_LDIF_PATH: /seed
+      LDAP_SEED_INTERNAL_LDAP_TLS_CRT_FILE: /tls/ldap.crt
+      LDAP_SEED_INTERNAL_LDAP_TLS_KEY_FILE: /tls/ldap.key
+      LDAP_SEED_INTERNAL_LDAP_TLS_CA_CRT_FILE: /tls/ca.crt
+    volumes:
+      - ./emulators/ldap/ldif:/seed:ro
+      - vena-ldap-tls:/tls:ro
+    depends_on:
+      ldap-certs:
+        condition: service_completed_successfully
+    healthcheck:
+      test: ["CMD", "ldapsearch", "-x", "-H", "ldap://127.0.0.1", "-b", "", "-s", "base", "namingContexts"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
 volumes:
   vena-postgres:
+  vena-predictions:
+  vena-inbox:
+  vena-helpdesk:
+  vena-ldap-ca:
+  vena-ldap-tls:

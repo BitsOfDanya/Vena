@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+import ipaddress
+import socket
 from dataclasses import dataclass
 from datetime import UTC, datetime, timedelta
 from typing import Annotated, Literal, cast
@@ -29,6 +31,7 @@ class Principal:
     user_id: str | None = None
     email: str | None = None
     session_id: str | None = None
+    scopes: tuple[str, ...] = ("all",)
 
 
 def signing_key(settings: Settings) -> str:
@@ -45,6 +48,35 @@ def check_origin(request: Request, settings: Settings, *, required: bool = False
     }
     if (required and not origin) or (origin and origin not in allowed):
         raise HTTPException(403, "Источник запроса не разрешён")
+
+
+def is_trusted_proxy(peer: str, proxies: list[str]) -> bool:
+    try:
+        address = ipaddress.ip_address(peer)
+    except ValueError:
+        return False
+    for proxy in proxies:
+        try:
+            if address in ipaddress.ip_network(proxy, strict=False):
+                return True
+        except ValueError:
+            try:
+                if peer in {info[4][0] for info in socket.getaddrinfo(proxy, None)}:
+                    return True
+            except OSError:
+                continue
+    return False
+
+
+def client_ip(request: Request, settings: Settings) -> str | None:
+    peer = request.client.host if request.client else None
+    forwarded = request.headers.get("x-forwarded-for", "").split(",")[-1].strip()
+    if peer and forwarded and is_trusted_proxy(peer, settings.trusted_proxies):
+        try:
+            return str(ipaddress.ip_address(forwarded))
+        except ValueError:
+            pass
+    return peer[:64] if peer else None
 
 
 def issue_token(user: User, session: Session, settings: Settings) -> tuple[str, int]:
@@ -123,6 +155,7 @@ def get_principal(
         user_id=user.id,
         email=user.email,
         session_id=auth_session.id,
+        scopes=tuple(user.scopes if user.scopes is not None else ["all"]),
     )
 
 

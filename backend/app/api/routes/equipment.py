@@ -14,7 +14,8 @@ from app.core.config import Settings, get_settings
 from app.core.security import Principal, get_principal, require_min_role
 from app.db.models import Equipment, HistoricalEvent, ImportOutbox, IntegrationRun
 from app.db.session import get_session
-from app.domain import equipment, imports, journal_tail
+from app.domain import equipment, hierarchy, imports, journal_tail
+from app.domain.scopes import ScopeDep, among
 from app.schemas.equipment import EquipmentIn, EquipmentOut
 
 router = APIRouter(tags=["equipment", "imports"])
@@ -41,11 +42,14 @@ def run_dict(run: IntegrationRun) -> dict:
 def list_equipment(
     db: DB,
     _: Reader,
+    scope: ScopeDep,
     q: str = "",
     offset: int = Query(0, ge=0),
     limit: int = Query(50, ge=1, le=1000),
 ) -> dict:
     query = select(Equipment)
+    if scope.objects is not None:
+        query = query.where(among(Equipment.object_id, scope.objects))
     if q:
         query = query.where(
             Equipment.name.ilike(f"%{q}%")
@@ -64,7 +68,7 @@ def integration_status(db: DB, settings: Config, _: Reader) -> dict:
     from app.domain.predictions import get_prediction_source
 
     snapshot = get_prediction_source(settings).status()
-    worker_path = settings.ml_dir / "results" / "predictions" / "worker-status.json"
+    worker_path = settings.snapshot_dir / "worker-status.json"
     try:
         worker = json.loads(worker_path.read_text())
     except (OSError, ValueError):
@@ -85,6 +89,7 @@ def integration_status(db: DB, settings: Config, _: Reader) -> dict:
         "sync_interval_seconds": settings.equipment_sync_interval_seconds,
         "ldap_enabled": settings.ldap_enabled,
         "ldap_configured": settings.ldap_configured,
+        "helpdesk_configured": bool(settings.helpdesk_url),
         "runs": [
             run_dict(run)
             for run in db.scalars(
@@ -133,7 +138,7 @@ def upload(
     db: DB,
     settings: Config,
     principal: Admin,
-    kind: Literal["channels", "journal"] = "channels",
+    kind: Literal["channels", "journal", "objects"] = "channels",
 ) -> dict:
     try:
         return run_dict(
@@ -148,7 +153,7 @@ def upload(
 @router.post("/imports/{run_id}/apply")
 def apply_upload(run_id: str, db: DB, settings: Config, principal: Admin) -> dict:
     run = db.get(IntegrationRun, run_id)
-    if run is None or run.kind not in {"journal", "channels"}:
+    if run is None or run.kind not in {"journal", "channels", "objects"}:
         raise HTTPException(404, "Загрузка не найдена")
     try:
         return run_dict(imports.apply_import(db, settings, run, principal.subject))
@@ -159,7 +164,7 @@ def apply_upload(run_id: str, db: DB, settings: Config, principal: Admin) -> dic
 
 
 @router.get("/imports/template/{kind}.xlsx")
-def template(kind: Literal["channels", "journal"], _: Admin) -> Response:
+def template(kind: Literal["channels", "journal", "objects"], _: Admin) -> Response:
     book = Workbook()
     sheet = book.worksheets[0]
     sheet.title = "Данные"
@@ -173,6 +178,8 @@ def template(kind: Literal["channels", "journal"], _: Admin) -> Response:
             "ид_объект",
         ]
         if kind == "channels"
+        else list(hierarchy.HEADERS)
+        if kind == "objects"
         else imports.EVENT_HEADERS
     )
     sheet.freeze_panes = "A2"
@@ -190,6 +197,7 @@ def recent_events(
     db: DB,
     settings: Config,
     _: Reader,
+    scope: ScopeDep,
     hours: int = Query(6, ge=1, le=168),
     limit: int = Query(100, ge=1, le=500),
     channel_id: str | None = None,
@@ -197,6 +205,8 @@ def recent_events(
     query = select(HistoricalEvent, Equipment.name, Equipment.object_id).outerjoin(
         Equipment, Equipment.asset_id == HistoricalEvent.channel_id
     )
+    if scope.objects is not None:
+        query = query.where(among(Equipment.object_id, scope.objects))
     latest_query = select(func.max(HistoricalEvent.ts))
     if channel_id:
         latest_query = latest_query.where(HistoricalEvent.channel_id == channel_id)
@@ -205,7 +215,7 @@ def recent_events(
     if latest is None:
         if settings.dataset_dir is not None and settings.dataset_dir.is_dir():
             return journal_tail.recent(
-                settings.dataset_dir, hours, limit, channel_id, settings.timezone
+                settings.dataset_dir, hours, limit, channel_id, settings.timezone, scope.objects
             )
         return {"latest_at": None, "from": None, "items": [], "has_more": False}
     start = latest - timedelta(hours=hours)
@@ -227,6 +237,7 @@ def recent_events(
                 "ts": event.ts,
                 "value": event.value,
                 "alarm": event.alarm,
+                "technical_fault": journal_tail.technical_fault(event.value, event.alarm),
                 "name": name or event.channel_id,
                 "object_id": object_id,
             }

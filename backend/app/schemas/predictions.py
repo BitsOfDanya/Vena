@@ -28,6 +28,12 @@ class Driver(BaseModel):
     contribution: float
 
 
+class TimeToFailure(BaseModel):
+    q20: float
+    q50: float
+    q80: float
+
+
 class Prediction(BaseModel):
     id: str
     asset_id: str
@@ -55,7 +61,13 @@ class Prediction(BaseModel):
     sensor_type: str | None = None
     system_type: str | None = None
     last_event_at: datetime | None = None
+    ttf_hours: TimeToFailure | None = None
     source_snapshot: str
+
+
+class ContextLine(BaseModel):
+    label: str
+    text: str
 
 
 class PredictionDetail(BaseModel):
@@ -64,6 +76,7 @@ class PredictionDetail(BaseModel):
     factors: list[RiskFactor]
     open_action_id: str | None = None
     notification_id: str | None = None
+    context: list[ContextLine] = []
 
 
 class StreamInfo(BaseModel):

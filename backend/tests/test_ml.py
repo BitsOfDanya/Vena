@@ -1,5 +1,10 @@
+import json
+from pathlib import Path
+
+import pytest
 from fastapi.testclient import TestClient
 
+from app.core.config import get_settings
 from app.main import app
 
 client = TestClient(app)
@@ -42,3 +47,29 @@ def test_results_reject_unknown_group_and_path_traversal() -> None:
     assert client.get("/api/v1/ml/results/tables/not_there.csv").status_code == 404
     too_many = client.get("/api/v1/ml/results/tables/x.csv", params={"limit": 100000})
     assert too_many.status_code == 422
+
+
+def test_object_level_requires_login_and_serves_file(
+    client: TestClient,
+    auth_users: dict[str, dict[str, str]],
+    monkeypatch: pytest.MonkeyPatch,
+    tmp_path: Path,
+) -> None:
+    monkeypatch.setattr(get_settings(), "ml_dir", tmp_path)
+    url = "/api/v1/ml/object-level"
+    assert client.get(url).status_code == 401
+    missing = client.get(url, headers=auth_users["viewer"])
+    assert missing.status_code == 404
+    assert "объект" in missing.json()["detail"]
+
+    payload = {
+        "period": "2026H1",
+        "unit": "object-day",
+        "models": [{"id": "phase_24h", "scenario": "power_loss", "top_k": {"5": 0.75}}],
+        "incidents": {},
+    }
+    (tmp_path / "results").mkdir()
+    (tmp_path / "results" / "object_level.json").write_text(json.dumps(payload), encoding="utf-8")
+    response = client.get(url, headers=auth_users["viewer"])
+    assert response.status_code == 200
+    assert response.json() == payload

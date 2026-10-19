@@ -5,7 +5,7 @@ from sqlalchemy.orm import Session
 
 from app.core.config import Settings
 from app.db.models import Action, Notification
-from app.domain.email import EmailProvider, digest_body
+from app.domain.email import EmailProvider, Letter, vena_link
 from app.domain.mail_queue import enqueue
 from app.domain.notifications import resolve_recipients
 from app.domain.predictions import get_prediction_source
@@ -51,7 +51,21 @@ def send_digest(session: Session, settings: Settings, provider: EmailProvider) -
     recipients = resolve_recipients(session, settings, configured.digest.recipients)
     if not recipients:
         return 0
-    body = digest_body(settings.public_url, build_sections(session))
+    sections = build_sections(session)
+    letter = Letter(
+        kicker="Утренняя сводка",
+        title="Прогнозы и работы на сегодня",
+        link=vena_link(settings.public_url, "/pulse"),
+        summary=" · ".join(f"{title}: {len(items)}" for title, items in sections[:4]),
+        sections=sections,
+    )
     for recipient in recipients:
-        enqueue(session, recipient, "VENA · Утренняя сводка", body, rule_id="morning_brief")
+        enqueue(
+            session,
+            recipient,
+            "VENA · Утренняя сводка",
+            letter.text(),
+            html=letter.html(),
+            rule_id="morning_brief",
+        )
     return len(recipients)

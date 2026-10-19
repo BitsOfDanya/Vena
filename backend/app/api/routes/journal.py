@@ -8,6 +8,7 @@ from app.core.security import Principal, get_principal
 from app.db.session import get_session
 from app.domain import journal as journal_service
 from app.domain.actions import DISMISS_REASONS
+from app.domain.scopes import ScopeDep
 from app.schemas.journal import DecisionReason, JournalEntry, JournalSummary
 
 router = APIRouter(prefix="/journal", tags=["journal"])
@@ -22,16 +23,20 @@ def list_journal(
     session: SessionDep,
     settings: SettingsDep,
     _: ReaderDep,
+    scope: ScopeDep,
     scenario: str | None = None,
     decision: str | None = None,
     limit: Annotated[int, Query(ge=1, le=2000)] = 500,
 ) -> list[JournalEntry]:
-    return journal_service.entries(session, settings, scenario, decision, limit)
+    return journal_service.entries(session, settings, scenario, decision, limit, scope.channels)
 
 
 @router.get("/summary", response_model=JournalSummary)
-def journal_summary(session: SessionDep, settings: SettingsDep, _: ReaderDep) -> JournalSummary:
-    return journal_service.summary(journal_service.entries(session, settings, limit=100_000))
+def journal_summary(
+    session: SessionDep, settings: SettingsDep, _: ReaderDep, scope: ScopeDep
+) -> JournalSummary:
+    rows = journal_service.entries(session, settings, limit=100_000, channels=scope.channels)
+    return journal_service.summary(rows)
 
 
 @router.get("/reasons", response_model=list[DecisionReason])

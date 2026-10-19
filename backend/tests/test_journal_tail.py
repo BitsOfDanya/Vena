@@ -34,3 +34,19 @@ def test_tail_keeps_alarms_and_state_changes(tmp_path: Path) -> None:
 
 def test_tail_is_empty_without_journal(tmp_path: Path) -> None:
     assert journal_tail.recent(tmp_path, 6, 10, None, "Europe/Moscow")["items"] == []
+
+
+def test_tail_marks_manufacturer_codes_as_sensor_faults(tmp_path: Path) -> None:
+    (tmp_path / "ext-journal-2026.csv").write_text(
+        HEADER
+        + "1,11,2026-06-30,21:00:00,f,-127\n"
+        + "2,11,2026-06-30,21:30:00,f,21\n"
+        + "3,11,2026-06-30,22:00:00,t,255\n"
+        + "4,12,2026-06-30,23:00:00,f,255\n",
+        encoding="utf-8",
+    )
+
+    items = journal_tail.recent(tmp_path, 6, 10, None, "Europe/Moscow")["items"]
+
+    flags = [(item["event_id"], item["technical_fault"]) for item in items]
+    assert flags == [("4", True), ("3", False), ("1", True)]

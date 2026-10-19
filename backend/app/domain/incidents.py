@@ -21,6 +21,23 @@ SCENARIO_LABELS = {
     "equipment": "Отказ оборудования",
 }
 
+LEVEL_LABELS = {
+    "critical": "критично",
+    "attention": "внимание",
+    "observe": "наблюдение",
+    "normal": "норма",
+}
+
+MODEL_LABELS = {
+    "phase": "Питание",
+    "power": "Питание",
+    "pump": "Подтопление",
+    "flood": "Подтопление",
+    "smoke": "Пожар",
+    "fan": "Вентиляция",
+    "alarm": "Тревоги",
+}
+
 LOCATION_LEVELS = 3
 
 LEVEL_RANK: dict[RiskLevel, int] = {"critical": 0, "attention": 1, "observe": 2, "normal": 3}
@@ -30,6 +47,16 @@ def score_text(prediction: Prediction) -> str:
     if prediction.score_type == "calibrated_probability":
         return f"{prediction.score:.0%}"
     return f"оценка {prediction.score:.3f}"
+
+
+def model_label(model_id: str | None) -> str:
+    if not model_id:
+        return "—"
+    base = MODEL_LABELS.get(model_id.split("_", 1)[0])
+    if base is None:
+        return model_id
+    hours = "3 суток" if "72" in model_id else "сутки" if "24" in model_id else None
+    return f"{base}, {hours}" if hours else base
 
 
 def reason_text(prediction: Prediction, hints: dict[str, str] | None = None) -> str:
@@ -67,11 +94,23 @@ def location_group(tag: str | None) -> str | None:
 
 
 OBJECTS: dict[str, str] = {}
+_names: dict[str, str] = {}
 
 
 def remember_objects(objects: dict[str, str]) -> None:
     OBJECTS.clear()
     OBJECTS.update(objects)
+
+
+def set_object_names(names: dict[str, str]) -> None:
+    global _names
+    _names = dict(names)
+
+
+def object_label(object_id: str | None) -> str | None:
+    if not object_id:
+        return None
+    return _names.get(object_id) or f"Объект {object_id}"
 
 
 def object_of(group: str | None) -> str | None:
@@ -84,7 +123,7 @@ def location_label(group: str | None) -> str | None:
     if not group:
         return None
     if group in OBJECTS:
-        return f"Объект {OBJECTS[group]} · {group}"
+        return f"{object_label(OBJECTS[group])} · {group}"
     obj, _, section = group.partition("-")
     return f"Объект {obj} · {section}" if section else f"Объект {obj}"
 

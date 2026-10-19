@@ -1,4 +1,5 @@
 import json
+import re
 from datetime import UTC, datetime, timedelta
 from pathlib import Path
 
@@ -186,7 +187,7 @@ def test_refresh_is_idempotent_and_creates_notifications(client: TestClient, ml_
     assert first["notifications_created"] == 2
     assert first["actions_created"] == 2
     assert second["processed"] is False
-    assert second["detail"] == "snapshot already processed"
+    assert second["detail"] == "Снимок уже обработан"
     assert len(client.get("/api/v1/notifications").json()) == 2
     suggested = client.get("/api/v1/actions", params={"status": "suggested"}).json()
     assert len(suggested) == 2
@@ -744,7 +745,8 @@ def test_inspection_plan_skips_fans_with_recent_work(client: TestClient, ml_root
         {**row(channel, score, "high"), "device_type": "fan", "model_id": "fan_72h"}
         for channel, score in (("f1", 0.9), ("f2", 0.8), ("f3", 0.7))
     ]
-    write_snapshot(ml_root, datetime.now(tz=UTC), [*fans, row("p1", 0.95, "critical")])
+    pump = {**row("p1", 0.95, "critical"), "ttf_hours": {"q20": 80.0, "q50": 30.0, "q80": 720.0}}
+    write_snapshot(ml_root, datetime.now(tz=UTC), [*fans, pump])
     url = "/api/v1/analytics/inspection-plan"
     before = client.get(url, params={"model_id": "fan_72h", "count": 2})
     assert [item["asset_id"] for item in before.json()["items"]] == ["f1", "f2"]
@@ -764,6 +766,8 @@ def test_inspection_plan_skips_fans_with_recent_work(client: TestClient, ml_root
     pumps = client.get(url, params={"model_id": "pump_72h"}).json()
     assert pumps["items"][0]["asset_id"] == "p1"
     assert pumps["items"][0]["prediction_id"]
+    assert pumps["items"][0]["ttf_hours"] == {"q20": 30.0, "q50": 80.0, "q80": 720.0}
+    assert after["items"][0]["ttf_hours"] is None
     assert client.get(url, params={"model_id": "x_1"}).status_code == 404
 
 
@@ -800,3 +804,100 @@ def test_shift_report_summarises_forecasts_events_and_work(
     assert report["predicted"]["top"][0]["risk_level"] == "critical"
     assert report["done"]["created"] >= 1
     assert "happened" in report
+
+
+def test_forecast_drafts_and_notifications_are_written_in_russian(
+    client: TestClient, ml_root: Path
+) -> None:
+    _snapshot_with_sections(ml_root)
+    client.post("/api/v1/predictions/refresh")
+
+    action = client.get("/api/v1/actions", params={"status": "suggested"}).json()[0]
+    notification = client.get("/api/v1/notifications").json()[0]
+
+    assert action["reason"] == (
+        "Прогноз: потеря питания, критично, 83% за 24 ч. "
+        "Место: Объект 5567 · 16-2.1.1. Причина: Сбои повторяются."
+    )
+    assert action["note"] == "Черновик создан по прогнозу «Питание, сутки»"
+    assert action["source_detail"] == "phase_24h"
+    assert notification["title"] == "Потеря питания · Объект 5567 · 16-2.1.1 · 83% за 24 ч"
+    assert notification["description"].startswith(
+        "Прогноз «Питание, сутки»: уровень критично на 24 ч"
+    )
+    assert notification["description"].endswith("Главная причина: Сбои повторяются.")
+    for text in (action["reason"], action["note"], notification["title"]):
+        assert re.search(r"[A-Za-z]{3,}", text) is None
+
+
+def _pdf_pages(content: bytes) -> int:
+    assert content.startswith(b"%PDF-")
+    assert content.rstrip().endswith(b"%%EOF")
+    assert b"/FontFile2" in content
+    return len(re.findall(rb"/Type /Page\b", content))
+
+
+def test_management_and_shift_reports_render_as_pdf(client: TestClient, ml_root: Path) -> None:
+    assert client.get("/api/v1/reports/management.pdf").status_code == 503
+    _snapshot_with_sections(ml_root)
+    client.post("/api/v1/predictions/refresh")
+
+    management = client.get("/api/v1/reports/management.pdf")
+    shift = client.get("/api/v1/reports/shift.pdf", params={"hours": 8})
+
+    for response in (management, shift):
+        assert response.status_code == 200
+        assert response.headers["content-type"] == "application/pdf"
+        assert "attachment" in response.headers["content-disposition"]
+        assert _pdf_pages(response.content) >= 1
+    assert client.get("/api/v1/reports/shift.pdf", params={"hours": 0}).status_code == 422
+
+
+def test_shift_pdf_renders_events_and_completed_work() -> None:
+    from app.domain.pdf_report import shift_pdf
+
+    now = datetime.now(tz=UTC)
+    event = {
+        "ts": now,
+        "object_id": "5567",
+        "channel_id": "11",
+        "name": "ФАНС1 ПК300",
+        "value": "Неисправен",
+        "alarm": True,
+    }
+    done = {
+        "asset_id": "11",
+        "reason": "Осмотр <фидера> & щита",
+        "outcome": "confirmed_issue",
+        "note": "",
+        "completed_at": now,
+    }
+    data = {
+        "hours": 12,
+        "from": now - timedelta(hours=12),
+        "to": now,
+        "predicted": {"available": False},
+        "happened": {
+            "available": True,
+            "total": 1,
+            "truncated": True,
+            "kinds": {"fault": 1},
+            "objects": [{"object_id": "5567", "events": 1}],
+            "latest": [event],
+        },
+        "done": {"created": 1, "completed": 1, "completed_items": [done]},
+    }
+
+    assert _pdf_pages(shift_pdf(data, get_settings())) >= 1
+
+
+def test_management_pdf_paginates_long_tables(client: TestClient, ml_root: Path) -> None:
+    rows = [
+        {**tagged(str(100 + index), 0.99, "critical", f"16-2.1.{index}.4.22."), "name": "Н1 ПК1"}
+        for index in range(150)
+    ]
+    write_snapshot(ml_root, datetime.now(tz=UTC), rows)
+
+    content = client.get("/api/v1/reports/management.pdf").content
+
+    assert _pdf_pages(content) >= 3

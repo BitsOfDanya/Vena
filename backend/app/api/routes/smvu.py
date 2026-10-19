@@ -1,8 +1,10 @@
 from datetime import datetime
-from typing import Annotated
+from typing import Annotated, Any
 
+from defusedxml import DefusedXmlException
+from defusedxml.ElementTree import ParseError, fromstring
 from fastapi import APIRouter, Depends, HTTPException, status
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, BeforeValidator, Field
 from sqlalchemy.orm import Session
 
 from app.core.config import Settings, get_settings
@@ -47,14 +49,57 @@ class SmvuBatchIn(BaseModel):
     events: list[SmvuEventIn] = Field(default_factory=list, max_length=100_000)
 
 
+XML_EXAMPLE = (
+    '<batch id="smvu-0001" event_count="1">'
+    '<event event_id="1" channel_id="96463" ts="2026-07-01T09:00:00" alarm="true">'
+    "Неисправен</event></batch>"
+)
+
+
+def _batch_from_xml(value: Any) -> Any:
+    if not isinstance(value, bytes):
+        return value
+    try:
+        root = fromstring(value, forbid_dtd=True)
+    except (ParseError, DefusedXmlException) as error:
+        raise ValueError(f"Тело запроса не является допустимым XML: {error}") from None
+    if root.tag != "batch" or any(child.tag != "event" for child in root):
+        raise ValueError("Ожидается элемент <batch> с вложенными элементами <event>")
+    batch = {
+        "batch_id": root.get("id"),
+        "event_count": root.get("event_count"),
+        "last_event_at": root.get("last_event_at"),
+        "detail": root.get("detail"),
+    }
+    events = [
+        {
+            key: event.get(key)
+            for key in ("event_id", "channel_id", "ts", "alarm")
+            if key in event.attrib
+        }
+        | {"value": (event.text or "").strip()}
+        for event in root
+    ]
+    return {key: item for key, item in batch.items() if item is not None} | {"events": events}
+
+
 @router.get("/status", response_model=SmvuStatus)
 def smvu_status(session: SessionDep, _: ReaderDep) -> SmvuStatus:
     return SmvuStatus.model_validate(smvu_service.get_status(session))
 
 
-@router.post("/events", response_model=SmvuStatus, status_code=status.HTTP_202_ACCEPTED)
+@router.post(
+    "/events",
+    response_model=SmvuStatus,
+    status_code=status.HTTP_202_ACCEPTED,
+    openapi_extra={
+        "requestBody": {
+            "content": {"application/xml": {"schema": {"type": "string"}, "example": XML_EXAMPLE}}
+        }
+    },
+)
 def ingest_smvu_batch(
-    body: SmvuBatchIn,
+    body: Annotated[SmvuBatchIn, BeforeValidator(_batch_from_xml)],
     session: SessionDep,
     settings: SettingsDep,
     principal: WriterDep,

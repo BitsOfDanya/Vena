@@ -1,7 +1,8 @@
 from datetime import datetime
 from typing import Literal
+from zoneinfo import ZoneInfo, ZoneInfoNotFoundError
 
-from pydantic import BaseModel, ConfigDict, EmailStr, Field
+from pydantic import BaseModel, ConfigDict, EmailStr, Field, field_validator
 
 NotificationType = Literal["risk", "pattern", "action", "system", "integration"]
 NotificationSeverity = Literal["info", "attention", "critical"]
@@ -72,8 +73,8 @@ class DigestSettings(BaseModel):
     id: str = "morning_brief"
     name: str = "Утренняя сводка"
     enabled: bool = True
-    hour: int = 8
-    minute: int = 0
+    hour: int = Field(default=8, ge=0, le=23)
+    minute: int = Field(default=0, ge=0, le=59)
     timezone: str = "Europe/Moscow"
     recipients: list[str] = []
     sections: list[str] = [
@@ -83,6 +84,22 @@ class DigestSettings(BaseModel):
         "overdue_actions",
         "changes",
     ]
+
+    @field_validator("timezone")
+    @classmethod
+    def known_timezone(cls, value: str) -> str:
+        try:
+            if value:
+                ZoneInfo(value)
+        except (ValueError, ZoneInfoNotFoundError) as error:
+            raise ValueError("Неизвестный часовой пояс") from error
+        return value
+
+
+class EscalationSettings(BaseModel):
+    enabled: bool = True
+    minutes: int = Field(default=30, ge=1, le=1440)
+    recipients: list[str] = ["management"]
 
 
 class ChannelState(BaseModel):
@@ -98,12 +115,14 @@ class NotificationSettings(BaseModel):
     recipients: list[RecipientGroup] = []
     rules: list[NotificationRule] = []
     digest: DigestSettings = DigestSettings()
+    escalation: EscalationSettings = EscalationSettings()
 
 
 class NotificationSettingsUpdate(BaseModel):
     recipients: list[RecipientGroup] | None = None
     rules: list[NotificationRule] | None = None
     digest: DigestSettings | None = None
+    escalation: EscalationSettings | None = None
 
 
 class EmailStatus(BaseModel):

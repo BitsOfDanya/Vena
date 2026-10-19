@@ -1,4 +1,5 @@
 import csv
+from collections.abc import Collection
 from datetime import datetime, timedelta
 from functools import lru_cache
 from pathlib import Path
@@ -8,6 +9,7 @@ from zoneinfo import ZoneInfo
 BYTES_PER_HOUR = 400_000
 MAX_BYTES = 64_000_000
 FAULT_STATES = {"неисправен", "обесточен", "затоплен", "отключено устройство"}
+SENTINEL_CODES = {-3276.0, -3276.8, -127.0, -100.0, 255.0, -255.0, 32767.0, -32768.0}
 STATES = "справочник_состояний.csv"
 REFERENCE = "справочник_каналов_датчиков.csv"
 
@@ -19,9 +21,18 @@ def journal_files(dataset: Path) -> list[Path]:
     )
 
 
+def technical_fault(value: str, alarm: bool) -> bool:
+    if alarm:
+        return False
+    try:
+        return float(value.strip().replace(",", ".")) in SENTINEL_CODES
+    except ValueError:
+        return False
+
+
 def notable(value: str, alarm: bool, alarm_states: set[str]) -> bool:
     text = value.strip().lower()
-    return alarm or text in FAULT_STATES or text in alarm_states
+    return alarm or text in FAULT_STATES or text in alarm_states or technical_fault(value, alarm)
 
 
 @lru_cache(maxsize=4)
@@ -86,7 +97,12 @@ def _tail(
 
 
 def recent(
-    dataset: Path, hours: int, limit: int, channel_id: str | None, timezone: str
+    dataset: Path,
+    hours: int,
+    limit: int,
+    channel_id: str | None,
+    timezone: str,
+    objects: Collection[str] | None = None,
 ) -> dict[str, Any]:
     files = journal_files(dataset)
     empty: dict[str, Any] = {
@@ -113,6 +129,7 @@ def recent(
         for row in rows
         if row[2] >= start
         and (channel_id is None or row[1] == channel_id)
+        and (objects is None or names.get(row[1], ("", None))[1] in objects)
         and notable(row[3], row[4], flagged)
     ]
     selected.sort(key=lambda row: (row[2], row[0]), reverse=True)
@@ -128,6 +145,7 @@ def recent(
                 "ts": ts.replace(tzinfo=zone),
                 "value": value,
                 "alarm": alarm,
+                "technical_fault": technical_fault(value, alarm),
                 "name": names.get(channel, (channel, None))[0],
                 "object_id": names.get(channel, (channel, None))[1],
             }

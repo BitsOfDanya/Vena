@@ -56,6 +56,11 @@ def test_invalid_transition_returns_409(client: TestClient) -> None:
     response = client.post(f"/api/v1/actions/{action_id}/approve")
 
     assert response.status_code == 409
+    assert response.json()["detail"] == "Работа уже в статусе «В плане»"
+    closed = client.post(f"/api/v1/actions/{action_id}/result", json={"outcome": "other"})
+    assert closed.status_code == 200
+    again = client.post(f"/api/v1/actions/{action_id}/start")
+    assert again.json()["detail"] == "Нельзя перевести работу из статуса «Завершено» в «В работе»"
 
 
 def test_dismiss_suggested_action(client: TestClient) -> None:

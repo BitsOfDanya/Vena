@@ -9,9 +9,12 @@ from app.core.config import Settings, get_settings
 from app.core.security import Principal, get_principal
 from app.db.session import get_session
 from app.domain import analytics as analytics_service
+from app.domain import pdf_report
 from app.domain import report as report_service
 from app.domain import shift_report as shift_service
+from app.domain.incidents import object_of
 from app.domain.predictions import get_prediction_source
+from app.domain.scopes import ScopeDep
 from app.schemas.analytics import EffectReport, EventTypeStats, InspectionPlan, ObjectNode
 
 router = APIRouter(tags=["analytics"])
@@ -21,6 +24,7 @@ SettingsDep = Annotated[Settings, Depends(get_settings)]
 ReaderDep = Annotated[Principal, Depends(get_principal)]
 
 XLSX = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+PDF = "application/pdf"
 
 
 def _source(settings: Settings):
@@ -31,18 +35,22 @@ def _source(settings: Settings):
 
 
 @router.get("/assets/tree", response_model=list[ObjectNode])
-def asset_tree(settings: SettingsDep, session: SessionDep, _: ReaderDep) -> list[ObjectNode]:
-    return analytics_service.asset_tree(get_prediction_source(settings), session)
+def asset_tree(
+    settings: SettingsDep, session: SessionDep, _: ReaderDep, scope: ScopeDep
+) -> list[ObjectNode]:
+    return analytics_service.asset_tree(get_prediction_source(settings), session, scope.objects)
 
 
 @router.get("/analytics/effect", response_model=EffectReport)
-def effect(session: SessionDep, settings: SettingsDep, _: ReaderDep) -> EffectReport:
-    return analytics_service.effect(session, settings, _source(settings))
+def effect(
+    session: SessionDep, settings: SettingsDep, _: ReaderDep, scope: ScopeDep
+) -> EffectReport:
+    return analytics_service.effect(session, settings, _source(settings), scope)
 
 
 @router.get("/analytics/event-types", response_model=list[EventTypeStats])
-def event_types(settings: SettingsDep, _: ReaderDep) -> list[EventTypeStats]:
-    return analytics_service.event_types(settings, get_prediction_source(settings))
+def event_types(settings: SettingsDep, _: ReaderDep, scope: ScopeDep) -> list[EventTypeStats]:
+    return analytics_service.event_types(settings, get_prediction_source(settings), scope.objects)
 
 
 @router.get("/analytics/inspection-plan", response_model=InspectionPlan)
@@ -50,13 +58,16 @@ def inspection_plan(
     session: SessionDep,
     settings: SettingsDep,
     _: ReaderDep,
+    scope: ScopeDep,
     model_id: Annotated[str, Query(pattern="^[a-z0-9_]+$")] = "pump_72h",
     count: Annotated[int, Query(ge=1, le=50)] = 5,
 ) -> InspectionPlan:
     if model_id not in analytics_service.PLAN_MODELS:
         raise HTTPException(status_code=404, detail="Для этой модели нет плана проверки")
     now = datetime.now(tz=UTC)
-    return analytics_service.inspection_plan(session, _source(settings), model_id, count, now)
+    return analytics_service.inspection_plan(
+        session, _source(settings), model_id, count, now, scope.objects
+    )
 
 
 @router.get("/analytics/weather")
@@ -79,18 +90,27 @@ def alarm_kpis(settings: SettingsDep, _: ReaderDep) -> dict[str, Any]:
 
 
 @router.get("/analytics/health-history")
-def health_history(settings: SettingsDep, _: ReaderDep) -> dict[str, Any]:
+def health_history(settings: SettingsDep, _: ReaderDep, scope: ScopeDep) -> dict[str, Any]:
     report = analytics_service.read_report(settings, "health_history")
     if report is None:
         raise HTTPException(status_code=404, detail="История состояния ещё не рассчитана")
-    return {"period": report.get("period"), "objects": report.get("objects", {})}
+    objects = report.get("objects", {})
+    return {
+        "period": report.get("period"),
+        "objects": {key: value for key, value in objects.items() if scope.has_object(key)},
+    }
 
 
 @router.get("/analytics/health-history/{group}")
-def section_health_history(group: str, settings: SettingsDep, _: ReaderDep) -> list[list[Any]]:
+def section_health_history(
+    group: str, settings: SettingsDep, _: ReaderDep, scope: ScopeDep
+) -> list[list[Any]]:
     report = analytics_service.read_report(settings, "health_history") or {}
     series = report.get("sections", {}).get(group)
-    if series is None:
+    hidden = not scope.unrestricted and not (
+        get_prediction_source(settings).available and scope.has_object(object_of(group))
+    )
+    if series is None or hidden:
         raise HTTPException(status_code=404, detail="Для этой секции ещё нет истории")
     return list(series)
 
@@ -100,17 +120,51 @@ def shift_report(
     session: SessionDep,
     settings: SettingsDep,
     _: ReaderDep,
+    scope: ScopeDep,
     hours: Annotated[int, Query(ge=1, le=72)] = 12,
 ) -> dict[str, Any]:
     now = datetime.now(tz=UTC)
     return shift_service.shift_report(
-        session, settings, get_prediction_source(settings), hours, now
+        session, settings, get_prediction_source(settings), hours, now, scope
+    )
+
+
+@router.get("/reports/shift.pdf")
+def shift_report_pdf(
+    session: SessionDep,
+    settings: SettingsDep,
+    _: ReaderDep,
+    scope: ScopeDep,
+    hours: Annotated[int, Query(ge=1, le=72)] = 12,
+) -> Response:
+    now = datetime.now(tz=UTC)
+    data = shift_service.shift_report(
+        session, settings, get_prediction_source(settings), hours, now, scope
+    )
+    return Response(
+        content=pdf_report.shift_pdf(data, settings),
+        media_type=PDF,
+        headers={"Content-Disposition": 'attachment; filename="vena-shift-report.pdf"'},
+    )
+
+
+@router.get("/reports/management.pdf")
+def management_report_pdf(
+    session: SessionDep, settings: SettingsDep, _: ReaderDep, scope: ScopeDep
+) -> Response:
+    content = pdf_report.management_pdf(session, settings, _source(settings), scope)
+    return Response(
+        content=content,
+        media_type=PDF,
+        headers={"Content-Disposition": 'attachment; filename="vena-management-report.pdf"'},
     )
 
 
 @router.get("/reports/management.xlsx")
-def management_report(session: SessionDep, settings: SettingsDep, _: ReaderDep) -> Response:
-    content = report_service.management_report(session, settings, _source(settings))
+def management_report(
+    session: SessionDep, settings: SettingsDep, _: ReaderDep, scope: ScopeDep
+) -> Response:
+    content = report_service.management_report(session, settings, _source(settings), scope)
     return Response(
         content=content,
         media_type=XLSX,
@@ -119,8 +173,8 @@ def management_report(session: SessionDep, settings: SettingsDep, _: ReaderDep) 
 
 
 @router.get("/reports/predictions.csv")
-def predictions_csv(settings: SettingsDep, _: ReaderDep) -> Response:
-    content = report_service.predictions_csv(_source(settings).all())
+def predictions_csv(settings: SettingsDep, _: ReaderDep, scope: ScopeDep) -> Response:
+    content = report_service.predictions_csv(_source(settings).visible(scope.objects))
     return Response(
         content=content,
         media_type="text/csv; charset=utf-8",
@@ -129,7 +183,9 @@ def predictions_csv(settings: SettingsDep, _: ReaderDep) -> Response:
 
 
 @router.get("/reports/predictions.xml")
-def predictions_xml(settings: SettingsDep, _: ReaderDep) -> Response:
+def predictions_xml(settings: SettingsDep, _: ReaderDep, scope: ScopeDep) -> Response:
     source = _source(settings)
-    content = report_service.predictions_xml(source.all(), source.status().snapshot_id)
+    content = report_service.predictions_xml(
+        source.visible(scope.objects), source.status().snapshot_id
+    )
     return Response(content=content, media_type="application/xml")

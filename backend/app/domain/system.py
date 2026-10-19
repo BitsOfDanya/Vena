@@ -1,10 +1,11 @@
+from collections.abc import Collection
 from datetime import UTC, datetime
 
 from sqlalchemy import select
 from sqlalchemy.orm import Session
 
 from app.core.config import Settings
-from app.db.models import Action, Notification, SmvuIngestState, SpatialLayer
+from app.db.models import Action, Notification, SituationClaim, SmvuIngestState, SpatialLayer
 from app.domain.actions import OPEN_STATUSES
 from app.domain.health import load_calibration, location_health
 from app.domain.incidents import (
@@ -16,6 +17,7 @@ from app.domain.incidents import (
 )
 from app.domain.predictions import get_prediction_source
 from app.domain.recommendations import driver_hints, recommend
+from app.domain.replay import time_machine
 from app.schemas.predictions import Prediction
 from app.schemas.system import HealthComponents, LocationHistory, Situation, SystemNotice
 
@@ -52,7 +54,7 @@ def health_components(settings: Settings, session: Session) -> HealthComponents:
     )
 
 
-def system_notices(settings: Settings) -> list[SystemNotice]:
+def system_notices(settings: Settings, session: Session) -> list[SystemNotice]:
     notices: list[SystemNotice] = []
     if not _models_available(settings):
         notices.append(
@@ -82,6 +84,23 @@ def system_notices(settings: Settings) -> list[SystemNotice]:
                 dismissible=False,
             )
         )
+    replay = time_machine(session)
+    if replay is not None:
+        notices.append(
+            SystemNotice(
+                id="time-machine",
+                kind="data_delayed",
+                severity="info",
+                title="Машина времени",
+                description=(
+                    "Воспроизводится реальный журнал через поток СМВУ"
+                    + (f", данные на {replay['clock']:%d.%m.%Y %H:%M}" if replay["clock"] else "")
+                    + ". Прогнозы и решения считаются по этим данным."
+                ),
+                href="/settings/integrations",
+                dismissible=True,
+            )
+        )
     if not status.available:
         notices.append(
             SystemNotice(
@@ -94,7 +113,7 @@ def system_notices(settings: Settings) -> list[SystemNotice]:
                 dismissible=False,
             )
         )
-    elif status.stale and status.age_seconds is not None:
+    elif replay is None and status.stale and status.age_seconds is not None:
         days = status.age_seconds // 86_400
         demo_stand = settings.environment in ("local", "test") or settings.seed_demo
         if status.data_source == "journal" and status.stream is None and status.prediction_time:
@@ -146,10 +165,19 @@ def system_notices(settings: Settings) -> list[SystemNotice]:
     return notices
 
 
-def situations(session: Session, settings: Settings, limit: int = 6) -> list[Situation]:
+def situation_key(situation_id: str) -> str:
+    head, separator, rest = situation_id.partition(":")
+    return rest if separator and rest and head.startswith("situation-") else situation_id
+
+
+def situations(
+    session: Session, settings: Settings, limit: int = 6, objects: Collection[str] | None = None
+) -> list[Situation]:
     source = get_prediction_source(settings)
     if not source.available:
         return []
+
+    claims = {claim.situation_key: claim for claim in session.scalars(select(SituationClaim))}
 
     open_actions: dict[str, Action] = {}
     for open_action in session.scalars(select(Action).where(Action.status.in_(OPEN_STATUSES))):
@@ -165,7 +193,7 @@ def situations(session: Session, settings: Settings, limit: int = 6) -> list[Sit
             notifications.setdefault(recent_notification.asset_id, recent_notification)
 
     best: dict[str, Prediction] = {}
-    for prediction in source.all():
+    for prediction in source.visible(objects):
         if prediction.risk_level not in ("critical", "attention"):
             continue
         current = best.get(prediction.asset_id)
@@ -211,9 +239,11 @@ def situations(session: Session, settings: Settings, limit: int = 6) -> list[Sit
         level_ru = {"critical": "критично", "attention": "внимание"}.get(
             lead.risk_level, lead.risk_level
         )
+        situation_id = f"situation-{lead.source_snapshot}:{incident.key}"
+        claim = claims.get(situation_key(situation_id))
         result.append(
             Situation(
-                id=f"situation-{lead.source_snapshot}:{incident.key}",
+                id=situation_id,
                 type="risk",
                 severity="critical" if incident.risk_level == "critical" else "attention",
                 title=incident.title,
@@ -235,6 +265,7 @@ def situations(session: Session, settings: Settings, limit: int = 6) -> list[Sit
                 scenario=incident.scenario,
                 location=location_label(incident.location),
                 location_group=incident.location,
+                object_id=lead.object_id,
                 asset_count=count,
                 incident_probability=location_probability,
                 health_index=health[incident.location].index
@@ -243,6 +274,9 @@ def situations(session: Session, settings: Settings, limit: int = 6) -> list[Sit
                 model_id=lead.model_id,
                 recommendation=recommend(settings, incident.scenario, lead),
                 history=_history(histories, incident.location, lead.device_type),
+                claimed_by=claim.display_name if claim else None,
+                claimed_by_subject=claim.subject if claim else None,
+                claimed_at=claim.claimed_at if claim else None,
             )
         )
 

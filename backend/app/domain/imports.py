@@ -17,8 +17,9 @@ from sqlalchemy.orm import Session
 from app.api.routes.smvu import SmvuEventIn
 from app.core.config import Settings
 from app.db.models import Equipment, HistoricalEvent, ImportOutbox, IntegrationRun, utcnow
-from app.domain import audit, equipment, smvu
+from app.domain import audit, equipment, hierarchy, smvu
 from app.schemas.equipment import EquipmentIn
+from app.schemas.objects import ObjectIn
 
 ALIASES = {
     "ид_канала_данных": "asset_id",
@@ -33,8 +34,23 @@ ALIASES = {
     "время": "time",
     "значение_датчика": "value",
     "тревожное": "alarm",
+    "иерархия_уровень": "level",
+    "родитель": "parent",
+    "вид_объекта": "object_kind",
+    "диспетчерское_название_объекта": "title",
 }
 EVENT_HEADERS = ["ид_события", "ид_канала_данных", "дата", "время", "тревожное", "значение_датчика"]
+REQUIRED = {
+    "channels": {"asset_id", "name", "object_id", "equipment_type", "tag", "system_type"},
+    "journal": {"event_id", "value", "alarm"},
+    "objects": {"object_id", "level", "title"},
+}
+ALLOWED = {
+    "channels": set(EquipmentIn.model_fields),
+    "journal": {"event_id", "asset_id", "channel_id", "date", "time", "ts", "value", "alarm"},
+    "objects": set(ObjectIn.model_fields),
+}
+IDENTITY = {"channels": "asset_id", "journal": "event_id", "objects": "object_id"}
 
 
 def staging(settings: Settings) -> Path:
@@ -109,6 +125,8 @@ def normalize(row: dict, kind: str, settings: Settings) -> dict:
             if key != "installed_on":
                 values[key] = _string(values[key])
         return EquipmentIn.model_validate(values).model_dump(mode="json")
+    if kind == "objects":
+        return ObjectIn.model_validate({k: _string(v) for k, v in values.items()}).model_dump()
     values["channel_id"] = values.pop("asset_id", values.get("channel_id", ""))
     if "ts" not in values:
         day = values.pop("date", "")
@@ -146,22 +164,14 @@ def preview(
         if not header or len(header) > 40:
             raise equipment.RegistryError("Не найдена строка заголовков (не более 40 колонок).")
         header = [ALIASES.get(_string(value).lower(), _string(value).lower()) for value in header]
-        required = (
-            {"asset_id", "name", "object_id", "equipment_type", "tag", "system_type"}
-            if kind == "channels"
-            else {"event_id", "value", "alarm"}
-        )
+        required = REQUIRED[kind]
         if kind == "journal":
             if not ({"date", "time"} <= set(header) or "ts" in header):
                 raise equipment.RegistryError("Нужны колонки дата, время либо ts.")
             if not ({"asset_id", "channel_id"} & set(header)):
                 raise equipment.RegistryError("Нет колонки ид_канала_данных.")
         missing = required - set(header)
-        allowed = (
-            set(EquipmentIn.model_fields)
-            if kind == "channels"
-            else {"event_id", "asset_id", "channel_id", "date", "time", "ts", "value", "alarm"}
-        )
+        allowed = ALLOWED[kind]
         if missing or len(set(header)) != len(header) or set(header) - allowed:
             raise equipment.RegistryError(
                 "Проверьте заголовки по шаблону. Отсутствуют: " + ", ".join(sorted(missing))
@@ -181,7 +191,7 @@ def preview(
                     ):
                         raise ValueError("Число значений не совпадает с заголовком")
                     values = normalize(dict(zip(header, row, strict=False)), kind, settings)
-                    identity = values["asset_id" if kind == "channels" else "event_id"]
+                    identity = values[IDENTITY[kind]]
                     if identity in seen:
                         raise ValueError("Повторяется идентификатор в файле")
                     seen.add(identity)
@@ -240,6 +250,38 @@ def preview(
     return run
 
 
+def _apply_objects(
+    session: Session, settings: Settings, run: IntegrationRun, path: Path, actor: str
+) -> IntegrationRun:
+    with path.open(encoding="utf-8") as handle:
+        rows = [ObjectIn.model_validate_json(line) for line in handle]
+    target = staging(settings).parent / hierarchy.FILE
+    temporary = target.with_suffix(".tmp")
+    with temporary.open("w", encoding="utf-8", newline="") as output:
+        writer = csv.writer(output)
+        writer.writerow(hierarchy.HEADERS)
+        for row in rows:
+            writer.writerow([row.object_id, row.level, row.parent, row.object_kind, row.title])
+    temporary.replace(target)
+    path.unlink(missing_ok=True)
+    run.status = "success"
+    run.finished_at = utcnow()
+    result = json.loads(run.result)
+    result.update(created=len(rows), updated=0, unchanged=0, accepted=len(rows))
+    run.result = json.dumps(result, ensure_ascii=False)
+    audit.record(
+        session,
+        actor=actor,
+        role="admin",
+        action="import.apply",
+        resource_type="integration_run",
+        resource_id=run.id,
+        detail=run.result,
+    )
+    session.flush()
+    return run
+
+
 def apply_import(
     session: Session, settings: Settings, run: IntegrationRun, actor: str
 ) -> IntegrationRun:
@@ -250,6 +292,8 @@ def apply_import(
     if run.status != "validated":
         raise equipment.RegistryError("Сначала исправьте ошибки и проверьте файл.")
     path = staging(settings) / f"{run.id}.jsonl"
+    if run.kind == "objects":
+        return _apply_objects(session, settings, run, path, actor)
     counts = {"created": 0, "updated": 0, "unchanged": 0}
     journal_path = staging(settings) / f"{run.id}.csv"
     with (

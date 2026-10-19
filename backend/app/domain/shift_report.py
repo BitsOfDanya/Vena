@@ -12,6 +12,7 @@ from app.domain.actions import OPEN_STATUSES
 from app.domain.incidents import LEVEL_RANK, group_incidents, location_label, reason_text
 from app.domain.predictions import PredictionSource
 from app.domain.recommendations import driver_hints
+from app.domain.scopes import EVERYTHING, Scope
 from app.schemas.predictions import Prediction
 
 TOP = 10
@@ -25,7 +26,7 @@ KINDS = {
 }
 
 
-def _predicted(source: PredictionSource, hints: dict[str, str]) -> dict[str, Any]:
+def _predicted(source: PredictionSource, hints: dict[str, str], scope: Scope) -> dict[str, Any]:
     if not source.available:
         return {
             "available": False,
@@ -36,7 +37,7 @@ def _predicted(source: PredictionSource, hints: dict[str, str]) -> dict[str, Any
             "incidents": 0,
             "top": [],
         }
-    items = source.all()
+    items = source.visible(scope.objects)
     levels = Counter(item.risk_level for item in items)
     risky = [item for item in items if item.risk_level in ("critical", "attention")]
     scenarios = Counter(item.scenario for item in risky)
@@ -74,7 +75,7 @@ def _predicted(source: PredictionSource, hints: dict[str, str]) -> dict[str, Any
     }
 
 
-def _happened(settings: Settings, hours: int) -> dict[str, Any]:
+def _happened(settings: Settings, hours: int, scope: Scope) -> dict[str, Any]:
     if settings.dataset_dir is None or not settings.dataset_dir.is_dir():
         return {
             "available": False,
@@ -85,7 +86,9 @@ def _happened(settings: Settings, hours: int) -> dict[str, Any]:
             "objects": [],
             "latest": [],
         }
-    feed = journal_tail.recent(settings.dataset_dir, hours, EVENT_LIMIT, None, settings.timezone)
+    feed = journal_tail.recent(
+        settings.dataset_dir, hours, EVENT_LIMIT, None, settings.timezone, scope.objects
+    )
     items = feed["items"]
     kinds = Counter(
         KINDS.get(item["value"].strip().lower(), "alarm" if item["alarm"] else "state")
@@ -104,9 +107,10 @@ def _happened(settings: Settings, hours: int) -> dict[str, Any]:
     }
 
 
-def _done(session: Session, start: datetime, now: datetime) -> dict[str, Any]:
-    touched = list(
-        session.scalars(
+def _done(session: Session, start: datetime, now: datetime, scope: Scope) -> dict[str, Any]:
+    touched = [
+        action
+        for action in session.scalars(
             select(Action).where(
                 or_(
                     Action.created_at >= start,
@@ -115,14 +119,19 @@ def _done(session: Session, start: datetime, now: datetime) -> dict[str, Any]:
                 )
             )
         )
-    )
+        if scope.has_channel(action.asset_id)
+    ]
     created = [action for action in touched if action.created_at >= start]
     completed = [
         action
         for action in touched
         if action.completed_at is not None and action.completed_at >= start
     ]
-    open_now = list(session.scalars(select(Action).where(Action.status.in_(OPEN_STATUSES))))
+    open_now = [
+        action
+        for action in session.scalars(select(Action).where(Action.status.in_(OPEN_STATUSES)))
+        if scope.has_channel(action.asset_id)
+    ]
     overdue = [
         action
         for action in open_now
@@ -152,7 +161,12 @@ def _done(session: Session, start: datetime, now: datetime) -> dict[str, Any]:
 
 
 def shift_report(
-    session: Session, settings: Settings, source: PredictionSource, hours: int, now: datetime
+    session: Session,
+    settings: Settings,
+    source: PredictionSource,
+    hours: int,
+    now: datetime,
+    scope: Scope = EVERYTHING,
 ) -> dict[str, Any]:
     start = now - timedelta(hours=hours)
     return {
@@ -160,7 +174,7 @@ def shift_report(
         "hours": hours,
         "from": start,
         "to": now,
-        "predicted": _predicted(source, driver_hints(settings)),
-        "happened": _happened(settings, hours),
-        "done": _done(session, start, now),
+        "predicted": _predicted(source, driver_hints(settings), scope),
+        "happened": _happened(settings, hours, scope),
+        "done": _done(session, start, now, scope),
     }

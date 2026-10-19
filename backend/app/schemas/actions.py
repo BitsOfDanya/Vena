@@ -64,6 +64,8 @@ class ActionOut(BaseModel):
     result_outcome: ActionOutcome | None
     result_note: str
     completed_at: datetime | None
+    helpdesk_ticket_id: str | None = None
+    helpdesk_status: str | None = None
     history: list[ActionEventOut] = []
 
 

@@ -59,9 +59,17 @@ def list_directions(settings: SettingsDep, _: ReaderDep) -> list[dict[str, Any]]
 
 @router.get("/prospective")
 def get_prospective(settings: SettingsDep, _: ReaderDep) -> Any:
-    path = settings.ml_dir / "results" / "predictions" / "prospective.json"
+    path = settings.snapshot_dir / "prospective.json"
     if not path.is_file():
         raise HTTPException(status_code=404, detail="Перспективная проверка ещё не началась")
+    return _read_json(path)
+
+
+@router.get("/object-level")
+def get_object_level(settings: SettingsDep, _: ReaderDep) -> Any:
+    path = settings.ml_dir / "results" / "object_level.json"
+    if not path.is_file():
+        raise HTTPException(status_code=404, detail="Метрики на уровне объекта ещё не рассчитаны")
     return _read_json(path)
 
 

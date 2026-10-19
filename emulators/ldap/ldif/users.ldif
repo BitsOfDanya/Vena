@@ -1,0 +1,47 @@
+# Test directory for the compose profile "ldap". All users have the password vena-ldap-test.
+dn: ou=people,{{ LDAP_BASE_DN }}
+objectClass: organizationalUnit
+ou: people
+
+dn: ou=groups,{{ LDAP_BASE_DN }}
+objectClass: organizationalUnit
+ou: groups
+
+dn: uid=ldap-admin,ou=people,{{ LDAP_BASE_DN }}
+objectClass: inetOrgPerson
+uid: ldap-admin
+cn: VENA Administrator
+sn: Administrator
+mail: ldap-admin@vena.local
+userPassword: {SSHA}tumJ6ljh+N2Frh+8PpQn6C9d9dh2ZW5hLWFkbQ==
+
+dn: uid=ldap-dispatcher,ou=people,{{ LDAP_BASE_DN }}
+objectClass: inetOrgPerson
+uid: ldap-dispatcher
+cn: VENA Dispatcher
+sn: Dispatcher
+mail: ldap-dispatcher@vena.local
+userPassword: {SSHA}CNQHSVRMCxwE4jKidzdpAPkA3Ch2ZW5hLWRzcA==
+
+dn: uid=ldap-viewer,ou=people,{{ LDAP_BASE_DN }}
+objectClass: inetOrgPerson
+uid: ldap-viewer
+cn: VENA Viewer
+sn: Viewer
+mail: ldap-viewer@vena.local
+userPassword: {SSHA}nohfBelNiuOLgB2SToq+p7UKtbd2ZW5hLXZ3cg==
+
+dn: cn=vena-admins,ou=groups,{{ LDAP_BASE_DN }}
+objectClass: groupOfUniqueNames
+cn: vena-admins
+uniqueMember: uid=ldap-admin,ou=people,{{ LDAP_BASE_DN }}
+
+dn: cn=vena-dispatchers,ou=groups,{{ LDAP_BASE_DN }}
+objectClass: groupOfUniqueNames
+cn: vena-dispatchers
+uniqueMember: uid=ldap-dispatcher,ou=people,{{ LDAP_BASE_DN }}
+
+dn: cn=vena-viewers,ou=groups,{{ LDAP_BASE_DN }}
+objectClass: groupOfUniqueNames
+cn: vena-viewers
+uniqueMember: uid=ldap-viewer,ou=people,{{ LDAP_BASE_DN }}

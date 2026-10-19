@@ -11,6 +11,7 @@ from app.db.models import DeliveryLog
 from app.db.session import get_session
 from app.domain import audit as audit_service
 from app.domain import settings_store
+from app.domain.scheduler import reschedule_digest
 from app.schemas.notifications import EmailStatus, NotificationSettings, NotificationSettingsUpdate
 
 router = APIRouter(tags=["settings"])
@@ -35,7 +36,11 @@ def update_notification_settings(
     settings: SettingsDep,
     principal: WriterDep,
 ) -> NotificationSettings:
+    before = settings_store.read_settings(session, settings).digest
     result = settings_store.write_settings(session, settings, payload)
+    schedule = ("hour", "minute", "timezone")
+    if any(getattr(result.digest, key) != getattr(before, key) for key in schedule):
+        reschedule_digest(settings, result.digest)
     audit_service.record(
         session,
         actor=principal.subject,

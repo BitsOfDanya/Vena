@@ -1,6 +1,7 @@
 from datetime import UTC, date, datetime
 
 from sqlalchemy import (
+    JSON,
     Boolean,
     CheckConstraint,
     Date,
@@ -37,6 +38,9 @@ class User(Base):
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=utcnow)
     auth_provider: Mapped[str] = mapped_column(String(16), default="local", server_default="local")
     directory_id: Mapped[str | None] = mapped_column(String(64), unique=True, nullable=True)
+    scopes: Mapped[list[str]] = mapped_column(
+        JSON, default=lambda: ["all"], server_default='["all"]'
+    )
 
 
 class AuthSession(Base):
@@ -73,6 +77,7 @@ class Notification(Base):
     read_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
     acknowledged_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
     resolved_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
+    escalated_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
 
 
 class Action(Base):
@@ -107,6 +112,8 @@ class Action(Base):
     result_outcome: Mapped[str | None] = mapped_column(String(40), nullable=True)
     result_note: Mapped[str] = mapped_column(Text, default="")
     completed_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
+    helpdesk_ticket_id: Mapped[str | None] = mapped_column(String(64), nullable=True)
+    helpdesk_status: Mapped[str | None] = mapped_column(String(32), nullable=True)
 
     history: Mapped[list["ActionEvent"]] = relationship(
         back_populates="action", cascade="all, delete-orphan", order_by="ActionEvent.at"
@@ -144,6 +151,7 @@ class DeliveryLog(Base):
 
     subject: Mapped[str] = mapped_column(String(240), default="")
     body: Mapped[str] = mapped_column(Text, default="")
+    html: Mapped[str | None] = mapped_column(Text, nullable=True)
     attempts: Mapped[int] = mapped_column(Integer, default=0)
     next_attempt_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=utcnow)
     sent_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
@@ -274,3 +282,13 @@ class ImportOutbox(Base):
     payload: Mapped[str] = mapped_column(Text)
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=utcnow)
     delivered_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
+
+
+class SituationClaim(Base):
+    __tablename__ = "situation_claims"
+
+    situation_key: Mapped[str] = mapped_column(String(200), primary_key=True)
+    situation_id: Mapped[str] = mapped_column(String(255))
+    subject: Mapped[str] = mapped_column(String(120))
+    display_name: Mapped[str] = mapped_column(String(120))
+    claimed_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=utcnow)

@@ -7,12 +7,15 @@ from app.db.models import DeliveryLog, utcnow
 from app.domain.email import EmailProvider
 
 
-def enqueue(session: Session, recipient: str, subject: str, body: str, **metadata) -> DeliveryLog:
+def enqueue(
+    session: Session, recipient: str, subject: str, body: str, html: str | None = None, **metadata
+) -> DeliveryLog:
     log = DeliveryLog(
         channel="email",
         recipient=recipient,
         subject=subject[:240],
         body=body,
+        html=html,
         status="pending",
         **metadata,
     )
@@ -44,7 +47,9 @@ def deliver_pending(session: Session, provider: EmailProvider, limit: int = 20) 
             break
         log.attempts += 1
         try:
-            provider.send(log.recipient, log.subject, log.body, delivery_id=str(log.id))
+            provider.send(
+                log.recipient, log.subject, log.body, html=log.html, delivery_id=str(log.id)
+            )
         except Exception as error:
             # SMTP responses can contain addresses or credentials; store only the error class.
             log.detail = f"Ошибка отправки ({type(error).__name__})"

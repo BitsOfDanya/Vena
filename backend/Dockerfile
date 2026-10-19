@@ -20,7 +20,8 @@ RUN pip install --no-cache-dir \
     "ldap3>=2.9.1,<3" \
     "httpx>=0.28,<1" \
     "defusedxml>=0.7,<1" \
-    "python-multipart>=0.0.20"
+    "python-multipart>=0.0.20" \
+    "reportlab>=4.4,<5"
 
 COPY app ./app
 COPY migrations ./migrations

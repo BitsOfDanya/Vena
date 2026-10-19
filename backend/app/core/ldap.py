@@ -24,6 +24,7 @@ class DirectoryIdentity:
     username: str
     email: str
     role: str
+    scopes: tuple[str, ...] = ("all",)
 
 
 def _connect(server: Server, dn: str, password: str, start_tls: bool, timeout: int):
@@ -47,6 +48,22 @@ def _connect(server: Server, dn: str, password: str, start_tls: bool, timeout: i
     except Exception:
         connection.unbind()
         raise
+
+
+def group_scopes(settings: Settings, groups: list[str]) -> tuple[str, ...]:
+    names: set[str] = set()
+    for group in groups:
+        dn = str(group).strip().casefold()
+        rdn = dn.split(",", 1)[0].strip()
+        names |= {dn, rdn, rdn.removeprefix("cn=").strip()}
+    matched = [
+        items
+        for group, items in settings.ldap_group_scopes.items()
+        if group.strip().casefold() in names
+    ]
+    scopes = [scope for items in matched for scope in items] if matched else []
+    unique = tuple(dict.fromkeys(scopes if matched else settings.ldap_default_scopes))
+    return ("all",) if "all" in unique else unique
 
 
 def authenticate(settings: Settings, login: str, password: str) -> DirectoryIdentity:
@@ -143,7 +160,9 @@ def authenticate(settings: Settings, login: str, password: str) -> DirectoryIden
         digest = hashlib.sha256(
             (settings.ldap_url.lower() + ":" + str(identifier)).encode()
         ).hexdigest()
-        return DirectoryIdentity(digest, "ldap:" + username, email, role)
+        return DirectoryIdentity(
+            digest, "ldap:" + username, email, role, group_scopes(settings, groups)
+        )
     except (LDAPException, OSError, ValueError, TypeError):
         raise DirectoryUnavailable() from None
     finally:

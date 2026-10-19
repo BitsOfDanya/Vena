@@ -1,7 +1,24 @@
+import pytest
 from fastapi.testclient import TestClient
 
+from app.core.config import get_settings
+from app.domain.predictions import reset_prediction_source
 
-def test_spatial_requires_explicit_import_or_demo_request(client: TestClient, auth_users) -> None:
+
+@pytest.fixture()
+def empty_ml(tmp_path):
+    settings = get_settings()
+    original = settings.ml_dir
+    settings.ml_dir = tmp_path
+    reset_prediction_source()
+    yield tmp_path
+    settings.ml_dir = original
+    reset_prediction_source()
+
+
+def test_spatial_requires_explicit_import_or_demo_request(
+    client: TestClient, auth_users, empty_ml
+) -> None:
 
     empty = client.get("/api/v1/spatial/status", headers=auth_users["admin"]).json()
     assert empty["configured"] is False
@@ -97,7 +114,7 @@ def test_smvu_events_are_spooled_for_the_stream(client: TestClient, monkeypatch,
     assert records[1]["alarm"] is False
 
 
-def test_production_rejects_demo_map(client, auth_users, monkeypatch):
+def test_production_rejects_demo_map(client, auth_users, monkeypatch, empty_ml):
     from app.core.config import get_settings
 
     monkeypatch.setattr(get_settings(), "environment", "production")

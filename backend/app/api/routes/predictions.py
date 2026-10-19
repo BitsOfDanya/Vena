@@ -13,7 +13,9 @@ from app.domain import audit as audit_service
 from app.domain import ingest as ingest_service
 from app.domain.actions import OPEN_STATUSES
 from app.domain.email import build_email_provider
+from app.domain.forecast_context import build_context, load_seasonality
 from app.domain.predictions import get_prediction_source
+from app.domain.scopes import ScopeDep, among
 from app.schemas.predictions import (
     AccessEvent,
     AccessRoute,
@@ -37,15 +39,14 @@ ActorDep = Annotated[Principal, Depends(require_min_role("dispatcher"))]
 def _require_snapshot(settings: Settings) -> None:
     source = get_prediction_source(settings)
     if not source.available:
-        raise HTTPException(
-            status_code=503, detail=source.status().detail or "predictions unavailable"
-        )
+        raise HTTPException(status_code=503, detail=source.status().detail or "Прогнозы недоступны")
 
 
 @router.get("/predictions", response_model=list[Prediction])
 def list_predictions(
     settings: SettingsDep,
     _: ReaderDep,
+    scope: ScopeDep,
     asset_id: str | None = None,
     device_type: str | None = None,
     risk_level: str | None = None,
@@ -57,7 +58,9 @@ def list_predictions(
 ) -> list[Prediction]:
     _require_snapshot(settings)
     source = get_prediction_source(settings)
-    return source.query(asset_id, device_type, risk_level, horizon, model_id, sort, limit, offset)
+    return source.query(
+        asset_id, device_type, risk_level, horizon, model_id, sort, limit, offset, scope.objects
+    )
 
 
 @router.get("/predictions/snapshot", response_model=SnapshotStatus)
@@ -69,11 +72,12 @@ def snapshot_status(settings: SettingsDep, _: ReaderDep) -> SnapshotStatus:
 def predictions_summary(
     settings: SettingsDep,
     _: ReaderDep,
+    scope: ScopeDep,
     horizon: int | None = None,
     top: Annotated[int, Query(ge=1, le=50)] = 5,
 ) -> PredictionSummary:
     _require_snapshot(settings)
-    return get_prediction_source(settings).summary(horizon, top)
+    return get_prediction_source(settings).summary(horizon, top, scope.objects)
 
 
 @router.post("/predictions/refresh", response_model=dict)
@@ -108,12 +112,12 @@ def refresh(
 
 @router.get("/predictions/{prediction_id:path}", response_model=PredictionDetail)
 def get_prediction(
-    prediction_id: str, session: SessionDep, settings: SettingsDep, _: ReaderDep
+    prediction_id: str, session: SessionDep, settings: SettingsDep, _: ReaderDep, scope: ScopeDep
 ) -> PredictionDetail:
     _require_snapshot(settings)
     source = get_prediction_source(settings)
     prediction = source.get(prediction_id)
-    if prediction is None:
+    if prediction is None or not scope.has_object(prediction.object_id):
         raise HTTPException(status_code=404, detail="Прогноз не найден")
     action = session.scalars(
         select(Action)
@@ -137,14 +141,19 @@ def get_prediction(
         factors=prediction.factors,
         open_action_id=action.id if action else None,
         notification_id=notification.id if notification else None,
+        context=build_context(
+            prediction, load_seasonality(settings), source.weather_forecast(), settings.timezone
+        ),
     )
 
 
 @router.get("/assets/{asset_id}/prediction", response_model=Prediction)
-def asset_prediction(asset_id: str, settings: SettingsDep, _: ReaderDep) -> Prediction:
+def asset_prediction(
+    asset_id: str, settings: SettingsDep, _: ReaderDep, scope: ScopeDep
+) -> Prediction:
     _require_snapshot(settings)
     prediction = get_prediction_source(settings).latest_for_asset(asset_id)
-    if prediction is None:
+    if prediction is None or not scope.has_object(prediction.object_id):
         raise HTTPException(status_code=404, detail="Прогноз для канала не найден")
     return prediction
 
@@ -154,10 +163,13 @@ def asset_prediction_history(
     asset_id: str,
     session: SessionDep,
     _: ReaderDep,
+    scope: ScopeDep,
     start: Annotated[datetime | None, Query(alias="from")] = None,
     end: Annotated[datetime | None, Query(alias="to")] = None,
     limit: Annotated[int, Query(ge=1, le=1000)] = 200,
 ) -> list[dict]:
+    if not scope.has_channel(asset_id):
+        raise HTTPException(status_code=404, detail="Канал не найден")
     points = ingest_service.history(session, asset_id, start, end, limit)
     return [
         {
@@ -178,11 +190,13 @@ def asset_prediction_history(
 def list_alarms(
     settings: SettingsDep,
     _: ReaderDep,
+    scope: ScopeDep,
     needs_verification: bool | None = None,
     limit: Annotated[int, Query(ge=1, le=20000)] = 200,
 ) -> list[AlarmAssessment]:
     _require_snapshot(settings)
-    items = get_prediction_source(settings).alarms()
+    alarms = get_prediction_source(settings).alarms()
+    items = [item for item in alarms if scope.has_channel(item.channel_id)]
     if needs_verification is not None:
         items = [item for item in items if item.needs_verification == needs_verification]
     return items[:limit]
@@ -190,21 +204,32 @@ def list_alarms(
 
 @router.get("/access-events", response_model=list[AccessEvent])
 def list_access_events(
-    settings: SettingsDep, _: ReaderDep, limit: Annotated[int, Query(ge=1, le=20000)] = 200
+    settings: SettingsDep,
+    _: ReaderDep,
+    scope: ScopeDep,
+    limit: Annotated[int, Query(ge=1, le=20000)] = 200,
 ) -> list[AccessEvent]:
     _require_snapshot(settings)
-    return get_prediction_source(settings).access_events()[:limit]
+    events = get_prediction_source(settings).access_events()
+    return [item for item in events if scope.has_channel(item.channel_id)][:limit]
 
 
 @router.get("/access-routes", response_model=list[AccessRoute])
-def list_access_routes(settings: SettingsDep, _: ReaderDep) -> list[AccessRoute]:
+def list_access_routes(settings: SettingsDep, _: ReaderDep, scope: ScopeDep) -> list[AccessRoute]:
     _require_snapshot(settings)
-    return get_prediction_source(settings).access_routes()
+    return [
+        route
+        for route in get_prediction_source(settings).access_routes()
+        if any(scope.has_channel(step.channel_id) for step in route.steps)
+    ]
 
 
 @router.get("/ml/feedback", response_model=list[FeedbackRow])
 def feedback(
-    session: SessionDep, _: ReaderDep, limit: Annotated[int, Query(ge=1, le=1000)] = 200
+    session: SessionDep,
+    _: ReaderDep,
+    scope: ScopeDep,
+    limit: Annotated[int, Query(ge=1, le=1000)] = 200,
 ) -> list[FeedbackRow]:
     statement = (
         select(Action)
@@ -212,6 +237,8 @@ def feedback(
         .order_by(Action.created_at.desc())
         .limit(limit)
     )
+    if scope.channels is not None:
+        statement = statement.where(among(Action.asset_id, scope.channels))
     return [
         FeedbackRow(
             prediction_id=action.source_prediction_id,

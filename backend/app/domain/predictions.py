@@ -1,9 +1,13 @@
 import json
+import math
+from collections.abc import Collection
 from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
 
 from app.core.config import Settings
+from app.domain import thresholds
+from app.domain.hierarchy import load as load_hierarchy
 from app.domain.incidents import (
     LEVEL_RANK,
     location_group,
@@ -24,6 +28,7 @@ from app.schemas.predictions import (
     RiskLevelCounts,
     SnapshotStatus,
     StreamInfo,
+    TimeToFailure,
 )
 
 SNAPSHOT_NAME = "snapshot.json"
@@ -49,7 +54,23 @@ class SnapshotUnavailable(Exception):
 
 
 def snapshot_path(settings: Settings) -> Path:
-    return settings.ml_dir / "results" / "predictions" / SNAPSHOT_NAME
+    return settings.snapshot_dir / SNAPSHOT_NAME
+
+
+def _float_value(value: Any) -> float | None:
+    if isinstance(value, bool) or not isinstance(value, int | float) or not math.isfinite(value):
+        return None
+    return float(value)
+
+
+def _ttf(raw: Any) -> TimeToFailure | None:
+    if not isinstance(raw, dict):
+        return None
+    values = [_float_value(raw.get(key)) for key in ("q20", "q50", "q80")]
+    if any(value is None for value in values):
+        return None
+    low, mid, high = sorted(value for value in values if value is not None)
+    return TimeToFailure(q20=low, q50=mid, q80=high)
 
 
 def _parse_time(value: Any) -> datetime | None:
@@ -112,6 +133,7 @@ class PredictionSource:
         self._settings = settings
         self._snapshot_id: str | None = None
         self._loaded_mtime: float | None = None
+        self._thresholds_version: str | None = None
         self._payload: dict[str, Any] | None = None
         self._predictions: list[Prediction] = []
         self._error: str = ""
@@ -124,7 +146,11 @@ class PredictionSource:
             self._error = "Снимок прогнозов недоступен"
             return
         mtime = path.stat().st_mtime
+        version, overrides = thresholds.current()
         if self._loaded_mtime == mtime and self._payload is not None:
+            if self._thresholds_version != version:
+                self._predictions = self._map(self._payload, overrides)
+                self._thresholds_version = version
             return
         try:
             payload = json.loads(path.read_text(encoding="utf-8"))
@@ -136,9 +162,12 @@ class PredictionSource:
         self._payload = payload
         self._loaded_mtime = mtime
         self._error = ""
-        self._predictions = self._map(payload)
+        self._predictions = self._map(payload, overrides)
+        self._thresholds_version = version
 
-    def _map(self, payload: dict[str, Any]) -> list[Prediction]:
+    def _map(
+        self, payload: dict[str, Any], overrides: dict[str, dict[str, float]]
+    ) -> list[Prediction]:
         snapshot_id = str(payload.get("snapshot_id", ""))
         prediction_time = _parse_time(payload.get("prediction_time")) or datetime.now(tz=UTC)
         result: list[Prediction] = []
@@ -149,6 +178,7 @@ class PredictionSource:
             if group and object_id:
                 objects.setdefault(group, object_id)
         remember_objects(objects)
+        load_hierarchy(self._settings)
         for row in payload.get("predictions", []):
             try:
                 asset_id = str(row["channel_id"])
@@ -157,6 +187,9 @@ class PredictionSource:
             except (KeyError, TypeError, ValueError):
                 continue
             model_level = str(row.get("model_risk_level", "low"))
+            override, raw_score = overrides.get(model_id), row.get("raw_score")
+            if override and isinstance(raw_score, int | float):
+                model_level = thresholds.model_level(float(raw_score), override)
             score_type = row.get("score_type", "risk_score")
             device_type = str(row.get("device_type", ""))
             scenario = str(row.get("scenario") or scenario_for(device_type, model_id))
@@ -191,6 +224,7 @@ class PredictionSource:
                     sensor_type=row.get("sensor_type"),
                     system_type=row.get("system_type"),
                     last_event_at=_parse_time(row.get("last_event_at")),
+                    ttf_hours=_ttf(row.get("ttf_hours")),
                     source_snapshot=snapshot_id,
                 )
             )
@@ -239,6 +273,12 @@ class PredictionSource:
         self._read()
         return list(self._predictions)
 
+    def visible(self, objects: Collection[str] | None = None) -> list[Prediction]:
+        items = self.all()
+        if objects is None:
+            return items
+        return [item for item in items if item.object_id in objects]
+
     def query(
         self,
         asset_id: str | None = None,
@@ -249,8 +289,9 @@ class PredictionSource:
         sort: str = "risk_desc",
         limit: int = 50,
         offset: int = 0,
+        objects: Collection[str] | None = None,
     ) -> list[Prediction]:
-        items = self.all()
+        items = self.visible(objects)
         if asset_id:
             items = [item for item in items if item.asset_id == asset_id]
         if device_type:
@@ -269,8 +310,10 @@ class PredictionSource:
             items.sort(key=lambda item: (LEVEL_RANK[item.risk_level], -item.score))
         return items[offset : offset + limit]
 
-    def summary(self, horizon: int | None = None, top: int = 5) -> PredictionSummary:
-        items = self.all()
+    def summary(
+        self, horizon: int | None = None, top: int = 5, objects: Collection[str] | None = None
+    ) -> PredictionSummary:
+        items = self.visible(objects)
         if horizon is not None:
             items = [item for item in items if item.horizon_hours == horizon]
         counts = RiskLevelCounts()
@@ -318,6 +361,16 @@ class PredictionSource:
         raw = (self._payload or {}).get("location_history")
         return raw if isinstance(raw, dict) else {}
 
+    def object_risks(self) -> tuple[list[dict[str, Any]], dict[str, dict[str, Any]]]:
+        rows = self._section("objects")
+        raw = (self._payload or {}).get("objects_meta")
+        meta = (
+            {str(key): value for key, value in raw.items() if isinstance(value, dict)}
+            if isinstance(raw, dict)
+            else {}
+        )
+        return rows, meta
+
     def alarms(self) -> list[AlarmAssessment]:
         result = []
         for row in self._section("alarms"):
@@ -343,6 +396,17 @@ class PredictionSource:
         routes.sort(key=lambda item: item.start, reverse=True)
         return routes
 
+    def default_thresholds(self) -> dict[str, dict[str, float]]:
+        result: dict[str, dict[str, float]] = {}
+        for row in self._section("predictions"):
+            model_id = row.get("model_id")
+            if not isinstance(model_id, str) or model_id in result:
+                continue
+            levels = thresholds.parse_levels(row.get("thresholds"))
+            if levels:
+                result[model_id] = levels
+        return result
+
     def get(self, prediction_id: str) -> Prediction | None:
         return next((item for item in self.all() if item.id == prediction_id), None)
 
@@ -366,3 +430,4 @@ def get_prediction_source(settings: Settings) -> PredictionSource:
 def reset_prediction_source() -> None:
     global _source
     _source = None
+    thresholds.invalidate()

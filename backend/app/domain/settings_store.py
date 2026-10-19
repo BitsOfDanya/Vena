@@ -7,6 +7,7 @@ from app.db.models import SettingsRecord
 from app.schemas.notifications import (
     ChannelState,
     DigestSettings,
+    EscalationSettings,
     NotificationRule,
     NotificationSettings,
     NotificationSettingsUpdate,
@@ -147,6 +148,7 @@ def read_settings(session: Session, settings: Settings) -> NotificationSettings:
         if "rules" in stored
         else DEFAULT_RULES,
         digest=digest,
+        escalation=EscalationSettings(**stored.get("escalation", {})),
     )
 
 
@@ -164,6 +166,7 @@ def write_settings(
             for item in (update.rules if update.rules is not None else current.rules)
         ],
         "digest": (update.digest or current.digest).model_dump(mode="json"),
+        "escalation": (update.escalation or current.escalation).model_dump(mode="json"),
     }
     record = session.get(SettingsRecord, SETTINGS_KEY)
     if record is None:

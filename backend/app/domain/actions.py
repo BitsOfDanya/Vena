@@ -30,8 +30,27 @@ EVENT_FOR_STATUS = {
 }
 
 
+STATUS_LABELS = {
+    "suggested": "Предложено",
+    "planned": "В плане",
+    "assigned": "Назначено",
+    "in_progress": "В работе",
+    "waiting": "Ожидание",
+    "completed": "Завершено",
+    "cancelled": "Отменено",
+    "dismissed": "Отклонено",
+}
+
+
 class InvalidTransition(Exception):
-    pass
+    def __init__(self, current: str, target: str) -> None:
+        source = STATUS_LABELS.get(current, current)
+        super().__init__(
+            f"Работа уже в статусе «{source}»"
+            if current == target
+            else f"Нельзя перевести работу из статуса «{source}» "
+            f"в «{STATUS_LABELS.get(target, target)}»"
+        )
 
 
 def _now() -> datetime:
@@ -138,7 +157,7 @@ def transition(
     session: Session, action: Action, to_status: str, actor: str, note: str = ""
 ) -> Action:
     if to_status not in TRANSITIONS[action.status]:
-        raise InvalidTransition(f"{action.status} -> {to_status}")
+        raise InvalidTransition(action.status, to_status)
     record(session, action, EVENT_FOR_STATUS[to_status], actor, note, to_status=to_status)
     action.status = to_status
     action.updated_at = _now()
@@ -148,7 +167,7 @@ def transition(
 
 def approve(session: Session, action: Action, actor: str) -> Action:
     if action.status != "suggested":
-        raise InvalidTransition(f"{action.status} -> planned")
+        raise InvalidTransition(action.status, "planned")
     record(session, action, "approved", actor, to_status="planned")
     action.status = "planned"
     action.updated_at = _now()
@@ -163,7 +182,7 @@ def assign(session: Session, action: Action, assignee: str, actor: str) -> Actio
 
 def complete(session: Session, action: Action, outcome: str, note: str, actor: str) -> Action:
     if action.status in {"completed", "cancelled", "dismissed"}:
-        raise InvalidTransition(f"{action.status} -> completed")
+        raise InvalidTransition(action.status, "completed")
     now = _now()
     record(session, action, "completed", actor, note, to_status="completed")
     action.status = "completed"
@@ -224,5 +243,7 @@ def to_dict(action: Action) -> dict:
         "result_outcome": action.result_outcome,
         "result_note": action.result_note,
         "completed_at": action.completed_at,
+        "helpdesk_ticket_id": action.helpdesk_ticket_id,
+        "helpdesk_status": action.helpdesk_status,
         "history": action.history,
     }

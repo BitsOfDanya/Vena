@@ -1,5 +1,6 @@
 import json
 import re
+from collections.abc import Collection
 from datetime import datetime, timedelta
 from pathlib import Path
 from typing import Any
@@ -16,11 +17,13 @@ from app.domain.incidents import (
     group_incidents,
     location_group,
     location_label,
+    object_label,
     object_of,
     reason_text,
 )
 from app.domain.predictions import PredictionSource
 from app.domain.recommendations import driver_hints
+from app.domain.scopes import EVERYTHING, Scope, among
 from app.schemas.analytics import (
     BacktestDay,
     ChannelNode,
@@ -69,9 +72,16 @@ def _health_order(node: SectionNode) -> tuple[int, float]:
     return (node.health_index, -(node.raw_risk or 0.0))
 
 
-def asset_tree(source: PredictionSource, session: Session | None = None) -> list[ObjectNode]:
-    predictions = source.all() if source.available else []
-    registry = list(session.scalars(select(Equipment))) if session else []
+def asset_tree(
+    source: PredictionSource,
+    session: Session | None = None,
+    allowed: Collection[str] | None = None,
+) -> list[ObjectNode]:
+    predictions = source.visible(allowed) if source.available else []
+    statement = select(Equipment)
+    if allowed is not None:
+        statement = statement.where(among(Equipment.object_id, allowed))
+    registry = list(session.scalars(statement)) if session else []
     if registry:
         best = _strongest(predictions)
         health = location_health(
@@ -89,7 +99,7 @@ def asset_tree(source: PredictionSource, session: Session | None = None) -> list
                 row.object_id,
                 ObjectNode(
                     object_id=row.object_id,
-                    label=f"Объект {row.object_id}",
+                    label=object_label(row.object_id) or row.object_id,
                     health_index=None,
                     sections=[],
                 ),
@@ -164,6 +174,7 @@ def asset_tree(source: PredictionSource, session: Session | None = None) -> list
                 ],
             )
         )
+    known = {item.object_id for item in predictions}
     result = []
     for object_id, nodes in objects.items():
         nodes.sort(key=_health_order)
@@ -171,7 +182,8 @@ def asset_tree(source: PredictionSource, session: Session | None = None) -> list
         result.append(
             ObjectNode(
                 object_id=object_id,
-                label=f"Объект {object_id}",
+                label=(object_label(object_id) if object_id in known else None)
+                or f"Объект {object_id}",
                 health_index=min(indexes) if indexes else None,
                 sections=nodes,
             )
@@ -225,12 +237,27 @@ def _lead_times(settings: Settings) -> list[ModelEffect]:
     return result
 
 
-def effect(session: Session, settings: Settings, source: PredictionSource) -> EffectReport:
-    significant = [item for item in source.all() if item.risk_level in ("critical", "attention")]
-    alarms = source.alarms() if source.available else []
+def effect(
+    session: Session, settings: Settings, source: PredictionSource, scope: Scope = EVERYTHING
+) -> EffectReport:
+    significant = [
+        item
+        for item in source.visible(scope.objects)
+        if item.risk_level in ("critical", "attention")
+    ]
+    alarms = (
+        [item for item in source.alarms() if scope.has_channel(item.channel_id)]
+        if source.available
+        else []
+    )
+    access = (
+        [item for item in source.access_events() if scope.has_channel(item.channel_id)]
+        if source.available
+        else []
+    )
     alarm_meta = _read(settings.ml_dir / "artifacts" / "models" / "alarm_30m" / "meta.json") or {}
     operating = alarm_meta.get("metrics_snapshot", {}).get("operating_test", {})
-    rows = journal_service.entries(session, settings, limit=100_000)
+    rows = journal_service.entries(session, settings, limit=100_000, channels=scope.channels)
     summary = journal_service.summary(rows)
     return EffectReport(
         channels_at_risk=len({item.asset_id for item in significant}),
@@ -240,7 +267,7 @@ def effect(session: Session, settings: Settings, source: PredictionSource) -> Ef
         alarms_to_verify=sum(1 for item in alarms if item.needs_verification),
         alarms_maintenance=sum(1 for item in alarms if item.maintenance),
         alarm_filter_share=operating.get("filtered_uncorroborated"),
-        access_events_30d=len(source.access_events()) if source.available else 0,
+        access_events_30d=len(access),
         forecasts_in_journal=summary.total,
         decided=summary.decided,
         confirmed=sum(item.confirmed for item in summary.by_scenario),
@@ -248,7 +275,7 @@ def effect(session: Session, settings: Settings, source: PredictionSource) -> Ef
         dispatches_avoided=sum(
             1 for row in rows if row.decision == "no_dispatch" and row.outcome in AVOIDED
         ),
-        prospective=_read(settings.ml_dir / "results" / "predictions" / "prospective.json"),
+        prospective=_read(settings.snapshot_dir / "prospective.json"),
     )
 
 
@@ -262,12 +289,14 @@ EVENT_TYPES = (
 )
 
 
-def event_types(settings: Settings, source: PredictionSource) -> list[EventTypeStats]:
+def event_types(
+    settings: Settings, source: PredictionSource, allowed: Collection[str] | None = None
+) -> list[EventTypeStats]:
     seasonality = _read(settings.ml_dir / "results" / "seasonality.json") or {}
     workload = (_read(settings.ml_dir / "results" / "workload_forecast.json") or {}).get(
         "scenarios", {}
     )
-    predictions = source.all() if source.available else []
+    predictions = source.visible(allowed) if source.available else []
     result = []
     for key, title, scenario, models in EVENT_TYPES:
         at_risk: dict[str, set[str]] = {}
@@ -313,10 +342,15 @@ def _plain_reason(item: Prediction, hints: dict[str, str]) -> str | None:
 
 
 def inspection_plan(
-    session: Session, source: PredictionSource, model_id: str, count: int, now: datetime
+    session: Session,
+    source: PredictionSource,
+    model_id: str,
+    count: int,
+    now: datetime,
+    allowed: Collection[str] | None = None,
 ) -> InspectionPlan:
     candidates = sorted(
-        (item for item in source.all() if item.model_id == model_id),
+        (item for item in source.visible(allowed) if item.model_id == model_id),
         key=lambda item: item.score,
         reverse=True,
     )
@@ -340,6 +374,7 @@ def inspection_plan(
                 probability=item.score,
                 risk_level=item.risk_level,
                 reason=_plain_reason(item, hints),
+                ttf_hours=item.ttf_hours,
             )
         )
         if len(items) == count:

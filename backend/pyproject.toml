@@ -19,6 +19,7 @@ dependencies = [
     "httpx>=0.28,<1",
     "defusedxml>=0.7,<1",
     "python-multipart>=0.0.20",
+    "reportlab>=4.4,<5",
 ]
 
 [dependency-groups]
@@ -56,5 +57,5 @@ build-backend = "hatchling.build"
 packages = ["app"]
 
 [[tool.mypy.overrides]]
-module = ["apscheduler.*", "openpyxl.*", "ldap3.*", "defusedxml.*"]
+module = ["apscheduler.*", "openpyxl.*", "ldap3.*", "defusedxml.*", "reportlab.*"]
 ignore_missing_imports = true

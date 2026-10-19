@@ -60,9 +60,20 @@ class Situation(BaseModel):
     scenario: str | None = None
     location: str | None = None
     location_group: str | None = None
+    object_id: str | None = None
     asset_count: int = 1
     incident_probability: float | None = None
     health_index: int | None = None
     model_id: str | None = None
     recommendation: Recommendation | None = None
     history: LocationHistory | None = None
+    claimed_by: str | None = None
+    claimed_by_subject: str | None = None
+    claimed_at: datetime | None = None
+
+
+class SituationClaimOut(BaseModel):
+    situation_id: str
+    claimed_by: str
+    claimed_by_subject: str
+    claimed_at: datetime

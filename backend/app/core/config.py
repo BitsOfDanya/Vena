@@ -1,9 +1,12 @@
 from functools import lru_cache
 from pathlib import Path
-from typing import Literal
+from typing import Annotated, Literal
 
-from pydantic import AliasChoices, AnyHttpUrl, Field, SecretStr
+from pydantic import AliasChoices, AnyHttpUrl, Field, SecretStr, StringConstraints
 from pydantic_settings import BaseSettings, SettingsConfigDict
+
+SCOPE_PATTERN = r"^(all|(district|complex|object):[0-9A-Za-z_.-]{1,64})$"
+ScopeItem = Annotated[str, StringConstraints(pattern=SCOPE_PATTERN)]
 
 
 class Settings(BaseSettings):
@@ -21,6 +24,7 @@ class Settings(BaseSettings):
     debug: bool = False
     cors_origins: list[AnyHttpUrl] = [AnyHttpUrl("http://localhost:3000")]
     ml_dir: Path = Path(__file__).resolve().parents[3] / "ml"
+    predictions_dir: Path | None = None
     database_url: str = "postgresql+psycopg://vena:vena@localhost:5432/vena"
     timezone: str = "Europe/Moscow"
     public_url: str = "http://localhost:3100"
@@ -30,6 +34,7 @@ class Settings(BaseSettings):
     prediction_critical_limit: int = 20
     prediction_cooldown_minutes: int = 240
     prediction_refresh_seconds: int = 30
+    smvu_stale_seconds: int = Field(default=900, ge=60)
     inbox_dir: Path | None = None
     ingest_on_startup: bool = True
     auth_enabled: bool = False
@@ -39,6 +44,7 @@ class Settings(BaseSettings):
     jwt_ttl_minutes: int = Field(default=60, ge=1, le=1440)
     auth_login_limit: int = Field(default=10, ge=1)
     auth_login_window_seconds: int = Field(default=300, ge=1)
+    trusted_proxies: list[str] = []
     ldap_enabled: bool = False
     ldap_url: str = ""
     ldap_bind_dn: str = ""
@@ -51,6 +57,8 @@ class Settings(BaseSettings):
     ldap_id_attribute: str = "objectGUID"
     ldap_group_roles: dict[str, Literal["viewer", "dispatcher", "admin"]] = {}
     ldap_default_role: Literal["viewer", "dispatcher", "none"] = "viewer"
+    ldap_group_scopes: dict[str, list[ScopeItem]] = {}
+    ldap_default_scopes: list[ScopeItem] = ["all"]
     ldap_ca_file: str | None = None
     ldap_timeout_seconds: int = Field(default=5, ge=1, le=30)
     dataset_dir: Path | None = None
@@ -64,6 +72,15 @@ class Settings(BaseSettings):
     equipment_sync_field_map: dict[str, str] = {}
     equipment_sync_ca_file: str | None = None
     equipment_sync_allow_http: bool = False
+    helpdesk_url: str = ""
+    helpdesk_token: SecretStr = SecretStr("")
+    helpdesk_ca_file: str | None = None
+    helpdesk_allow_http: bool = False
+    helpdesk_interval_seconds: int = Field(default=60, ge=10, le=3600)
+
+    @property
+    def snapshot_dir(self) -> Path:
+        return self.predictions_dir or self.ml_dir / "results" / "predictions"
 
     @property
     def ldap_configured(self) -> bool:
