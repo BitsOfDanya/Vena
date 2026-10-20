@@ -1,0 +1,2931 @@
+{
+  "metropt3": {
+    "dataset": "metropt3",
+    "verified_at_utc": "2026-10-20T16:07:25.104684+00:00",
+    "source_page": "https://archive.ics.uci.edu/dataset/791/metropt+3+dataset",
+    "license": "CC BY 4.0",
+    "citation": "Davari et al. (2021), DOI 10.24432/C5VW3R",
+    "files": [
+      {
+        "filename": "source.zip",
+        "url": "https://archive.ics.uci.edu/static/public/791/metropt%2B3%2Bdataset.zip",
+        "bytes": 218381995,
+        "sha256": "aab991a970e58210de853bb8078ce0e63abb4d9412fdc5c79792dae3d8e1721a"
+      }
+    ],
+    "extracted_files": [
+      {
+        "path": "MetroPT3(AirCompressor).csv",
+        "bytes": 218300507,
+        "sha256": "db30ccb4ea402e3c8bf2c99db06e288d4f2a772f6928f9dbe26a920d69793e24"
+      },
+      {
+        "path": "raw/Data Description_Metro.pdf",
+        "bytes": 81208,
+        "sha256": "b00fac0e8899854078309bef4adaa480d82ecf14dc81c5097c3646973e824127"
+      },
+      {
+        "path": "raw/MetroPT3(AirCompressor).csv",
+        "bytes": 218300507,
+        "sha256": "db30ccb4ea402e3c8bf2c99db06e288d4f2a772f6928f9dbe26a920d69793e24"
+      }
+    ]
+  },
+  "hydraulic": {
+    "dataset": "hydraulic",
+    "verified_at_utc": "2026-10-20T16:07:44.016659+00:00",
+    "source_page": "https://archive.ics.uci.edu/dataset/447/condition+monitoring+of+hydraulic+systems",
+    "license": "CC BY 4.0",
+    "citation": "Helwig, Pignanelli & Schuetze (2015), DOI 10.24432/C5CW21",
+    "files": [
+      {
+        "filename": "source.zip",
+        "url": "https://archive.ics.uci.edu/static/public/447/condition%2Bmonitoring%2Bof%2Bhydraulic%2Bsystems.zip",
+        "bytes": 76601704,
+        "sha256": "24128aad2ee45eea7e6b63ebbd9992cdf25d0483a2cebefbfc13bc69079af1f2"
+      }
+    ],
+    "extracted_files": [
+      {
+        "path": "raw/CE.txt",
+        "bytes": 911516,
+        "sha256": "2adc6e258be8e3b7a303b7962f485a7984099cea21248c3bf9f18c7d87283c09"
+      },
+      {
+        "path": "raw/CP.txt",
+        "bytes": 779343,
+        "sha256": "63f60132cb5a30879c6f5c73640a39c69e416013195fe62dafe5133b0747baf4"
+      },
+      {
+        "path": "raw/EPS1.txt",
+        "bytes": 87411594,
+        "sha256": "2a8d13ca793bb36c0ec4afd27b0103b97b3c1b5a176677be5e7a2ae98c277ab9"
+      },
+      {
+        "path": "raw/FS1.txt",
+        "bytes": 7581926,
+        "sha256": "7ff09b17047f776befc136b7902bc7bd4419f96dc107a7ae94d8c412effe0375"
+      },
+      {
+        "path": "raw/FS2.txt",
+        "bytes": 8271923,
+        "sha256": "5ee983f88e15ee054846b183224ebcab568b07e3bbe70a4f7f838e603cf1177f"
+      },
+      {
+        "path": "raw/PS1.txt",
+        "bytes": 91391892,
+        "sha256": "168e2e663bb511043a15a9c978b93a6e0280b27b113133d0a26f738170af39c0"
+      },
+      {
+        "path": "raw/PS2.txt",
+        "bytes": 82373611,
+        "sha256": "2c283dac9a874828ac98badd172a136d52b1de580afb05311c47dc02e5e420c5"
+      },
+      {
+        "path": "raw/PS3.txt",
+        "bytes": 69916801,
+        "sha256": "e671e83d99f37bcfe001fed22cb429002a9da8cad026f8abe4c1b7b284c8637f"
+      },
+      {
+        "path": "raw/PS4.txt",
+        "bytes": 46698180,
+        "sha256": "fb58417e4a2c4f11d5614b31813b6942eb97f50690688d045090e3e4db2b252f"
+      },
+      {
+        "path": "raw/PS5.txt",
+        "bytes": 77776429,
+        "sha256": "42b08cddc1fda06ae0b1c665e208680deb7ad1fff9b9cd9b9879a5820fdf4eca"
+      },
+      {
+        "path": "raw/PS6.txt",
+        "bytes": 77875407,
+        "sha256": "9588d363210ab250cf179d930b6b8831643b55bfd8460e54374df18f37456573"
+      },
+      {
+        "path": "raw/SE.txt",
+        "bytes": 824838,
+        "sha256": "4c04994cb28b82c001b4931acecf8099e9fe5c864f361c0a7435fbf8745361a1"
+      },
+      {
+        "path": "raw/TS1.txt",
+        "bytes": 904586,
+        "sha256": "49cae5e9013d8e230698d95f53a98bb77fedfe3c86985b812cf701dcc9ef06d8"
+      },
+      {
+        "path": "raw/TS2.txt",
+        "bytes": 910594,
+        "sha256": "34115a5b86886d83c0592c1ed259605634a8c83d3a051e97bf3e5790f1db58fa"
+      },
+      {
+        "path": "raw/TS3.txt",
+        "bytes": 908805,
+        "sha256": "cc271852b4caad39a3b8f5c36d948b57f6cab761dad8b4c7bdd7cb7e99c0b980"
+      },
+      {
+        "path": "raw/TS4.txt",
+        "bytes": 910127,
+        "sha256": "548b903f7cd4ea7f2497c0063bdda4bdf8793d55ff43a7d694b8cb835eaf2f55"
+      },
+      {
+        "path": "raw/VS1.txt",
+        "bytes": 778499,
+        "sha256": "a6227d9bcb807ee9835c32e73834d3eb9262f0f5cad1b176ca10c473ced25e99"
+      },
+      {
+        "path": "raw/description.txt",
+        "bytes": 4044,
+        "sha256": "a115e362976a4532bc7d28c471caa257514584bb3f4f6f06f760ca1236761a63"
+      },
+      {
+        "path": "raw/documentation.txt",
+        "bytes": 4719,
+        "sha256": "9fe5ce23d5b850df9bf38335588aa98601475b42b7551d10e84b1d075f7b62b4"
+      },
+      {
+        "path": "raw/profile.txt",
+        "bytes": 31196,
+        "sha256": "867987ca884b2f0fd607ad3918329eba887d095af2befa21122cea518eaa584a"
+      }
+    ]
+  },
+  "water": {
+    "dataset": "water",
+    "verified_at_utc": "2026-10-20T16:07:45.804913+00:00",
+    "source_page": "https://zenodo.org/records/15096167",
+    "license": "CC BY 4.0 (dataset README)",
+    "citation": "Babela, Munk & Munkova (2025), DOI 10.5281/zenodo.15096167",
+    "files": [
+      {
+        "filename": "water.csv",
+        "url": "https://zenodo.org/records/15096167/files/input_model_potenc_predXfault7_A.csv?download=1",
+        "bytes": 818525,
+        "sha256": "5ed3fea7735eb51bdc191c4fc50d60c6e14507e88f43ead799e3016264d6e0f9"
+      },
+      {
+        "filename": "README.txt",
+        "url": "https://zenodo.org/records/15096167/files/README.txt?download=1",
+        "bytes": 1441,
+        "sha256": "b70c95af86623e8f06aca43087cfc5e24206bcf8cd0d3020677fb5a6fa1f17b3"
+      }
+    ],
+    "extracted_files": []
+  },
+  "nist_smoke": {
+    "dataset": "nist_smoke",
+    "verified_at_utc": "2026-10-20T16:07:49.982649+00:00",
+    "source_page": "https://www.nist.gov/el/fire/engineered-fire-safety/data-smoke-alarm-performance",
+    "license": "Public NIST experimental data; retain attribution and source terms",
+    "citation": "NIST TN 1947, smoke alarm performance experiments",
+    "files": [
+      {
+        "filename": "smoke_box.zip",
+        "url": "https://www.nist.gov/document/smokeboxdatazip",
+        "bytes": 2555002,
+        "sha256": "1c96c8bacba89b90396428fc307d9c5d20aa03c00955f9a2a6edb317a5d63f7f"
+      },
+      {
+        "filename": "room.zip",
+        "url": "https://www.nist.gov/document/roomdatazip",
+        "bytes": 1444346,
+        "sha256": "a36111dc32fa3915c9ac5274ed9df38e964b65832230086294eb52131142666f"
+      }
+    ],
+    "extracted_files": [
+      {
+        "path": "room/Room Data/BHBG1T1.tsv",
+        "bytes": 136175,
+        "sha256": "48561f8cbd608c709d7431823e45e8f1fc221de86156c4dc0725fd45d4eaaefa"
+      },
+      {
+        "path": "room/Room Data/BHBG1T2.tsv",
+        "bytes": 117060,
+        "sha256": "86d6eaff6916eed5c1dd50dd2d55c614e6748cebbc890c954033bf31a6162483"
+      },
+      {
+        "path": "room/Room Data/BHBG1T3.tsv",
+        "bytes": 120678,
+        "sha256": "62cff0960388608196be0b74408d1347f5dcbfe372052718138df55fe3a63c7a"
+      },
+      {
+        "path": "room/Room Data/BHBG2T1.tsv",
+        "bytes": 118787,
+        "sha256": "8682381f03c3e3945386c30ac69967fe78f9440e78017148808dc99e371f3060"
+      },
+      {
+        "path": "room/Room Data/BHBG2T2.tsv",
+        "bytes": 116642,
+        "sha256": "f113f025aa96f64236cf03b30806a996521d2b4836878764d25039bd30fd6a56"
+      },
+      {
+        "path": "room/Room Data/BHBG2T3.tsv",
+        "bytes": 118856,
+        "sha256": "513214a1b3ab85c35abe4b03cdff90fff783959a6ff226dc4ecd64946bc8a600"
+      },
+      {
+        "path": "room/Room Data/BHBG3T1.tsv",
+        "bytes": 118091,
+        "sha256": "3e7d8c76a371fc9fe0be991bcd9af6cb90116086113ce3daa54d936c082faefb"
+      },
+      {
+        "path": "room/Room Data/BHBG3T2.tsv",
+        "bytes": 118447,
+        "sha256": "a5653d93018ad0b40364bef5ed0f2c28fd975f1162e30ec6d7fd39cb0f6037c5"
+      },
+      {
+        "path": "room/Room Data/BHBG3T3.tsv",
+        "bytes": 118732,
+        "sha256": "2a93bc84c37f7c72b79d165150e59d219e3924d920c0a31b8fb305cf678be696"
+      },
+      {
+        "path": "room/Room Data/BHBG4T1.tsv",
+        "bytes": 119302,
+        "sha256": "cec6c8204d40a8eba87c7e130a91e7427f7aa4936d9e6eadf3585ad52a9be6cd"
+      },
+      {
+        "path": "room/Room Data/BHBG4T2.tsv",
+        "bytes": 118539,
+        "sha256": "2e2eef0bedf9df426a3ef61fff1b00be7d47f344a26107d3832834f7a3826d41"
+      },
+      {
+        "path": "room/Room Data/BHBG4T3.tsv",
+        "bytes": 119063,
+        "sha256": "d162b2701a58c403963f365b9f38103f0f5c0bd39217f05f0f174014c197f870"
+      },
+      {
+        "path": "room/Room Data/BHBG5T1.tsv",
+        "bytes": 122848,
+        "sha256": "524c4cf4c3c2e5b6c690f1cc5f1d7740a3016404c935cb8f75cc7d6c4497347d"
+      },
+      {
+        "path": "room/Room Data/BHBG5T2.tsv",
+        "bytes": 122352,
+        "sha256": "8fcd96eb05178a2c9b60fdba5a680306d30582d93ec2e7b2c307463076ae7928"
+      },
+      {
+        "path": "room/Room Data/BHBG5T3.tsv",
+        "bytes": 131189,
+        "sha256": "dfface75128cff3d6625b41dc44e79c127a4a232c656df6b33335b7725077e73"
+      },
+      {
+        "path": "room/Room Data/FFoamG1T1.tsv",
+        "bytes": 45683,
+        "sha256": "017276d67987c9e3a1634ebeefa7ff455a5255da4cf6daa1f9c6c7fe1b6fc3a0"
+      },
+      {
+        "path": "room/Room Data/FFoamG1T2.tsv",
+        "bytes": 53674,
+        "sha256": "80af154cf7ffbcf176a8b4219476216afa29e7c70e5051f9fdbdacfae5b519c0"
+      },
+      {
+        "path": "room/Room Data/FFoamG1T3.tsv",
+        "bytes": 47035,
+        "sha256": "5d32f7ee2761a1d0f771fdad9c3fce9cdbb4573841eaee537faaba24f064a2d6"
+      },
+      {
+        "path": "room/Room Data/FFoamG2T1.tsv",
+        "bytes": 54280,
+        "sha256": "8be00eae84905856bf5c0f7bb51d0d589910753b8a9ec70d37e25b72b9facb12"
+      },
+      {
+        "path": "room/Room Data/FFoamG2T2.tsv",
+        "bytes": 50280,
+        "sha256": "4571c60a837cb1a898845c60ecd0a6ee1087bd7bbd37c92d197694d459606b3b"
+      },
+      {
+        "path": "room/Room Data/FFoamG2T3.tsv",
+        "bytes": 51608,
+        "sha256": "e57eb13bfd83eba00ecf88925313a1029b3d6e5d945ea8bab66e664809e2028c"
+      },
+      {
+        "path": "room/Room Data/FFoamG3T1.tsv",
+        "bytes": 51204,
+        "sha256": "2b11735dddf56cd65695805df7454b8a8e2a977e5737ea234967383013951448"
+      },
+      {
+        "path": "room/Room Data/FFoamG3T2.tsv",
+        "bytes": 52013,
+        "sha256": "1396ff4d279a4b55c37c4aa622e00fbe2e4d27879d7d193abf07cb95344040f4"
+      },
+      {
+        "path": "room/Room Data/FFoamG3T3.tsv",
+        "bytes": 42984,
+        "sha256": "c7b582b69ec27c58e8bf1bf1791f1ef567794dcd54dc2f756672a92ccb93ad6d"
+      },
+      {
+        "path": "room/Room Data/FFoamG4T1.tsv",
+        "bytes": 46944,
+        "sha256": "6b50fc47fafda59a094d875c7fa2b455c6e882d221e88594fcf076eeefeac727"
+      },
+      {
+        "path": "room/Room Data/FFoamG4T2.tsv",
+        "bytes": 59054,
+        "sha256": "0f30625bf24faa6fb0dc04d0e410488da94428004783bb3b78bbefb1c32e7a5c"
+      },
+      {
+        "path": "room/Room Data/FFoamG4T3.tsv",
+        "bytes": 46761,
+        "sha256": "c1a668850ca80915e4e16dbe625b35fd141d4c59081941105d6256eb6181ee3e"
+      },
+      {
+        "path": "room/Room Data/FFoamG5T1.tsv",
+        "bytes": 47610,
+        "sha256": "0048cdfe9d86ac674fa6a3b8dc6791c1706e98c375678828aa14b04446a34c4f"
+      },
+      {
+        "path": "room/Room Data/FFoamG5T2.tsv",
+        "bytes": 51120,
+        "sha256": "747869cbf115cf6949b7873224e3b2b8021f18439ba596e95b9a453aec9fd490"
+      },
+      {
+        "path": "room/Room Data/FFoamG5T3.tsv",
+        "bytes": 51116,
+        "sha256": "3e2d48d1667a092eb99cad33030fdcd69b7226c16b21708bb5df86a11019ce19"
+      },
+      {
+        "path": "room/Room Data/FryHBG1T1.tsv",
+        "bytes": 58682,
+        "sha256": "c238b67bca64bac31d2f183c442c4554d107ec006ef465937a400382016ba726"
+      },
+      {
+        "path": "room/Room Data/FryHBG1T2.tsv",
+        "bytes": 57455,
+        "sha256": "6798424ee49ccd30012b9d2f5167851c5c0a79337cbd5080ad3c952a3311007f"
+      },
+      {
+        "path": "room/Room Data/FryHBG1T3.tsv",
+        "bytes": 58497,
+        "sha256": "cd5b7b1d3837f6a7a4277aa2c24e1d2e80aea7cd15a8d45b8b55e0929f1f6ab5"
+      },
+      {
+        "path": "room/Room Data/FryHBG2T1.tsv",
+        "bytes": 58470,
+        "sha256": "b98f69f555310a96279fbd9c4dbd597af759b737390eda11e55c58459d19aaab"
+      },
+      {
+        "path": "room/Room Data/FryHBG2T2.tsv",
+        "bytes": 58085,
+        "sha256": "3bca9c93028679cd40318c6bbad290c4164ed5249bf6478581372bb2675a38df"
+      },
+      {
+        "path": "room/Room Data/FryHBG2T3.tsv",
+        "bytes": 58756,
+        "sha256": "c48fe88b0a53bb62a97c359e91736758b08406887eb9001dea3bb17b89f440de"
+      },
+      {
+        "path": "room/Room Data/FryHBG3T1.tsv",
+        "bytes": 58554,
+        "sha256": "798aa844b4bd975871a9f1abbf85869e29a00fd124760d6eb9ea5804f6c53c0c"
+      },
+      {
+        "path": "room/Room Data/FryHBG3T2.tsv",
+        "bytes": 58415,
+        "sha256": "81073b3020362a17e1911f44d691d74ea8fbf06307dc8ac554e1ec0280de6858"
+      },
+      {
+        "path": "room/Room Data/FryHBG3T3.tsv",
+        "bytes": 59853,
+        "sha256": "827db4087753139c4bc921fdb5bd40f12e2a4adb17650a947cdd79f53edc0dc1"
+      },
+      {
+        "path": "room/Room Data/FryHBG4T1.tsv",
+        "bytes": 58382,
+        "sha256": "ac077cbd8dc10b7f207e465446ef81bd8793c82e8b23ede8802efad935f2fea3"
+      },
+      {
+        "path": "room/Room Data/FryHBG4T2.tsv",
+        "bytes": 58749,
+        "sha256": "ef0422c112b2669bd79b124a1d6283c9afc6d3bdc520d51a29edf3ad7d5ae524"
+      },
+      {
+        "path": "room/Room Data/FryHBG4T3.tsv",
+        "bytes": 58436,
+        "sha256": "2f5c235115da7b701194df03843e48e8c8afd239bf116858844539f7663f8b57"
+      },
+      {
+        "path": "room/Room Data/FryHBG5T1.tsv",
+        "bytes": 59169,
+        "sha256": "bc01c1f04ad240c19d1673ee58454aa4adba9c3dbfbafd9f25e15e98f8a055d6"
+      },
+      {
+        "path": "room/Room Data/FryHBG5T2.tsv",
+        "bytes": 58592,
+        "sha256": "772ba41688a859e55a7d359b0f9ca7ff2e03407a51c84ea7b9347fc315cbfd10"
+      },
+      {
+        "path": "room/Room Data/FryHBG5T3.tsv",
+        "bytes": 61244,
+        "sha256": "0c061516b40e62842641dd693c80768b84988133eb49fff650cd12cd3a18b18c"
+      },
+      {
+        "path": "room/Room Data/SFG1T1.tsv",
+        "bytes": 68193,
+        "sha256": "35744897bd16dc92b5ec2b3315401d5a3e9a7bb7756777afb2223652e3916307"
+      },
+      {
+        "path": "room/Room Data/SFG1T2.tsv",
+        "bytes": 43374,
+        "sha256": "f2e0183f2fbc088d7dbd71080a57a8918adf38395e5a5d132e86ed68ae177f58"
+      },
+      {
+        "path": "room/Room Data/SFG1T3.tsv",
+        "bytes": 43150,
+        "sha256": "ac4f9f43b9e5f657c143fd150e551e49cdb29e8634c015a8789025b2806883eb"
+      },
+      {
+        "path": "room/Room Data/SFG2T1.tsv",
+        "bytes": 42973,
+        "sha256": "4c7559eeee4c336ea91ca4caf8e386315124327bdefd892c33eacc937f9a455d"
+      },
+      {
+        "path": "room/Room Data/SFG2T2.tsv",
+        "bytes": 43018,
+        "sha256": "064770a444349e7b9f8f0f296662d7bf690116a24633a4c4d1a20e07dae3764f"
+      },
+      {
+        "path": "room/Room Data/SFG2T3.tsv",
+        "bytes": 43187,
+        "sha256": "e5933705f66004b4afd0e1c585c190a9f73b07e1a2a4915c55e2512a494dc454"
+      },
+      {
+        "path": "room/Room Data/SFG3T1.tsv",
+        "bytes": 42324,
+        "sha256": "657c3eeceddcb6a707b15a95a9d30179dbb2fd1a3c2af1c34d28560c61913578"
+      },
+      {
+        "path": "room/Room Data/SFG3T2.tsv",
+        "bytes": 43167,
+        "sha256": "05726b3f87690758774424abd9ffdc4a60f5dba2c10312f94a9aaf2fd0905277"
+      },
+      {
+        "path": "room/Room Data/SFG3T3.tsv",
+        "bytes": 42847,
+        "sha256": "4dcb1c5a8bf55aa8240c141fbec664907ee55899da7f4aded6f180dd6ea4ebe1"
+      },
+      {
+        "path": "room/Room Data/SFG4T1.tsv",
+        "bytes": 42881,
+        "sha256": "e67893c7043ec64f819fde09b7869d63321ec37dfd28a0cdbe568636190904a7"
+      },
+      {
+        "path": "room/Room Data/SFG4T2.tsv",
+        "bytes": 43783,
+        "sha256": "74549209fc4e27d33b0bd3677de7e49944109f555fc0f7a6be065cc71f4c7159"
+      },
+      {
+        "path": "room/Room Data/SFG4T3.tsv",
+        "bytes": 45281,
+        "sha256": "7b5703327ff38ee1c39849a987f9ebe530f383fa6ba04bcb4bd65d1a016d6825"
+      },
+      {
+        "path": "room/Room Data/SFG5T1.tsv",
+        "bytes": 43543,
+        "sha256": "7c0f47f764cc2105b7198d279cb7d67eefa6d69de033937ef619965fc743f79a"
+      },
+      {
+        "path": "room/Room Data/SFG5T2.tsv",
+        "bytes": 43051,
+        "sha256": "e9217023bd123fdd4c514ed8b83fa42632adf90a6e428a7fe32058a6958320d6"
+      },
+      {
+        "path": "room/Room Data/SFG5T3.tsv",
+        "bytes": 42853,
+        "sha256": "1350cff154bff2e2e8e4e0084c2b4a79c9130dd21fb7c0363fb62c63ca63b83f"
+      },
+      {
+        "path": "room/Room Data/SFoamG1T1.tsv",
+        "bytes": 152135,
+        "sha256": "d1cc498d419c9ac2d6cef148ff9f132ba168540f7183ec69614bedcd30b4cf5b"
+      },
+      {
+        "path": "room/Room Data/SFoamG1T2.tsv",
+        "bytes": 149613,
+        "sha256": "fa856e50761f04c626fb0726e00b06ec444589b9c5bee31ff709f73baa7e94a5"
+      },
+      {
+        "path": "room/Room Data/SFoamG1T3.tsv",
+        "bytes": 146250,
+        "sha256": "a4ce95f2c0ad37512d416250342b2d89fb865d1dfe452b67af4486dfe37db5d1"
+      },
+      {
+        "path": "room/Room Data/SFoamG2T1.tsv",
+        "bytes": 139323,
+        "sha256": "fcd0560cbd3768f9f56b6c31c18047685d314ffa43115e7d14bb5d5c337a26eb"
+      },
+      {
+        "path": "room/Room Data/SFoamG2T2.tsv",
+        "bytes": 145571,
+        "sha256": "c4fc2193d13397fb1e66c632887dfd26c5624ae631639ffe408e70f195f99bce"
+      },
+      {
+        "path": "room/Room Data/SFoamG2T3.tsv",
+        "bytes": 139408,
+        "sha256": "4f2997df79045886aa9a2f577a7f747d879c056ac6f2f438017bb7661724253a"
+      },
+      {
+        "path": "room/Room Data/SFoamG3T1.tsv",
+        "bytes": 144528,
+        "sha256": "43faa0bae216a1df1e1f524eb2816d50697cd29def96efc6dd61ad8ea775c83f"
+      },
+      {
+        "path": "room/Room Data/SFoamG3T2.tsv",
+        "bytes": 138416,
+        "sha256": "1d47d3b8c3a77b34a44ef16777bdde419895dfed64f8a7e2391dd480bff83eb8"
+      },
+      {
+        "path": "room/Room Data/SFoamG3T3.tsv",
+        "bytes": 142584,
+        "sha256": "af4f31ec72d79d9f0115430133cb46b560af029b6ca87bb55f8a4bb646a262a1"
+      },
+      {
+        "path": "room/Room Data/SFoamG4T1.tsv",
+        "bytes": 140108,
+        "sha256": "5112b495327ad5d7748ae57933a51ff9827b59a5ff35a1d45071f55c7e4d55d7"
+      },
+      {
+        "path": "room/Room Data/SFoamG4T2.tsv",
+        "bytes": 129098,
+        "sha256": "960956a4c82394dcaaae73cc559e53712c7f9a96cf36897fa8deb534947d2adc"
+      },
+      {
+        "path": "room/Room Data/SFoamG4T3.tsv",
+        "bytes": 144173,
+        "sha256": "2213224a3457624ae30a107e58eb93edf86fc19eeff998e3c279e4629e2aa7c5"
+      },
+      {
+        "path": "room/Room Data/SFoamG5T1.tsv",
+        "bytes": 144956,
+        "sha256": "998658658c6320c114ebf652c50b9359399b317aeac709f9e4280401d944882e"
+      },
+      {
+        "path": "room/Room Data/SFoamG5T2.tsv",
+        "bytes": 155739,
+        "sha256": "1ae030248ef1f2918e030b09905dd99cbb71cb97894a9f8b5ee8eb6ce12b6b43"
+      },
+      {
+        "path": "room/Room Data/SFoamG5T3.tsv",
+        "bytes": 147301,
+        "sha256": "3ce01e0001999c5f0f718b3dc94adb7f66c5be40c94d954edcb4d927011d0861"
+      },
+      {
+        "path": "room/Room Data/ToastG1T1.tsv",
+        "bytes": 41913,
+        "sha256": "26185e38f709f9483921bd54046cf7ded28eec1cda774f7329dd6a962d870890"
+      },
+      {
+        "path": "room/Room Data/ToastG1T2.tsv",
+        "bytes": 38647,
+        "sha256": "3b771c2e0a50192e79e288a6f57dab7521a328416e817e9c506c318ac51ef434"
+      },
+      {
+        "path": "room/Room Data/ToastG1T3.tsv",
+        "bytes": 60738,
+        "sha256": "0229c0246438652ee38ed96ae9cd10c02b481a662e983fffe5532f01d37df20b"
+      },
+      {
+        "path": "room/Room Data/ToastG2T1.tsv",
+        "bytes": 37220,
+        "sha256": "d85464e656cc3dc671d6e633aed16f5ea0d1f00a1e1b9c59e2e56c7947eda6fe"
+      },
+      {
+        "path": "room/Room Data/ToastG2T2.tsv",
+        "bytes": 38331,
+        "sha256": "1136d2a1ba598a07fa6d3e9373d63063734ec1bde99e5c2d32d5ea3e24214058"
+      },
+      {
+        "path": "room/Room Data/ToastG2T3.tsv",
+        "bytes": 33219,
+        "sha256": "568899a766613853e361509eda2e2376190d65064bc76a18f39355ed2c4e823c"
+      },
+      {
+        "path": "room/Room Data/ToastG3T1.tsv",
+        "bytes": 32829,
+        "sha256": "26507282d20493ecfb194f7c34b9362e4acaa0e8cc8d7ac1f959a1fa45558b5c"
+      },
+      {
+        "path": "room/Room Data/ToastG3T2.tsv",
+        "bytes": 32988,
+        "sha256": "71b883f858619a09f31969e397cc525271db6e2267f86219a03e239b8a1f814b"
+      },
+      {
+        "path": "room/Room Data/ToastG3T3.tsv",
+        "bytes": 34596,
+        "sha256": "8862e7a3213c286e0d3fa4c778b870895f3ac3d66726eb450c322dfb31ec8589"
+      },
+      {
+        "path": "room/Room Data/ToastG4T1.tsv",
+        "bytes": 33185,
+        "sha256": "df97b7c5c88ac03dfc9f0d91e3186d2289a219f7fa1c50ebd1dc2deb579735b1"
+      },
+      {
+        "path": "room/Room Data/ToastG4T2.tsv",
+        "bytes": 33137,
+        "sha256": "554092e59e2a83c22e5de5c008c515215a259a6d7f8ef4d643d202b695006215"
+      },
+      {
+        "path": "room/Room Data/ToastG4T3.tsv",
+        "bytes": 33417,
+        "sha256": "62cbed9bc4c16abdfc0f8df784390ce2662980518f2637d1a2a399b566f9e6f9"
+      },
+      {
+        "path": "room/Room Data/ToastG5T1.tsv",
+        "bytes": 34796,
+        "sha256": "993ebb16cadc7e94aabf6e2b3cbe1ae4cdc7f0fc14145aef2220dc9e0cc4b383"
+      },
+      {
+        "path": "room/Room Data/ToastG5T2.tsv",
+        "bytes": 33003,
+        "sha256": "7cc7d97576089aba14ad9a0a42c4e5080c32365167b0cb2d85fab1510312cea3"
+      },
+      {
+        "path": "room/Room Data/ToastG5T3.tsv",
+        "bytes": 32856,
+        "sha256": "64d8b533713655c786314e662c8bc8a6306fd3c868ae4fc3baef825c00d173e2"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/I01-A-001.tsv",
+        "bytes": 15330,
+        "sha256": "f4dc1c0d3265818597d052ae9e8dab0832df2fa9709214debe22e2711dea8d1f"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/I01-B-001.tsv",
+        "bytes": 12237,
+        "sha256": "c734cb43a84490ff6d64a2a87f3d2ee40d4f351b071465ddee6ddc39b57d6ffa"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/I01-C-001.tsv",
+        "bytes": 15856,
+        "sha256": "e4294356277849e887727d1977741d046fb21c8c114ac5dbba1cd701fd52ca74"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/I01-D-001.tsv",
+        "bytes": 13404,
+        "sha256": "38ca3fbdb0d602be901e173409a54c66488e8845f5152df0a1c6a460f1b70ddc"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/I01-E-001.tsv",
+        "bytes": 13779,
+        "sha256": "eeb0ee033d34f0c4600587b14a619b3d26d85ad7bcbcdb061982a3082df44d99"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/I01-F-001.tsv",
+        "bytes": 10912,
+        "sha256": "49d962ee56aad36224b14e66f90624bb43479c696707a1140c88a4b43066729b"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/I01-F-002.tsv",
+        "bytes": 11722,
+        "sha256": "700fd23fbcedd3ac919257670b3b78b7e5e9f94940c0cf0eb5bca7315392b590"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/I01-F-003.tsv",
+        "bytes": 9925,
+        "sha256": "9ff3c8b5c9703ed68d1cf1487bfb44021823a2035b6c8e25251ed86bc5612b59"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/I01-F-004.tsv",
+        "bytes": 10684,
+        "sha256": "e63c896807ab62d5e2fd94235fc65ae471b42a2252a883d288596514031d6efc"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/I01-F-005.tsv",
+        "bytes": 8516,
+        "sha256": "50de39da40352197611c1de387913ee9c3b113f330e211709897383ca2aac525"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/I02-A-001.tsv",
+        "bytes": 8139,
+        "sha256": "6a2452d9f283326458da6c752c54126ceac79341bd697425317486207af7b371"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/I02-B-001.tsv",
+        "bytes": 8187,
+        "sha256": "473fcb3ae4dbc6f5c06512d7d1a0facb1278df455894d1b275c4ea6a7851d817"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/I02-C-001.tsv",
+        "bytes": 7823,
+        "sha256": "4a5a920688a0e388dd9b46be93d7381b6e7e292a81594e13404f5e056f456504"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/I02-D-001.tsv",
+        "bytes": 10447,
+        "sha256": "69069db3b53961fa3c51113d536feebd231a7b4680c153127cfb14fa1f05768c"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/I02-E-001.tsv",
+        "bytes": 8986,
+        "sha256": "29de33050eb8961d9b498b22893e0ae6b3bfc30c3c0a5a74b1b6f961373b7f46"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/I02-F-001.tsv",
+        "bytes": 7539,
+        "sha256": "86407da8b719bf819a28e46f4c96faa984a94731f8cffee4a01f5468dbca444c"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/I02-F-002.tsv",
+        "bytes": 7907,
+        "sha256": "2a27b1bc9c6096010b00679e4c04cbbe52115a8695a7a2d2552936e6ab4e79f0"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/I02-F-003.tsv",
+        "bytes": 9042,
+        "sha256": "f3d0b2a804c46b024abb27b4878263c38e9319a2813f0cda5430126a78c0e1d4"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/I02-F-004.tsv",
+        "bytes": 5884,
+        "sha256": "bc482404d6827b754f698712171217c73634aa46e03100dba513060c45b5676e"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/I02-F-005.tsv",
+        "bytes": 5696,
+        "sha256": "6aca3235df5b0309c7d820391d252822e10ad1524de97e622dfd6193e48c9a1f"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/I03-A-001.tsv",
+        "bytes": 5958,
+        "sha256": "6972b171613077ad0282e28b2b05768d03c0dfc2e6108af9ddb72a50f2643d52"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/I03-B-001.tsv",
+        "bytes": 6871,
+        "sha256": "06719af59d8c008da43fd30ee2f2f2d80011107b35ec6cfdcb5104e5a04102b9"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/I03-C-001.tsv",
+        "bytes": 4755,
+        "sha256": "b0fb2ab4bb6664c638b95b29ce687f485341626d57e47a3ae42263c569be9da8"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/I03-D-001.tsv",
+        "bytes": 7073,
+        "sha256": "5256b6d3bf01735ad696786430f48e743201b71f89fa1e9cccd04e41e11ea0b2"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/I03-E-001.tsv",
+        "bytes": 6878,
+        "sha256": "7b951ea6e037a03db179885c78af09a6573bea5f09108217808ebbfee76a0bb7"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/I03-F-001.tsv",
+        "bytes": 6120,
+        "sha256": "14c27c332ca8e70bac16a8b2d60df2c571f9db12209313e26d4f1cc091a5a384"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/I03-F-002.tsv",
+        "bytes": 7011,
+        "sha256": "b41371a7c8adfe0a458eaabdb99c524be1e36070d6c3fbc7894e0408ee1827b3"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/I03-F-003.tsv",
+        "bytes": 5934,
+        "sha256": "2452a113301a0552b960ec220a9705c5a68e5286eaff22283fc82ee40d77fb8e"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/I03-F-004.tsv",
+        "bytes": 4995,
+        "sha256": "9b5cdf24c1432852d571652505ad97589ac124cc16b00258e914fe4382b3367e"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/I03-F-005.tsv",
+        "bytes": 7904,
+        "sha256": "33cd841c67ceb23687cc0b030173a6e3611bb74cd911b4eb36b0734adb19b5f5"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/I04-A-001.tsv",
+        "bytes": 4943,
+        "sha256": "90c9ffb69a136311b54279b6be4f3081c50a671629b925aa8863d21c70b5fff3"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/I04-B-001.tsv",
+        "bytes": 4064,
+        "sha256": "38d60a4fecd0fbe1426af02c9cc1e8f6c5f8fdee83ac7e21c13c14dedc9a013a"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/I04-C-001.tsv",
+        "bytes": 5413,
+        "sha256": "6d4ef88bc2cbc4f7cd030693d8a236e308e6c218e61567597a0aa5552a0eab3e"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/I04-D-001.tsv",
+        "bytes": 5228,
+        "sha256": "9ac6a96cf77da40da6bd6550716d5bd554d5e3090fe357371ffed3c697005566"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/I04-E-001.tsv",
+        "bytes": 4388,
+        "sha256": "c41d34de85d64b282145843e05a6e602c121755d69db854ec2e928ff1ff466c7"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/I04-F-001.tsv",
+        "bytes": 5092,
+        "sha256": "74822e52e17cb6e09f2d88886109be2c29fa446cac3ab76168e10695c0893f03"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/I04-F-002.tsv",
+        "bytes": 4860,
+        "sha256": "a73b180f58c54c00c71c0bc3c93ed40e3527a8c0df828beeed15d432216bf9ec"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/I04-F-003.tsv",
+        "bytes": 4616,
+        "sha256": "a650fd5bc708df4a9674bb135a317136af7259163129f069663ba68f0f79fe14"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/I04-F-004.tsv",
+        "bytes": 4248,
+        "sha256": "158636c820d318a57bb85cfa9cfa843babd03a9f9b70d21556e7d3aa17feecc3"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/I04-F-005.tsv",
+        "bytes": 4203,
+        "sha256": "4cdd5f3ee1ac43133b6c71862dbc345310f1505577b4856fdbb2576e5b50039c"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/I05-A-001.tsv",
+        "bytes": 15433,
+        "sha256": "9e8b87e31e33015532a78ae7e3e6a0294f35be4d1ba1d53a6cc0617d1fcc3413"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/I05-B-001.tsv",
+        "bytes": 10542,
+        "sha256": "3a21521462828ddb4e94c92aafc3e7b42a078fe4b6e724dd6141eda9df38178d"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/I05-C-001.tsv",
+        "bytes": 12604,
+        "sha256": "3c071ca1e2b3b44ec49e9b79fc42fe3e315c204702f69adf782c06beb513c377"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/I05-D-001.tsv",
+        "bytes": 11859,
+        "sha256": "5d79a6bda32346fea02271705c41b9834ef7c49c408074ff87961f53c714db69"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/I05-E-001.tsv",
+        "bytes": 11669,
+        "sha256": "07ee10ea30bfb3912a54020142731ed2aa089646950ff2a08ca664ddfbe3bc0b"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/I05-F-001.tsv",
+        "bytes": 12700,
+        "sha256": "9d227dd8cc656dff5059c8dcdf889b0f9b8668bb120c9cef11f2ca06ac8ef0a1"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/I05-F-002.tsv",
+        "bytes": 11288,
+        "sha256": "1a11ab382e054adf1fdbc31bf28a026d7f002b5e6a2b18e8c78736acaa32ceed"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/I05-F-003.tsv",
+        "bytes": 12087,
+        "sha256": "d1994ddc017da4c8ff124b60a496c64143db81bc82f9450058c1570326fc1cdf"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/I05-F-004.tsv",
+        "bytes": 9690,
+        "sha256": "c88151ccfa9c42d80d738626e452a6bb0bd93ff2135f1799de53100916a55ed6"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/I05-F-005.tsv",
+        "bytes": 10494,
+        "sha256": "40a13bb7bc7ba2df50acc13f1713dd46bc0f48a0579deb6751ee703c9cdcb7f9"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/I06-A-001.tsv",
+        "bytes": 10583,
+        "sha256": "c28bdc7159b1df0b2ce1ac1ba0558d517b3a5dffb121fa97738efa5541065b56"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/I06-B-001.tsv",
+        "bytes": 10680,
+        "sha256": "532a30843aa2edb847cb5da96d8e992dbc1d3320f2c9af69e353ac88fb3bb4d9"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/I06-C-001.tsv",
+        "bytes": 9988,
+        "sha256": "2a3e5acf09eb16a98f369fe85bc53a7d07a3ec4df65ef80a5a94481a946af0ae"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/I06-D-001.tsv",
+        "bytes": 9973,
+        "sha256": "817bed53d08e4919ef1e4243f3e4450f27dd8128e771101adc022fb89c6e2b80"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/I06-E-001.tsv",
+        "bytes": 13500,
+        "sha256": "c3a86d459f7fff1594c196ccede835dbe43efbf1d2828d5536e0c09df63e6f34"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/I06-F-001.tsv",
+        "bytes": 13836,
+        "sha256": "a815d2962e178fbcb67f7e92ff77a9d995153ac6370d4296a47b3af482d4d7c1"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/I06-F-002.tsv",
+        "bytes": 12751,
+        "sha256": "85dcd333634319b3f8dc4fc85b1efdeaf6578b4e49856871fbb80edf55bda0ba"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/I06-F-003.tsv",
+        "bytes": 13279,
+        "sha256": "90534f52e9ec73b2e8e0dba8216bcc1a86e597a155269812992bba8388d0c55f"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/I06-F-004.tsv",
+        "bytes": 10489,
+        "sha256": "eb999a2619300012c3835a5dc47cf0151805dd55c2b0c4b21e4ce69f73cc7d7e"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/I06-F-005.tsv",
+        "bytes": 10448,
+        "sha256": "57bd23734b0e01bf315110b207bcf879cda8f430d46d94c61b14beba953f44b8"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/I07-A-001.tsv",
+        "bytes": 7717,
+        "sha256": "6b64e92a5bd84745df84677e5613b5809e6c648eb8a165fc59c95802d5c4a58d"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/I07-B-001.tsv",
+        "bytes": 9314,
+        "sha256": "29cdd5e6db401e8202c2f11dada18ea944cdf46e2e3f8961e39d0b0924282359"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/I07-C-001.tsv",
+        "bytes": 9644,
+        "sha256": "e5b2acf3329771717771c19fcd8630592304222a0d870ca19540624bfad0f254"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/I07-D-001.tsv",
+        "bytes": 9408,
+        "sha256": "48ec71c4db789bc86e01ffce8e447eb017e0172cd819e08e8faf8492c84e2be4"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/I07-E-001.tsv",
+        "bytes": 9502,
+        "sha256": "c4e6bb448d35f3e131bcaeec6fe51fcbbc6136f9c0133d7f24c8d75f2c0c8685"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/I07-F-001.tsv",
+        "bytes": 8478,
+        "sha256": "00e0cc23f0fbcdac7213eab3a0064d0639fbe246c83d66fc85c42e639e4087dd"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/I07-F-002.tsv",
+        "bytes": 9223,
+        "sha256": "483b4387ca27a64193579c22e67dfd30573948fed0f86d9fe835ff8f17b361ef"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/I07-F-003.tsv",
+        "bytes": 7810,
+        "sha256": "22ad3156a4c99ddedc8a200eb726ae028b2c9f4c808680d68d69ad7b348e205b"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/I07-F-004.tsv",
+        "bytes": 6259,
+        "sha256": "cb4ce287e174c475ba7ac629890e8a76dcfed8ffb000fb7d74fe70a172b53d00"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/I07-F-005.tsv",
+        "bytes": 7487,
+        "sha256": "5e6d82f87335caea35c30ef425da5ce3f45c03e4a13b1b0190beb217174f7af1"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/I08-A-001.tsv",
+        "bytes": 8565,
+        "sha256": "7f202fc35d32b9283a6ca0dce800d9567cce16182f2968da96c231a7d06245f8"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/I08-B-001.tsv",
+        "bytes": 7810,
+        "sha256": "b2e7e936149ffb7da70033167ad231e29fb5223e7ca8a5bcc1f256f17e5821ea"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/I08-C-001.tsv",
+        "bytes": 8096,
+        "sha256": "d18a514fa6ccd5068bb99f278aaadafe8ba59ade2e5f5216635ab0ae4ee66429"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/I08-D-001.tsv",
+        "bytes": 8610,
+        "sha256": "20bce0207241872f4890ed693c3e4756e7cf6b108a7f03d016556290d20bf40c"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/I08-E-001.tsv",
+        "bytes": 6873,
+        "sha256": "1fc949764feaa1013c6472c15e52cfb3e1a6c47232a088ecfaf0c4bbdedfce2b"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/I08-F-001.tsv",
+        "bytes": 7293,
+        "sha256": "a252691db9150b3c6e46c367f4f1b7b14cb2b1324d6e8ad1961ac520264fe044"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/I08-F-002.tsv",
+        "bytes": 7105,
+        "sha256": "1d6f39b127b725e57f006b40c39b07e284c272543ecd8d68312f9740aefd527a"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/I08-F-003.tsv",
+        "bytes": 8477,
+        "sha256": "e643d63370481db90c5147dcdfc8e831e23aca23aa1b2951d37b4c7f70c281f3"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/I08-F-004.tsv",
+        "bytes": 8140,
+        "sha256": "0d9eb40ce47be3cec4cf05d2d55519e5222bf525f43a01602471a3ce8f861473"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/I08-F-005.tsv",
+        "bytes": 8471,
+        "sha256": "c750d00b8f4c97f5f39398b5174a1f14a83710e1cc000982d7a481bfc2ebf7dd"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/I09-A-001.tsv",
+        "bytes": 7910,
+        "sha256": "d19add6a8d2d8c4717067ae0e53da7075e38237ee44c2df9d82146b823148952"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/I09-B-001.tsv",
+        "bytes": 7578,
+        "sha256": "497a699725bba416458458a476591a513219b1d4c9ae0f4845b67c2d377df8df"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/I09-C-001.tsv",
+        "bytes": 7716,
+        "sha256": "ab3c18a44834c844f657ef49f3471eead23398d240edc2ceaee7e0d67f9c3e7a"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/I09-D-001.tsv",
+        "bytes": 8515,
+        "sha256": "1925cc60d9823ae5744430a4fcab5b99dbce17afa3c1a4e632380a2b1fa0bc08"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/I09-E-001.tsv",
+        "bytes": 6360,
+        "sha256": "eb6016dcecc5976b49a75ec762d85826ba52fbe6afc17d853adcd598dee25e19"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/I09-F-001.tsv",
+        "bytes": 6871,
+        "sha256": "dbcaa0e1ff34baa58bb4b23b7533fee9d2440f1d2106ba2aa59f7355dad04d98"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/I09-F-002.tsv",
+        "bytes": 8333,
+        "sha256": "24cb0a7732f5e8f3b4a7b1535ffe94940403b3444e1b76cceb64dbda4a896f25"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/I09-F-003.tsv",
+        "bytes": 7632,
+        "sha256": "741a46066d1388873653964b7c31a9490363700ee25d6d1497435ee2733c8c35"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/I09-F-004.tsv",
+        "bytes": 5977,
+        "sha256": "43fe61f2ae0cc9c64d05093eb4c1eb247b296bf0f4ae1795600bea84dbe96890"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/I09-F-005.tsv",
+        "bytes": 6265,
+        "sha256": "aa91edf011248b80287500d95d35a6999ae73e80d1453b7689dafb32756a14e2"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/I10-A-001.tsv",
+        "bytes": 8664,
+        "sha256": "f8dfa298bd78daee45678a8e3d52711ba4b7045ab3a2f628b875ae7cae30566e"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/I10-B-001.tsv",
+        "bytes": 8332,
+        "sha256": "91a187328c5e4e43861872f2fe427693e641010e124afc962282393570d8d130"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/I10-C-001.tsv",
+        "bytes": 8989,
+        "sha256": "7de4f7257bc3bba9c9adf507aa84a602b38460a3b61948b94c0dd7e3dd580f64"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/I10-D-001.tsv",
+        "bytes": 9173,
+        "sha256": "2f707ece2096a3a4292c99b3ed96b9a7cac1409b8d7f6168a97c482e2bf5c2f7"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/I10-E-001.tsv",
+        "bytes": 10984,
+        "sha256": "9b84b7bc005588b0d2b76f00e1c5d600ede9d28e260c7238787f3dd1ad02b433"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/I10-F-001.tsv",
+        "bytes": 9456,
+        "sha256": "718daf7312401f5eabd0c733d52ef4bdb287b83806cfb6edf99375b1d4cb4eff"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/I10-F-002.tsv",
+        "bytes": 10301,
+        "sha256": "540db481e9d9f3066c552448fde341687b1f9d730b2fec07e496fe4f8ef83562"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/I10-F-003.tsv",
+        "bytes": 8891,
+        "sha256": "691ff3d933380bc65d109f77858b8ecb49c8fd2b5b647b891c7eb58fe6a10dc9"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/I10-F-004.tsv",
+        "bytes": 6259,
+        "sha256": "af639e413913d49492ea51f75d8646c95a65a0793dc37c8981a444e7777f7d53"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/I10-F-005.tsv",
+        "bytes": 7718,
+        "sha256": "e24e26a00eaab4b0e8ff49d4208fa4bc2f7e9b491647838195837d8badadf103"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/I11-A-001.tsv",
+        "bytes": 12855,
+        "sha256": "148c5bde07d212080550a17ec67a2f8c8df3396b2ee9d87e554c3a2a6cb88b46"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/I11-B-001.tsv",
+        "bytes": 9972,
+        "sha256": "3151d06c8ecba94645edceb275775dcbe9c1e732caecb9c15fb37251b2d731b9"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/I11-C-001.tsv",
+        "bytes": 11385,
+        "sha256": "bae5097ab92aa534ea1e08128e358f014dcf66485b7c5ea9a00b8e377b51cbce"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/I11-D-001.tsv",
+        "bytes": 14109,
+        "sha256": "20c33453959274871cffc90797dd723a13454662b8346802d3c56ca2ce76397c"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/I11-E-001.tsv",
+        "bytes": 14116,
+        "sha256": "7b10c3d5fcb9c6a41ec00ba0d71f293936d71228d355fe34359151a564453110"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/I11-F-001.tsv",
+        "bytes": 11309,
+        "sha256": "a614b16313dba775fe28cec1bd73e2937e4ba95cdc5693b48a2fe37119ccf979"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/I11-F-002.tsv",
+        "bytes": 12980,
+        "sha256": "9bddbeada01afa3e2d2ffe5d8f6b6ec66360fc7b90113108d235795d4dc438fb"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/I11-F-003.tsv",
+        "bytes": 11573,
+        "sha256": "5f98d93ed8cde226c20779878ea77d34ec44ec072ed36f0c43ac746b23704b6a"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/I11-F-004.tsv",
+        "bytes": 10072,
+        "sha256": "f4b1f54db2e072812545609e02bd9e665d6c2e2a20ec3a824620be2be4faa0db"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/I11-F-005.tsv",
+        "bytes": 7857,
+        "sha256": "2c380b0aab8c2f029be1b0bdb3116c2f9497b0994c3b34ca8174d3b53feb0149"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/I12-A-001.tsv",
+        "bytes": 12192,
+        "sha256": "53c8493b82aefae01b706cc362cde7ac1faf98e350a9a0016b91256c5721221a"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/I12-B-001.tsv",
+        "bytes": 14636,
+        "sha256": "4b8a916f46242fe51fddb0eab83e89060a919f03830a9e88f8ca70caae786763"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/I12-C-001.tsv",
+        "bytes": 10165,
+        "sha256": "1d2829d9b8e2e2841d7aba4192044db5222dd476ad5b1b08d887f52a034bb988"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/I12-D-001.tsv",
+        "bytes": 11619,
+        "sha256": "00e6aeb2eed3c65313b66fbd968064b3fea8a6ac18dcf723c12ac422d187bd09"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/I12-E-001.tsv",
+        "bytes": 11852,
+        "sha256": "4bcd8e57352e95f581ad448fa5f3dbfb32cc316c802dee81f3ecd7ba0e08e63f"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/I12-F-001.tsv",
+        "bytes": 11100,
+        "sha256": "151bf07d8b2010af9265745ca90a4f1ea336a6520bebeb7133440386bc2c2435"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/I12-F-002.tsv",
+        "bytes": 10775,
+        "sha256": "905c8debbcbe7288aa4c48c38cd48d2fba474d47821b1571c01d8f011414a2fa"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/I12-F-003.tsv",
+        "bytes": 9365,
+        "sha256": "32142c3c7cde41c66095584ea2f9e3f9befe20f9fcf3970f4221a730b6920632"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/I12-F-004.tsv",
+        "bytes": 9034,
+        "sha256": "9ed40bc4d96a31d73f3182ce81dedc103190f8cc27085bf4b602c2977aa5c46b"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/I12-F-005.tsv",
+        "bytes": 8797,
+        "sha256": "96516f7fc0c6993574bc405fa0d52c96192c7453c4d5a02ff9dd6d565a10e65d"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/I13-A-001.tsv",
+        "bytes": 14634,
+        "sha256": "d5d9101714d54bdb23009e39a63362f6ec44c462c5b9e70cdf987ae897ff81b2"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/I13-B-001.tsv",
+        "bytes": 21876,
+        "sha256": "a35a07de600152620237a09d5b9882838741cf4bf1743f37e2348bf5a5e5be35"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/I13-C-001.tsv",
+        "bytes": 14489,
+        "sha256": "0b27e27f755e9c059974aac2dcfa9011f2f4f6b84c3a4faa9b8b74ffe815d28b"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/I13-D-001.tsv",
+        "bytes": 18620,
+        "sha256": "1b055f0d4ae40d044a1253b8c9ccefa7709d82b30c076789bd73dab6c4f7bc9b"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/I13-E-001.tsv",
+        "bytes": 19140,
+        "sha256": "a33a327fdda842c94c40bf86e804ca88b9f3db2331016e8de1cb136544193ab7"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/I13-F-001.tsv",
+        "bytes": 14296,
+        "sha256": "5edd68fbbfd2cbe13c5d11667fcbd7fe990fdf3587f6ac4e8b648fe6171b0621"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/I13-F-002.tsv",
+        "bytes": 17734,
+        "sha256": "021a0de0223f652ebb9f39e891131068772f6e54113b1c53e78b7c16f52017cf"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/I13-F-003.tsv",
+        "bytes": 15990,
+        "sha256": "a1bde8fbe3c061807211ba846140f5d13fff4fb69041c0675ba9fe774e4a110c"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/I13-F-004.tsv",
+        "bytes": 15894,
+        "sha256": "aaceae6debf175e28db0ecf61349ba4f9cb9bd126b55205b000358aed8897119"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/I13-F-005.tsv",
+        "bytes": 11664,
+        "sha256": "842edff588696710ab59092800c9921e5a48b74141947b197eada56e9bd59204"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/I14-A-001.tsv",
+        "bytes": 16235,
+        "sha256": "2e7eb5bc613eb8013a01ce90e039f5e851456217946ed7b1fcd9e94d00a06dd2"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/I14-B-001.tsv",
+        "bytes": 20516,
+        "sha256": "3ea77f262da56d0a0c6e85b5c96801762a2b85de2dafb57df7c116c1fe3dbce5"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/I14-C-001.tsv",
+        "bytes": 13450,
+        "sha256": "329b9214f51e954a85d22cff9da4a0ab10cf1eba571605fa9d0611835377cec5"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/I14-D-001.tsv",
+        "bytes": 16364,
+        "sha256": "1018a0917a1aa3192627a82b0d4a1560796ed508e2bc7b6e92dfbc056c129326"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/I14-E-001.tsv",
+        "bytes": 15716,
+        "sha256": "e9f212ab80ed17ddb8fb91791c885060ced4b934d5071636fd51bef721c60fc4"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/I14-F-001.tsv",
+        "bytes": 15753,
+        "sha256": "474b53479d2a1e01ad4e23afe701d0e9d9b6eddbe318272e0d51ff777359fe82"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/I14-F-002.tsv",
+        "bytes": 15945,
+        "sha256": "1cdc1964fb06810a250b75bba15b7d4019d36a5c54347a669976ddf3b21bef8c"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/I14-F-003.tsv",
+        "bytes": 17868,
+        "sha256": "60c17b8b4b21247d208ba1daec0d495e9a7513c9d8cd1efa468158459a3a74b4"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/I14-F-004.tsv",
+        "bytes": 12088,
+        "sha256": "75de1c72dcdae4a7d8ed8e36ea069ebd1a98ec2288926cb27fdfdbd0d4469985"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/I14-F-005.tsv",
+        "bytes": 13732,
+        "sha256": "8a2e0ac9bbead06008e29d79d71770719828a78fcf36e778667400195773c381"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/ICO01-A-001.tsv",
+        "bytes": 10402,
+        "sha256": "965f395e57fcbe0e784e1bee8d194f671616276a96e63e2ca3431d119462a264"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/ICO01-B-001.tsv",
+        "bytes": 9841,
+        "sha256": "4f2ec7e0a87a51b8b16e17c432a70eaf9ebfb1ddb99e4493184457dc2e9dce78"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/ICO01-C-001.tsv",
+        "bytes": 9845,
+        "sha256": "8f5da7ed02bdfe68ac926bf02dbd92240ebf1fabdf65649d0b00a8cb41514584"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/ICO01-D-001.tsv",
+        "bytes": 11117,
+        "sha256": "ca24f797bb335a611fa73bd37b9a171b0b14de0a3f9419b47efe637a3e48412c"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/ICO01-E-001.tsv",
+        "bytes": 10174,
+        "sha256": "c87f310fe5a7969876dca225f98d75b403d2225981fb6b60a25679785c7101d6"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/ICO01-F-001.tsv",
+        "bytes": 11199,
+        "sha256": "21db33eb4d59b2512d210a2c4fd58aa1b463f23763c6c55265a06e1c94f07795"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/ICO01-F-002.tsv",
+        "bytes": 11196,
+        "sha256": "5051f7cc724b22d2305ace0651132984792e7b3994b70dff5e9f91e6a72f1fbb"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/ICO01-F-003.tsv",
+        "bytes": 10255,
+        "sha256": "a7631ab644d0862046b96d49a826d72da511b4dad714e9546cea2f9cdf230396"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/ICO01-F-004.tsv",
+        "bytes": 8110,
+        "sha256": "93bf396bd98a411c51eb671c9c6e2ded9325d944c97466e437a09a8b8b980571"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/ICO01-F-005.tsv",
+        "bytes": 8797,
+        "sha256": "0fd8a827fdc59bff8d9d9ffa9c0e30a393471a90e5100c0390c7f1c2fba52162"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/ICO02-A-001.tsv",
+        "bytes": 9831,
+        "sha256": "913b5219467c06bedfe6ba37c29787380e932c534e41c2a9aaffb8f07d742b42"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/ICO02-B-001.tsv",
+        "bytes": 10630,
+        "sha256": "e63656d7b70d352a662c6ba50c1a973725f6cdfb923cfdaf0a6c9e06b29e558d"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/ICO02-C-001.tsv",
+        "bytes": 9831,
+        "sha256": "f480a4634294ace8bdaac95718d4cc4e48d343670d657509f7f21d6bb4c97e17"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/ICO02-D-001.tsv",
+        "bytes": 9549,
+        "sha256": "eb78bbbc38c165539187613185d7071c9d16426fba23b5c86c15b94e6278478c"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/ICO02-E-001.tsv",
+        "bytes": 21534,
+        "sha256": "6c1129308cd4e561b2702ca298cfe1546b80771d2ae212de67d36602e02dbf62"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/ICO02-E-002.tsv",
+        "bytes": 21819,
+        "sha256": "b8103093b4adc41ed7d5435d6ba1d31db4a72685da252097c90e145c1fb7656c"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/ICO02-E-003.tsv",
+        "bytes": 15096,
+        "sha256": "39aa198bc5dad9ac2ce258cd4090ffca07c706235eb7d4f90ed1760cc07191d4"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/ICO02-F-001.tsv",
+        "bytes": 11336,
+        "sha256": "03fe1745bac19c40a84be1a5fe45a58c3bf1b0f62f4f30a8e816ade1cf04665c"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/ICO02-F-002.tsv",
+        "bytes": 11150,
+        "sha256": "e656d58c62770809568d198a5536001e828e88a1a6fc7b0c6165988d050fec3a"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/ICO02-F-003.tsv",
+        "bytes": 10686,
+        "sha256": "9bb882afea346d05bee4971e23353dd645560ddb05d056687dc321f7d58115fa"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/ICO02-F-004.tsv",
+        "bytes": 9365,
+        "sha256": "8626bcb0889d290479f079ad7d542dc14bc7c9cc24b35a9d095f8111eb87796b"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/ICO02-F-005.tsv",
+        "bytes": 8985,
+        "sha256": "d212c09a25aab112fa7807a1f9cb928f49bfbf5265bf160396f50dc73fef6728"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/ICO03-A-001.tsv",
+        "bytes": 7858,
+        "sha256": "c8579e519e1ff4645bf73f71bc47cdde1832a9fa9a92bc6b6515719d7bf06798"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/ICO03-B-001.tsv",
+        "bytes": 8234,
+        "sha256": "ea5f58612faeb172a0c9771a93b61ffa4dfd1460bb2c7288ab914b25a7273f07"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/ICO03-C-001.tsv",
+        "bytes": 10160,
+        "sha256": "5f2896bfe8fed4a1c75952b41776864e53251ca25dec7bf76ee0d9d67451eda9"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/ICO03-D-001.tsv",
+        "bytes": 7909,
+        "sha256": "88903e217f021ff814a9eeeb563200b28ac4e00f4c95a26dac12418056b06769"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/ICO03-E-001.tsv",
+        "bytes": 8703,
+        "sha256": "91ab0a5f8e122741e10c6e28bf0c82197e72d935177b87583d82062c33333684"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/ICO03-F-001.tsv",
+        "bytes": 9456,
+        "sha256": "ad586df16798c038a3ddd7a06b8cce9536e6e2e724e58a70dd39bedd5c862bd6"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/ICO03-F-002.tsv",
+        "bytes": 8703,
+        "sha256": "1c0fae3c3e3a604c3ff707faa74a94635539658f4dffcb8accbbf8ff666b6a84"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/ICO03-F-003.tsv",
+        "bytes": 8846,
+        "sha256": "bd4016e5757194152c019ac7b6c71fafe12007cf981440f075de3ad408f7512c"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/ICO03-F-004.tsv",
+        "bytes": 9315,
+        "sha256": "35d5b2133618b876cd04a8dda7b2bdcf4ef3c8dfd766ed894fc10c2a92980d5a"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/ICO03-F-005.tsv",
+        "bytes": 7952,
+        "sha256": "baff2905e6482f8117ee4cbfe446527bde2c174ea63aaa5a5ea4447531e312fd"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/ICO04-A-001.tsv",
+        "bytes": 7768,
+        "sha256": "e1dbf362323379708fa2ac840907b22895e93dd8451119db1db0c4945f113764"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/ICO04-B-001.tsv",
+        "bytes": 8891,
+        "sha256": "791d0a63e52b5eef9175d605f3418663fc4acc01e32033593a866da1e849bd16"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/ICO04-C-001.tsv",
+        "bytes": 9314,
+        "sha256": "7f3f78a7e1cfcf4733f1d0391d19eb919aa97195ac166e6e1a92d96addd081ad"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/ICO04-D-001.tsv",
+        "bytes": 8800,
+        "sha256": "f28cbaf030ecc35828890caeb218ca3a07d479ee71c4b35d81741dba4eedae39"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/ICO04-E-001.tsv",
+        "bytes": 8565,
+        "sha256": "15583d2e908e715a91048354b2a33ff8022e0689c3c0c93c24f0acb8d823fefc"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/ICO04-F-001.tsv",
+        "bytes": 8751,
+        "sha256": "a66f0bf02baa9545947b8407f72310377d0268826091eaaf5fe6fda5ed2070fd"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/ICO04-F-002.tsv",
+        "bytes": 8569,
+        "sha256": "04a24a62b2bf8c69b2b5b9b44d48e32c960eb8f26d7b23552547d853ff1d9520"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/ICO04-F-003.tsv",
+        "bytes": 8669,
+        "sha256": "0a5a5150acedd8dd5056861f42f1933ae920f5411d295efd89b1762738e041c6"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/ICO04-F-004.tsv",
+        "bytes": 8055,
+        "sha256": "fe8bdb40b3800cf61ce874e9bba23f2ab98afb8fb65f8883959b92c52f43ca17"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/ICO04-F-005.tsv",
+        "bytes": 6731,
+        "sha256": "316454629625f50f3b027f52bf0691943a25a02c2585c0ef68e5f06b4d846630"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/P01-A-001.tsv",
+        "bytes": 22991,
+        "sha256": "c71806982107ab2f6d393366b0d28b7889be929809b0e8412189e2e65843594a"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/P01-A-002.tsv",
+        "bytes": 28823,
+        "sha256": "ca10bb6428ab70671cd264ca59453befd759a95a772c5838a06318e36b80f0ab"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/P01-B-001.tsv",
+        "bytes": 35963,
+        "sha256": "6fbc914404d9b9b17c6ccc6e481c6a491c9e832e62814030f0bc9bf05ec459cb"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/P01-C-001.tsv",
+        "bytes": 33191,
+        "sha256": "4afedb80a09154cd2b3613850122d1a3b742c1aa8fb187084065011da59f8d61"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/P01-D-001.tsv",
+        "bytes": 34882,
+        "sha256": "ea7f25b29365d33f901f39e50f83227d30eaabbe1eade86310637d9d88d42b05"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/P01-E-001.tsv",
+        "bytes": 39591,
+        "sha256": "3327c7801ce357d6b923534288e3b4b496b08d0ced6870b9090659cff24c8342"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/P01-F-001.tsv",
+        "bytes": 28208,
+        "sha256": "7b8b4c99aeb742579553f7bf2c4f77bcb0ee9160a4e90bcc0955568fe3d5edf4"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/P01-F-002.tsv",
+        "bytes": 33896,
+        "sha256": "b2c70d4fa9cba222b748fa07b604b14490f91e4dcfebd5329bcfc23050df4920"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/P01-F-003.tsv",
+        "bytes": 29479,
+        "sha256": "26472c28fe41903badd90b82b9acb8f8bdccf3b7a9a3ca0109d35742734bd6ff"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/P01-F-004.tsv",
+        "bytes": 34654,
+        "sha256": "8946bee038f29e4515b21ba833dca94bc91a8b27b17a7cda65263c10eed4e36c"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/P01-F-005.tsv",
+        "bytes": 32117,
+        "sha256": "6b031d0cfb626b59c7921fc10650d15a910c915b005b20a88a16eaffc27a78bb"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/P02-A-001.tsv",
+        "bytes": 25027,
+        "sha256": "a1aa51ec74fb7e9da378422ef49e3fef58bbee82d963cc9cc42b6e71b70a7bf7"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/P02-B-001.tsv",
+        "bytes": 24171,
+        "sha256": "6a81627b88423dec37602b7ec57c49221fa6f33a195ec3a0ccd2ce448eac1958"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/P02-C-001.tsv",
+        "bytes": 31128,
+        "sha256": "70cb57782aae407af2f35cabec0ba60eb4b25e707c41913dc2c6a03a4e5e6edf"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/P02-D-001.tsv",
+        "bytes": 39025,
+        "sha256": "6d54248caec8747d78fbfdd570d6bb3fa5a2ba645885a6624e5ad7bb581a0157"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/P02-D-002.tsv",
+        "bytes": 40945,
+        "sha256": "91da0971fdfdf13a3d880824e5f1946d0ffcef4099836ba765ba190eb2825a18"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/P02-D-003.tsv",
+        "bytes": 35307,
+        "sha256": "a290c4eb15b891aef11a860762e12df8bd7576dd22fa18e88837a5c69a06a203"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/P02-E-001.tsv",
+        "bytes": 28649,
+        "sha256": "4dc9b356b3ad2943765b9396443517ccdc8f2cc0e671e1dd2e60da680d070ab3"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/P02-F-001.tsv",
+        "bytes": 18730,
+        "sha256": "06d1d3302c6aead8b312b824480173dde7f3859d2956582b314eb96c0fe26242"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/P02-F-002.tsv",
+        "bytes": 19804,
+        "sha256": "cb3ce1d9139fd3e2c16adfebeb00e60d93c32ff5c33b36573aaa204e1dced8b1"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/P02-F-003.tsv",
+        "bytes": 20688,
+        "sha256": "a55509370405c6947df5e4adcd4e3bc80a90c3ea22202259daba9090933b1094"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/P02-F-004.tsv",
+        "bytes": 10820,
+        "sha256": "05359c40763aac9818c3f2ecfc93f12b1953f3c55872442915f514900a425f55"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/P02-F-005.tsv",
+        "bytes": 11433,
+        "sha256": "4852866f7c2b8d3adbf7c67e2e35200787d7b87f317a287f0ceec1971e2be183"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/P03-A-001.tsv",
+        "bytes": 29622,
+        "sha256": "c084a73df0e5b56f19b2c68fb6ba14d353dc3ae8a3f0ef48cf1a3e099d737acf"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/P03-B-001.tsv",
+        "bytes": 26344,
+        "sha256": "03dd30f8284d095dff7989c68b8b341c9492322de134fffdc6994deb4430af40"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/P03-C-001.tsv",
+        "bytes": 35365,
+        "sha256": "8269a41158a69d228f834a0892070168df84085a6f85d6152a50e49983f04133"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/P03-D-001.tsv",
+        "bytes": 43258,
+        "sha256": "fa7525024119fac5db5e95fd01987b68b29b1e54be790c835df23bc6e77129e7"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/P03-D-003.tsv",
+        "bytes": 42121,
+        "sha256": "6173d28d9e9d3ca700e128576630fa088bcead567e673ad89d76ecb671c4775e"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/P03-E-001.tsv",
+        "bytes": 26484,
+        "sha256": "08b440ae515fe340f083c8f6faf3242ac4fe4b3c660a56b72d26e1c1e6585f15"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/P03-F-001.tsv",
+        "bytes": 31874,
+        "sha256": "a49fde21d2e6e0ce7d77764d3f8aa64a647014f5e616296b8e1175ec31da1c97"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/P03-F-002.tsv",
+        "bytes": 32595,
+        "sha256": "52c35a5bf5a319754f40a8772e890137fd659a91271c9cdf33dd513f21d3a075"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/P03-F-003.tsv",
+        "bytes": 30471,
+        "sha256": "8a95512b25c04510dd7a3d8211e12db369e108e6dd2195a57afa6604a938d51e"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/P03-F-004.tsv",
+        "bytes": 30140,
+        "sha256": "8229f94021bb078fbfeef83a348a7a424e14d940f47b081c68cced813da09e53"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/P03-F-005.tsv",
+        "bytes": 27973,
+        "sha256": "4b3ec0c644f7cba345ffa1302502145c1efb3cbe14321e296b767f1afb7b030b"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/P04-A-001.tsv",
+        "bytes": 25254,
+        "sha256": "62c75fd7f2f375cc513bed91fb474626b5e4e94d56301302fe859887e5c2ccda"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/P04-B-001.tsv",
+        "bytes": 30520,
+        "sha256": "d81f82322ea751ab6f8c8397694d0e44b2a74f8fe65364e16c7c4604fff6af13"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/P04-C-001.tsv",
+        "bytes": 25721,
+        "sha256": "25d6ef0d575600bc82907ffb88a13429a6a02a4fc1534485060efd2bd4a5ea27"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/P04-D-001.tsv",
+        "bytes": 22663,
+        "sha256": "94b376dd049ab34d1db2d20ab49e9f5aebdab0081439b28f4e20f3822255d3df"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/P04-E-001.tsv",
+        "bytes": 27552,
+        "sha256": "68136a474781e6517aac23b18da43934d406ef89c275da6d4b8a8c42102c389b"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/P04-F-001.tsv",
+        "bytes": 28165,
+        "sha256": "49970af1257055090f8015f10a003f8c370467da1ac433b692a1d28bbf47c14d"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/P04-F-002.tsv",
+        "bytes": 22522,
+        "sha256": "26f150d089d8886a5c7770c916d0428fef2cf621f8b37bbcd25fa968b86bf1fd"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/P04-F-003.tsv",
+        "bytes": 27597,
+        "sha256": "af95cad80c0e9b222f2a64c593d3565f121d4200a9005f50ada5957ee156b3cb"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/P04-F-004.tsv",
+        "bytes": 21869,
+        "sha256": "d69650188084d2da11bf57a834f030bea5c41f7ccf5718a291c304746375d451"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/P04-F-005.tsv",
+        "bytes": 18011,
+        "sha256": "ca52c50f5d162289ee766407a7eac600a878e6b19741faeb0f255901f1ae03b3"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/P05-A-001.tsv",
+        "bytes": 22719,
+        "sha256": "5b8ccec3b9bd29d2af7c23db814a6d8f699f9ddebce32186512bf2d1df6002e9"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/P05-B-001.tsv",
+        "bytes": 25861,
+        "sha256": "ba7bbb0ea21e65d318d5a2c1603d6c193e86166a58346c08b14e2d650ff4d9cc"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/P05-C-001.tsv",
+        "bytes": 20601,
+        "sha256": "a4fff8d36ddf477130fff3ca1170c730af3ed45c58ecbc3b2b174d7bd18be644"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/P05-D-001.tsv",
+        "bytes": 20831,
+        "sha256": "79a6c39b46e1dfa816007a9189a67846ef6de70ebc981306de58b10154980f50"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/P05-E-001.tsv",
+        "bytes": 32215,
+        "sha256": "c08d9a4fec9f957e3fb5619276a44649bf817a17c6719fcec23d4169889340c9"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/P05-F-001.tsv",
+        "bytes": 14546,
+        "sha256": "899cce835188e56543ab75accf33666eb13e73402f20c55576fc29ba2d860235"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/P05-F-002.tsv",
+        "bytes": 18110,
+        "sha256": "2daaaf1521acb4353a4e803f6f71d26cddc2a17eff2b19c131f0ef2b54cda795"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/P05-F-003.tsv",
+        "bytes": 21727,
+        "sha256": "d7fd2befe5c4a8b98280f79b4eee48cee04d6c91a937c5c02ae72aec7e130f91"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/P05-F-004.tsv",
+        "bytes": 18533,
+        "sha256": "1b898f01625b10f8197d8303a03f5ab85f7fea5d74237a74727e0e31979afc5f"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/P05-F-005.tsv",
+        "bytes": 12703,
+        "sha256": "872aadb9d2a22edb4b55624a83fdd1f0d315372f9e382b28abad1daa0e8d1a80"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/P06-A-001.tsv",
+        "bytes": 25767,
+        "sha256": "b09f5933d3ffcc52b905df6ce667e5f9ba01869bc416e022a741ff6930f23f41"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/P06-B-001.tsv",
+        "bytes": 28255,
+        "sha256": "e73bd8f7a7243aa2b689df53d7d6d009082b0d1eb4b774b0ccf87cc41107808f"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/P06-C-001.tsv",
+        "bytes": 24918,
+        "sha256": "27c1f81b87d48ea77be4c759ad015a23381354c11c15cb8f6f53199cda1dc58e"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/P06-D-001.tsv",
+        "bytes": 41885,
+        "sha256": "68728bbbeb2f2e927f144ef77d9773140797cfe56055d5a3dcfb3a142c0f618a"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/P06-D-003.tsv",
+        "bytes": 32767,
+        "sha256": "b9983879f0970e11ec3f3c60bf5dc5c858201efe04fee47dd86cd41c89727d77"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/P06-E-001.tsv",
+        "bytes": 21816,
+        "sha256": "40aac214663d9c16518b3b9e5b2df8066bbe327929dea7327f71b55e91e358c6"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/P06-F-001.tsv",
+        "bytes": 27503,
+        "sha256": "54d8c5923d70f26206de96f178aa9c489f1f120bbdf10404ed4f7e21a71d8a58"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/P06-F-002.tsv",
+        "bytes": 24557,
+        "sha256": "b05d983253a3e5b26608510cc05f1910fc581288194c95a674433c3ff3ea730c"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/P06-F-003.tsv",
+        "bytes": 25059,
+        "sha256": "7172a563b79bc1d0f87ab2545feee81df92b61f8224bb00a1cfba117f6cfd446"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/P06-F-004.tsv",
+        "bytes": 23273,
+        "sha256": "f3c64ec2b7c4bdedfddb2f83e9813dd3965108d2d572c7565952f486321a662a"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/P06-F-005.tsv",
+        "bytes": 19048,
+        "sha256": "f1027a0642c180380f55cfd5e4b206b9c719bc3243fafbac9fc49f252beb17fe"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/P07-A-001.tsv",
+        "bytes": 37044,
+        "sha256": "435da88edb4039999f8f292d2423c8de2bb0d96c6a624698c1189f8559c3b35c"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/P07-B-001.tsv",
+        "bytes": 28399,
+        "sha256": "ebd74c105f166c15ad30bbf37b972e02bc461ef4cd7f7c2024a67e0a43a1aa66"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/P07-C-001.tsv",
+        "bytes": 34882,
+        "sha256": "4d5561acec0372fff77f24cc18ff54ffa9bd36c3a63447812939f13dc70baf78"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/P07-D-001.tsv",
+        "bytes": 29543,
+        "sha256": "732a20cf7f56df51d82e3279e389fd410fc20c8bb363294076d497443cd079fc"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/P07-E-001.tsv",
+        "bytes": 41462,
+        "sha256": "f5fa51d920d53a1d86947e63fd1e570cbd4470a5dab197e07a53cd626cd5e2bc"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/P07-E-002.tsv",
+        "bytes": 39018,
+        "sha256": "eb75b0801ddfb740b402a26a1b01cbd253e134f1fd14fea1bef621f0f5340625"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/P07-F-001.tsv",
+        "bytes": 29101,
+        "sha256": "1a2b2599dcf4e1312fbefa9196ab73556ec037fe972d51f44ed17d37ba1b2eec"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/P07-F-002.tsv",
+        "bytes": 27930,
+        "sha256": "6a1c32085d618d69d632cfaef5f34733b91ea8248ed9aef81ce95d318cde1eb1"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/P07-F-003.tsv",
+        "bytes": 28731,
+        "sha256": "11f4837268b6b4749836c53176edbe332dbf968a92cd7f5efbd93228db0d1b5c"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/P07-F-004.tsv",
+        "bytes": 26754,
+        "sha256": "8e7b7eac70fae158ad1313c562121c486b2eabc2da45ea8e3e605c288ce387db"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/P07-F-005.tsv",
+        "bytes": 25294,
+        "sha256": "6d472c37f5d33de9c6252d43f39a574192fe3be92a3ff9b06470dbc1c8385309"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/P08-A-001.tsv",
+        "bytes": 24730,
+        "sha256": "631a6bdb2788b98e669b35d0f610e68093a93084da40d8cade6c31da199a4459"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/P08-B-001.tsv",
+        "bytes": 23746,
+        "sha256": "6c6a137f907b1a9fe342b2d760ea936d06c8c60c213f2c5d4280001668292867"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/P08-C-001.tsv",
+        "bytes": 22994,
+        "sha256": "c67c5a85ae147b20e6e85fe88fd78f7787eee9d0ad039dafdeaa67615f00ac74"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/P08-D-001.tsv",
+        "bytes": 22530,
+        "sha256": "0de4a7075bfaeaddb4360b1b642b4e946825dcd0abc7008258097ae2f3364d32"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/P08-E-001.tsv",
+        "bytes": 25399,
+        "sha256": "dcc6ebac4173115615fa8c90dd70715b98e9a27855b89708a7306065206ec901"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/P08-F-001.tsv",
+        "bytes": 20784,
+        "sha256": "8459c957809fa7b7b3527824e4fca43af70c9cfec12ee0009a5c5063a2f48abc"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/P08-F-003.tsv",
+        "bytes": 23884,
+        "sha256": "624a21922183cd1343aaf07fe06b742828c19d3aeddb8db5a889dd67b4fa313c"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/P08-F-004.tsv",
+        "bytes": 21019,
+        "sha256": "bdc56d03f3ab08f045e9ad9508f7927129777cd0a2aee09fb8fa0c9faf87c327"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/P08-F-005.tsv",
+        "bytes": 17494,
+        "sha256": "ab40a25aa4504f0c81f020a6492bbcb73128bb4606e1bb7711752a1c02ae67e9"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/P09-A-001.tsv",
+        "bytes": 20501,
+        "sha256": "047bf1f2330d5a074f88b42c47d3fe5c71df45cdb6373e19f763ce5b08440b62"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/P09-B-001.tsv",
+        "bytes": 22911,
+        "sha256": "b0245580281a28a19c795bdf69f8dd738aa33a0a370b23cd283b092c3d750d93"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/P09-C-001.tsv",
+        "bytes": 21684,
+        "sha256": "b57fd0df763b843703bb300a7f39b45b00a2e03afc5bdc39f8de6ce531518cbd"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/P09-D-001.tsv",
+        "bytes": 39596,
+        "sha256": "8cb282a110959925f2bd515fad7f9aea1674a75679f3bc04683136613a0a5168"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/P09-D-003.tsv",
+        "bytes": 30652,
+        "sha256": "d0b5732e59a10b460bc3b8101f402d58f6d5442e8cf7ddeea834dbb3716b84e4"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/P09-E-001.tsv",
+        "bytes": 25483,
+        "sha256": "b71b14912177b5f3fd648a7d974b5c9b4db9710b2ed067e98eb445056cfca350"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/P09-F-001.tsv",
+        "bytes": 21535,
+        "sha256": "d1c1954754b88e4c2d26b2f201fe93fe1451486d7094bba644bf3532255cda0e"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/P09-F-002.tsv",
+        "bytes": 24731,
+        "sha256": "9e1e8c3c6cb1886bcf1dd53874a8fb9e09da0ac02392410db6b8e0514501ac53"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/P09-F-003.tsv",
+        "bytes": 24507,
+        "sha256": "ca07a0dc7d83ea4d3399554fde2d4224a8cb60c698a2a6f9a9e3e47757c8f8b2"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/P09-F-004.tsv",
+        "bytes": 16082,
+        "sha256": "780b583a070f54526bdd317c80de2793d1515ef74b06dd5642882eea6ef378c3"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/P09-F-005.tsv",
+        "bytes": 19983,
+        "sha256": "7c9e07d74395ac7e2c8562cd8ada10807a123afd5543ad79bd1263ec9f6e82f1"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/P10-A-001.tsv",
+        "bytes": 16740,
+        "sha256": "20ace19a10b0ec7859cdffd555b7b1ff185f12d8236af733f96b1616502c41f6"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/P10-B-001.tsv",
+        "bytes": 13544,
+        "sha256": "41f753b5d10616805ef0cb857039f54f851ae7d968b346d3287f7f10c826bba7"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/P10-C-001.tsv",
+        "bytes": 19815,
+        "sha256": "07146754ea65817e3181653a5bca0dcd4489c223bbce1f81b0aa80da7c5babd0"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/P10-D-001.tsv",
+        "bytes": 16323,
+        "sha256": "47231c74a148defcafa8bc03f974ec36d705548b351eaaac07d5ab2494404776"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/P10-E-001.tsv",
+        "bytes": 18951,
+        "sha256": "009b87e3dc05478f0093f8df620fb366892288b565690ec0f7eb90f6d78f03a6"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/P10-F-001.tsv",
+        "bytes": 17167,
+        "sha256": "0aa655a91fc0a7df6cd313fa23cebcf247ada52f9bdeff604a98cc48e659b5cf"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/P10-F-002.tsv",
+        "bytes": 18717,
+        "sha256": "7d7f9c89b4d5cabb887e1d98cdb354e85523c44b4fd5ebbc22d988523fa98e21"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/P10-F-003.tsv",
+        "bytes": 21773,
+        "sha256": "0ffe7a75997fa9501e8dfd23f584ea2c102ccdd45f455aa71d5723c4dfd363c4"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/P10-F-004.tsv",
+        "bytes": 12605,
+        "sha256": "b7ea732547dd4bd28bc9c22f95d1a9f10ceaf11c642f961e29a8abebfa1f696d"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/P10-F-005.tsv",
+        "bytes": 14625,
+        "sha256": "aba249802936bae5f01bffe03db4dfb15e9a05d8ddf6cb375f71ef62cc464360"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/P11-A-001.tsv",
+        "bytes": 16554,
+        "sha256": "168d48ac4a5b4239252665d54313e36f1677606418a4f279092dd0424e515e7e"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/P11-B-001.tsv",
+        "bytes": 19280,
+        "sha256": "e8f802c14b54cb8ec445ca6b5b97dc96a616fda5eda4294e193ab038d17193e6"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/P11-C-001.tsv",
+        "bytes": 19936,
+        "sha256": "50fdd94f8bbda8a8f2d787c3929457d0ec9b2819381e72b2daeb10f8163055f1"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/P11-D-001.tsv",
+        "bytes": 24824,
+        "sha256": "8df277c9e1876d213fe9337b5f4c72d233370322b306d5527238bbcd3c9d9445"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/P11-E-001.tsv",
+        "bytes": 22521,
+        "sha256": "2834f63bead9a77ef229cc7efa809fd069a1cdd94c2b3693ea5ff911cee7070a"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/P11-F-001.tsv",
+        "bytes": 17304,
+        "sha256": "64b8fa75a1b19348c9d0c72c1ec68a9ce72bb54d3fdd5163c90b7a541a353a1e"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/P11-F-002.tsv",
+        "bytes": 14770,
+        "sha256": "8f620ada92f0fb14697683b87746d8347eec005bc12f423c816e508cd9f7750c"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/P11-F-003.tsv",
+        "bytes": 17587,
+        "sha256": "310cf281a4d2b1dd4d6d34db90ed9af969e69e7c790764b43c00e93e317b6a02"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/P11-F-004.tsv",
+        "bytes": 14907,
+        "sha256": "56a007892cc7282435301e5f2885799ac7f8bc2443aa0b08c9082abd548d47d3"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/P11-F-005.tsv",
+        "bytes": 13920,
+        "sha256": "9e570b2a9a607be989ac61f1506134bbd0ff7201faa0ddf4edec3f9859b029a1"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/P12-A-001.tsv",
+        "bytes": 27785,
+        "sha256": "7b1072348d09c5a3f6fc2388c00b74e36ba6e0a179334caf8c5b52dd27b5bf20"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/P12-B-001.tsv",
+        "bytes": 21863,
+        "sha256": "b360b8460b7926de1855a9160a3fa92e813511dd2dccd25d62cf9d0f528bfe1f"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/P12-C-001.tsv",
+        "bytes": 24077,
+        "sha256": "285c2ae13fbb9a6b45c7874171dee14848b83237b3db06f4742e5fc19c7e68b5"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/P12-D-001.tsv",
+        "bytes": 24542,
+        "sha256": "93620654a1027a95db3180ba6c9134e8950f152f4b4f7affcf9ba7e69189b496"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/P12-E-001.tsv",
+        "bytes": 19001,
+        "sha256": "bfe181fad7c8e667c985a06cff3c1456b584c8296a028ecb25389b22b3676ecb"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/P12-F-001.tsv",
+        "bytes": 22147,
+        "sha256": "30439fbd462888be7dd25264de23537801875d9c96218db2f767498119b3b2b0"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/P12-F-002.tsv",
+        "bytes": 25905,
+        "sha256": "1e294e14a8d566688cd3c16cdaaf2097a92ab776883e8de213fbe709424c5662"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/P12-F-003.tsv",
+        "bytes": 23937,
+        "sha256": "b9d1cac77a83e8cbfea65910b080bd9944de4f55216f54f03500c08a055ae226"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/P12-F-004.tsv",
+        "bytes": 19672,
+        "sha256": "38ac8572ea63f1ce96e0e0bd793e8bbe8c58c584c7e3d8087c96a5b0f244e19a"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/P12-F-005.tsv",
+        "bytes": 19801,
+        "sha256": "616114681d83b2217e070536221b950e1ffa998d0b3e8d19ed8551ce0c9d6033"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/P13-A-001.tsv",
+        "bytes": 56464,
+        "sha256": "101e666fee5cba7f0a7384fe20beb76bec43f2d8b9dc3d0be3d21b187832c774"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/P13-B-001.tsv",
+        "bytes": 60261,
+        "sha256": "a8016e934b7897bd32fc082e715f94e789eedc355ed5429f3d23f741a3607962"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/P13-C-001.tsv",
+        "bytes": 66791,
+        "sha256": "3be09b6a36035b61439a1d025cd09e200aadc653479978a52604ab84674a2ca6"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/P13-D-001.tsv",
+        "bytes": 63616,
+        "sha256": "643c5c474ee8a3442183146b83efd0ce0157fed054ed8e721756f9a64298f405"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/P13-E-001.tsv",
+        "bytes": 67986,
+        "sha256": "e59104338d591b63bd9faacd22f65a78765ae3e50a743aac3398a1e74559eb6a"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/P13-F-001.tsv",
+        "bytes": 61456,
+        "sha256": "031aa8e32fe26483a262172e52d2f956439851e752ecb6ab8de9abcdde4da9fa"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/P13-F-002.tsv",
+        "bytes": 58870,
+        "sha256": "a04d2be8fb6c393e47ecac2a26b36226b151c38254348496b8597ac90b3d0899"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/P13-F-003.tsv",
+        "bytes": 66794,
+        "sha256": "84ba68962571591f5d3b7eed10b387989d283725e1bff92a4d37b096c604f803"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/P13-F-004.tsv",
+        "bytes": 63953,
+        "sha256": "89cef97b32dfd902f1bdd628a8eb621193263e3da29adfe7860894039aef7e12"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/P13-F-005.tsv",
+        "bytes": 56800,
+        "sha256": "3093436a8f302d0efe57ae4bd3adba7ff75e6e6076d16258f8651dc8d92f4329"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/P14-A-001.tsv",
+        "bytes": 38035,
+        "sha256": "e0c02deeb01ea708dbccdb1040a46b7a6275f90008855b42907a51a9b905d883"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/P14-B-001.tsv",
+        "bytes": 37429,
+        "sha256": "7ff0a60aa2261f47f9fa68917057d83426645b8d9466c8c772b14670013435fb"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/P14-C-001.tsv",
+        "bytes": 35212,
+        "sha256": "436ee9e576ac3481288f51a47ded542fca9d66503126d5a0b2451dd05e0a2a25"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/P14-D-001.tsv",
+        "bytes": 31837,
+        "sha256": "d5e842e8e484f0eb07fddf242fc06685597abc868a4800e838f24eb97ed7db3c"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/P14-E-001.tsv",
+        "bytes": 36293,
+        "sha256": "5cda269b7b39cb2f1fee7b1a4904c40f2dc56f8796e024d09e75e7d0ec001893"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/P14-F-001.tsv",
+        "bytes": 29618,
+        "sha256": "23d647f05d4894f7ff65fbfa309ad6aa59b43f631f6f025fb01ffebd76c3507f"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/P14-F-002.tsv",
+        "bytes": 29246,
+        "sha256": "a07706774a51fb15103aa482babf6dd83520b4fa403d69678169ba151537b194"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/P14-F-003.tsv",
+        "bytes": 27974,
+        "sha256": "feb1b4eb946103bdb5c1546e3ec6ebebafad1ba6330a3b8f17a2329f6c29af3e"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/P14-F-004.tsv",
+        "bytes": 26527,
+        "sha256": "7ccf665db1069babc6883365b798bf3231c63fcd761cffe784c9c6a08996af9c"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/P14-F-005.tsv",
+        "bytes": 20503,
+        "sha256": "2c76ce22fecb3b0bfe5422ef550dc0262560532c678eeb3a435cc1a2576139d3"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/PCO01-A-001.tsv",
+        "bytes": 36447,
+        "sha256": "059dfc340c35ab64623d93fca8f73f0b6b5882e9ceb3859423342464e8249aef"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/PCO01-B-001.tsv",
+        "bytes": 30338,
+        "sha256": "6975b6fce409a88dae4fe94f98eb64a34330f5683342c6cbacafbe9932a50850"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/PCO01-C-001.tsv",
+        "bytes": 35317,
+        "sha256": "ca62617ef3c6934599bab058775e49bc74c2db4748e76b86d033de09fef76ccf"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/PCO01-D-001.tsv",
+        "bytes": 32109,
+        "sha256": "5a44f8b44dbf71d1074bcc56c691cfedf03a2d1626d09d41585653c26e8c3b0a"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/PCO01-E-001.tsv",
+        "bytes": 35875,
+        "sha256": "725ceb064cde1cfd7c6371a8761b007b7a4a66b0022adf89c450d6b5fe2320e6"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/PCO01-F-001.tsv",
+        "bytes": 33251,
+        "sha256": "ca03583e34f4ea9b9bf3fc1fdb562a67371bb08c77892a3c63a3ca33663b2be4"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/PCO01-F-002.tsv",
+        "bytes": 33754,
+        "sha256": "7bef6710d3de72aa6940ab1784df4a354c5502526eb345cec013d32959e7a80e"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/PCO01-F-003.tsv",
+        "bytes": 32911,
+        "sha256": "92656a1e9b23182c36ff10f89ab318be18c92b7f86fcb475d59b9fae4b5448e3"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/PCO01-F-004.tsv",
+        "bytes": 25435,
+        "sha256": "214d8438b22cc469deec8587caf28ebc026e1dadbfe00a5b4416ccc671b4ffed"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/PCO01-F-005.tsv",
+        "bytes": 23837,
+        "sha256": "4cc8e49bd651d5e70d95e31bdd56f8a57dbe24392a35e95b0f26112bfc9dba4f"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/PCO02-A-001.tsv",
+        "bytes": 49366,
+        "sha256": "fc1a42c8de564916ccc925e97bf72b96febe7090a4d979f1e793e62e24d6d93b"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/PCO02-B-001.tsv",
+        "bytes": 41987,
+        "sha256": "0add98bdc97e4ee8d84eb4bd1a48bf15e2c3905e19bb59eef5fa0fb075ee0c59"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/PCO02-C-001.tsv",
+        "bytes": 42638,
+        "sha256": "d1d7f4ffef4ff7b4ac7ffba47796d05ea4ac206d93dc01fe806310ba7f479be9"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/PCO02-D-001.tsv",
+        "bytes": 46538,
+        "sha256": "94243f7780263efe592341194f3c140bac663a7f302571a9fdd3d574d7006a44"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/PCO02-E-001.tsv",
+        "bytes": 52533,
+        "sha256": "e77cb5110e42b7d1a1d555380ab1626a8024170603bab6628d4d265f7c4f193b"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/PCO02-F-001.tsv",
+        "bytes": 46590,
+        "sha256": "137d67968018dd531c65cb56ee1492638cd4ee99b45e38946b7f55578911cd94"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/PCO02-F-002.tsv",
+        "bytes": 43391,
+        "sha256": "97247bd08ba49a1f41f416784c9342027ff967f7ce9b466f81718ddd24d1a0e9"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/PCO02-F-003.tsv",
+        "bytes": 44188,
+        "sha256": "d241e20322c09a1fc314e85a1990503106e0a08a914cd7ce54e0c17183d8a95c"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/PCO02-F-004.tsv",
+        "bytes": 22333,
+        "sha256": "63a71c210075441c3087e66c2453d3b664392218aea815b8f791212a244d222f"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/PCO02-F-005.tsv",
+        "bytes": 25202,
+        "sha256": "f10b2fc89aa21fa84d6a53232ed3dc8f1805237dfd3bb40acfe678a6a1ee0963"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/PCO03-A-001.tsv",
+        "bytes": 25391,
+        "sha256": "125fd573ba9c3cdf798ff54c2aa3ecacadfb93cdc8a8f76dd2a49a7a34817d1e"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/PCO03-B-001.tsv",
+        "bytes": 31927,
+        "sha256": "6b68322752e8240315b437cd214f76a0d01a3761e115839aa47b2dd1dfc663a0"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/PCO03-C-001.tsv",
+        "bytes": 26611,
+        "sha256": "d52552d94832e46782926fdf7dfc8a170c3b1a03be36cb2696548f98f0128f15"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/PCO03-D-001.tsv",
+        "bytes": 22429,
+        "sha256": "845bb62c77567fd8ca5dce36bb6405ac0afef8846bbd7e5c3853a78df7349767"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/PCO03-E-001.tsv",
+        "bytes": 28397,
+        "sha256": "66bc729551864bacf1684cea538e121101569c6b3f7b8248d4e100c09e0ed04b"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/PCO03-F-001.tsv",
+        "bytes": 28401,
+        "sha256": "1226a5b8d5c0c7ecab1d28e906117912bfc756a9996ab64b643839d8a1644ef3"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/PCO03-F-002.tsv",
+        "bytes": 32627,
+        "sha256": "5eea4858197127d27d5c8fda62a9f2ec66b6bd009be42a9e88259521aecb5798"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/PCO03-F-003.tsv",
+        "bytes": 29994,
+        "sha256": "935154d88f611ac7c106d53c5670d57b0a5cc02e50c5c1c1e4ff22316c15ffe9"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/PCO03-F-004.tsv",
+        "bytes": 22521,
+        "sha256": "22891d5587fe74effdf04d8d1ba2e78a0ded9c5633e95b55fb3a7b624af20895"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/PCO03-F-005.tsv",
+        "bytes": 15612,
+        "sha256": "0075da2947a226a2d3ab68b53d86764c58ac37a4d75f2d94d677f46a0f7e6e75"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/PCO04-A-001.tsv",
+        "bytes": 40240,
+        "sha256": "6d1714451ab6c5a9f00763376b87165b0551162282b321eab64332c43d5843f4"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/PCO04-B-001.tsv",
+        "bytes": 39093,
+        "sha256": "4ab2c3e74c2ef327d48ebd5b416497a36f3e38c75a12ecbf292713b3d29a2dc9"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/PCO04-C-001.tsv",
+        "bytes": 27503,
+        "sha256": "d0813254d4407c7fcb41e6816ff1ac977ef9a0a1afcc6e70c853dbe9b61a25eb"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/PCO04-D-001.tsv",
+        "bytes": 36060,
+        "sha256": "8fe5847494041231e208f2eaf05a2d937bdddbf87ee8565c0d1880708b7b81d4"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/PCO04-E-001.tsv",
+        "bytes": 34139,
+        "sha256": "2c98e4a41e8cce13e9028c5d6cdaaf624db02fd6ae8c18c44b081d4f583e9eac"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/PCO04-F-001.tsv",
+        "bytes": 31734,
+        "sha256": "a6489f2cecc32d755ff3dc9ce16c79156a073d9cc069d3684ef7b022fc381ae9"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/PCO04-F-002.tsv",
+        "bytes": 30135,
+        "sha256": "b4b38b8c60649d86219a4be5d4fa105c09b584862e0b4ad421838aff620cf418"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/PCO04-F-003.tsv",
+        "bytes": 30934,
+        "sha256": "a167c9c560a5c3f54bf99dba21eb96aa5d8762772107f388d67840681fe5e9a7"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/PCO04-F-004.tsv",
+        "bytes": 23603,
+        "sha256": "9bd661bbf6c1670c7e83d028570b64b537799b85c85f940bbcb49c6a50cc5874"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/PCO04-F-005.tsv",
+        "bytes": 26986,
+        "sha256": "934b9b87f89d96d7c6a769521a0239fb5999affb174346e704511d9f4a1105a7"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/PCO05-A-001.tsv",
+        "bytes": 12369,
+        "sha256": "faa66aef764b2a757419a1d45be2e60daf9e2c6932054d37f2e23456f30dd072"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/PCO05-B-001.tsv",
+        "bytes": 15801,
+        "sha256": "1ed10dabe5fae45a449b650d3e50bd43a2d898048acd83d8bcdac25a384381b0"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/PCO05-C-001.tsv",
+        "bytes": 16975,
+        "sha256": "2af80ed3eed8696dcd95b858cf6af108acdb6f03a814a60c2d608be8fcb72ec9"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/PCO05-D-001.tsv",
+        "bytes": 15379,
+        "sha256": "e77f9bcdc4b1e6b7437a696ca77e4f9c855ee157c0cbdf1e1589e0f4751cae1d"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/PCO05-E-001.tsv",
+        "bytes": 16458,
+        "sha256": "cb79aa032050ca12669ae7319152da9d04f20feed2b675e251ca49fbec35066a"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/PCO05-F-001.tsv",
+        "bytes": 13612,
+        "sha256": "b829db89650ef057f60c7b6475d430e3e85cb1ee1f262b14f4a5fd73ad4e1ac7"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/PCO05-F-002.tsv",
+        "bytes": 16601,
+        "sha256": "b299d15ee63b04842f0fe120310ce385cdaf0482ec3a9ffb35af9941cf9d4e31"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/PCO05-F-003.tsv",
+        "bytes": 13593,
+        "sha256": "386973fbc8f806a96a72905690b9e691bd94fd5691bd4bf4eaf640fb8d517939"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/PCO05-F-004.tsv",
+        "bytes": 14487,
+        "sha256": "85d165c5639d61e1cdc46f3490976adc6c637f07c15c017d2487929e19e2edfe"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/PCO05-F-005.tsv",
+        "bytes": 14628,
+        "sha256": "ea8123848f4a2168de9884f454f4d6aadec753b4b28d9ae62bb257fdfc6513cd"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/PCO06-A-001.tsv",
+        "bytes": 12375,
+        "sha256": "8ea49f17ee827e85d7669cd718fcce917db03faa4a74b49eb4665c50a7faef43"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/PCO06-B-001.tsv",
+        "bytes": 11908,
+        "sha256": "9a7bc16493e60c43819228af8535b58447c9084994390c2a5ce4895faaf22171"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/PCO06-C-001.tsv",
+        "bytes": 11618,
+        "sha256": "aa49f08f5314eecd399d76ab5cee8e1cc0bd5dedbd3b90616c160d17dc8f982f"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/PCO06-D-001.tsv",
+        "bytes": 13450,
+        "sha256": "efc7a624039b69609ca27b5a404e1e70883d1f755b6e902577ebab72a5c054a9"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/PCO06-E-001.tsv",
+        "bytes": 11288,
+        "sha256": "2741da178c6a27d43cea909000b6fa7cdf7ce887a40d2fbfd47391dc1dd20e38"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/PCO06-F-001.tsv",
+        "bytes": 11952,
+        "sha256": "c9c04ba495f69c6ce801d90c91813c6e700ed4974da0ed52ecfcac10b58396d4"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/PCO06-F-002.tsv",
+        "bytes": 12510,
+        "sha256": "1d718720df8cc84a64e9f7fe90541608a4f4863c721ca12b248189a9e866dd83"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/PCO06-F-003.tsv",
+        "bytes": 11993,
+        "sha256": "5099dd719e4cfa789c6a086b49879c6b296cb5f390892536893ea962350a965e"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/PCO06-F-004.tsv",
+        "bytes": 11056,
+        "sha256": "b475846f6c6bb856aed9c973cd6daf380816ed39fbda88d34daf985097007de5"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/PCO06-F-005.tsv",
+        "bytes": 9502,
+        "sha256": "ad887e75d51a3b0fcce8964541adeb7a0e77067c495d4d42513920824acdafd6"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/PCO07-A-001.tsv",
+        "bytes": 31372,
+        "sha256": "e7db5d81461e940d29da631e8e6f48eb9d101a29f96f7f28e03e4b747451b4fd"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/PCO07-B-001.tsv",
+        "bytes": 28364,
+        "sha256": "fd54dfa2888cad0e4bd8a6356153706992fec21540f328f661810c4c581eac65"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/PCO07-C-001.tsv",
+        "bytes": 35665,
+        "sha256": "4ace75ea48c3069ef85abd4b73e4512495a31063e504ad6a845934956b5c2dc9"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/PCO07-D-001.tsv",
+        "bytes": 31123,
+        "sha256": "9230696ac5e95feb6d7a8145428d63c3361c242821dfcf00f60889314d996667"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/PCO07-E-001.tsv",
+        "bytes": 30746,
+        "sha256": "06e13b1d828b217dd73075ef3222c2d5ef30249b57ab64b377dd6a067b7b67aa"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/PCO07-F-001.tsv",
+        "bytes": 28931,
+        "sha256": "6399257f46402bd589b9ae7a0278d4b53924729ef4dabdc52cb7a5d49adc05cc"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/PCO07-F-002.tsv",
+        "bytes": 28690,
+        "sha256": "a88eefee8505ea1cfa819b539bad9564fd85c1e21e744432a174314b3319a6a9"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/PCO07-F-003.tsv",
+        "bytes": 30000,
+        "sha256": "5d78a3c7e60ffe2a02bad724c1abbeadb9fb74f5191b42e21ae5f544bac08fc6"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/PCO07-F-004.tsv",
+        "bytes": 29671,
+        "sha256": "b7b3e9d6f392815c62acceccc62218fc9d69e5debeac98d3676011b8d2ba45cd"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/PCO07-F-005.tsv",
+        "bytes": 25352,
+        "sha256": "f683aa37178123b732611905b59aa317307b392f4bf6dd3c19cd511c8e675c77"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/PI01-A-001.tsv",
+        "bytes": 9455,
+        "sha256": "fc5d86861b2fa50b9663ee3becd5ccd072d62b9f1f033d0a1f355ca6b7ba4be6"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/PI01-B-001.tsv",
+        "bytes": 12241,
+        "sha256": "b45c23d2344d65431dab871707f05c93de7f68bf2273d4c624abf3d4fbf24841"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/PI01-C-001.tsv",
+        "bytes": 12659,
+        "sha256": "fad05842c0a784f855117d0052df3fb9df8e36cacd42c5b4ab552fc71d2fceda"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/PI01-D-001.tsv",
+        "bytes": 11435,
+        "sha256": "288150be7f8a9c8a90825ee1c57f703fa2fdccf5f387c0a4f104de848f6f3bd0"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/PI01-E-001.tsv",
+        "bytes": 9314,
+        "sha256": "7dcf4a4ebc729902f4716f60d55457cce7e7572485ccdfbbc2adfc2ac5bba69e"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/PI01-F-001.tsv",
+        "bytes": 12013,
+        "sha256": "eef3044f8a630ecf5f55a14d60dab1b934ce95c306f6b2288ca27c6d3931aa8c"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/PI01-F-002.tsv",
+        "bytes": 9466,
+        "sha256": "084f3fd9adedddb3b3a0d5fed60fafddedc084110c81e5436ef67c744d35e730"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/PI01-F-003.tsv",
+        "bytes": 9972,
+        "sha256": "b992696da348bd7b26ecf3de0df7899424b25ab3b72acd1407855005c26750b9"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/PI01-F-004.tsv",
+        "bytes": 8754,
+        "sha256": "236aa126fa2210f2d73277d0b702e1b4e238096a01047cdba6a3ef84e7ad2c08"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/PI01-F-005.tsv",
+        "bytes": 8045,
+        "sha256": "69ef05dd767f1247c29a31ac7c235a73f80f303db57c88c8ade355e64b7ca88b"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/PI02-A-001.tsv",
+        "bytes": 13215,
+        "sha256": "8aa414819e58a59e89bbcd236163be8c77fffb82623826e58360ab429cd5808c"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/PI02-B-001.tsv",
+        "bytes": 9973,
+        "sha256": "338e573ecd614f3e746a4c6545f032c0ca16f8be047e7ba0267684ae553a8c08"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/PI02-C-001.tsv",
+        "bytes": 10818,
+        "sha256": "5a6c9c0e9521d08127c0daf99cd92397c94b06aa535c866e3cd55f7e78fffa64"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/PI02-D-001.tsv",
+        "bytes": 9317,
+        "sha256": "f1db23720cd20272b8417dc020d3fc0f8780c1f6d7e5163854f3fd780cd89cf8"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/PI02-E-001.tsv",
+        "bytes": 9408,
+        "sha256": "15e511892af3e351f10cec82d8406df46b8aa68217135a58300f829f2f6a502d"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/PI02-F-001.tsv",
+        "bytes": 9737,
+        "sha256": "083f6f7a3e92f6b7cdba19041f9078173a829496f1822034d3dbd2fd4dc6eadd"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/PI02-F-002.tsv",
+        "bytes": 10498,
+        "sha256": "03eaa455596ae30a11d118cbc9abe3c3c7e8c3b949e160c70634ac418575faca"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/PI02-F-003.tsv",
+        "bytes": 9133,
+        "sha256": "2803d30c09b654205d9cb94abc6af101b152a3ed374f426af307317b3d52c9d7"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/PI02-F-004.tsv",
+        "bytes": 8609,
+        "sha256": "e0f2d72139525ca4bcb17ad70e9a0936f26769170fb5a6c48d95df8170614c22"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/PI02-F-005.tsv",
+        "bytes": 7998,
+        "sha256": "9fe9b072395a4e7c43c0a9969aba547afd1b5db4cf09f4dc1041a8483c8cc199"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/PI03-A-001.tsv",
+        "bytes": 6165,
+        "sha256": "b1ce70b655d37693dd99471f7b8dd08670ef4d7c89376d540716ef2a2820df55"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/PI03-B-001.tsv",
+        "bytes": 8000,
+        "sha256": "801698117b63961d33188488c2de2c86f28709d7f317ac1e19606631ced917af"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/PI03-C-001.tsv",
+        "bytes": 6731,
+        "sha256": "a8a253e3684cf960ff0db12eb583cf4ef818175a557500e36856ffa8bc52294a"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/PI03-D-001.tsv",
+        "bytes": 6919,
+        "sha256": "91d34215a8f264ee275c361c60b4eb6e3364f4563c25901283775c13c73f01d5"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/PI03-E-001.tsv",
+        "bytes": 9361,
+        "sha256": "c1168175f270fec4a25918425aa5507a3e656556261401a994c00cd3e1452bea"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/PI03-E-003.tsv",
+        "bytes": 9035,
+        "sha256": "fe6b0247327881824dcafa136f468f0919fe84bdc101392b6266a94cfa66aaa6"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/PI03-F-001.tsv",
+        "bytes": 6636,
+        "sha256": "065ac97c3b5c273b61ce99aae924d04ac983fef3d9181fbfad30241d86286293"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/PI03-F-003.tsv",
+        "bytes": 6874,
+        "sha256": "687dcdea372b79b473067cc4a7afa7721f1964f3410e3dfe4f2123b94a19b0b9"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/PI03-F-004.tsv",
+        "bytes": 5462,
+        "sha256": "3dc2624dc51f6e0d60660cf1320e4c3590968e969fc1d2c19940955f1286632e"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/PI03-F-005.tsv",
+        "bytes": 5367,
+        "sha256": "44b8d073488684c7df0fddf8cbb13cdb01808f5c1166412ecd0a886a40153cd8"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/PI04-A-001.tsv",
+        "bytes": 11434,
+        "sha256": "4a3eedccd497385a96dce572ab1540952e6fbe485df0363336ae3b72c35019bd"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/PI04-B-001.tsv",
+        "bytes": 10406,
+        "sha256": "d44fb65dbcc3fc7e735dbfcdc6b41f208fcfd34b15565e7cceb4c8276e8b4085"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/PI04-C-001.tsv",
+        "bytes": 10223,
+        "sha256": "512177dde4112255557436425889d6f82f5f11a4716de26cc8fe962166c31455"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/PI04-D-001.tsv",
+        "bytes": 8941,
+        "sha256": "7fdac21221f5931617ee38cc991423c2dac7beb85f7ee7878011e03bdbdf5be1"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/PI04-E-001.tsv",
+        "bytes": 10272,
+        "sha256": "04e6ac9ec40ccffc693d3ae6fe711c53a64e366107ba620bc914a404328268a8"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/PI04-F-001.tsv",
+        "bytes": 10442,
+        "sha256": "f0613f9e8721e01ca02d6b371a3338e066ccd2965b3e83472b159c1b37beb50f"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/PI04-F-002.tsv",
+        "bytes": 10348,
+        "sha256": "e3b757e27b2e63205a0b4669d78f5376d0d9b57be0caae5450fca2dcab90c544"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/PI04-F-003.tsv",
+        "bytes": 9410,
+        "sha256": "47b4c45a59e8b39d1980db82d1f03e02afb9f6c023b681ec217ac78db7efd6eb"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/PI04-F-004.tsv",
+        "bytes": 6824,
+        "sha256": "4b97f73b5c8de4b31923d4c49e2df91d589ce668081d36f42a1feef2bb25f0b3"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/PI04-F-005.tsv",
+        "bytes": 5225,
+        "sha256": "219e0b1b9fcb7c724a1215328f30175d5f94c8c3613d979c34d4501743aa2401"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/PT01-A-001.tsv",
+        "bytes": 29675,
+        "sha256": "cf7c08af9ebdbfd72219a6d2db4ccb850f4c102e612b5f58cf26c428e8485b5c"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/PT01-B-001.tsv",
+        "bytes": 30981,
+        "sha256": "1e69c07b0d3ed320b4627ffa685fd8157091084e6e2c1f4cbda6ac1bccf761dd"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/PT01-C-001.tsv",
+        "bytes": 29293,
+        "sha256": "46ba3ce802ba4894ba516bf5f23dddd33b57f8df28bcb8fd24d5603d92c879af"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/PT01-D-001.tsv",
+        "bytes": 20829,
+        "sha256": "1cab414c44eb890f939bbb76dbca57afdb6e1e91cd81ca5f3b575c3f8fb793f8"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/PT01-E-001.tsv",
+        "bytes": 35822,
+        "sha256": "d88e29e03b5d73f615b3db75cb80e99bcd61ebb8808828a68964d71e80019d90"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/PT01-F-001.tsv",
+        "bytes": 29007,
+        "sha256": "b0f90985e08b789d12c2204d05772686d87f70c0a53a56c9a58f575085bbbba5"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/PT01-F-002.tsv",
+        "bytes": 28631,
+        "sha256": "57c233ced6e3a8849df361d32e1603697c66e5ca15e68e0eee96ca661831c68d"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/PT01-F-003.tsv",
+        "bytes": 28021,
+        "sha256": "cb2098b7d996a383d0ff6dfc58688aa94583199f3900749615057bbc8962933b"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/PT01-F-004.tsv",
+        "bytes": 19845,
+        "sha256": "33dd432ff6fb5419e7d651bc2800676c4767e464c511ad3ddd5713d7f1f4ef79"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/PT01-F-005.tsv",
+        "bytes": 19184,
+        "sha256": "d65371effeefc9e51768f75db461705d794a38d1b196977ce1fca19318b0bf94"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/PT02-A-001.tsv",
+        "bytes": 25578,
+        "sha256": "c8f1df0e156e6a9f5873a14fcb6e639398a4f30e96ef31a4860637085bcda20c"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/PT02-B-001.tsv",
+        "bytes": 21581,
+        "sha256": "d54387353cae3e00f8acd90c580f13b380ac4c7f47014840589b5945a7b34816"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/PT02-C-001.tsv",
+        "bytes": 22098,
+        "sha256": "9a0db34358d22cd5c818e4343f0a35f86544dc121c951b9e9e621d3c99f9284a"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/PT02-D-001.tsv",
+        "bytes": 23040,
+        "sha256": "89eaca336024f37b42ad53b2267b2c6106bddc14c366da230f4ca433d6be9f55"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/PT02-E-001.tsv",
+        "bytes": 19285,
+        "sha256": "2094abc6e2419c2cb76346705a4e2ce0dde57b461f9e65057acec7f14ff0a6d2"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/PT02-F-001.tsv",
+        "bytes": 24075,
+        "sha256": "85a07df2665b4bb3feff58dc5b33af3803ffdadd4ad58f006aca90d1eb383bdb"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/PT02-F-003.tsv",
+        "bytes": 25956,
+        "sha256": "b8c7bb8e509549f74ffc3b9b63f95db80977a1818e6d83d90df3cc6cd111a96f"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/PT02-F-004.tsv",
+        "bytes": 21823,
+        "sha256": "4d885a86ed161aeac00cb475b8d140cb3a5630425cc200fb04cded6444b67e35"
+      },
+      {
+        "path": "smoke_box/Smoke Box Data/PT02-F-005.tsv",
+        "bytes": 21816,
+        "sha256": "a7cdebe6d979b00059e61999245af9b533a9cd940ee08178336e4ef4a87dc88f"
+      }
+    ]
+  }
+}

@@ -1,0 +1,5 @@
+channel_id,episode_start,episode_end,kind
+gradual_degradation-101/pump1,2026-08-29 08:35:00,2026-09-02 22:35:00,pump
+gradual_degradation-101/pump1,2026-08-30 07:20:00,2026-09-02 22:45:00,flood
+gradual_degradation-101/pump2,2026-08-29 08:35:00,2026-09-02 22:35:00,pump
+gradual_degradation-101/pump2,2026-08-30 07:20:00,2026-09-02 22:45:00,flood

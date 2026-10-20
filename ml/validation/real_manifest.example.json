@@ -1,0 +1,10 @@
+{
+  "events": "events.csv",
+  "episodes": "confirmed_episodes.csv",
+  "model": "pump_72h",
+  "evaluation_start": "2026-07-01 00:00:00",
+  "coverage_end": "2026-09-30 23:59:59",
+  "timezone": "Europe/Moscow",
+  "attested_unseen": false,
+  "truth_source": "REPLACE: ODS/repair export, version, coverage, and confirmation criteria"
+}

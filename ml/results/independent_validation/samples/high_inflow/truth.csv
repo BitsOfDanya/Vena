@@ -1,0 +1,3 @@
+channel_id,episode_start,episode_end,kind
+high_inflow-101/pump1,2026-08-24 23:45:00,2026-08-28 22:50:00,flood
+high_inflow-101/pump2,2026-08-24 23:45:00,2026-08-28 22:50:00,flood

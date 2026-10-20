@@ -1,0 +1,4 @@
+channel_id,episode_start,episode_end,kind
+power_loss-101/pump1,2026-08-25 01:45:00,2026-08-26 10:55:00,flood
+power_loss-101/pump2,2026-08-25 01:45:00,2026-08-26 10:55:00,flood
+power_loss-101/phase,2026-08-24 22:40:00,2026-08-26 10:35:00,phase

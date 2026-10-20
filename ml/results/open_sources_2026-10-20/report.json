@@ -1,0 +1,1392 @@
+{
+  "metro_frozen": {
+    "status": "completed",
+    "scope": "frozen-model cross-domain diagnostic, not independent Moscow accuracy",
+    "provenance": {
+      "source": "https://archive.ics.uci.edu/dataset/791/metropt+3+dataset",
+      "download": "https://archive.ics.uci.edu/static/public/791/metropt%2B3%2Bdataset.zip",
+      "license": "CC BY 4.0",
+      "citation": "Davari, Veloso, Ribeiro & Gama (2021), MetroPT-3, DOI 10.24432/C5VW3R",
+      "sha256": "db30ccb4ea402e3c8bf2c99db06e288d4f2a772f6928f9dbe26a920d69793e24",
+      "raw_rows": 1516948,
+      "events": 20508,
+      "data_start": "2020-02-01T00:00:00",
+      "data_end": "2020-09-01T03:59:50",
+      "evaluation_start": "2020-04-01",
+      "evaluation_end": "2020-08-01",
+      "adapter": "DV_eletric load/unload; LPS low-pressure; Oil_level low-oil; changed combined state only",
+      "truth": "Four compressor leak reports, not sensor-generated labels",
+      "limitations": [
+        "Single compressor, four failures: no population confidence interval",
+        "Already explored historically; this is a frozen-model transfer diagnostic, not a fresh lockbox",
+        "Different equipment and event semantics; probabilities may not transfer",
+        "No observed Неисправен state: production failure-history features remain at their cold-start values",
+        "Report end timestamps used as given; exact return-to-service times are not independently verified"
+      ]
+    },
+    "metrics": {
+      "pump_24h": {
+        "predictions": 469,
+        "excluded_active_predictions": 16,
+        "channels": 1,
+        "positive_rate": 0.03411513859275053,
+        "ap": 0.07728669114958242,
+        "ap_lift": 2.2654661343221347,
+        "roc_auc": 0.6463852097130243,
+        "brier": 0.033381171856533894,
+        "mean_probability": 0.011912950009655286,
+        "maximum_raw_score": 0.7743607708337006,
+        "threshold_high_range": [
+          0.9532175022480122,
+          0.9532175022480122
+        ],
+        "recent_fault_baseline_ap": 0.03411513859275053,
+        "operations": {
+          "alerts": 0,
+          "true_alerts": 0,
+          "false_alerts": 0,
+          "precision": null,
+          "episodes": 4,
+          "covered_episodes": 0,
+          "episode_recall": 0.0,
+          "median_lead_hours": null,
+          "false_alerts_per_channel_day": 0.0
+        },
+        "recent_fault_baseline_operations": {
+          "alerts": 0,
+          "true_alerts": 0,
+          "false_alerts": 0,
+          "precision": null,
+          "episodes": 4,
+          "covered_episodes": 0,
+          "episode_recall": 0.0,
+          "median_lead_hours": null
+        }
+      },
+      "pump_72h": {
+        "predictions": 461,
+        "excluded_active_predictions": 16,
+        "channels": 1,
+        "positive_rate": 0.10412147505422993,
+        "ap": 0.15113048213199687,
+        "ap_lift": 1.4514823388093867,
+        "roc_auc": 0.5508979015334948,
+        "brier": 0.09622711885273552,
+        "mean_probability": 0.15202060674158793,
+        "maximum_raw_score": 0.9001549645099577,
+        "threshold_high_range": [
+          0.9689136059121185,
+          0.9689136059121185
+        ],
+        "recent_fault_baseline_ap": 0.10412147505422993,
+        "operations": {
+          "alerts": 0,
+          "true_alerts": 0,
+          "false_alerts": 0,
+          "precision": null,
+          "episodes": 4,
+          "covered_episodes": 0,
+          "episode_recall": 0.0,
+          "median_lead_hours": null,
+          "false_alerts_per_channel_day": 0.0
+        },
+        "recent_fault_baseline_operations": {
+          "alerts": 0,
+          "true_alerts": 0,
+          "false_alerts": 0,
+          "precision": null,
+          "episodes": 4,
+          "covered_episodes": 0,
+          "episode_recall": 0.0,
+          "median_lead_hours": null
+        }
+      }
+    }
+  },
+  "metro_analog": {
+    "status": "completed",
+    "model_role": "new unsupervised analog diagnostic, not production VENA",
+    "task": "Does analog abnormality precede documented leaks within 24/72h?",
+    "train_rows": 537,
+    "train_end_exclusive": "2020-03-01",
+    "threshold_source": "99th percentile of training anomaly scores; no test tuning",
+    "features": [
+      "TP2_mean1h",
+      "TP3_mean1h",
+      "H1_mean1h",
+      "DV_pressure_mean1h",
+      "Reservoirs_mean1h",
+      "Motor_current_mean1h",
+      "Oil_temperature_mean1h",
+      "TP2_mean6h",
+      "TP3_mean6h",
+      "H1_mean6h",
+      "DV_pressure_mean6h",
+      "Reservoirs_mean6h",
+      "Motor_current_mean6h",
+      "Oil_temperature_mean6h",
+      "TP2_std6h",
+      "TP3_std6h",
+      "H1_std6h",
+      "DV_pressure_std6h",
+      "Reservoirs_std6h",
+      "Motor_current_std6h",
+      "Oil_temperature_std6h"
+    ],
+    "results": {
+      "24": {
+        "metrics": {
+          "rows": 343,
+          "positives": 12,
+          "positive_rate": 0.03498542274052478,
+          "ap": 0.04472064365797039,
+          "roc_auc": 0.5790533736153072,
+          "threshold": 0.5725053721201854,
+          "alerts": 218,
+          "precision": 0.045871559633027525,
+          "recall": 0.8333333333333334
+        },
+        "operations": {
+          "alerts": 80,
+          "true_alerts": 4,
+          "false_alerts": 76,
+          "precision": 0.05,
+          "episodes": 4,
+          "covered_episodes": 4,
+          "episode_recall": 1.0,
+          "median_lead_hours": 15.25
+        }
+      },
+      "72": {
+        "metrics": {
+          "rows": 337,
+          "positives": 35,
+          "positive_rate": 0.10385756676557864,
+          "ap": 0.13511281034536976,
+          "roc_auc": 0.5843424787133397,
+          "threshold": 0.5725053721201854,
+          "alerts": 212,
+          "precision": 0.1179245283018868,
+          "recall": 0.7142857142857143
+        },
+        "operations": {
+          "alerts": 78,
+          "true_alerts": 9,
+          "false_alerts": 69,
+          "precision": 0.11538461538461539,
+          "episodes": 4,
+          "covered_episodes": 4,
+          "episode_recall": 1.0,
+          "median_lead_hours": 58.75
+        }
+      }
+    },
+    "suitable_for": "Comparing analog anomaly detection with event-based failure forecasting",
+    "limitations": [
+      "Anomaly score is NOT a calibrated failure probability",
+      "One compressor, four reported leaks; March excluded from scoring, not used for tuning",
+      "Abnormality may reflect operating-mode changes rather than approaching failure"
+    ]
+  },
+  "hydraulic": {
+    "status": "completed",
+    "model_role": "new diagnostic classifier, not production VENA",
+    "task": "Current pump leakage severity 0/1/2 from a completed 60-second cycle",
+    "rows": 2205,
+    "features": 70,
+    "train_rows": 1410,
+    "test_rows": 795,
+    "train_groups": [
+      "100/100/100",
+      "100/100/115",
+      "100/100/130",
+      "100/73/115",
+      "100/73/130",
+      "100/73/90",
+      "100/80/115",
+      "100/80/130",
+      "100/80/90",
+      "100/90/115",
+      "100/90/130",
+      "100/90/90",
+      "20/100/100",
+      "20/100/115",
+      "20/100/130",
+      "20/73/100",
+      "20/73/115",
+      "20/73/130",
+      "20/73/90",
+      "20/90/100",
+      "20/90/115",
+      "20/90/130",
+      "20/90/90",
+      "3/100/100",
+      "3/100/115",
+      "3/100/130",
+      "3/100/90",
+      "3/73/100",
+      "3/73/130",
+      "3/73/90",
+      "3/80/115",
+      "3/80/130",
+      "3/90/100",
+      "3/90/115",
+      "3/90/130",
+      "3/90/90"
+    ],
+    "test_groups": [
+      "100/100/90",
+      "100/73/100",
+      "100/80/100",
+      "100/90/100",
+      "20/100/90",
+      "20/80/100",
+      "20/80/115",
+      "20/80/130",
+      "20/80/90",
+      "3/73/115",
+      "3/80/100",
+      "3/80/90"
+    ],
+    "metrics": {
+      "accuracy": 0.9974842767295597,
+      "balanced_accuracy": 0.9945355191256832,
+      "macro_f1": 0.9945355191256832,
+      "majority_accuracy": 0.6930817610062893,
+      "majority_balanced_accuracy": 0.3333333333333333,
+      "confusion_labels": [
+        0,
+        1,
+        2
+      ],
+      "confusion_matrix": [
+        [
+          551,
+          0,
+          0
+        ],
+        [
+          0,
+          121,
+          1
+        ],
+        [
+          0,
+          1,
+          121
+        ]
+      ]
+    },
+    "suitable_for": "Pump condition diagnosis from continuous sensors",
+    "not_suitable_for": "24/72-hour failure forecasting: no real elapsed run-to-failure trajectory",
+    "limitations": [
+      "One experimental rig; unseen configurations are not unseen independent machines",
+      "Summary uses the whole cycle, so inference happens after the cycle finishes"
+    ]
+  },
+  "water": {
+    "status": "completed",
+    "model_role": "new exploratory classifier, not production VENA",
+    "task": "Classification of ±7-day leak proximity; not future failure prediction",
+    "rows": 8737,
+    "features": [
+      "4700008966_kW",
+      "4700008966_power_hour",
+      "4408411600_kW",
+      "4408411600_power_hour",
+      "4608927500_kvar_hour",
+      "238045_ws_temp",
+      "279805_ws_vigor",
+      "279804_ws_level",
+      "279625_ws_temp",
+      "279623_ws_vigor",
+      "319235_ws_temp",
+      "279831_ws_temp",
+      "326417_ws_temp",
+      "326416_ws_vigor",
+      "temp_site1_anomaly_score",
+      "sfc_temp_site1_anomaly_score",
+      "gw_lvl_site2_anomaly_score",
+      "gw_temp_site2_anomaly_score"
+    ],
+    "missing_fraction": 0.10685081327178157,
+    "train_rows": 6217,
+    "test_rows": 2184,
+    "train_end_exclusive": "2022-09-17",
+    "test_start": "2022-10-01",
+    "purge_days": 14,
+    "train_positive_rate": 0.6948689078333602,
+    "metrics": {
+      "rows": 2184,
+      "positives": 1872,
+      "positive_rate": 0.8571428571428571,
+      "ap": 0.8935064431892857,
+      "roc_auc": 0.6605603153079114,
+      "threshold": 0.5,
+      "alerts": 1987,
+      "precision": 0.9149471565173629,
+      "recall": 0.9711538461538461
+    },
+    "suitable_for": "SCADA data quality, missingness, exploratory anomaly/leak-proximity classification",
+    "not_suitable_for": "Validating causal early warning until exact leak onsets and feature provenance are supplied",
+    "limitations": [
+      "fault_d7 includes seven days AFTER leaks; no causal onset label",
+      "Anomaly scores were precomputed upstream; their training windows are unknown",
+      "Temporal purge does not repair potential leakage inside upstream features",
+      "No event-level recall claimed: exact leak timestamps are absent"
+    ]
+  },
+  "nist_smoke": {
+    "status": "completed",
+    "model_role": "new diagnostic model, not VENA smoke_24h",
+    "task": "First smoke-alarm activation in the next 10 seconds, using only pre-alarm measurements",
+    "smoke_box_files": 457,
+    "used_files": 457,
+    "room_files_downloaded_not_scored": 90,
+    "rejected_files": [],
+    "features": [
+      "Obscuration (%/ft)",
+      "MIC(pA)",
+      "CO",
+      "Obscuration (%/ft)_mean10",
+      "Obscuration (%/ft)_std10",
+      "MIC(pA)_mean10",
+      "MIC(pA)_std10",
+      "CO_mean10",
+      "CO_std10"
+    ],
+    "train_rows": 25331,
+    "test_rows": 7796,
+    "train_detector_models": [
+      "I01",
+      "I02",
+      "I03",
+      "I06",
+      "I08",
+      "I10",
+      "I11",
+      "I12",
+      "I14",
+      "ICO01",
+      "ICO02",
+      "ICO03",
+      "ICO04",
+      "P01",
+      "P02",
+      "P03",
+      "P04",
+      "P05",
+      "P06",
+      "P10",
+      "P11",
+      "P12",
+      "P13",
+      "P14",
+      "PCO01",
+      "PCO02",
+      "PCO03",
+      "PCO05",
+      "PCO06",
+      "PCO07",
+      "PI02",
+      "PI04",
+      "PT02"
+    ],
+    "test_detector_models": [
+      "I04",
+      "I05",
+      "I07",
+      "I09",
+      "I13",
+      "P07",
+      "P08",
+      "P09",
+      "PCO04",
+      "PI01",
+      "PI03",
+      "PT01"
+    ],
+    "metrics": {
+      "rows": 7796,
+      "positives": 242,
+      "positive_rate": 0.0310415597742432,
+      "ap": 0.04877771124887472,
+      "roc_auc": 0.627820190496196,
+      "threshold": 0.5,
+      "alerts": 0,
+      "precision": null,
+      "recall": 0.0
+    },
+    "test_experiments": 121,
+    "assessable_alarm_experiments": 121,
+    "covered_alarm_experiments": 0,
+    "experiments_with_false_window_alerts": 0,
+    "per_experiment": [
+      {
+        "experiment": "I04-A-001",
+        "has_observed_pre_alarm_window": true,
+        "covered": false,
+        "any_false_window_alert": false,
+        "lead_seconds": null
+      },
+      {
+        "experiment": "I04-B-001",
+        "has_observed_pre_alarm_window": true,
+        "covered": false,
+        "any_false_window_alert": false,
+        "lead_seconds": null
+      },
+      {
+        "experiment": "I04-C-001",
+        "has_observed_pre_alarm_window": true,
+        "covered": false,
+        "any_false_window_alert": false,
+        "lead_seconds": null
+      },
+      {
+        "experiment": "I04-D-001",
+        "has_observed_pre_alarm_window": true,
+        "covered": false,
+        "any_false_window_alert": false,
+        "lead_seconds": null
+      },
+      {
+        "experiment": "I04-E-001",
+        "has_observed_pre_alarm_window": true,
+        "covered": false,
+        "any_false_window_alert": false,
+        "lead_seconds": null
+      },
+      {
+        "experiment": "I04-F-001",
+        "has_observed_pre_alarm_window": true,
+        "covered": false,
+        "any_false_window_alert": false,
+        "lead_seconds": null
+      },
+      {
+        "experiment": "I04-F-002",
+        "has_observed_pre_alarm_window": true,
+        "covered": false,
+        "any_false_window_alert": false,
+        "lead_seconds": null
+      },
+      {
+        "experiment": "I04-F-003",
+        "has_observed_pre_alarm_window": true,
+        "covered": false,
+        "any_false_window_alert": false,
+        "lead_seconds": null
+      },
+      {
+        "experiment": "I04-F-004",
+        "has_observed_pre_alarm_window": true,
+        "covered": false,
+        "any_false_window_alert": false,
+        "lead_seconds": null
+      },
+      {
+        "experiment": "I04-F-005",
+        "has_observed_pre_alarm_window": true,
+        "covered": false,
+        "any_false_window_alert": false,
+        "lead_seconds": null
+      },
+      {
+        "experiment": "I05-A-001",
+        "has_observed_pre_alarm_window": true,
+        "covered": false,
+        "any_false_window_alert": false,
+        "lead_seconds": null
+      },
+      {
+        "experiment": "I05-B-001",
+        "has_observed_pre_alarm_window": true,
+        "covered": false,
+        "any_false_window_alert": false,
+        "lead_seconds": null
+      },
+      {
+        "experiment": "I05-C-001",
+        "has_observed_pre_alarm_window": true,
+        "covered": false,
+        "any_false_window_alert": false,
+        "lead_seconds": null
+      },
+      {
+        "experiment": "I05-D-001",
+        "has_observed_pre_alarm_window": true,
+        "covered": false,
+        "any_false_window_alert": false,
+        "lead_seconds": null
+      },
+      {
+        "experiment": "I05-E-001",
+        "has_observed_pre_alarm_window": true,
+        "covered": false,
+        "any_false_window_alert": false,
+        "lead_seconds": null
+      },
+      {
+        "experiment": "I05-F-001",
+        "has_observed_pre_alarm_window": true,
+        "covered": false,
+        "any_false_window_alert": false,
+        "lead_seconds": null
+      },
+      {
+        "experiment": "I05-F-002",
+        "has_observed_pre_alarm_window": true,
+        "covered": false,
+        "any_false_window_alert": false,
+        "lead_seconds": null
+      },
+      {
+        "experiment": "I05-F-003",
+        "has_observed_pre_alarm_window": true,
+        "covered": false,
+        "any_false_window_alert": false,
+        "lead_seconds": null
+      },
+      {
+        "experiment": "I05-F-004",
+        "has_observed_pre_alarm_window": true,
+        "covered": false,
+        "any_false_window_alert": false,
+        "lead_seconds": null
+      },
+      {
+        "experiment": "I05-F-005",
+        "has_observed_pre_alarm_window": true,
+        "covered": false,
+        "any_false_window_alert": false,
+        "lead_seconds": null
+      },
+      {
+        "experiment": "I07-A-001",
+        "has_observed_pre_alarm_window": true,
+        "covered": false,
+        "any_false_window_alert": false,
+        "lead_seconds": null
+      },
+      {
+        "experiment": "I07-B-001",
+        "has_observed_pre_alarm_window": true,
+        "covered": false,
+        "any_false_window_alert": false,
+        "lead_seconds": null
+      },
+      {
+        "experiment": "I07-C-001",
+        "has_observed_pre_alarm_window": true,
+        "covered": false,
+        "any_false_window_alert": false,
+        "lead_seconds": null
+      },
+      {
+        "experiment": "I07-D-001",
+        "has_observed_pre_alarm_window": true,
+        "covered": false,
+        "any_false_window_alert": false,
+        "lead_seconds": null
+      },
+      {
+        "experiment": "I07-E-001",
+        "has_observed_pre_alarm_window": true,
+        "covered": false,
+        "any_false_window_alert": false,
+        "lead_seconds": null
+      },
+      {
+        "experiment": "I07-F-001",
+        "has_observed_pre_alarm_window": true,
+        "covered": false,
+        "any_false_window_alert": false,
+        "lead_seconds": null
+      },
+      {
+        "experiment": "I07-F-002",
+        "has_observed_pre_alarm_window": true,
+        "covered": false,
+        "any_false_window_alert": false,
+        "lead_seconds": null
+      },
+      {
+        "experiment": "I07-F-003",
+        "has_observed_pre_alarm_window": true,
+        "covered": false,
+        "any_false_window_alert": false,
+        "lead_seconds": null
+      },
+      {
+        "experiment": "I07-F-004",
+        "has_observed_pre_alarm_window": true,
+        "covered": false,
+        "any_false_window_alert": false,
+        "lead_seconds": null
+      },
+      {
+        "experiment": "I07-F-005",
+        "has_observed_pre_alarm_window": true,
+        "covered": false,
+        "any_false_window_alert": false,
+        "lead_seconds": null
+      },
+      {
+        "experiment": "I09-A-001",
+        "has_observed_pre_alarm_window": true,
+        "covered": false,
+        "any_false_window_alert": false,
+        "lead_seconds": null
+      },
+      {
+        "experiment": "I09-B-001",
+        "has_observed_pre_alarm_window": true,
+        "covered": false,
+        "any_false_window_alert": false,
+        "lead_seconds": null
+      },
+      {
+        "experiment": "I09-C-001",
+        "has_observed_pre_alarm_window": true,
+        "covered": false,
+        "any_false_window_alert": false,
+        "lead_seconds": null
+      },
+      {
+        "experiment": "I09-D-001",
+        "has_observed_pre_alarm_window": true,
+        "covered": false,
+        "any_false_window_alert": false,
+        "lead_seconds": null
+      },
+      {
+        "experiment": "I09-E-001",
+        "has_observed_pre_alarm_window": true,
+        "covered": false,
+        "any_false_window_alert": false,
+        "lead_seconds": null
+      },
+      {
+        "experiment": "I09-F-001",
+        "has_observed_pre_alarm_window": true,
+        "covered": false,
+        "any_false_window_alert": false,
+        "lead_seconds": null
+      },
+      {
+        "experiment": "I09-F-002",
+        "has_observed_pre_alarm_window": true,
+        "covered": false,
+        "any_false_window_alert": false,
+        "lead_seconds": null
+      },
+      {
+        "experiment": "I09-F-003",
+        "has_observed_pre_alarm_window": true,
+        "covered": false,
+        "any_false_window_alert": false,
+        "lead_seconds": null
+      },
+      {
+        "experiment": "I09-F-004",
+        "has_observed_pre_alarm_window": true,
+        "covered": false,
+        "any_false_window_alert": false,
+        "lead_seconds": null
+      },
+      {
+        "experiment": "I09-F-005",
+        "has_observed_pre_alarm_window": true,
+        "covered": false,
+        "any_false_window_alert": false,
+        "lead_seconds": null
+      },
+      {
+        "experiment": "I13-A-001",
+        "has_observed_pre_alarm_window": true,
+        "covered": false,
+        "any_false_window_alert": false,
+        "lead_seconds": null
+      },
+      {
+        "experiment": "I13-B-001",
+        "has_observed_pre_alarm_window": true,
+        "covered": false,
+        "any_false_window_alert": false,
+        "lead_seconds": null
+      },
+      {
+        "experiment": "I13-C-001",
+        "has_observed_pre_alarm_window": true,
+        "covered": false,
+        "any_false_window_alert": false,
+        "lead_seconds": null
+      },
+      {
+        "experiment": "I13-D-001",
+        "has_observed_pre_alarm_window": true,
+        "covered": false,
+        "any_false_window_alert": false,
+        "lead_seconds": null
+      },
+      {
+        "experiment": "I13-E-001",
+        "has_observed_pre_alarm_window": true,
+        "covered": false,
+        "any_false_window_alert": false,
+        "lead_seconds": null
+      },
+      {
+        "experiment": "I13-F-001",
+        "has_observed_pre_alarm_window": true,
+        "covered": false,
+        "any_false_window_alert": false,
+        "lead_seconds": null
+      },
+      {
+        "experiment": "I13-F-002",
+        "has_observed_pre_alarm_window": true,
+        "covered": false,
+        "any_false_window_alert": false,
+        "lead_seconds": null
+      },
+      {
+        "experiment": "I13-F-003",
+        "has_observed_pre_alarm_window": true,
+        "covered": false,
+        "any_false_window_alert": false,
+        "lead_seconds": null
+      },
+      {
+        "experiment": "I13-F-004",
+        "has_observed_pre_alarm_window": true,
+        "covered": false,
+        "any_false_window_alert": false,
+        "lead_seconds": null
+      },
+      {
+        "experiment": "I13-F-005",
+        "has_observed_pre_alarm_window": true,
+        "covered": false,
+        "any_false_window_alert": false,
+        "lead_seconds": null
+      },
+      {
+        "experiment": "P07-A-001",
+        "has_observed_pre_alarm_window": true,
+        "covered": false,
+        "any_false_window_alert": false,
+        "lead_seconds": null
+      },
+      {
+        "experiment": "P07-B-001",
+        "has_observed_pre_alarm_window": true,
+        "covered": false,
+        "any_false_window_alert": false,
+        "lead_seconds": null
+      },
+      {
+        "experiment": "P07-C-001",
+        "has_observed_pre_alarm_window": true,
+        "covered": false,
+        "any_false_window_alert": false,
+        "lead_seconds": null
+      },
+      {
+        "experiment": "P07-D-001",
+        "has_observed_pre_alarm_window": true,
+        "covered": false,
+        "any_false_window_alert": false,
+        "lead_seconds": null
+      },
+      {
+        "experiment": "P07-E-001",
+        "has_observed_pre_alarm_window": true,
+        "covered": false,
+        "any_false_window_alert": false,
+        "lead_seconds": null
+      },
+      {
+        "experiment": "P07-E-002",
+        "has_observed_pre_alarm_window": true,
+        "covered": false,
+        "any_false_window_alert": false,
+        "lead_seconds": null
+      },
+      {
+        "experiment": "P07-F-001",
+        "has_observed_pre_alarm_window": true,
+        "covered": false,
+        "any_false_window_alert": false,
+        "lead_seconds": null
+      },
+      {
+        "experiment": "P07-F-002",
+        "has_observed_pre_alarm_window": true,
+        "covered": false,
+        "any_false_window_alert": false,
+        "lead_seconds": null
+      },
+      {
+        "experiment": "P07-F-003",
+        "has_observed_pre_alarm_window": true,
+        "covered": false,
+        "any_false_window_alert": false,
+        "lead_seconds": null
+      },
+      {
+        "experiment": "P07-F-004",
+        "has_observed_pre_alarm_window": true,
+        "covered": false,
+        "any_false_window_alert": false,
+        "lead_seconds": null
+      },
+      {
+        "experiment": "P07-F-005",
+        "has_observed_pre_alarm_window": true,
+        "covered": false,
+        "any_false_window_alert": false,
+        "lead_seconds": null
+      },
+      {
+        "experiment": "P08-A-001",
+        "has_observed_pre_alarm_window": true,
+        "covered": false,
+        "any_false_window_alert": false,
+        "lead_seconds": null
+      },
+      {
+        "experiment": "P08-B-001",
+        "has_observed_pre_alarm_window": true,
+        "covered": false,
+        "any_false_window_alert": false,
+        "lead_seconds": null
+      },
+      {
+        "experiment": "P08-C-001",
+        "has_observed_pre_alarm_window": true,
+        "covered": false,
+        "any_false_window_alert": false,
+        "lead_seconds": null
+      },
+      {
+        "experiment": "P08-D-001",
+        "has_observed_pre_alarm_window": true,
+        "covered": false,
+        "any_false_window_alert": false,
+        "lead_seconds": null
+      },
+      {
+        "experiment": "P08-E-001",
+        "has_observed_pre_alarm_window": true,
+        "covered": false,
+        "any_false_window_alert": false,
+        "lead_seconds": null
+      },
+      {
+        "experiment": "P08-F-001",
+        "has_observed_pre_alarm_window": true,
+        "covered": false,
+        "any_false_window_alert": false,
+        "lead_seconds": null
+      },
+      {
+        "experiment": "P08-F-003",
+        "has_observed_pre_alarm_window": true,
+        "covered": false,
+        "any_false_window_alert": false,
+        "lead_seconds": null
+      },
+      {
+        "experiment": "P08-F-004",
+        "has_observed_pre_alarm_window": true,
+        "covered": false,
+        "any_false_window_alert": false,
+        "lead_seconds": null
+      },
+      {
+        "experiment": "P08-F-005",
+        "has_observed_pre_alarm_window": true,
+        "covered": false,
+        "any_false_window_alert": false,
+        "lead_seconds": null
+      },
+      {
+        "experiment": "P09-A-001",
+        "has_observed_pre_alarm_window": true,
+        "covered": false,
+        "any_false_window_alert": false,
+        "lead_seconds": null
+      },
+      {
+        "experiment": "P09-B-001",
+        "has_observed_pre_alarm_window": true,
+        "covered": false,
+        "any_false_window_alert": false,
+        "lead_seconds": null
+      },
+      {
+        "experiment": "P09-C-001",
+        "has_observed_pre_alarm_window": true,
+        "covered": false,
+        "any_false_window_alert": false,
+        "lead_seconds": null
+      },
+      {
+        "experiment": "P09-D-001",
+        "has_observed_pre_alarm_window": true,
+        "covered": false,
+        "any_false_window_alert": false,
+        "lead_seconds": null
+      },
+      {
+        "experiment": "P09-D-003",
+        "has_observed_pre_alarm_window": true,
+        "covered": false,
+        "any_false_window_alert": false,
+        "lead_seconds": null
+      },
+      {
+        "experiment": "P09-E-001",
+        "has_observed_pre_alarm_window": true,
+        "covered": false,
+        "any_false_window_alert": false,
+        "lead_seconds": null
+      },
+      {
+        "experiment": "P09-F-001",
+        "has_observed_pre_alarm_window": true,
+        "covered": false,
+        "any_false_window_alert": false,
+        "lead_seconds": null
+      },
+      {
+        "experiment": "P09-F-002",
+        "has_observed_pre_alarm_window": true,
+        "covered": false,
+        "any_false_window_alert": false,
+        "lead_seconds": null
+      },
+      {
+        "experiment": "P09-F-003",
+        "has_observed_pre_alarm_window": true,
+        "covered": false,
+        "any_false_window_alert": false,
+        "lead_seconds": null
+      },
+      {
+        "experiment": "P09-F-004",
+        "has_observed_pre_alarm_window": true,
+        "covered": false,
+        "any_false_window_alert": false,
+        "lead_seconds": null
+      },
+      {
+        "experiment": "P09-F-005",
+        "has_observed_pre_alarm_window": true,
+        "covered": false,
+        "any_false_window_alert": false,
+        "lead_seconds": null
+      },
+      {
+        "experiment": "PCO04-A-001",
+        "has_observed_pre_alarm_window": true,
+        "covered": false,
+        "any_false_window_alert": false,
+        "lead_seconds": null
+      },
+      {
+        "experiment": "PCO04-B-001",
+        "has_observed_pre_alarm_window": true,
+        "covered": false,
+        "any_false_window_alert": false,
+        "lead_seconds": null
+      },
+      {
+        "experiment": "PCO04-C-001",
+        "has_observed_pre_alarm_window": true,
+        "covered": false,
+        "any_false_window_alert": false,
+        "lead_seconds": null
+      },
+      {
+        "experiment": "PCO04-D-001",
+        "has_observed_pre_alarm_window": true,
+        "covered": false,
+        "any_false_window_alert": false,
+        "lead_seconds": null
+      },
+      {
+        "experiment": "PCO04-E-001",
+        "has_observed_pre_alarm_window": true,
+        "covered": false,
+        "any_false_window_alert": false,
+        "lead_seconds": null
+      },
+      {
+        "experiment": "PCO04-F-001",
+        "has_observed_pre_alarm_window": true,
+        "covered": false,
+        "any_false_window_alert": false,
+        "lead_seconds": null
+      },
+      {
+        "experiment": "PCO04-F-002",
+        "has_observed_pre_alarm_window": true,
+        "covered": false,
+        "any_false_window_alert": false,
+        "lead_seconds": null
+      },
+      {
+        "experiment": "PCO04-F-003",
+        "has_observed_pre_alarm_window": true,
+        "covered": false,
+        "any_false_window_alert": false,
+        "lead_seconds": null
+      },
+      {
+        "experiment": "PCO04-F-004",
+        "has_observed_pre_alarm_window": true,
+        "covered": false,
+        "any_false_window_alert": false,
+        "lead_seconds": null
+      },
+      {
+        "experiment": "PCO04-F-005",
+        "has_observed_pre_alarm_window": true,
+        "covered": false,
+        "any_false_window_alert": false,
+        "lead_seconds": null
+      },
+      {
+        "experiment": "PI01-A-001",
+        "has_observed_pre_alarm_window": true,
+        "covered": false,
+        "any_false_window_alert": false,
+        "lead_seconds": null
+      },
+      {
+        "experiment": "PI01-B-001",
+        "has_observed_pre_alarm_window": true,
+        "covered": false,
+        "any_false_window_alert": false,
+        "lead_seconds": null
+      },
+      {
+        "experiment": "PI01-C-001",
+        "has_observed_pre_alarm_window": true,
+        "covered": false,
+        "any_false_window_alert": false,
+        "lead_seconds": null
+      },
+      {
+        "experiment": "PI01-D-001",
+        "has_observed_pre_alarm_window": true,
+        "covered": false,
+        "any_false_window_alert": false,
+        "lead_seconds": null
+      },
+      {
+        "experiment": "PI01-E-001",
+        "has_observed_pre_alarm_window": true,
+        "covered": false,
+        "any_false_window_alert": false,
+        "lead_seconds": null
+      },
+      {
+        "experiment": "PI01-F-001",
+        "has_observed_pre_alarm_window": true,
+        "covered": false,
+        "any_false_window_alert": false,
+        "lead_seconds": null
+      },
+      {
+        "experiment": "PI01-F-002",
+        "has_observed_pre_alarm_window": true,
+        "covered": false,
+        "any_false_window_alert": false,
+        "lead_seconds": null
+      },
+      {
+        "experiment": "PI01-F-003",
+        "has_observed_pre_alarm_window": true,
+        "covered": false,
+        "any_false_window_alert": false,
+        "lead_seconds": null
+      },
+      {
+        "experiment": "PI01-F-004",
+        "has_observed_pre_alarm_window": true,
+        "covered": false,
+        "any_false_window_alert": false,
+        "lead_seconds": null
+      },
+      {
+        "experiment": "PI01-F-005",
+        "has_observed_pre_alarm_window": true,
+        "covered": false,
+        "any_false_window_alert": false,
+        "lead_seconds": null
+      },
+      {
+        "experiment": "PI03-A-001",
+        "has_observed_pre_alarm_window": true,
+        "covered": false,
+        "any_false_window_alert": false,
+        "lead_seconds": null
+      },
+      {
+        "experiment": "PI03-B-001",
+        "has_observed_pre_alarm_window": true,
+        "covered": false,
+        "any_false_window_alert": false,
+        "lead_seconds": null
+      },
+      {
+        "experiment": "PI03-C-001",
+        "has_observed_pre_alarm_window": true,
+        "covered": false,
+        "any_false_window_alert": false,
+        "lead_seconds": null
+      },
+      {
+        "experiment": "PI03-D-001",
+        "has_observed_pre_alarm_window": true,
+        "covered": false,
+        "any_false_window_alert": false,
+        "lead_seconds": null
+      },
+      {
+        "experiment": "PI03-E-001",
+        "has_observed_pre_alarm_window": true,
+        "covered": false,
+        "any_false_window_alert": false,
+        "lead_seconds": null
+      },
+      {
+        "experiment": "PI03-E-003",
+        "has_observed_pre_alarm_window": true,
+        "covered": false,
+        "any_false_window_alert": false,
+        "lead_seconds": null
+      },
+      {
+        "experiment": "PI03-F-001",
+        "has_observed_pre_alarm_window": true,
+        "covered": false,
+        "any_false_window_alert": false,
+        "lead_seconds": null
+      },
+      {
+        "experiment": "PI03-F-003",
+        "has_observed_pre_alarm_window": true,
+        "covered": false,
+        "any_false_window_alert": false,
+        "lead_seconds": null
+      },
+      {
+        "experiment": "PI03-F-004",
+        "has_observed_pre_alarm_window": true,
+        "covered": false,
+        "any_false_window_alert": false,
+        "lead_seconds": null
+      },
+      {
+        "experiment": "PI03-F-005",
+        "has_observed_pre_alarm_window": true,
+        "covered": false,
+        "any_false_window_alert": false,
+        "lead_seconds": null
+      },
+      {
+        "experiment": "PT01-A-001",
+        "has_observed_pre_alarm_window": true,
+        "covered": false,
+        "any_false_window_alert": false,
+        "lead_seconds": null
+      },
+      {
+        "experiment": "PT01-B-001",
+        "has_observed_pre_alarm_window": true,
+        "covered": false,
+        "any_false_window_alert": false,
+        "lead_seconds": null
+      },
+      {
+        "experiment": "PT01-C-001",
+        "has_observed_pre_alarm_window": true,
+        "covered": false,
+        "any_false_window_alert": false,
+        "lead_seconds": null
+      },
+      {
+        "experiment": "PT01-D-001",
+        "has_observed_pre_alarm_window": true,
+        "covered": false,
+        "any_false_window_alert": false,
+        "lead_seconds": null
+      },
+      {
+        "experiment": "PT01-E-001",
+        "has_observed_pre_alarm_window": true,
+        "covered": false,
+        "any_false_window_alert": false,
+        "lead_seconds": null
+      },
+      {
+        "experiment": "PT01-F-001",
+        "has_observed_pre_alarm_window": true,
+        "covered": false,
+        "any_false_window_alert": false,
+        "lead_seconds": null
+      },
+      {
+        "experiment": "PT01-F-002",
+        "has_observed_pre_alarm_window": true,
+        "covered": false,
+        "any_false_window_alert": false,
+        "lead_seconds": null
+      },
+      {
+        "experiment": "PT01-F-003",
+        "has_observed_pre_alarm_window": true,
+        "covered": false,
+        "any_false_window_alert": false,
+        "lead_seconds": null
+      },
+      {
+        "experiment": "PT01-F-004",
+        "has_observed_pre_alarm_window": true,
+        "covered": false,
+        "any_false_window_alert": false,
+        "lead_seconds": null
+      },
+      {
+        "experiment": "PT01-F-005",
+        "has_observed_pre_alarm_window": true,
+        "covered": false,
+        "any_false_window_alert": false,
+        "lead_seconds": null
+      }
+    ],
+    "suitable_for": "Short-horizon sensor response and laboratory alarm-detection research",
+    "not_suitable_for": "Predicting fire 24 hours ahead or determining field false-fire rates",
+    "limitations": [
+      "Alarm? is a manually activated latch, not a confirmed real-world fire label",
+      "Alarm? and Microphone excluded from inputs; held-out detector models never enter training",
+      "Room traces have no Alarm? onset column; require separate summary-table alignment",
+      "This first exploration is not a safety certification or an unbiased field-performance estimate"
+    ]
+  },
+  "metro_matched": {
+    "frozen": {
+      "pump_24h": {
+        "rows": 343,
+        "positives": 12,
+        "positive_rate": 0.03498542274052478,
+        "ap": 0.08266725935172492,
+        "roc_auc": 0.6533232628398793,
+        "threshold": 0.9532175022480122,
+        "alerts": 0,
+        "precision": null,
+        "recall": 0.0,
+        "operations": {
+          "alerts": 0,
+          "true_alerts": 0,
+          "false_alerts": 0,
+          "precision": null,
+          "episodes": 4,
+          "covered_episodes": 0,
+          "episode_recall": 0.0,
+          "median_lead_hours": null
+        }
+      },
+      "pump_72h": {
+        "rows": 337,
+        "positives": 35,
+        "positive_rate": 0.10385756676557864,
+        "ap": 0.16388903452692027,
+        "roc_auc": 0.5862819299905393,
+        "threshold": 0.9689136059121184,
+        "alerts": 0,
+        "precision": null,
+        "recall": 0.0,
+        "operations": {
+          "alerts": 0,
+          "true_alerts": 0,
+          "false_alerts": 0,
+          "precision": null,
+          "episodes": 4,
+          "covered_episodes": 0,
+          "episode_recall": 0.0,
+          "median_lead_hours": null
+        }
+      }
+    },
+    "analog": {
+      "24": {
+        "metrics": {
+          "rows": 343,
+          "positives": 12,
+          "positive_rate": 0.03498542274052478,
+          "ap": 0.04472064365797039,
+          "roc_auc": 0.5790533736153072,
+          "threshold": 0.5725053721201854,
+          "alerts": 218,
+          "precision": 0.045871559633027525,
+          "recall": 0.8333333333333334
+        },
+        "operations": {
+          "alerts": 80,
+          "true_alerts": 4,
+          "false_alerts": 76,
+          "precision": 0.05,
+          "episodes": 4,
+          "covered_episodes": 4,
+          "episode_recall": 1.0,
+          "median_lead_hours": 15.25
+        }
+      },
+      "72": {
+        "metrics": {
+          "rows": 337,
+          "positives": 35,
+          "positive_rate": 0.10385756676557864,
+          "ap": 0.13511281034536976,
+          "roc_auc": 0.5843424787133397,
+          "threshold": 0.5725053721201854,
+          "alerts": 212,
+          "precision": 0.1179245283018868,
+          "recall": 0.7142857142857143
+        },
+        "operations": {
+          "alerts": 78,
+          "true_alerts": 9,
+          "false_alerts": 69,
+          "precision": 0.11538461538461539,
+          "episodes": 4,
+          "covered_episodes": 4,
+          "episode_recall": 1.0,
+          "median_lead_hours": 58.75
+        }
+      }
+    },
+    "coverage": {
+      "24": {
+        "frozen_grid_rows": 485,
+        "common_grid_rows": 357,
+        "common_eligible_rows": 343,
+        "omitted_without_complete_analog_history": 128
+      },
+      "72": {
+        "frozen_grid_rows": 477,
+        "common_grid_rows": 351,
+        "common_eligible_rows": 337,
+        "omitted_without_complete_analog_history": 126
+      }
+    },
+    "note": "Analog model abstains without six complete hourly bins. Compare both models on the intersection, with identical ground truth and active-episode exclusions."
+  },
+  "production_artifacts_unchanged": true
+}

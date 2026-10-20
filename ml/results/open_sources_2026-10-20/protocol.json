@@ -1,0 +1,123 @@
+{
+  "created_at_utc": "2026-10-20T16:15:15.118378+00:00",
+  "scope": "Exploratory suitability study; heterogeneous tasks, not a shared production benchmark",
+  "python": "3.12.11",
+  "packages": {
+    "numpy": "1.26.4",
+    "pandas": "2.2.1",
+    "scikit-learn": "1.5.1",
+    "joblib": "1.3.2",
+    "lightgbm": "4.6.0",
+    "catboost": "1.2.8"
+  },
+  "source_sha256": {
+    "run_open_source_experiments.py": "be61b04eb28cb90a445fdda0421d3466aa5c6580c3cdc3f35c2c18a52dfbfc06",
+    "open_sources/__init__.py": "d5fa5682526488a9794e01968e3daa49bdf5e2f35e6e5e37758ec530bfb9ea70",
+    "open_sources/download.py": "a6597dd4d263de4d7289590e90d72d82c3f4aa4f4746269eb696d522e2f72065",
+    "open_sources/experiments.py": "1c6d2666c18b8aa4e68ed89ac03f469020dbe3087310b8669a54c4c08a765cf9",
+    "open_sources/test_open_sources.py": "7dd0515e39d6c4cd6c096747bdf3b3ad2d110f3a626321ed97d7f6d11fb53c01",
+    "validation/evaluation.py": "857847ffea4d350c53eb604797f6b3fd603153e8e79fbb476c1c4790aecb97fb",
+    "validation/external.py": "dac3457b1f13206089d8e35a71b3ab626ee61f754a60cdfc90e90db722340459",
+    "run_independent_validation.py": "03388b57a462b7d6057477530e65b1c6480a42b16260e4280dae59a1a34e930d",
+    "pipeline/features.py": "8e42fb9781a076c810228407ca6aa6acb904bfbc63e4b053ed87db6b839aea8d",
+    "pipeline/calibration.py": "dffbac3e4c8b9124abcdadeca3f62bf843244e6937c44204e0958358160bec7d"
+  },
+  "git_head": "267f1ea786fa11c78be8d39e184ea7ff659cb7a1",
+  "production": {
+    "pump_72h": {
+      "version": "2026-09-29",
+      "training_period": {
+        "train_years": "2021-2023"
+      },
+      "thresholds": {
+        "critical": 0.9820003022026244,
+        "high": 0.9689136059121185,
+        "medium": 0.9090196824226232
+      },
+      "files": {
+        "calibrator.joblib": "8498ed6645df6d4a9a19d55d39d437dea4028aa400d31d631a95e44cbebcbf15",
+        "meta.json": "37e82ee2a0c127b1685191fa972f93bae0c7b7f42c3a29793c8ad95f5bba10a8",
+        "model.joblib": "3284e8407124c4a075a35d8f51cb21e3bba924f97b1111190836a72d16f151a5"
+      }
+    },
+    "pump_baseline_72h": {
+      "version": "2026-09-29",
+      "training_period": {
+        "train_years": "2019-2023"
+      },
+      "thresholds": {
+        "critical": 0.9962668556891047,
+        "high": 0.9861815138747381,
+        "medium": 0.9448702018202455
+      },
+      "files": {
+        "calibrator.joblib": "366470e1a862a05df9c27279fc9649eb5dfdc43784266ff778095b61b12745b7",
+        "meta.json": "dffc2b2a8cc0334762169c9495bfeba27dd79ab53cde5271c290025b48af4e9e",
+        "model.joblib": "0f56405bd43ad96438950749264377cae4e7b155bf3442fee1e9cf634de48f85"
+      }
+    },
+    "pump_24h": {
+      "version": "2026-09-29",
+      "training_period": {
+        "train_years": "2019-2025"
+      },
+      "thresholds": {
+        "critical": 0.9699377390929222,
+        "high": 0.9532175022480122,
+        "medium": 0.8886337669761263
+      },
+      "files": {
+        "calibrator.joblib": "176ed888c2ec1142707b457d33ccee05f2955eb8bbb5393543c539a8c020f32e",
+        "meta.json": "500ce52a93428487f24c21ca0116ed0c5618cd8f308f07c5f97c71f954880a44",
+        "model.joblib": "de12d2482632a51fff8f0232f7b69cff52e311b2d1683a7a756a44655c9b696f"
+      }
+    }
+  },
+  "hydraulic": {
+    "grouping": "cooler/valve/accumulator combinations",
+    "test_fraction": 0.25,
+    "seed": 42,
+    "parameters": {
+      "max_iter": 150,
+      "max_leaf_nodes": 15,
+      "l2_regularization": 1.0,
+      "early_stopping": false,
+      "random_state": 42
+    }
+  },
+  "water": {
+    "train_end_exclusive": "2022-09-17",
+    "test_start": "2022-10-01",
+    "threshold": 0.5,
+    "parameters": {
+      "max_iter": 150,
+      "max_leaf_nodes": 15,
+      "l2_regularization": 1.0,
+      "early_stopping": false,
+      "random_state": 42
+    }
+  },
+  "nist": {
+    "grouping": "detector model",
+    "test_fraction": 0.25,
+    "seed": 42,
+    "horizon_seconds": 10,
+    "threshold": 0.5,
+    "parameters": {
+      "max_iter": 150,
+      "max_leaf_nodes": 15,
+      "l2_regularization": 1.0,
+      "early_stopping": false,
+      "random_state": 42
+    }
+  },
+  "metro_analog": {
+    "train_end_exclusive": "2020-03-01",
+    "test_start": "2020-04-01",
+    "test_end": "2020-08-01",
+    "n_estimators": 200,
+    "max_samples": 256,
+    "seed": 42,
+    "threshold_train_quantile": 0.99
+  }
+}
