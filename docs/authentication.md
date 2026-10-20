@@ -1,188 +1,90 @@
 # Вход и пользователи
 
-Вход доступен по email **или** логину и паролю. Пароли хранятся в PostgreSQL
-только как Argon2-хеши с индивидуальной солью. Роли: `viewer` — чтение,
-`dispatcher` — работы и решения, `admin` — настройки, аудит и геоданные.
-Публичная регистрация не включена: аккаунты создаются административным скриптом.
+Вход — по логину или email с паролем либо через LDAP/AD. Публичной регистрации нет.
 
-## Конфигурация
+## Вход и сессии
 
-Задайте `VENA_AUTH_ENABLED=true` и случайный `VENA_JWT_SECRET` длиной не менее
-32 байт (`openssl rand -hex 32`). На сервере это `/opt/vena/shared/.env`.
-Секрет не хранится в Git. При отсутствии секрета включённая аутентификация
-не допускает запуск приложения. `VENA_JWT_TTL_MINUTES=60` задаёт срок JWT.
-Значение секрета по умолчанию в корневом Compose — только для локальной разработки.
+- Пароли хранятся в PostgreSQL только как хеши Argon2 (pwdlib), длина пароля — от 10 символов.
+- После входа выдаётся JWT (HS256, PyJWT): cookie `vena_session` (`HttpOnly`, `SameSite=Lax`,
+  `Path=/api/v1`, `Secure` при `https` в `VENA_PUBLIC_URL`) или `Authorization: Bearer` для внешних клиентов.
+- На каждом запросе проверяются подпись, срок, сессия в `auth_sessions` и активность; роль и область — из БД.
+- Выход отзывает текущую сессию; смена или сброс пароля и изменение роли, блокировки или области — все сессии
+  пользователя. Меняющий данные запрос с cookie проверяется по `Origin` (`VENA_PUBLIC_URL`, `VENA_CORS_ORIGINS`).
+- Не больше 10 попыток входа на логин и 100 на IP за окно, далее HTTP 429 с `Retry-After`. Вход, неудачные попытки
+  (без пароля), выход и смена пароля пишутся в аудит с IP клиента.
 
-Браузер хранит JWT в cookie `vena_session` с `HttpOnly`, `SameSite=Lax` и
-`Path=/api/v1`. При `VENA_PUBLIC_URL=https://…` добавляется `Secure`.
-JWT не сохраняется в localStorage; старый API-ключ удаляется браузером.
-Production доступен по `https://5bit.online`; cookie сессии передаётся только
-по HTTPS. При смене домена обновите адрес Caddy и `VENA_PUBLIC_URL`,
-чтобы защищённые cookie и проверка Origin использовали новый адрес.
+Переменные: `VENA_AUTH_ENABLED` (в обоих compose `true`), `VENA_JWT_SECRET` (от 32 байт,
+`openssl rand -hex 32`, иначе backend не стартует; на стенде — в `/opt/vena/shared/.env`),
+`VENA_JWT_TTL_MINUTES` (60), `VENA_AUTH_LOGIN_LIMIT` (10), `VENA_AUTH_LOGIN_WINDOW_SECONDS` (300),
+`VENA_TRUSTED_PROXIES` (от кого принимать `X-Forwarded-For`, на стенде `["caddy"]`).
 
-Проверяются HS256-подпись, `exp`, `nbf`, `iat`, issuer, audience, тип токена,
-существование сессии и активность пользователя. Роль берётся из БД.
-Выход немедленно отзывает текущую сессию, смена пароля — все сессии пользователя.
-По истечении JWT нужен повторный вход. Refresh-токены не используются.
-Для меняющих данные запросов с cookie требуется разрешённый Origin:
-`VENA_PUBLIC_URL` либо `VENA_CORS_ORIGINS`.
+## Роли
 
-Ограничение входа хранится в PostgreSQL: по умолчанию 10 попыток на логин
-и 100 на IP за 300 секунд. Ответ — HTTP 429 с Retry-After. Параметры:
-`VENA_AUTH_LOGIN_LIMIT`, `VENA_AUTH_LOGIN_WINDOW_SECONDS`.
+| Роль | Права |
+|---|---|
+| `viewer` | просмотр экранов и API в пределах своей области |
+| `dispatcher` | то же и работы, решения, подтверждение уведомлений, «Взять в работу», приём потока СМВУ |
+| `admin` | то же и пользователи, настройки уведомлений, пороги моделей, импорт, геослой, аудит, машина времени; видит все объекты |
 
-Вход, неудачная попытка входа (с введённым логином и причиной, без пароля), выход
-и смена своего пароля пишутся в журнал аудита вместе с IP клиента. За обратным
-прокси IP берётся из `X-Forwarded-For`, только если запрос пришёл от адреса из
-`VENA_TRUSTED_PROXIES` (на стенде — `caddy`).
+## Создание пользователей user1–user20
 
-## Создание 20 пользователей
-
-Локальный Docker Compose создаёт их сам при первом старте (`VENA_SEED_USERS=true`,
-`VENA_SEED_ADMIN=user1`). Локально без Docker, после `alembic upgrade head`:
+Скрипт `backend/app/db/seed_users.py` создаёт `user1`…`user20` (`userN@example.com`, роль `dispatcher`, пароль `0987654321`
+или `VENA_USER_PASSWORD`); существующие аккаунты не меняются, запуск можно повторять. `VENA_SEED_ADMIN=user1` (`--admin`)
+делает аккаунт администратором, `VENA_SEED_SCOPES='{"user18":["complex:5"]}'` задаёт области (по умолчанию `all`). При
+`VENA_SEED_USERS=true` скрипт выполняется при старте backend: в корневом compose включено, в `infra/.env.example` выключено.
+Флаги: `--count`, `--email-domain`, `--role`; `--username` и `--email` создают один аккаунт.
 
 ```sh
-cd backend
-VENA_SEED_ADMIN=user1 uv run python -m app.db.seed_users
-```
-
-Через production Compose:
-
-```sh
-export VENA_ENV_FILE=/opt/vena/shared/.env
-docker compose --env-file "$VENA_ENV_FILE" -f /opt/vena/current/infra/compose.yaml \
-  exec backend python -m app.db.seed_users
-```
-
-Создаются ровно 20 аккаунтов: `user1`–`user20`, email
-`user1@example.com`–`user20@example.com`, пароль `0987654321`, роль `dispatcher`.
-Адреса — демонстрационные, письма для подтверждения не отправляются.
-Скрипт повторяемый: существующие пароли, роли и блокировки не изменяются.
-Можно задать `--email-domain`, `--count`, `--role`; переменная `VENA_USER_PASSWORD`
-переопределяет пароль. `VENA_SEED_ADMIN=user1` (или `--admin user1`) создаёт `user1`
-администратором; уже существующий `user1` не повышается. `VENA_SEED_USERS=true`
-включает сидирование при старте контейнера: в локальном Compose по умолчанию,
-на стенде (`infra/.env.example`) выключено. Роли меняют в **Настройки → Пользователи**.
-
-Отдельная учётная запись, в том числе администратор (пароль вводится скрыто):
-
-```sh
-uv run python -m app.db.seed_users --username admin --email admin@example.com --role admin
+cd backend && VENA_SEED_ADMIN=user1 uv run python -m app.db.seed_users   # локально, после alembic upgrade head
+export VENA_ENV_FILE=/opt/vena/shared/.env                                # стенд
+docker compose --env-file "$VENA_ENV_FILE" -f /opt/vena/current/infra/compose.yaml exec backend python -m app.db.seed_users
 ```
 
 ## Области видимости
 
-Роль определяет, что пользователь может делать, область — какие объекты он видит.
-Области задаются по справочнику объектов диспетчера:
+Роль определяет, что пользователь может делать, область — какие объекты он видит. Иерархия берётся
+из `справочник_объектов_диспетчер.csv` в `VENA_DATASET_DIR` (уровни: 1 — район, 2 — комплекс, 3 — объект),
+загрузка — `POST /api/v1/imports?kind=objects`, дерево — `GET /api/v1/objects/tree`.
 
 | Область | Что видно |
 |---|---|
-| `all` | все объекты (диспетчер ОДС) |
-| `district:<id>` | район по эксплуатации со всеми комплексами и объектами |
-| `complex:<id>` | комплекс и его объекты (техник, например `complex:5` — «объект Альфа») |
-| `object:<id>` | один объект, например `object:5122` — «ДУ объект Альфа» |
+| `all` | все объекты |
+| `district:<id>` | район со всеми комплексами и объектами, например `district:5773` |
+| `complex:<id>` | комплекс и его объекты, например `complex:5` — «объект Альфа» |
+| `object:<id>` | один объект, например `object:5122` — «ДУ объект Альфа»; работает и без справочника |
 
-У пользователя может быть несколько областей, права суммируются. Администратор видит всё.
-Канал относится к объекту по `ид_объект` из реестра оборудования, снимка прогнозов
-и справочника каналов. На сервере фильтруются прогнозы и сводка, ситуации, дерево
-оборудования, работы, уведомления, журнал прогнозов, события, тревоги и доступы,
-аналитика, отчёты смены, XLSX, CSV и XML, реестр оборудования и геослой, утренний
-список объектов и последние инциденты реестра. Чужая работа,
-прогноз или уведомление возвращают 404, в том числе при попытке изменения.
-Уведомления без канала, например о загрузке журнала, видны всем.
+Области суммируются, администратор видит всё. Сервер фильтрует прогнозы, ситуации, работы,
+уведомления, журнал, события, аналитику, отчёты, реестр оборудования и геослой; чужой объект даёт 404.
+Локальному пользователю область задаёт администратор (колонка «Область» или `PATCH /api/v1/users/{id}`
+с `{"scopes": [...]}`). Пользователю LDAP/AD она вычисляется из групп при каждом входе.
 
-Справочник — `справочник_объектов_диспетчер.csv` в `VENA_DATASET_DIR` с колонками
-`ид_объект`, `иерархия_уровень` (1 — район, 2 — комплекс, 3 — объект), `родитель`,
-`вид_объекта`, `диспетчерское_название_объекта`. Файл перечитывается при изменении.
-Его можно заменить через `POST /api/v1/imports?kind=objects` и
-`POST /api/v1/imports/{id}/apply`, шаблон — `GET /api/v1/imports/template/objects.xlsx`.
-Дерево район → комплексы → объекты с числом каналов: `GET /api/v1/objects/tree`.
-Без справочника районы и комплексы не раскрываются: работают только области
-`object:<id>`, объекты подписываются «Объект N».
+## LDAP / Active Directory
 
-Локальным пользователям область назначает администратор в **Настройки → Пользователи**
-(колонка «Область») или запросом `PATCH /api/v1/users/{id}` с `{"scopes": ["complex:5"]}`.
-Изменение области завершает сессии пользователя. Текущая область видна в меню
-пользователя: «Область: объект Альфа» или «Область: Все объекты».
+| Переменная | Назначение (по умолчанию) |
+|---|---|
+| `VENA_LDAP_ENABLED`, `VENA_LDAP_URL` | включение (`false`); `ldaps://host:636` или `ldap://host:389` с обязательным StartTLS |
+| `VENA_LDAP_BIND_DN`, `VENA_LDAP_BIND_PASSWORD`, `VENA_LDAP_BASE_DN`, `VENA_LDAP_USER_FILTER` | служебная учётная запись, база и фильтр поиска с `{login}` |
+| `VENA_LDAP_USERNAME_ATTRIBUTE`, `VENA_LDAP_ID_ATTRIBUTE` | логин и устойчивый ID (`sAMAccountName`, `objectGUID`) |
+| `VENA_LDAP_GROUP_ROLES`, `VENA_LDAP_DEFAULT_ROLE` | JSON «DN группы → роль», берётся старшая; роль без группы (`viewer`, `none` — вход запрещён) |
+| `VENA_LDAP_GROUP_SCOPES`, `VENA_LDAP_DEFAULT_SCOPES` | JSON «DN или CN группы → области», области суммируются; без совпадений (`["all"]`) |
+| `VENA_LDAP_CA_FILE`, `VENA_LDAP_TIMEOUT_SECONDS` | CA каталога в PEM, тайм-аут (5 с) |
 
-Пользователям LDAP/AD область вычисляется из групп при каждом входе.
-`VENA_LDAP_GROUP_SCOPES` сопоставляет DN или CN группы со списком областей:
-
-```sh
-VENA_LDAP_GROUP_SCOPES='{"CN=VENA-ODS,OU=Groups,DC=corp,DC=example":["all"],"VENA-District":["district:5773"],"VENA-Alpha":["complex:5"],"VENA-Alpha-DU":["object:5122"]}'
-```
-
-Области всех групп пользователя суммируются, `all` в любой группе открывает всё.
-Если ни одна группа не сопоставлена, действует `VENA_LDAP_DEFAULT_SCOPES`
-(по умолчанию `["all"]`, как до появления областей; `[]` — без доступа к объектам).
-
-Демонстрационным аккаунтам область задаётся только явно и только при создании:
-
-```sh
-VENA_SEED_SCOPES='{"user18":["complex:5"],"user19":["object:5122"]}' python -m app.db.seed_users
-```
-
-Без переменной у всех создаваемых аккаунтов область `all`; существующие аккаунты
-не меняются. Вход записывается в аудит как `auth.login` или `auth.ldap_login`
-с `scopes=…`, изменение области — как `user.update`.
-
-## API
-
-`POST /api/v1/auth/login`:
-
-```json
-{"email":"user1@example.com","password":"0987654321"}
-```
-
-В поле `email` можно передать `user1`; также поддерживается поле `login`.
-Ответ содержит `access_token`, `token_type=bearer`, `expires_in` и `user`.
-Для внешних клиентов передавайте `Authorization: Bearer <access_token>`.
-
-- `GET /api/v1/auth/me` — пользователь, роль и область видимости (`scopes`, `scope_label`).
-- `POST /api/v1/auth/logout` — отзыв текущего токена.
-- `POST /api/v1/auth/password` — `current_password` и `new_password` (от 10 символов).
-- `GET /api/v1/auth/status` — публичное состояние механизма входа.
-
-Старые `X-API-Key` и API-ключи в Bearer больше не действуют.
-После обновления пользователям нужно войти заново.
-
-Проверки автодеплоя создают временных пользователей со случайными паролями,
-проверяют вход, JWT, роли и отзыв сессии, затем удаляют эти аккаунты.
-
-Реализация использует [PyJWT](https://pyjwt.readthedocs.io/en/stable/usage.html)
-и [pwdlib/Argon2, описанные в документации FastAPI](https://fastapi.tiangolo.com/tutorial/security/oauth2-jwt/).
-
-Управление пользователями доступно администратору в `/settings/users`. LDAP/AD и
-параметры корпоративного каталога описаны в [интеграциях](data-integrations.md).
+Сертификат и имя сервера проверяются всегда. При первом входе создаётся запись `ldap:<логин>`, пароль
+каталога не хранится. Пример для AD — в [data-integrations.md](data-integrations.md#ldap--active-directory-тз-11).
 
 ## Тестовый каталог LDAP
 
-Профиль `ldap` корневого compose поднимает OpenLDAP (`osixia/openldap:1.5.0`, overlay memberOf)
-и включает вход через каталог:
+`VENA_LDAP_ENABLED=true docker compose --profile ldap up -d` поднимает OpenLDAP (`osixia/openldap:1.5.0`).
+Контейнер `ldap-certs` (`emulators/ldap/make-certs.sh`) выпускает тестовый CA и сертификат хоста `ldap`;
+backend получает только `ca.crt` и подключается через StartTLS. Пользователи — `emulators/ldap/ldif/users.ldif`,
+пароль у всех `vena-ldap-test`, вход по `uid` или email: `ldap-admin` (группа `cn=vena-admins`, роль `admin`),
+`ldap-dispatcher` (`cn=vena-dispatchers`, `dispatcher`), `ldap-viewer` (`cn=vena-viewers`, `viewer`).
 
-```sh
-VENA_LDAP_ENABLED=true docker compose --profile ldap up -d
-```
+## API
 
-Пользователи и группы — `emulators/ldap/ldif/users.ldif`, пароль у всех `vena-ldap-test`:
-
-| Логин | Группа | Роль VENA |
+| Запрос | Доступ | Назначение |
 |---|---|---|
-| `ldap-admin` | `cn=vena-admins,ou=groups,dc=vena,dc=local` | `admin` |
-| `ldap-dispatcher` | `cn=vena-dispatchers,ou=groups,dc=vena,dc=local` | `dispatcher` |
-| `ldap-viewer` | `cn=vena-viewers,ou=groups,dc=vena,dc=local` | `viewer` |
-
-Вход возможен и по email (`ldap-viewer@vena.local`). Пользователь без группы не входит
-(`VENA_LDAP_DEFAULT_ROLE=none`). Остальные `VENA_LDAP_*` заданы в `compose.yaml`: поиск
-служебной учётной записью `cn=vena-reader,dc=vena,dc=local` (только чтение) в
-`ou=people,dc=vena,dc=local`, логин — `uid`, устойчивый ID — `entryUUID`.
-
-Перед стартом каталога одноразовый контейнер `ldap-certs` выпускает тестовый CA и сертификат
-хоста `ldap` (`emulators/ldap/make-certs.sh`), ключ CA не сохраняется. Backend получает только
-`ca.crt` (`VENA_LDAP_CA_FILE=/srv/ldap-ca/ca.crt`) и подключается через StartTLS с проверкой
-сертификата и имени — так же, как к корпоративному каталогу.
-
-Проверено на этом профиле: `POST /api/v1/auth/ldap` (его вызывает экран входа) для всех трёх
-учётных записей, роль в `/auth/me` совпадает с группой, `GET /users` доступен только
-администратору, неверный пароль и неизвестный логин — 401. В журнале slapd StartTLS
-выполняется до каждого bind.
+| `POST /api/v1/auth/login`, `POST /api/v1/auth/ldap` | все | `email` (или `login`) и `password`; ответ — `access_token`, `expires_in`, `user` и cookie |
+| `GET /api/v1/auth/me`, `GET /api/v1/auth/status` | вошедший; все | текущий пользователь с `scopes`; включён ли вход и доступен ли LDAP |
+| `POST /api/v1/auth/logout`, `POST /api/v1/auth/password` | вошедший | отзыв сессии; смена пароля (`current_password`, `new_password`) |
+| `GET`, `POST /api/v1/users`; `PATCH /api/v1/users/{id}`; `POST /api/v1/users/{id}/password` | `admin` | список, создание, изменение, сброс пароля |

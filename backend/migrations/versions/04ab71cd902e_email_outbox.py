@@ -17,7 +17,6 @@ def upgrade():
     ]:
         op.add_column("delivery_log", column)
     op.create_index("ix_delivery_queue", "delivery_log", ["channel", "status", "next_attempt_at"])
-    # Legacy pending rows have no saved message and cannot be sent safely.
     op.execute("UPDATE delivery_log SET status='failed' WHERE status='pending'")
 
 

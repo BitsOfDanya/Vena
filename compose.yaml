@@ -65,6 +65,7 @@ services:
       SMTP_PASSWORD: ${SMTP_PASSWORD:-}
       SMTP_FROM: ${SMTP_FROM:-}
       SMTP_TLS: ${SMTP_TLS:-true}
+      SMTP_SECURE: ${SMTP_SECURE:-false}
       VENA_HELPDESK_URL: ${VENA_HELPDESK_URL-http://helpdesk:8090}
       VENA_HELPDESK_TOKEN: ${VENA_HELPDESK_TOKEN:-local-helpdesk-token}
       VENA_HELPDESK_ALLOW_HTTP: "true"

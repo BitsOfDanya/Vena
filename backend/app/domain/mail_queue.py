@@ -29,7 +29,6 @@ def deliver_pending(session: Session, provider: EmailProvider, limit: int = 20) 
         return 0
     sent = 0
     for _ in range(limit):
-        # Lock one message until SMTP accepts it; other workers skip this row.
         log = session.scalars(
             select(DeliveryLog)
             .where(
@@ -51,7 +50,6 @@ def deliver_pending(session: Session, provider: EmailProvider, limit: int = 20) 
                 log.recipient, log.subject, log.body, html=log.html, delivery_id=str(log.id)
             )
         except Exception as error:
-            # SMTP responses can contain addresses or credentials; store only the error class.
             log.detail = f"Ошибка отправки ({type(error).__name__})"
             log.status = "failed" if log.attempts >= 6 else "pending"
             log.next_attempt_at = utcnow() + timedelta(seconds=60 * 2 ** (log.attempts - 1))
