@@ -24,3 +24,18 @@
 		reverse_proxy frontend:3000
 	}
 }
+
+# Add this block to the existing edge Caddyfile.
+courses.ufranshize.site {
+    encode zstd gzip
+    header {
+        -Server
+        X-Content-Type-Options nosniff
+        Referrer-Policy strict-origin-when-cross-origin
+    }
+    reverse_proxy ufranshize-courses-app:3000 {
+        # One public proxy in front of the application; do not trust a client-supplied IP.
+        header_up X-Forwarded-For {remote_host}
+        header_up X-Real-IP {remote_host}
+    }
+}

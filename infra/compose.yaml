@@ -112,9 +112,9 @@ services:
     environment:
       VENA_SITE_ADDRESS: ${VENA_SITE_ADDRESS:?Set VENA_SITE_ADDRESS}
     ports:
-      - "80:80"
-      - "443:443"
-      - "443:443/udp"
+      - "${VENA_HTTP_BIND:-80}:80"
+      - "${VENA_HTTPS_BIND:-443}:443"
+      - "${VENA_HTTPS_UDP_BIND:-443}:443/udp"
     volumes:
       - ./Caddyfile:/etc/caddy/Caddyfile:ro
       - caddy-data:/data
